@@ -4,8 +4,9 @@ import Header from '../Components/Header/Header';
 import { useLocation } from 'react-router-dom';
 import { useState, useRef, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faAngleDown, faAngleLeft, faAngleRight, faAngleUp, faBan, faMinus, faPlus, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faAngleDown, faAngleLeft, faAngleRight, faAngleUp, faBan, faMinus, faPlus, faTimes, faUser } from '@fortawesome/free-solid-svg-icons';
 import { useCookies } from 'react-cookie';
+import CreatePatient from '../CreatePatient/CreatePatient';
 
 const Appointments = ({ data }) => {
 
@@ -18,23 +19,25 @@ const Appointments = ({ data }) => {
 
     const daysOfWeek = cookies.language === "en" ? ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] : ['Dum', 'Lun', 'Mar', 'Mie', 'Joi', 'Vin', 'Sam'];
     const [date, setDate] = useState(new Date());
-    const [appointmentDateValue, setAppointmentDateValue] = useState();
     const [month, setMonth] = useState(date.getMonth());
     const [year, setYear] = useState(date.getFullYear());
     const [days, setDays] = useState([date.getDate()]);
     const [hourContainerHeight, setHourContainerHeight] = useState(0);
     const [filters, setFilters] = useState(cookies.language === "en" ? ['Day', 'Working Week', 'Week', 'Month', 'Year'] : ['Zi', 'Saptamana Lucratoare', 'Saptamana', 'Luna', 'An']);
-    const [appointments, setAppointments] = useState(data.organisation.schedules);
     
     const [startEvent, setStartEvent] = useState(); 
-    const [modifyEvent, setModifyEvent] = useState();
+    const [modifyEvent, setModifyEvent] = useState(false);
     const [startPosition, setStartPosition] = useState();
     const [lastElement, setLastElement] = useState();
     const [firstElement, setFirstElement] = useState();
     const [newDay, setNewDay] = useState();
     const [filterActive, setFilterActive] = useState(0);
+
+    const [appointments, setAppointments] = useState(data.organisation.schedules);
+    const [appointmentDateValue, setAppointmentDateValue] = useState();
     const [activeCreateAppointment, setActiveCreateAppointment] = useState(false);
     const [activeEditAppointment, setActiveEditAppointment] = useState(false);
+    const [activeCreatePatient, setActiveCreatePatient] = useState(false);
     const [appointmentTitle, setAppointmentTitle] = useState("");
     const [appointmentPatient, setAppointmentPatient] = useState("");
     const [appointmentPatientData, setAppointmentPatientData] = useState();
@@ -46,9 +49,14 @@ const Appointments = ({ data }) => {
     const [appointmentTypeIncome, setAppointmentTypeIncome] = useState("LEI");
     const [appointmentNotes, setAppointmentNotes] = useState("");
     const [appointmentPatientsList, setAppointmentPatientsList] = useState([]);
+    const [appointmentPatientPhoneNumber, setAppointmentPatientPhoneNumber] = useState("");
+    
+    const [phoneNumberReadOnly, setPhoneNumberReadOnly] = useState(true);
+    const [patientSaved, setPatientSaved] = useState(true);
     const [appointmentId, setAppointmentId] = useState();
     const [statusMessage, setStatusMessage] = useState();
     const [activeGaps, setActiveGaps] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
 
     const hours = [];
     const filterRef = useRef();
@@ -103,12 +111,15 @@ const Appointments = ({ data }) => {
         });
     };
 
-    const initiateAppointment = (e, currHour, gap) => {
+    const initiateAppointment = (e, currHour, gap, editing = false) => {
+      
         if (date.getFullYear() < new Date().getFullYear() || date.getMonth() < new Date().getMonth() || date.getDate() < new Date().getDate()) return;
         if (e.button === 2) return; // check for right click
         if (modifyEvent) return;
-        const target = e.target.classList.contains("gap") ? e.target : e.target.parentElement;
-        if (target.classList.contains('highlight')) return;
+        if (editing) e.target = e;
+        
+        const target = e.target?.classList.contains("gap") ? e.target : e.target.parentElement;
+        if (target.classList.contains('highlight') && !editing) return;
         console.log(new Date(date.getFullYear(), date.getMonth(), e.target.getAttribute('day')));
         setAppointmentDateValue(filterActive === 0 ? date : new Date(e.target.getAttribute('day')));
         setStartEvent(true);
@@ -116,16 +127,16 @@ const Appointments = ({ data }) => {
         setFirstElement(target);
         setAppointmentStartHour(currHour + startHour);
         setAppointmentStartMinutes(gap * minutesPerGap);
- 
         setAppointmentEndMinutes((gap + 1) * minutesPerGap >= 60 ? 0 : (gap + 1) * minutesPerGap);
         setAppointmentEndHour((gap + 1) * minutesPerGap >= 60 ? currHour + startHour + 1 : currHour + startHour);
         setLastElement(target);
     };
 
     const moveAppointment = e => {
-        
+      
         if (!startEvent || modifyEvent) return;
         if (startPosition >= e.clientY) return;
+        console.log(e.target);
         if (e.target.classList.contains("highlight") && parseInt(e.target.getAttribute('id')) > parseInt(lastElement.getAttribute('id'))) return;
         if (e.target.parentElement.classList.contains("inactive")) return;
         const lastPos = lastElement.getBoundingClientRect();
@@ -167,6 +178,11 @@ const Appointments = ({ data }) => {
 
     const sendAppointment = async () => {
 
+        if (appointmentPatient.length === 0 || appointmentPatientPhoneNumber.toString().length === 0 || appointmentTitle.length === 0) {
+            setErrorMessage(cookies.language === "en" ? "Fill required fields!" : "Completeaza campurile obligatorii!");
+            return;
+        }
+
         const appointmentData = {
             startDate: new Date(date.getFullYear(), date.getMonth(), date.getDate(), appointmentStartHour, appointmentStartMinutes),
             endDate: new Date(date.getFullYear(), date.getMonth(), date.getDate(), appointmentEndHour, appointmentEndMinutes),
@@ -177,7 +193,8 @@ const Appointments = ({ data }) => {
             income: appointmentCost,
             typeIncome: appointmentTypeIncome,
             notes: appointmentNotes,
-            date: date
+            date: date,
+            saved: !patientSaved
         };
 
         const options = {
@@ -218,9 +235,16 @@ const Appointments = ({ data }) => {
         setAppointmentStartMinutes("");
         setAppointmentEndHour("");
         setAppointmentEndMinutes("");
-
+        setAppointmentTitle("");
+        setAppointmentPatient("");
+        setAppointmentPatientData();
         setFirstElement(null);
         setLastElement(null);
+        setAppointmentCost("");
+        setAppointmentPatientsList([]);
+        setAppointmentNotes("");
+        setAppointmentPatientPhoneNumber("");
+        setAppointmentDateValue();
     };
 
     const editAppointment = async (currentAppointmentId) => {
@@ -390,7 +414,7 @@ const Appointments = ({ data }) => {
 
                     setActiveEditAppointment(true);
                     setAppointmentTitle(appointment.title);
-                    setAppointmentPatient(`${appointment.patients[0].firstname} ${appointment.patients[0].lastname}`);
+                    setAppointmentPatient(`${JSON.parse(appointment.patients)[0].firstname} ${JSON.parse(appointment.patients)[0].lastname}`);
                     setAppointmentPatientsList([]);
                     setAppointmentPatientData(appointment.patients[0]);
                     setAppointmentStartHour(new Date(appointment.startDate).getHours() < 10 ? `0${new Date(appointment.startDate).getHours()}` : new Date(appointment.startDate).getHours());
@@ -467,18 +491,18 @@ const Appointments = ({ data }) => {
 
             currentGaps[endIdx].classList.add("resizeable");
             currentGaps[endIdx].classList.add("resizeable-down");
-
+            console.log(currentGaps[startIdx]);
+            const appointmentHourIdx = Number(currentGaps[startIdx].getAttribute("starthour")) - startHour;
+            const appointmentGapIdx = Number(currentGaps[startIdx].getAttribute("key"));
+            console.log(currentGaps[startIdx].parentElement);
             currentGaps[endIdx].addEventListener("mousedown", () => {
-                
+                console.log(currentGaps[startIdx]);
+                initiateAppointment(currentGaps[startIdx], appointmentHourIdx, appointmentGapIdx, true);
             });
 
-            currentGaps[endIdx].addEventListener("mousemove", () => {
-                
-            });
+            currentGaps[endIdx].addEventListener("mousemove", e => moveAppointment(e));
 
-            currentGaps[endIdx].addEventListener("mouseup", () => {
-                
-            });
+            currentGaps[endIdx].addEventListener("mouseup", e => createAppointment(e));
 
             const activeGaps = [...currentGaps].filter(currentGap => currentGap.classList.contains("highlight") && currentGap.classList.contains("created"));
 
@@ -549,7 +573,9 @@ const Appointments = ({ data }) => {
 
             const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/search-patient`, options);
             const response = await request.json();
+            console.log(response);
             if (response.success) setAppointmentPatientsList(response.patients);
+            else setAppointmentPatientsList([]);
 
         })();
     }, [appointmentPatient]);
@@ -656,7 +682,7 @@ const Appointments = ({ data }) => {
                             <div className="month-appointment" onClick={() => {
                                 setActiveEditAppointment(true);
                                 setAppointmentTitle(appointment.title);
-                                setAppointmentPatient(`${appointment.patients[0].firstname} ${appointment.patients[0].lastname}`);
+                                setAppointmentPatient(`${JSON.parse(appointment.patients)[0].firstname} ${JSON.parse(appointment.patients)[0].lastname}`);
                                 setAppointmentPatientsList([]);
                                 setAppointmentPatientData(appointment.patients[0]);
                                 setAppointmentStartHour(new Date(appointment.startDate).getHours() < 10 ? `0${new Date(appointment.startDate).getHours()}` : new Date(appointment.startDate).getHours());
@@ -708,9 +734,23 @@ const Appointments = ({ data }) => {
         });
     };
 
+    const patientNotSaved = () => {
+        setPatientSaved(false);
+        setAppointmentPatientsList([]);
+        setAppointmentPatientData({});
+        setPhoneNumberReadOnly(false);
+    };
+
+    const patientGotSaved = () => {
+        setPatientSaved(true);
+        setActiveCreatePatient(true);
+        setPhoneNumberReadOnly(true);
+
+    };
+
     
 
-    return (
+    return !activeCreatePatient ? (
         <div className="appointments">
             <Navigation page="appointments" />
 
@@ -824,11 +864,11 @@ const Appointments = ({ data }) => {
                 <div className="scheduler">
                     {filterActive !== 3 && filterActive !== 4 && 
                         <div className="hours">
-                        {hours.map((hour, hourIdx) => (
-                            <div className="hour" key={hourIdx}>
-                                <p>{hour < 10 ? `0${hour}:00` : `${hour}:00`}</p>
-                            </div>
-                        ))}
+                            {hours.map((hour, hourIdx) => (
+                                <div className="hour" key={hourIdx}>
+                                    <p>{hour < 10 ? `0${hour}:00` : `${hour}:00`}</p>
+                                </div>
+                            ))}
                         </div>
                     }
 
@@ -878,31 +918,46 @@ const Appointments = ({ data }) => {
                                 <input type="text" value={appointmentTitle} onChange={e => setAppointmentTitle(e.target.value)} placeholder={cookies.language === "en" ? "Title" : "Titlu"} className="row" />
                             </div>
 
-                            <div className="label one-row">
+                            <div className="label">
                                 <p>{cookies.language === "en" ? "Patient" : "Pacient"}</p>
                                 <input type="text" value={appointmentPatient} onChange={e => setAppointmentPatient(e.target.value)} placeholder={cookies.language === "en" ? "Patient" : "Pacient"} />
-                                {appointmentPatientsList && appointmentPatientsList.length !== 0 ?
-                                    <div className="patient-list">
-                                        {appointmentPatientsList.map((patient, idx) => (
-                                            <div className="patient-container" onClick={() => {
-                                                setAppointmentPatient(`${patient.firstname} ${patient.lastname}`);
-                                                setAppointmentPatientsList([]);
-                                                setAppointmentPatientData(patient);
-                                            }}>
-                                                <p>{patient.firstname} {patient.lastname} {patient.fileNumber || idx + 1}</p>
-                                            </div>
-                                        ))}
-                                    </div> : appointmentPatient.length > 0 &&
-                                    <div>
-                                        <p className="normal-text">{cookies.language === "en" ? "No patients found" : "Niciun pacient gasit"}</p>
-                                        <div className="line-patient">
-                                            <p className="normal-text">{cookies.language === "en" ? "Do you want to add a new patient?" : "Doriti sa adaugati un pacient nou?"}</p>
-                                            <button>{cookies.language === "en" ? "YES" : "DA"}</button>
-                                            <button>{cookies.language === "en" ? "NO" : "NU"}</button>
-                                        </div>
-                                    </div>
-                                }
+                                
                             </div>
+
+                            <div className="label">
+                                <p>{cookies.language === "en" ? "Phone Number" : "Numar telefon"}</p>
+                                <input type="number" className="number-input" value={appointmentPatientPhoneNumber} onChange={e => setAppointmentPatientPhoneNumber(e.target.value)} readOnly={phoneNumberReadOnly} />
+                            </div>
+
+                            <div className={`patient-list-container ${appointmentPatient.length > 0 && !appointmentPatientData ? "active" : ""}`}>
+                                    {appointmentPatientsList && appointmentPatientsList.length > 0 ?
+                                        <div className="patient-list">
+                                            {appointmentPatientsList.map((patient, idx) => (
+                                                <div className="patient-container" onClick={() => {
+                                                    console.log(patient);
+                                                    setAppointmentPatient(`${patient.firstname} ${patient.lastname}`);
+                                                    setAppointmentPatientsList([]);
+                                                    setAppointmentPatientData(patient);
+                                                    setAppointmentPatientPhoneNumber(Number(patient.phone));
+                                                }}>
+                                                    <FontAwesomeIcon icon={faUser} className="user-icon" />
+                                                    <p>{patient.firstname} {patient.lastname} {patient.fileNumber || idx + 1}</p>
+                                                </div>
+                                            ))}
+                                        </div> : appointmentPatient.length > 0 && !appointmentPatientData &&
+                                        <div className="add-patient-container">
+                                            <p className="normal-text">{cookies.language === "en" ? "No patient found." : "Niciun pacient gasit."}</p>
+                                            <div className="line-patient">
+                                                <p className="normal-text">{cookies.language === "en" ? "Do you want to add a new patient?" : "Doriti sa adaugati un pacient nou?"}</p>
+                                                <br />
+                                                <button type="button" onClick={() => patientGotSaved()}>{cookies.language === "en" ? "YES" : "DA"}</button>
+                                                <button type="button" onClick={() => patientNotSaved()}>{cookies.language === "en" ? "NO" : "NU"}</button>
+                                            </div>
+                                        </div>
+                                    }
+                            </div>
+                            
+                            <div className={`non-visible ${appointmentPatient.length > 0 && !appointmentPatientData ? "active" : ""}`} />
 
                             <div className="label">
                                 <p>{cookies.language === "en" ? "Start Hour" : "Ora inceput"}</p>
@@ -1126,6 +1181,10 @@ const Appointments = ({ data }) => {
 
                         </div>
 
+                        {errorMessage.length > 0 && 
+                            <p className="error-message">{errorMessage}</p>
+                        }
+
                         <button type="button" className="add-appointment" onClick={async () => await editAppointment(appointmentId)}>
                             <p>{cookies.language === "en" ? "Save changes" : "Salveaza modificarile"}</p>
                         </button>
@@ -1134,7 +1193,7 @@ const Appointments = ({ data }) => {
                 </div>
             </div>
         </div>
-    );
+    ) : <CreatePatient data={data} fromAppointments={true} />;
 };
 
 export default Appointments;

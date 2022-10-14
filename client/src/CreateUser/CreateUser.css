@@ -1,0 +1,55 @@
+.grid-container
+{
+   
+}
+
+.grid-container > div 
+{
+ 
+}
+
+.input-color p
+{
+    margin-right: 15px;
+}
+
+.input-color span 
+{
+    background-color: transparent;
+    border: none;
+    
+}
+
+
+
+
+.input .interval 
+{
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+}
+.login-container .login-inputs .input .number-input
+{
+    max-width: 75px;
+    text-align: center;
+    padding-left: 0rem;
+   
+   
+}
+.input .interval .interval-icon
+{
+    width: 25px;
+    height: 25px;
+    
+    padding: .5rem;
+    color: var(--text-color);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 350ms ease-in-out;
+}
+
+.input .interval .interval-icon:hover
+{
+    background: var(--contrast-color);
+}

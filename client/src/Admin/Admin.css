@@ -103,6 +103,61 @@
     cursor: pointer;
 }
 
+.admin .organisation .options 
+{
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.admin .organisation .options-container 
+{
+    position: absolute;
+    top: 90%;
+    background: #000;
+    right: 30%;
+    min-height: 60px;
+    opacity: 0;
+    transition: all 350ms ease-in-out;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.admin .organisation .options-container.active 
+{
+    opacity: 1;
+}
+
+.admin .organisation .options-container.active .option-item
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    width: 250px;
+   
+    padding-inline: 20px;
+}
+
+.admin .organisation .options-container.active .option-item p
+{
+    font-size: 100%;
+    font-family: "Inter";
+    color: var(--text-color);
+    font-size: 18px;
+    width: 100%;
+}
+
+.admin .organisation .options-container.active .option-item .icon 
+{
+    color: var(--contrast-color);
+    font-size: 20px;
+}
+
+
 .admin .organisation .user 
 {
 
@@ -140,7 +195,8 @@
     font-size: 24px;
     color: var(--text-color-3);
     cursor: pointer;
- 
+    position: relative;
+    z-index: 100000;
 }
 
 .admin .organisation .user p

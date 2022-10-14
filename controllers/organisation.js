@@ -51,8 +51,8 @@ exports.createOrganisation = async (req, res, next) => {
 
         createTableSql = 'CREATE TABLE ?? ( ';
         createTableSql += '_id varchar(25) not null, ';
-        createTableSql += 'startDate date not null, ';
-        createTableSql += 'endDate date not null, ';
+        createTableSql += 'startDate datetime not null, ';
+        createTableSql += 'endDate datetime not null, ';
         createTableSql += 'title varchar(128) not null, ';
         createTableSql += 'income int, ';
         createTableSql += 'typeIncome varchar(10), ';
@@ -66,6 +66,7 @@ exports.createOrganisation = async (req, res, next) => {
         await db.query(createTableSql, ['schedules']);
 
         // Users table
+        
 
         createTableSql = 'CREATE TABLE ?? ( ';
         createTableSql += 'userId varchar(25) unique not null, ';
@@ -96,7 +97,7 @@ exports.createOrganisation = async (req, res, next) => {
 
 exports.removeOrganisation = async (req, res, next) => {
     const { _id, adminId } = req.body;
-    
+    console.log("..");
     try {
 
         const isAdmin = await db.query("SELECT * FROM ?? WHERE _id = ?", [`${process.env.DB_PREFIX}admins.users`, adminId]);
@@ -105,9 +106,10 @@ exports.removeOrganisation = async (req, res, next) => {
         let sql = 'DROP DATABASE ??';
 
         const result = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}`]);
-        if (result) res.status(200).json({ success: true, message: { en: "Organisation successfully removed!", ro: "Organizatia a fost stearsa cu success!" }});
+        if (await result) res.status(200).json({ success: true, message: { en: "Organisation successfully removed!", ro: "Organizatia a fost stearsa cu success!" }});
         else res.status(404).json({ success: false, message: { en: "The organisation could not be removed!", ro: "Organizatia nu a putut fi stearsa!" } });
     } catch (e) {
+        console.log(e);
         res.status(404).json({ success: false, message: { en: "An error occured!", ro: "A aparut o eroare!" } });
     }
 };
@@ -189,16 +191,19 @@ exports.createUser = async (req, res, next) => {
 
 exports.removeUser = async (req, res, next) => {
     const { _id, username, adminId } = req.body;
-
+    console.log("./");
     try {
+        let sql = "SELECT * FROM ?? WHERE _id = ?";
         const isAdmin = await db.query(sql, [`${process.env.DB_PREFIX}admins.users`, adminId]);
         if (!isAdmin.length) return new ErrorResponse("You cannot add an organisation if you are not an admin!", 404, res);
 
-        let sql = "DELETE FROM ?? WHERE username = ?";
+        
+        sql = "DELETE FROM ?? WHERE username = ?";
         const deletedUser = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.users`, username]);
-
+        console.log(await deletedUser);
         if (await deletedUser) res.status(200).json({ success: true, message: { en: "User removed successfully!", ro: "Utilizator sters cu succes!" }});
     } catch (e) {
+        console.log(e);
         res.status(404).json({ success: false, message: "An error occured." });
     }
 };

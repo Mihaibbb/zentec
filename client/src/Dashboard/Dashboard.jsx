@@ -13,7 +13,7 @@ const Dashboard = ({ data }) => {
     const [appointments, setAppointments] = useState();
     const [newPatients, setNewPatients] = useState();
     const [income, setIncome] = useState();
-    const [filter, setFilter] = useState("month");
+    const [filter, setFilter] = useState("day");
     const [typeIncome, setTypeIncome] = useState("");
     
     const [cookies, setCookie] = useCookies();
@@ -34,6 +34,7 @@ const Dashboard = ({ data }) => {
         if (!response.success) return;
         setDoctors(response.doctors);
     };     
+    
     // Get the following appointments
     const getNextAppointments = async () => {
 
@@ -49,10 +50,10 @@ const Dashboard = ({ data }) => {
 
         const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/next-appointments`, options);
         const response = await request.json();
-        console.log(await response);
+        console.log(JSON.parse(await response.appointments[0].patients));
         if (response.success) setNextAppointments(response.appointments.map(appointment => {
             return {
-                name: `${appointment.patients[0].firstname} ${appointment.patients[0].lastname}`,
+                name: `${JSON.parse(appointment.patients)[0].firstname} ${JSON.parse(appointment.patients)[0].lastname}`,
                 hour: `${new Date(appointment.startDate).getHours()}:${new Date(appointment.startDate).getMinutes()}`,
                 income: appointment.income,
                 typeIncome: appointment.typeIncome
@@ -74,17 +75,15 @@ const Dashboard = ({ data }) => {
         };
         
         try {
-            console.log(options, data.organisation._id);
-            console.log(`${process.env.REACT_APP_BACKEND_URL}/api/user/get-statistics-data`);
             const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/analytics`, options);
             const response = await request.json();
             console.log(await response);
-            if (!response.success) return;
+            if (!await response.success) return;
             
-            setNewPatients(response.patients);
-            setAppointments(response.appointments);
-            setIncome(response.income);
-            setTypeIncome(response.typeIncome);
+            setNewPatients(await response.patients);
+            setAppointments(await response.appointments);
+            setIncome(await response.income);
+            setTypeIncome(await response.typeIncome);
         } catch (e) {
             console.log("ERROR", e);
         }
@@ -153,15 +152,35 @@ const Dashboard = ({ data }) => {
         },
     ];
 
+    useEffect(() => {
+        (async () => {
+            await getStatistics();
+        })();
+    }, [filter]);
+
+    const filters_server = ["day", "week", "month", "year"] 
+    const filters = cookies.language === "en" ? ["Day", "Week", "Month", "Year"] : ["Zi", "Saptamana", "Luna", "An"];
+
     return (
         <div className="dashboard">
             <Navigation page="dashboard"/>
             
             <div className="content">
                 <Header data={data} />
-               
+                
+                <div className="filter-container">
+                    {filters.map((currFilter, idx) => (
+                        <div key={idx} className={`filter ${idx === 0 ? "active" : ""}`} onClick={async e => {
+                            e.target.parentNode.childNodes.forEach(elem => elem.classList.remove("active"));
+                            e.target.classList.add("active");
+                            setFilter(filters_server[idx]);
+                            
+                        }}>{currFilter}</div>
+                    ))}
+                </div>
 
                 <div className="data">
+
                     <div className="data-container">
                         <div className="image">
                             <FontAwesomeIcon icon={faCalendar} className="data-icon"/>

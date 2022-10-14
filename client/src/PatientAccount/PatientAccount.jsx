@@ -21,7 +21,6 @@ const PatientAccount = ({ data }) => {
         
     if (!param?.id) navigation(-1);
    
-
     const patient = location?.state?.patient;
 
     const initialFirstName = patient.firstname;
@@ -84,7 +83,6 @@ const PatientAccount = ({ data }) => {
         } catch (e) {
             console.log(e)
         }
-      
     };
 
     const updateAccount = async () => {
@@ -249,7 +247,7 @@ const PatientAccount = ({ data }) => {
                                             <FontAwesomeIcon icon={faCheck} className={`active-icon`} />
                                             
                                         </div>
-                                        <p>{currGender}</p>
+                                        <p className="patient-gender">{currGender}</p>
                                     </div>
                                 ))}
                             </div>
@@ -297,7 +295,7 @@ const PatientAccount = ({ data }) => {
                 </div>
 
                 <div className="patient-historic">
-                    <h2 className="title">{cookies.language === "en" ? "Patient's historic" : "Istoricul pacientului"}</h2>
+                    <h2 className="title">{cookies.language === "en" ? "Patient's historic" : "Istoric Pacient"}</h2>
                     
                     <div className="historic-container">
                         <div className="first-row">
@@ -309,7 +307,7 @@ const PatientAccount = ({ data }) => {
                         {historic && historic.length > 0 && historic.map(historicItem => (
                             <div className="historic-item">
                                 <div className="col">{historicItem.title}</div>
-                                <div className="col">{new Date(historicItem.date).getDate()}.{new Date(historicItem.date).getMonth()}.{new Date(historicItem).getFullYear()}</div>
+                                <div className="col">{new Date(historicItem.date).getDate()}-{new Date(historicItem.date).getMonth() + 1}-{new Date(historicItem.date).getFullYear()}</div>
                                 <div className="col">{historicItem.startHour}:{historicItem.startMinutes} - {historicItem.endHour}:{historicItem.endMinutes}</div>
                                 <div className="col">{historicItem.price} {historicItem.typePrice}</div>
                             </div>

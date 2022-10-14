@@ -8,7 +8,7 @@ import Header from "../Components/Header/Header";
 import Navigation from "../Components/Navigation/Navigation";
 import "./CreatePatient.css";
 
-const CreatePatient = ({ data }) => {
+const CreatePatient = ({ data, fromAppointments }) => {
 
     const location = useLocation();
     const navigate = useNavigate();
@@ -91,8 +91,9 @@ const CreatePatient = ({ data }) => {
                 setErrorMessage(await response.message[cookies.language]);
                 return;
             }
-            navigate("/patients", { state: { message: { en: "Patient added successfully!", ro: "Pacient adaugat cu succes." } } });
 
+            if (!fromAppointments) navigate("/patients", { state: { message: { en: "Patient added successfully!", ro: "Pacient adaugat cu succes." } } });
+            else navigate("/appointments", {  });
         } catch (e) {
             console.log(e);
         }
@@ -171,7 +172,7 @@ const CreatePatient = ({ data }) => {
 
     return (
         <div className="create-patient">
-            <Navigation />
+            <Navigation page={fromAppointments ? "appointments" : "patients"}/>
             <div className="content">
                 <Header data={data} />
                 <h2 className="title">{cookies.language === "en" ? "Create new patient" : "Creeaza un nou pacient"}</h2>

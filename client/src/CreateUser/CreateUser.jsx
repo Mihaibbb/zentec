@@ -5,6 +5,9 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Header from "../Components/Header/Header";
 import Navigation from "../Components/Navigation/Navigation";
 import InputColor from "react-input-color";
+import "./CreateUser.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
 
 const CreateUser = () => {
 
@@ -96,37 +99,58 @@ const CreateUser = () => {
                         <input type="password" placeholder={cookies.language === "en" ? "Repeat password" : "Repeta parola"} value={repeatPassword} onChange={e => setRepeatPassword(e.target.value)} />
                     </div>
 
-                    <div className="selection">
-                        <p>{cookies.language === "en" ? "Type of user: " : "Tipul de utilizator"}</p>
-                        <select value={type} onChange={e => setType(e.target.value)}>
-                            <option value="Doctor">Doctor</option>
-                            <option value="Reception">{cookies.language === "en" ? "Reception" : "Receptie"}</option>
-                        </select>
-                    </div>
-
-                    {type === "Doctor" && 
-                        <div className="input-color">
-                            <p>{cookies.language === "en" ? "Doctor's color" : "Culoare doctor: "}</p>
-                            <InputColor 
-                                initialValue="#5e72e4"
-                                onChange={setDoctorColor}
-                            >
-                                <div
-                                    style={{
-                                    width: 50,
-                                    height: 50,
-                                    marginTop: 20,
-                                    backgroundColor: doctorColor.rgba,
-                                    }}
-                                />
-                            </InputColor>
+                    <div className="grid-container">
+                        <div className="selection">
+                            <p>{cookies.language === "en" ? "Type of user: " : "Tipul de utilizator"}</p>
+                            <select value={type} onChange={e => setType(e.target.value)}>
+                                <option value="Doctor">Doctor</option>
+                                <option value="Reception">{cookies.language === "en" ? "Reception" : "Receptie"}</option>
+                            </select>
                         </div>
-                    }
 
-                    {/* <div className="input">
-                        <input type="checkbox" checked={rememberMe} onClick={() => setRememberMe(currRememberMe => !currRememberMe)}/>
-                        <p>Remember Me</p>
-                    </div> */}
+                        {type === "Doctor" && 
+                            <div className="input-color">
+                                <p>{cookies.language === "en" ? "Doctor's color" : "Culoare doctor: "}</p>
+                                <InputColor 
+                                    initialValue="#5e72e4"
+                                    onChange={setDoctorColor}
+                                >
+                                    <div
+                                        style={{
+                                        width: 50,
+                                        height: 50,
+                                        marginTop: 20,
+                                        backgroundColor: doctorColor.rgba,
+                                        }}
+                                    />
+                                </InputColor>
+                            </div>
+                        }
+
+
+                        {/* <div className="input">
+                            <input type="checkbox" checked={rememberMe} onClick={() => setRememberMe(currRememberMe => !currRememberMe)}/>
+                            <p>Remember Me</p>
+                        </div> */}
+
+                        <div className="input interval-container">
+                            <p>{cookies.language === "en" ? "Start Hour" : "Ora inceput"}</p>
+                            <div className="interval">
+                                <FontAwesomeIcon icon={faMinus} className="interval-icon" onClick={() => setStartHour(currHour => Number(currHour) - 1)} />
+                                <input type="number" className="number-input" value={startHour} onChange={e => setStartHour(e.target.value)} />
+                                <FontAwesomeIcon icon={faPlus} className="interval-icon" onClick={() => setStartHour(currHour => Number(currHour) + 1)}/>
+                            </div>
+                        </div>
+
+                        <div className="input interval-container">
+                            <p>{cookies.language === "en" ? "End Hour" : "Ora sfarsit"}</p>
+                            <div className="interval">
+                                <FontAwesomeIcon icon={faMinus} className="interval-icon" onClick={() => setEndHour(currHour => Number(currHour) - 1)} />
+                                <input type="number" className="number-input" value={endHour} onChange={e => setEndHour(e.target.value)} />
+                                <FontAwesomeIcon icon={faPlus} className="interval-icon" onClick={() => setEndHour(currHour => Number(currHour) + 1)} />
+                            </div>
+                        </div>
+                    </div>
 
                     <button type="text" onClick={async () => await createNewUser()}>
                         <p>{cookies.language === "en" ? "Add user" : "Adauga utilizator"}</p>

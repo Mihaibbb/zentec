@@ -75,6 +75,8 @@ exports.createAppointment = async (req, res, next) => {
             console.log("Error: ", e);
         }
 
+        if (req.body?.saved) return res.status(200).json({ success: true, message: { en: "Appointment added successfully!", ro: "Programare adaugata cu succes!" } });
+        
         // Push to patient's historic
 
         patients.forEach(currPatient => {
@@ -165,16 +167,34 @@ exports.analytics = async (req, res, next) => {
         if (filter === "day") {
             const patients = await patientsDb.filter(patient => new Date(patient.date).getFullYear() === new Date().getFullYear() &&
                                                                      new Date(patient.date).getMonth() === new Date().getMonth() &&
-                                                                     new Date(patient.date).getDate() === new Date().getDate());
+                                                                     new Date(patient.date).getDate() - 1 === new Date().getDate());
     
             const appointments = await schedulesDb.filter(schedule => new Date(schedule.createdAt).getFullYear() === new Date().getFullYear() &&
                                                                            new Date(schedule.createdAt).getMonth() === new Date().getMonth() &&
-                                                                           new Date(schedule.createdAt).getDate() === new Date().getDate());
+                                                                            new Date(schedule.createdAt).getDate() - 1 === new Date().getDate());
+         
             let totalIncome = 0;
             await appointments.forEach(appointment => totalIncome += appointment.income); 
-    
+            
             res.status(200).json({ success: true, patients: await patients.length, appointments: await appointments.length, income: totalIncome, typeIncome: await appointments.length > 0 && await appointments[0].typeIncome ? await appointments[0].typeIncome : "LEI" });
         
+        } else if (filter === "week") {
+            const days = getWeekDays(new Date());
+
+            const patients = await patientsDb.filter(patient => (new Date(patient.date).getFullYear() >= days[0].getFullYear() && new Date(patient.date).getFullYear() <= days[days.length - 1].getFullYear()) &&
+                                                                (new Date(patient.date).getMonth() >= days[0].getMonth() && new Date(patient.date).getMonth() <= days[days.length - 1].getMonth()) &&
+                                                                inArr(days, new Date(patient.date).getDate() - 1));
+    
+            const appointments = await schedulesDb.filter(schedule => (new Date(schedule.createdAt).getFullYear() >= days[0].getFullYear() && new Date(schedule.createdAt).getFullYear() <= days[days.length - 1].getFullYear()) &&
+                                                                      (new Date(schedule.createdAt).getMonth() >= days[0].getMonth() && new Date(schedule.createdAt).getMonth() <= days[days.length - 1].getMonth()) &&
+                                                                      inArr(days, new Date(schedule.createdAt).getDate() - 1));
+            console.log(patients);
+            let totalIncome = 0;
+            await appointments.forEach(appointment => totalIncome += appointment.income); 
+            
+            res.status(200).json({ success: true, patients: await patients.length, appointments: await appointments.length, income: totalIncome, typeIncome: await appointments.length > 0 && await appointments[0].typeIncome ? await appointments[0].typeIncome : "LEI" });
+            
+            
         } else if (filter === "month") {
       
             const patients = await patientsDb.filter(patient => new Date(patient.date).getFullYear() === new Date().getFullYear() &&
@@ -192,7 +212,7 @@ exports.analytics = async (req, res, next) => {
         else if (filter === "year") {
             const patients = await patientsDb.filter(patient => new Date(patient.date).getFullYear() === new Date().getFullYear());
     
-            const appointments = await schedulesDb.schedules.filter(schedule => new Date(schedule.createdAt).getFullYear() === new Date().getFullYear());
+            const appointments = await schedulesDb.filter(schedule => new Date(schedule.createdAt).getFullYear() === new Date().getFullYear());
             let totalIncome = 0;
             await appointments.forEach(appointment => totalIncome += appointment.income); 
     
@@ -478,4 +498,32 @@ const sameDate = (date1, date2) => {
     return date1.getDate() == date2.getDate() &&
            date1.getMonth() === date2.getMonth() &&
            date1.getFullYear() === date2.getFullYear();
+};
+
+const getWeekDays = (date) => {
+    const arr = [new Date(date)];
+    const currDay = date.getDay();
+    let day = currDay;
+    day++;
+    while (day <= 7) {
+        const currDate = new Date(date);
+        currDate.setDate(date.getDate() + (day - currDay));
+        arr.push(currDate);
+        day++;
+    }
+
+    day = currDay;
+    day--;
+    while (day >= 1) {
+        const currDate = new Date();
+        currDate.setDate(date.getDate() - (currDay - day));
+        arr.unshift(currDate);
+        day--;
+    }
+    console.log(arr);
+    return arr;
+};
+
+const inArr = (arr, number) => {
+    return arr.some(day => day.getDate() === Number(number));
 };

@@ -31,6 +31,7 @@ const App = () => {
             }
             
             const [userId, password] = [cookies["user-id"], cookies["pwd"]];
+            console.log(userId, password);
             const options = {
                 method: 'POST',
                 headers: {

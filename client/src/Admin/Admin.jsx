@@ -1,4 +1,4 @@
-import { faEllipsis, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsis, faPlus, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
@@ -52,6 +52,7 @@ const Admin = () => {
         try {
             const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/organisation/remove`, options);
             const response = await request.json();
+            console.log(await response);
             if (!await response.success) return;
             navigate("/dashboard", { state: { message: await response.message[cookies.language] } })
         } catch (e) {
@@ -60,6 +61,7 @@ const Admin = () => {
     };
 
     const removeUser = async (_id, username) => {
+        console.log(_id, username, cookies['user-id']);
         const options = {
             method: "POST",
             headers: {
@@ -75,6 +77,7 @@ const Admin = () => {
         try {
             const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/organisation/remove-user`, options);
             const response = await request.json();
+            console.log(await response);
             if (!await response.success) return;
             navigate("/dashboard", { state: { message: await response.message } });
         } catch (e) {
@@ -96,9 +99,19 @@ const Admin = () => {
             {organisations.length > 0 && organisations.map((organisation, idx) => (
                 <div className="organisation" key={idx}>
 
-                    <div className="option">
-                        <FontAwesomeIcon icon={faEllipsis} className="option-icon" onClick={async () => await removeOrganisation(organisation._id)} />
-                    </div>
+                        <div className="option">
+                            <FontAwesomeIcon icon={faEllipsis} className="option-icon" onClick={e => {
+                                document.querySelectorAll(".options-container").forEach(option => option.classList.remove("active"));
+                                const element = e.target.parentElement.querySelector(".options-container");
+                                element.classList.toggle("active");
+                            }} />
+                            <div className="options-container">
+                                <div className="option-item" onClick={async () => await removeOrganisation(organisation._id)}>
+                                    <FontAwesomeIcon icon={faTimes} className="remove-icon" />
+                                    <p>{cookies.language === "en" ? "Remove organisation" : "Sterge organizatie"}</p>
+                                </div>
+                            </div>
+                        </div>
 
                     <div className="organisation-container">
                         <h2>{organisation.name}</h2>
@@ -123,7 +136,19 @@ const Admin = () => {
                                 <p>{user.username}</p>
                                 <p>{user.email}</p>
                                 <p>{user.type.slice(0, 1).toUpperCase() + user.type.slice(1)}</p>
-                                <FontAwesomeIcon icon={faEllipsis} className="option-icon" onClick={async () => await removeUser(user.userId, user.username)} />
+                                <div className="options">
+                                    <FontAwesomeIcon icon={faEllipsis} className="option-icon" onClick={e => {
+                                        document.querySelectorAll(".options-container").forEach(option => option.classList.remove("active"));
+                                        const element = e.target.parentElement.querySelector(".options-container");
+                                        element.classList.toggle("active");
+                                    }} />
+                                    <div className="options-container">
+                                        <div className="option-item" onClick={async () => await removeUser(organisation._id, user.username)}>
+                                            <FontAwesomeIcon icon={faTimes} className="icon" />
+                                            <p>{cookies.language === "en" ? "Remove user" : "Sterge utilizator"}</p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div className="line" />
                         </div>
