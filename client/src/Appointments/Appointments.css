@@ -379,10 +379,11 @@ input[type=number] {
     z-index: 100;
 }
 
+
+
 .appointments .schedule-container .day-container .schedule-hour .gap.highlight
 {
-    background: var(--doctor-color);
-    
+    background: var(--doctor-color-css);
 }
 
 .appointments .schedule-container .day-container .schedule-hour .gap.highlight.created 
@@ -409,7 +410,7 @@ input[type=number] {
 
 .appointments .schedule-container .day-container .schedule-hour .gap.highlight.mouse-over-gap
 {
-    background: var(--contrast-color-highlight);
+    background: var(--doctor-color-css);
 }
 
 .appointments .month-schedule
@@ -503,7 +504,7 @@ input[type=number] {
 
 .appointments .month-schedule .month-day .month-appointments .month-appointment
 {
-    background: var(--contrast-color);
+    background: var(--doctor-color-css);
 }
 
 

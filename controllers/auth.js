@@ -100,6 +100,10 @@ exports.loginRemember = async (req, res, next) => {
                 const currUser = users && users.find(user => {
                     return user.userId.toString() === userId.toString() && user.password === hashedPassword;
                 });
+
+                const doctors = users && users.filter(user => {
+                    return user.type.toLowerCase() === "doctor";
+                });
     
                 console.log("USER", currUser);
                 if (currUser) {
@@ -118,7 +122,7 @@ exports.loginRemember = async (req, res, next) => {
                         _id: _id
                     };
     
-                    return res.status(200).json({organisation: organisationData, user: userData, success: true, admin: false});
+                    return res.status(200).json({organisation: organisationData, user: userData, doctors: doctors, success: true, admin: false});
                   
                 }   
             })();

@@ -13,6 +13,7 @@ import CreateOrganisation from "./CreateOrganisation/CreateOrganisation";
 import CreateUser from "./CreateUser/CreateUser";
 import CreatePatient from "./CreatePatient/CreatePatient";
 import PatientAccount from "./PatientAccount/PatientAccount";
+import Settings from "./Settings/Settings";
 
 const App = () => {
     const [cookies, setCookie, removeCookie] = useCookies([]);
@@ -78,8 +79,8 @@ const App = () => {
                                 <Route path="appointments" element={<Appointments data={data} />} />
                                 {/* <Route path="import-patients" element={<ImportPatients />}/> */}
                                 <Route path="create-patient" element={<CreatePatient data={data} />} />
-
-
+                                <Route path="settings" element={<Settings data={data} />} />
+                                
                             </>
                         ) : (
                             <>

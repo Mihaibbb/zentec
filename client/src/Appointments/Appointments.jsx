@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faAngleDown, faAngleLeft, faAngleRight, faAngleUp, faBan, faMinus, faPlus, faTimes, faUser } from '@fortawesome/free-solid-svg-icons';
 import { useCookies } from 'react-cookie';
 import CreatePatient from '../CreatePatient/CreatePatient';
+import * as React from 'react';
 
 const Appointments = ({ data }) => {
 
@@ -50,6 +51,7 @@ const Appointments = ({ data }) => {
     const [appointmentNotes, setAppointmentNotes] = useState("");
     const [appointmentPatientsList, setAppointmentPatientsList] = useState([]);
     const [appointmentPatientPhoneNumber, setAppointmentPatientPhoneNumber] = useState("");
+    const [activeResizing, setActiveResizing] = useState(false);
     
     const [phoneNumberReadOnly, setPhoneNumberReadOnly] = useState(true);
     const [patientSaved, setPatientSaved] = useState(true);
@@ -70,44 +72,48 @@ const Appointments = ({ data }) => {
     const endHour = 18;
     const gaps = 4;
     const minutesPerGap = 60 / gaps;
-    const doctors = data.user.type.toLowerCase() === "doctor" ? [data.user.name] : null;
+    console.log(data.doctors);
+    const doctors = data.doctors;
+    console.log(doctors);
     for (let hour = startHour; hour <= endHour; hour++)  {
         hours.push(hour);   
     }
 
-    const getSchedule = (dayFormat) => {
+    const getSchedule = (dayFormat, doctorColor) => {
         const gapsArr = [];
    
         for (let gap = 0; gap < gaps; gap++)
             gapsArr.push(gap);
 
         return hours.map((hour, idx) => {
-            return (<div className={`schedule-hour ${idx === hours.length - 1 ? "inactive" : ""}`} key={idx} ref={!scheduleRef.current && idx === 0 ? scheduleRef : null}>
-                {gapsArr.map((gap, gapIdx) => (
-                    <div className="gap" 
-                        key={gapIdx} 
-                        id={(idx * gaps + gapIdx).toString()}
-                       
-                        starthour={idx + startHour < 10 ? `0${idx + startHour}` : (idx + startHour).toString()}
-                        startminutes={gapIdx * minutesPerGap < 10 ? `0${gapIdx * minutesPerGap}` : gapIdx * minutesPerGap < 60 ? (gapIdx * minutesPerGap).toString() : "0"}
-                        endhour={(gapIdx + 1) * minutesPerGap < 60 ? (idx + startHour < 10 ? `0${idx + startHour}` : (idx + startHour).toString()) : (idx + startHour + 1 < 10 ? `0${idx + startHour + 1}` : (idx + startHour + 1).toString())}
-                        endminutes={(gapIdx + 1) * minutesPerGap < 10 ? `0${(gapIdx + 1) * minutesPerGap}` : (gapIdx + 1) * minutesPerGap < 60 ? ((gapIdx + 1) * minutesPerGap).toString() : "0"}
-                        day={dayFormat.toString()}
-                        ref={gapsRef} 
-                        onMouseDown={(e) => initiateAppointment(e, idx, gapIdx)}
-                        onMouseMove={(e) => moveAppointment(e)}
-                        onMouseUp={(e) => createAppointment(e)}
-                        onTouchStart={e => initiateAppointment(e, idx, gapIdx)}
-                        onTouchMove={e => moveAppointment(e)}
-                        onTouchEnd={e => createAppointment(e)}
-                    >
-                        {firstElement?.getAttribute('id') === (idx * gaps + gapIdx).toString() && 
-                        firstElement?.getAttribute('day') === dayFormat.toString() &&
-                            <p className='appointment-interval'>{appointmentStartHour}:{appointmentStartMinutes < 10 ? `0${appointmentStartMinutes}` : appointmentStartMinutes} - {appointmentEndHour}:{appointmentEndMinutes < 10 ? `0${appointmentEndMinutes}` : appointmentEndMinutes}</p>
-                        }
-                    </div>
-                ))}
-            </div>);
+            return (
+                <div className={`schedule-hour ${idx === hours.length - 1 ? "inactive" : ""}`} key={idx} ref={!scheduleRef.current && idx === 0 ? scheduleRef : null}>
+                    {gapsArr.map((gap, gapIdx) => (
+                        <div className="gap" 
+                            key={gapIdx} 
+                            id={(idx * gaps + gapIdx).toString()}
+                            style={{ "--doctor-color-css": doctorColor }}
+                            starthour={idx + startHour < 10 ? `0${idx + startHour}` : (idx + startHour).toString()}
+                            startminutes={gapIdx * minutesPerGap < 10 ? `0${gapIdx * minutesPerGap}` : gapIdx * minutesPerGap < 60 ? (gapIdx * minutesPerGap).toString() : "0"}
+                            endhour={(gapIdx + 1) * minutesPerGap < 60 ? (idx + startHour < 10 ? `0${idx + startHour}` : (idx + startHour).toString()) : (idx + startHour + 1 < 10 ? `0${idx + startHour + 1}` : (idx + startHour + 1).toString())}
+                            endminutes={(gapIdx + 1) * minutesPerGap < 10 ? `0${(gapIdx + 1) * minutesPerGap}` : (gapIdx + 1) * minutesPerGap < 60 ? ((gapIdx + 1) * minutesPerGap).toString() : "0"}
+                            day={dayFormat.toString()}
+                            ref={gapsRef} 
+                            onMouseDown={(e) => initiateAppointment(e, idx, gapIdx)}
+                            onMouseMove={(e) => moveAppointment(e, doctorColor)}
+                            onMouseUp={(e) => createAppointment(e)}
+                            onTouchStart={e => initiateAppointment(e, idx, gapIdx)}
+                            onTouchMove={e => moveAppointment(e, doctorColor)}
+                            onTouchEnd={e => createAppointment(e)}
+                        >
+                            {firstElement?.getAttribute('id') === (idx * gaps + gapIdx).toString() && 
+                            firstElement?.getAttribute('day') === dayFormat.toString() && !activeResizing &&
+                                <p className='appointment-interval'>{appointmentStartHour}:{appointmentStartMinutes < 10 ? `0${appointmentStartMinutes}` : appointmentStartMinutes} - {appointmentEndHour}:{appointmentEndMinutes < 10 ? `0${appointmentEndMinutes}` : appointmentEndMinutes}</p>
+                            }
+                        </div>
+                    ))}
+                </div>
+            );
         });
     };
 
@@ -116,7 +122,10 @@ const Appointments = ({ data }) => {
         if (date.getFullYear() < new Date().getFullYear() || date.getMonth() < new Date().getMonth() || date.getDate() < new Date().getDate()) return;
         if (e.button === 2) return; // check for right click
         if (modifyEvent) return;
-        if (editing) e.target = e;
+        if (editing) {
+            e.target = e;
+            setActiveResizing(true);
+        }
         
         const target = e.target?.classList.contains("gap") ? e.target : e.target.parentElement;
         if (target.classList.contains('highlight') && !editing) return;
@@ -125,17 +134,22 @@ const Appointments = ({ data }) => {
         setStartEvent(true);
         setStartPosition(e.clientY);
         setFirstElement(target);
+      
+        setLastElement(target);
+        if (editing) return;
         setAppointmentStartHour(currHour + startHour);
         setAppointmentStartMinutes(gap * minutesPerGap);
         setAppointmentEndMinutes((gap + 1) * minutesPerGap >= 60 ? 0 : (gap + 1) * minutesPerGap);
         setAppointmentEndHour((gap + 1) * minutesPerGap >= 60 ? currHour + startHour + 1 : currHour + startHour);
-        setLastElement(target);
+ 
     };
 
-    const moveAppointment = e => {
-      
+    const moveAppointment = (e, doctorColor, editing = false, gap = null) => {
+        console.log(editing);
+        
         if (!startEvent || modifyEvent) return;
         if (startPosition >= e.clientY) return;
+       
         console.log(e.target);
         if (e.target.classList.contains("highlight") && parseInt(e.target.getAttribute('id')) > parseInt(lastElement.getAttribute('id'))) return;
         if (e.target.parentElement.classList.contains("inactive")) return;
@@ -143,8 +157,11 @@ const Appointments = ({ data }) => {
         const currPos = e.target.getBoundingClientRect();
         console.log(firstElement);
         if (!firstElement.classList.contains('highlight')) firstElement.classList.add("highlight");
-        setAppointmentEndHour(e.target.getAttribute('endhour'));
-        setAppointmentEndMinutes(e.target.getAttribute('endminutes'));
+        if (!editing) {
+            setAppointmentEndHour(e.target.getAttribute('endhour'));
+            setAppointmentEndMinutes(e.target.getAttribute('endminutes'));
+        } 
+        
         
         if (parseInt(e.target.getAttribute('id')) < parseInt(lastElement.getAttribute('id'))) {
             for (let i = parseInt(e.target.getAttribute('id')) + 1; i <= parseInt(lastElement.getAttribute('id')); i++) {
@@ -158,6 +175,13 @@ const Appointments = ({ data }) => {
                 const child = lastElement.parentElement.parentElement.querySelector(`[id="${i.toString()}"]`);
                 console.log(i, lastElement.parentElement.parentElement.querySelector(`[id="${i}"]`) );
                 child.classList.add("highlight");
+                if (editing) {
+                    console.log(gap);
+                    const paragraphs = gap.querySelectorAll(".appointment-interval");
+                    const appointmentHours = paragraphs[0];
+                    const startHour = appointmentHours.split("-")[0];
+                    paragraphs[0].innerText = `${startHour}- ${e.target.getAttribute('endhour')}:${e.target.getAttribute('endminutes')}`;
+                }
             }
         }
 
@@ -174,6 +198,13 @@ const Appointments = ({ data }) => {
         setStartPosition(false);
         
         // Send appointment to database
+    };
+
+    const resizeAppointment = (e) => {
+        if (!startEvent || modifyEvent) return;
+        setActiveResizing(false);
+        setStartEvent(false);
+        setStartPosition(false);
     };
 
     const sendAppointment = async () => {
@@ -226,7 +257,6 @@ const Appointments = ({ data }) => {
         while (currentId <= finalId) {
             const currentElement = document.querySelector(`.gap[id="${currentId.toString()}"][day="${currentDay}"]`)
             currentElement.classList.remove("highlight");
-        
             currentId++;
         }
         
@@ -334,6 +364,7 @@ const Appointments = ({ data }) => {
         const currentGaps = document.querySelectorAll('.gap');
 
         currentGaps.forEach(gap => {
+            
             gap.classList.remove("highlight");
             gap.classList.remove("created");
             gap.classList.remove("resizeable");
@@ -500,9 +531,12 @@ const Appointments = ({ data }) => {
                 initiateAppointment(currentGaps[startIdx], appointmentHourIdx, appointmentGapIdx, true);
             });
 
-            currentGaps[endIdx].addEventListener("mousemove", e => moveAppointment(e));
+            currentGaps[endIdx].addEventListener("mousemove", e => {
+                
+                moveAppointment(e, true, currentGaps[startIdx]);
+            });
 
-            currentGaps[endIdx].addEventListener("mouseup", e => createAppointment(e));
+            currentGaps[endIdx].addEventListener("mouseup", e => resizeAppointment(e));
 
             const activeGaps = [...currentGaps].filter(currentGap => currentGap.classList.contains("highlight") && currentGap.classList.contains("created"));
 
@@ -654,7 +688,7 @@ const Appointments = ({ data }) => {
         return currWeek;
     };
 
-    const getMonthData = () => {
+    const getMonthData = (doctorColor) => {
         const daysInMonth = new Date(date.getFullYear(), date.getMonth(), 0).getDate();
         console.log(new Date(date.getFullYear(), date.getMonth(), 0));
         const dayComponents = [];
@@ -679,7 +713,7 @@ const Appointments = ({ data }) => {
                     }}>{currDay}</p>
                     <div className="month-appointments">
                         {currAppointments.map((appointment, idx) => (
-                            <div className="month-appointment" onClick={() => {
+                            <div style={{ "--doctor-color-css": doctorColor }} className="month-appointment" onClick={() => {
                                 setActiveEditAppointment(true);
                                 setAppointmentTitle(appointment.title);
                                 setAppointmentPatient(`${JSON.parse(appointment.patients)[0].firstname} ${JSON.parse(appointment.patients)[0].lastname}`);
@@ -705,7 +739,7 @@ const Appointments = ({ data }) => {
         return dayComponents;
     };
 
-    const getYearData = () => {
+    const getYearData = (doctorColor) => {
         return months.map((currMonth, monthIdx) => {
             const daysInMonth = new Date(date.getFullYear(), monthIdx + 1, 0).getDate();
             const currDays = [];
@@ -879,13 +913,13 @@ const Appointments = ({ data }) => {
                                 {days.map((day, dayIdx) => (
                                     filterActive === 0 ? (
                                         <div className="day-container" key={dayIdx}>
-                                            {getSchedule(day)}
+                                            {getSchedule(day, doctor.color)}
                                         </div>
                                     ) : filterActive === 1 || filterActive === 2 ? (
                                         <div key={dayIdx} className="day-of-week-container">
                                             <h2>{`${daysOfWeek[day.getDay()]} ${day.getDate()}`}</h2>
                                             <div className="day-container" >
-                                                {getSchedule(day)}
+                                                {getSchedule(day, doctor.color)}
                                             </div>
                                         </div>
                                     ) : null
@@ -894,10 +928,10 @@ const Appointments = ({ data }) => {
                                 
                             </div> : filterActive === 3 ?
                             <div className="month-schedule" key={idx} ref={ref => doctorRef.current[idx] = ref}>
-                                {getMonthData()}
+                                {getMonthData(doctor.color)}
                             </div> : filterActive === 4 ?
                             <div className="year-schedule" key={idx} ref={ref => doctorRef.current[idx] = ref}>
-                                {getYearData()}
+                                {getYearData(doctor.color)}
                             </div> : null
                         ))}
                     </div>
