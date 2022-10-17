@@ -231,7 +231,7 @@ exports.checkPatient = async (req, res, next) => {
     try {
         let sql = "SELECT * FROM ?? WHERE _id = ?";
         const patient = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.patients`, patientId]);
-        if (!patient) return res.status(200).json({ success: false });
+        if (!await patient) return res.status(200).json({ success: false });
         res.status(200).json({ success: true });
     } catch (e) {
         console.log(e);
@@ -397,7 +397,7 @@ exports.removePatient = async (req, res, next) => {
         let sql = "DELETE FROM ?? WHERE _id = ?";
         const deletedPatient = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.patients`, patientId]);
         
-        if (!deletedPatient) return new ErrorResponse("An error occured!", 404);
+        if (!await deletedPatient) return new ErrorResponse("An error occured!", 404);
         
         res.status(200).json({ success: true, message: { en: "Patient removed successfully!", ro: "Pacientul a fost sters cu succes!" }});
         
@@ -410,12 +410,12 @@ exports.removePatient = async (req, res, next) => {
 exports.getDoctors = async (req, res, next) => {
     const { _id } = req.body;
     try {
-        let sql = "SELECT * FROM ?? WHERE type = ?";
-        const doctors = db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.users`, "Doctor"]);
+        let sql = "SELECT * FROM ??";
+        const doctors = db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.doctors`]);
    
-        res.status(200).json({ success: true, doctors: await doctors });
+        if (await doctors) res.status(200).json({ success: true, doctors: await doctors });
     } catch (e) {
-        res.status(404).json({ success: false, message: "An error occured!" });
+        res.status(404).json({ success: false, message: { en: "An error occured!", ro: "A aparut o eroare!" }});
     }
 };
 
@@ -439,9 +439,10 @@ exports.getPatients = async (req, res, next) => {
     try {
         let sql = "SELECT * FROM ??";
         const patients = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.patients`]);
-        if (!patients || !patients.length) return res.status(200).json({ success: false, message: { en: "No patient was found!", ro: "Nu a fost gasit niciun pacient!" }});
-        res.status(200).json({ success: true, patients });
+        if (!await patients || !await patients.length) return res.status(200).json({ success: false, message: { en: "No patient was found!", ro: "Nu a fost gasit niciun pacient!" }});
+        res.status(200).json({ success: true, patients: await patients });
     } catch (e) {
+        console.log(e);
         res.status(404).json({ success: false, message: "An error occured." });
     }
 };
@@ -458,20 +459,18 @@ exports.searchPatient = async (req, res, next) => {
         let sql = "SELECT * FROM ??";
         const totalPatients = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.patients`]);
         
-        const regex = new RegExp("^" + searchQuery, "i");
         const searchedPatients = await totalPatients.filter((patient, idx) => {
-            console.log("REGEX", patient.phone.search(searchQuery));
-            return patient.firstname.toLowerCase().search(searchQuery.toLowerCase()) !== -1 ||
-            patient.lastname.toLowerCase().search(searchQuery.toLowerCase()) !== -1 ||
-            patient.phone.toString().toLowerCase().search(searchQuery.toLowerCase()) !== -1 ||
-            (patient.username && patient.username.toLowerCase().search(searchQuery.toLowerCase()) !== -1) ||
-            (patient.email && patient.email.toLowerCase().search(searchQuery.toLowerCase()) !== -1) ||
-            (patient.country && patient.country.toLowerCase().search(searchQuery.toLowerCase()) !== -1)||
-            (patient.city && patient.city.toLowerCase().search(searchQuery.toLowerCase()) !== -1) ||
-            (patient.county && patient.county.toLowerCase().search(searchQuery.toLowerCase()) !== -1) ||
-            (patient.address && patient.address.toLowerCase().search(searchQuery.toLowerCase()) !== -1) ||
-            (patient.fileNumber && patient.fileNumber.toString().toLowerCase().search(searchQuery.toLowerCase()) !== -1) ||
-            (patient.cnp && patient.PIC.toString().toLowerCase().search(searchQuery.toLowerCase()) !== -1);
+            return  (patient.firstname.toLowerCase().search(searchQuery.toLowerCase()) !== -1 || patient.firstname.toLowerCase().includes(searchQuery.toLowerCase())) ||
+                    (patient.lastname.toLowerCase().search(searchQuery.toLowerCase()) !== -1 || patient.lastname.toLowerCase().includes(searchQuery.toLowerCase())) ||
+                    (patient.phone.toString().toLowerCase().search(searchQuery.toLowerCase()) !== -1 || patient.phone.toString().toLowerCase().includes(searchQuery.toLowerCase())) ||
+                    (patient.username && (patient.username.toLowerCase().search(searchQuery.toLowerCase()) !== -1 || patient.username.toLowerCase().includes(searchQuery.toLowerCase()))) ||
+                    (patient.email && (patient.email.toLowerCase().search(searchQuery.toLowerCase()) !== -1 || patient.email.toLowerCase().includes(searchQuery.toLowerCase()))) ||
+                    (patient.country && (patient.country.toLowerCase().search(searchQuery.toLowerCase()) !== -1 || patient.country.toLowerCase().includes(searchQuery.toLowerCase()))) ||
+                    (patient.city && (patient.city.toLowerCase().search(searchQuery.toLowerCase()) !== -1 || patient.city.toLowerCase().includes(searchQuery.toLowerCase()))) ||
+                    (patient.county && (patient.county.toLowerCase().search(searchQuery.toLowerCase()) !== -1 || patient.county.toLowerCase().includes(searchQuery.toLowerCase()))) ||
+                    (patient.address && (patient.address.toLowerCase().search(searchQuery.toLowerCase()) !== -1 || patient.address.toLowerCase().includes(searchQuery.toLowerCase()))) ||
+                    (patient.fileNumber && (patient.fileNumber.toString().toLowerCase().search(searchQuery.toLowerCase()) !== -1 || patient.fileNumber.toString().toLowerCase().includes(searchQuery.toLowerCase()))) ||
+                    (patient.cnp && (patient.PIC.toString().toLowerCase().search(searchQuery.toLowerCase()) !== -1 || patient.PIC.toString().toLowerCase().includes(searchQuery.toLowerCase())));
         });
         console.log(await searchedPatients);
         if (!await searchedPatients || !await searchedPatients.length > 0) return res.status(200).json({ success: false, message: { en: "No results", ro: "Niciun rezultat" } });
@@ -482,12 +481,135 @@ exports.searchPatient = async (req, res, next) => {
     }
 };
 
-exports.getStatisticsData = async (req, res, next) => {
-    const { _id } = req.body; 
+// Doctors
+
+exports.createDoctor = async (req, res, next) => {
+    const { organisationId, firstname, lastname, email, phone, color, multipleSchedules, activeDoctor } = req.body;
+    try {
+        let sql = "INSERT INTO ?? (_id, firstname, lastname, email, phone, color, schedule, multiple_schedules, active, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        const _id = generateId(25);
+        const result = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.doctors`, _id, firstname, lastname, email, phone, color.hex, JSON.stringify([]), multipleSchedules, activeDoctor, new Date()]);
+        if (await result) return res.status(201).json({ success: true, message: { en: "Doctor created successfully!", ro: "Doctor a fost adaugat cu succes!" } });
+    } catch (e) {
+        console.log(e);
+        res.status(404).json({ success: false, message: { en: "An error occurred!", ro: "A aparut o eroare!" } });
+    }
+};
+
+exports.removeDoctor = async (req, res, next) => {
+    const { organisationId, doctorId } = req.body;
+    try {
+        let sql = "DELETE FROM ?? WHERE _id = ?";
+        const result = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.doctors`, doctorId]);
+        if (await result) return res.status(200).json({ success: true, message: { en: "Doctor removed successfully!", ro: "Doctorul a fost sters cu succes!" } })
+    } catch (e) {
+        console.log(e);
+    }
+};
+
+exports.editDoctor = async (req, res, next) => {
+    const { organisationId, doctorId, firstname, lastname, email, phone, color, multipleSchedules, activeDoctor} = req.body;
+    try {
+        let sql = "UPDATE ?? ";
+        sql += 'SET firstname = ?, ';
+        sql += 'lastname = ?, ';
+        sql += 'email = ?, ';
+        sql += 'phone = ?, ';
+        sql += 'color = ?, ';
+        sql += 'multiple_schedules = ?, ';
+        sql += 'active = ? ';
+        sql += 'WHERE doctorId = ?';
+
+        const result = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.doctors`, _id, firstname, lastname, email, phone, color.hex, multipleSchedules, activeDoctor, doctorId]);
+        if (await result) return res.status(200).json({ success: true, message: { en: "Doctor edited successfully!", ro: "Doctor a fost editat cu succes!" } });
+    } catch (e) {
+        console.log(e);
+        res.status(404).json({ success: false, message: { en: "An error occurred!", ro: "A aparut o eroare!" } });
+    }
+};
+
+exports.searchDoctors = async (req, res, next) => {
+    const { organisationId, searchQuery } = req.body;
+    try {
+        let sql = "SELECT * FROM ??";
+        const doctors = await sql.query(`${process.env.DB_PREFIX}org_${organisationId}.doctors`);
+
+        const filteredDoctors = await doctors.filter((doctor, idx) => {
+            return  (doctor.firstname.toLowerCase().search(searchQuery.toLowerCase()) !== -1 || doctor.firstname.toLowerCase().includes(searchQuery.toLowerCase())) ||
+                    (doctor.lastname.toLowerCase().search(searchQuery.toLowerCase()) !== -1 || doctor.lastname.toLowerCase().includes(searchQuery.toLowerCase())) || 
+                    (doctor.email.toLowerCase().search(searchQuery.toLowerCase()) !== -1 || doctor.email.toLowerCase().includes(searchQuery.toLowerCase())) ||
+                    (doctor.phone.toLowerCase().search(searchQuery.toLowerCase()) !== -1 || doctor.phone.toLowerCase().includes(searchQuery.toLowerCase())) ||
+                    (doctor.color.toLowerCase().search(searchQuery.toLowerCase()) !== -1 || doctor.color.toLowerCase().includes(searchQuery.toLowerCase())) ||
+                    (doctor.id.toString().search(searchQuery.toLowerCase()) !== -1 || doctor.id.toString().includes(searchQuery.toLowerCase()) );
+        });
+        
+
+        if (!await filteredDoctors || !await filteredDoctors.length > 0) return res.status(200).json({ success: false, message: { en: "No results found!", ro: "Nu a fost gasit niciun rezultat!" } });
+        res.status(200).json({ success: true, doctors: await filteredDoctors });
+        
+    } catch (e) {
+        console.log(e);
+        res.status(404).json({ success: false, message: { en: "An error occurred!", ro: "A aparut o eroare!" } });
+    };
+};
+
+// Create a schedule for doctor
+
+exports.createDoctorSchedule = async (req, res, next) => {
+
+    const { organisationId, doctorId, startHour, startMinutes, endHour, endMinutes, date, repeat, dayNumber } = req.body;
+    try {
+        let sql = "SElECT * FROM ?? WHERE _id = ?";
+        const doctors = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.doctors`, doctorId]);
+        if (await doctors.length !== 1) return res.status(404).json({ success: false, message: { en: "Doctor doesn't exist!", ro: "Doctorul nu exista!"} });
+        const schedules = JSON.parse(await doctors[0].schedules);
+
+        let scheduleId = generateId(25);
+        while (inArrId(schedules, scheduleId, "scheduleId")) scheduleId = generateId(25);
+        
+        schedules.push({
+            startHour,
+            startMinutes,
+            endHour,
+            endMinutes,
+            date,
+            repeat,
+            dayNumber,
+            scheduleId
+        });
+
+        sql = "UPDATE ?? SET schedule = ? WHERE _id = ?";
+        await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.doctors`, JSON.stringify(schedules), doctorId]);
+        return res.status(201).json({ success: true, message: { en: "Schedule modified successfully!", ro: "Programul a fost modificat cu succes!" } });
     
+    } catch (e) {
+        console.log(e);
+        res.status(404).json({ success: false, message: { en: "An error occurred!", ro: "A aparut o eroare!" } });
+    }
+};
+
+// Remove schedule
+
+exports.removeDoctorSchedule = async (req, res, next) => {
+    const { organisationId, doctorId, scheduleId } = req.body;
+    try {
+        let sql = "";
+    } catch (e) {
+        console.log(e);
+        res.status(404).json({ success: false, message: { en: "An error occurred!", ro: "A aparut o eroare!" } });
+    }
+};
+
+// Edit schedule
+
+exports.editDoctorSchedule = async (req, res, next) => {
 
 };
 
+exports.getStatisticsData = async (req, res, next) => {
+    const { _id } = req.body; 
+    
+};
 
 const encryptData = (data) => {
 
@@ -526,4 +648,8 @@ const getWeekDays = (date) => {
 
 const inArr = (arr, number) => {
     return arr.some(day => day.getDate() === Number(number));
+};
+
+const inArrId = (arr, id, key) => {
+    return arr.some(element => element[key] === id);
 };

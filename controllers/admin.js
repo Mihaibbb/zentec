@@ -5,7 +5,7 @@ const generateId = require("../functions/generateId");
 
 
 exports.createAdmin = async (req, res, next) => {
-    const { username, name, email, password } = req.body;
+    const { username, firstname, lastname, email, password } = req.body;
     const adminId = generateId(25);
     try {
         const result = await db.query('USE ??', [`${process.env.DB_PREFIX}admins`]);
@@ -13,8 +13,8 @@ exports.createAdmin = async (req, res, next) => {
 
         const salt = await bcrypt.genSalt(parseInt(process.env.SALT));
         const hashedPassword = await bcrypt.hash(password, salt);
-        let sql = 'INSERT INTO ?? (_id, name, username, email, password) VALUES (?, ?, ?, ?, ?)';
-        let placeholders = ['users', adminId, name, username, email, hashedPassword];
+        let sql = 'INSERT INTO ?? (_id, firstname, lastname, username, email, password) VALUES (?, ?, ?, ?, ?, ?)';
+        let placeholders = ['users', adminId, firstname, lastname, username, email, hashedPassword];
         const insertAdmin = await db.query(sql, placeholders);
         
         if (insertAdmin) res.status(200).json({ created: true });

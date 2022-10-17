@@ -3,14 +3,15 @@ const bcrypt = require("bcryptjs");
 const db = require("../db");
 
 exports.login = async (req, res, next) => {
-    const { email, password, rememberMe } = req.body;
+    const { username, password, rememberMe } = req.body;
     console.log("here");
     try {
         const dbs = await db.query("SHOW DATABASES");
         const organisationsUnfiltered = await dbs.map(currDb => {
             if (currDb.Database.search(`${process.env.DB_PREFIX}org_`) !== -1) return currDb.Database;
-            else return null;
+            return null;
         });
+
         const organisations = await organisationsUnfiltered.filter(currDb => currDb !== null);
         console.log(organisations);
         let user, organisationName, isUser;
@@ -18,7 +19,7 @@ exports.login = async (req, res, next) => {
         await organisations && await organisations.length > 0 && await organisations.forEach(organisation => {
             (async () => {
                 
-                const selectedUsers = await db.query('SELECT * FROM ?? WHERE email = ?', [`${organisation}.users`, email]);
+                const selectedUsers = await db.query('SELECT * FROM ?? WHERE username = ?', [`${organisation}.users`, username]);
                 const detailsArr = await db.query("SELECT * FROM ??", `${organisation}.details`);
                 const details = await detailsArr[0];
                 const currUser = await selectedUsers && await selectedUsers[0];
@@ -46,7 +47,7 @@ exports.login = async (req, res, next) => {
         if (!user) {
             await db.query("USE ??", [`${process.env.DB_PREFIX}admins`]);
             const admins = await db.query("SELECT * FROM ??", ["users"]);
-            const admin = await admins.find(currAdmin => currAdmin.email === email);
+            const admin = await admins.find(currAdmin => currAdmin.username === username);
             console.log("The admin", admin);
             if (admin && admin.password && await bcrypt.compare(password, await admin.password)) {
                 user = admin;
@@ -55,17 +56,15 @@ exports.login = async (req, res, next) => {
         }
        
         if (!user && !organisationName) {
-            res.status(200).json({ success: false, message: "Email or password is incorrect" });
+            res.status(200).json({ success: false, message: {en: "Email or password is incorrect!", ro: "Email-ul sau parola sunt incorecte!" }});
             return;
         }
            
         
-
         const userData = {
-            name: user.name, 
+            name: `${user.firstname} ${user.lastname}`, 
             username: user.username, 
-            email: user.email,
-            type: user.type
+            email: user?.email
         }; 
         
         console.log(userData);
@@ -74,6 +73,7 @@ exports.login = async (req, res, next) => {
             
     } catch (e) {
         console.log(e);
+        res.status(404).json({ success: false, message: { en: "An error occured!", ro: "A aparut o eroare!" } });
     }
 };
 
@@ -96,13 +96,10 @@ exports.loginRemember = async (req, res, next) => {
                 const { _id, name, date } = await row1;
                 const schedules = await db.query("SELECT * FROM ??", [`${organisation}.schedules`]);
                 const patients = await db.query("SELECT * FROM ??", [`${organisation}.patients`]);
+                const doctors = await db.query("SELECT * FROM ??", [`${organisation}.doctors`]);
                 
                 const currUser = users && users.find(user => {
                     return user.userId.toString() === userId.toString() && user.password === hashedPassword;
-                });
-
-                const doctors = users && users.filter(user => {
-                    return user.type.toLowerCase() === "doctor";
                 });
     
                 console.log("USER", currUser);
@@ -110,8 +107,6 @@ exports.loginRemember = async (req, res, next) => {
                     const userData = {
                         name: currUser.name, 
                         username: currUser.username, 
-                        email: currUser.email,
-                        type: currUser.type,
                         userId
                     };
     
@@ -119,10 +114,13 @@ exports.loginRemember = async (req, res, next) => {
                         name: name,
                         schedules: await schedules || [],
                         patients: await patients,
+                        users: await users,
+                        doctors: await doctors,
+                        details: await details,
                         _id: _id
                     };
     
-                    return res.status(200).json({organisation: organisationData, user: userData, doctors: doctors, success: true, admin: false});
+                    return res.status(200).json({ organisation: organisationData, user: userData, success: true, admin: false });
                   
                 }   
             })();
@@ -133,12 +131,12 @@ exports.loginRemember = async (req, res, next) => {
         const admin = await admins.find(currAdmin => currAdmin._id === userId && currAdmin.password === hashedPassword);
         if (admin) {
             const adminData = {
-                name: admin.name,
+                name: `${admin.firstname} ${admin.lastname}`,
                 email: admin.email,
                 username: admin.username
             };
             console.log("admin data ", adminData);
-            return res.status(200).json({admin: adminData, success: true, admin: true });
+            return res.status(200).json({ admin: adminData, success: true, admin: true });
         }
     } catch (e) {
         console.log(e);
@@ -167,7 +165,7 @@ exports.updatePassword = async (req, res, next) => {
         const newPasswordHashed = await bcrypt.hash(newPassword, process.env.SALT);
         let sql = "UPDATE ?? SET password = ? WHERE userId = ?";
         const updateUser = await db.query(sql, ['users', newPasswordHashed, userId]); 
-        if (!updateUser) return res.status(200).json({ success: false, message: { en: "The password could not be updated", ro: "Parola nu a putut fi actualizata" } });
+        if (!updateUser) return res.status(200).json({ success: false, message: { en: "The password could not be updated!", ro: "Parola nu a putut fi actualizata!" } });
         
         res.status(200).json({ success: true, message: { en: "Password updated successfully!", ro: "Parola a fost actualizata cu succes!" } });
     } catch (e) {

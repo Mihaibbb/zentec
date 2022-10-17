@@ -89,6 +89,7 @@
     border-radius: 24px;
     cursor: pointer;
     font-size: 24px;
+    font-family: "Source Sans Pro";
     color: var(--text-color);
     transition: all 400ms ease-in-out;
 }

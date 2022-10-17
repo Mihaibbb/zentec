@@ -14,7 +14,6 @@ const Patients = ({ data }) => {
     const navigation = useNavigate();
     const location = useLocation();
     const optionsRef = useRef([]);
-
     const [cookies, setCookie] = useCookies();
 
     // const patients = [
@@ -136,9 +135,9 @@ const Patients = ({ data }) => {
 
             const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/search-patient`, options);
             const response = await request.json();
-            console.log(response);
+          
             if (response.success) setPatients(response.patients || []);
-            
+            else setPatients([]);
         })();
     }, [query]);
 
@@ -151,7 +150,7 @@ const Patients = ({ data }) => {
                 {location.state?.message && <div className="message">{location.state?.message[cookies['language']]}</div>}
                 <h2 className="title">{cookies.language === "en" ? "Patients" : "Pacienti"}</h2>
 
-                {patients.length > 0 && <div className="search-container">
+                {patients && <div className="search-container">
                     <input type="text" value={query} onChange={e => setQuery(e.target.value)} placeholder={cookies.language === "en" ? "Search patient..." : "Cauta pacient..."} />
                     <FontAwesomeIcon icon={faSearch} className="search-icon" />
                 </div>}

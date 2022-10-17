@@ -4,7 +4,7 @@ const bcrypt = require("bcryptjs");
 const db = require("../db");
 
 exports.createOrganisation = async (req, res, next) => {
-    const { name, adminId, orgId } = req.body;
+    const { name, adminId, orgId, smsLimit } = req.body;
    
     try {
         
@@ -15,9 +15,11 @@ exports.createOrganisation = async (req, res, next) => {
         
         // if (!createNewOrg) return res.status(404).json({ success: false, message: { en: "This organisation could not be created!", ro: "Aceasta organizatie nu poate fi creata!" } });
         // Details table 
+
         let createTableSql = 'CREATE TABLE ?? ( ';
         createTableSql += 'name varchar(128) not null, ';
         createTableSql += 'date date not null, ';
+        createTableSql += 'sms_limit int(10)';
         createTableSql += '_id varchar(25) not null )';
 
         await db.query(createTableSql, ["details"]);
@@ -67,28 +69,39 @@ exports.createOrganisation = async (req, res, next) => {
 
         // Users table
         
-
         createTableSql = 'CREATE TABLE ?? ( ';
         createTableSql += 'userId varchar(25) unique not null, ';
         createTableSql += 'name varchar(256) not null, ';
         createTableSql += 'username varchar(256) unique not null,';
-        createTableSql += 'email varchar(256) unique not null, ';
         createTableSql += 'password varchar(256) not null, ';
         createTableSql += 'date date not null, ';
-        createTableSql += 'profileImage json, ';
-        createTableSql += 'type varchar(24) not null, ';
-        createTableSql += "status varchar(12) default 'Offline', ";
-        createTableSql += 'color varchar(16), ';
-        createTableSql += 'startHour int(2) not null default 9, ';
-        createTableSql += 'endHour int(2) not null default 17 )';
+        createTableSql += 'profileImage json )';
 
         await db.query(createTableSql, ['users']);
 
+        // Doctors table
+
+        createTableSql = 'CREATE TABLE ?? ( ';
+        createTableSql += 'id int(11) auto_increment primary key not null, ';
+        createTableSql += '_id varchar(25) unique not null, ';
+        createTableSql += 'firstname varchar(128) not null, ';
+        createTableSql += 'lastname varchar(128) not null, ';
+        createTableSql += 'email varchar(128) not null, ';
+        createTableSql += 'phone varchar(15) not null, ';
+        createTableSql += 'color varchar(16) not null, ';
+        createTableSql += 'schedules json not null, ';
+        createTableSql += 'multiple_schedules boolean not null, ';
+        createTableSql += 'active boolean not null, ';
+        createTableSql += 'date date not null )';
+
+
+        await db.query(createTableSql, ['doctors']);
+
         // Insert into details a row of organisation's details
 
-        let sql = 'INSERT INTO ?? (name, date, _id) VALUES (?, ?, ?)';
-        const result = await db.query(sql, ['details', name, new Date(), orgId]);
-        if (result) res.status(201).json({ message: { en: "Organisation created successfully!", ro: "Organizatia a fost creata cu succes!" }, success: true });
+        let sql = 'INSERT INTO ?? (name, date, sms_limit, _id) VALUES (?, ?, ?, ?)';
+        const result = await db.query(sql, ['details', name, new Date(), smsLimit, orgId]);
+        if (await result) res.status(201).json({ message: { en: "Organisation created successfully!", ro: "Organizatia a fost creata cu succes!" }, success: true });
     } catch (e) {
         console.log(e);
         res.status(404).json({ success: false, message: { en: "An error occured!", ro: "A aparut o eroare!" } });
@@ -120,7 +133,7 @@ exports.getOrganisationsData = async (req, res, next) => {
         let sql = "SELECT * FROM ?? WHERE _id = ?";
         const isAdmin = await db.query(sql, [`${process.env.DB_PREFIX}admins.users`, adminId]);
         if (!isAdmin.length) return new ErrorResponse("You cannot add an organisation if you are not an admin!", 404, res);
-        sql = "SHOW DATABASES;"
+        sql = "SHOW DATABASES;";
         const currDbs = await db.query(sql);
         const currOrganisations = await currDbs.filter(currDb => currDb.Database.search(`${process.env.DB_PREFIX}org_`) !== -1);
         const organisations = await Promise.all(await currOrganisations.map(async org => {
@@ -133,13 +146,15 @@ exports.getOrganisationsData = async (req, res, next) => {
             const date = await detail.date;
             const schedules = await db.query("SELECT * FROM ??", [`${org.Database}.schedules`]);
             const patients = await db.query("SELECT * FROM ??", [`${org.Database}.patients`]);
+            const doctors = await db.query("SELECT * FROM ??", [`${org.Database}.doctors`]);
             console.log("THIS ONE", {
                 users: await users,
                 _id: await _id,
                 name: await name,
                 date: await date,
                 schedules: await schedules,
-                patients: await patients
+                patients: await patients,
+                doctors: await doctors
             });
 
             return {
@@ -148,20 +163,20 @@ exports.getOrganisationsData = async (req, res, next) => {
                 name: await name,
                 date: await date,
                 schedules: await schedules,
-                patients: await patients
+                patients: await patients,
+                doctors: await doctors
             };
         }));
 
-        console.log(await organisations);
-
-        res.status(200).json({ success: true, organisations: await organisations });
+        res.status(200).json({ success: true, organisations: organisations });
     } catch (e) {
+        console.log(e);
         res.status(404).json({ success: false, message: "An error occured." });
     }
 };
 
 exports.createUser = async (req, res, next) => {
-    const { organisationId, name, username, password, type, adminId, startHour, endHour, color, email } = req.body;
+    const { organisationId, name, username, password, adminId } = req.body;
 
     try {
         console.log(color);
@@ -169,24 +184,22 @@ exports.createUser = async (req, res, next) => {
         const isAdmin = await db.query(sql, [`${process.env.DB_PREFIX}admins.users`, adminId]);
         if (!isAdmin.length) return new ErrorResponse("You cannot add an organisation if you are not an admin!", 404, res);
 
-        const dbs = await db.query("SHOW DATABASES;");
+        const dbs = await db.query("SHOW DATABASES");
         const foundOrganisation = await dbs.find(currDb => currDb.Database === `${process.env.DB_PREFIX}org_${organisationId}`);
         if (!await foundOrganisation) new ErrorResponse("Organisation doesn't exist!", 404, res);
         
         const userId = generateId(25);
         const salt = await bcrypt.genSalt(parseInt(process.env.SALT));
         const hashPassword = await bcrypt.hash(password, salt);
-        console.log(foundOrganisation);
-        sql = "INSERT INTO ?? (userId, name, username, email, password, date, type, color, startHour, endHour) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-       
-        const insertedUser = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.users`, userId, name, username, email, hashPassword, new Date(), type, color.hex, startHour, endHour]);
-        
+
+        sql = "INSERT INTO ?? (userId, name, username, password, date) VALUES (?, ?, ?, ?, ?)";
+        const insertedUser = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.users`, userId, name, username, hashPassword, new Date()]);
+
         if (await insertedUser) res.status(201).json({ success: true, message: { en: "User created successfully!", ro: "Utilizator creat cu succes!" }});
     } catch (e) {
         console.log(e);
         res.status(404).json({ success: false, message: "An error occured." });
     }
-
 };
 
 exports.removeUser = async (req, res, next) => {
@@ -197,7 +210,6 @@ exports.removeUser = async (req, res, next) => {
         const isAdmin = await db.query(sql, [`${process.env.DB_PREFIX}admins.users`, adminId]);
         if (!isAdmin.length) return new ErrorResponse("You cannot add an organisation if you are not an admin!", 404, res);
 
-        
         sql = "DELETE FROM ?? WHERE username = ?";
         const deletedUser = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.users`, username]);
         console.log(await deletedUser);
