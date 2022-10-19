@@ -97,8 +97,6 @@ const CreatePatient = ({ data, fromAppointments }) => {
         } catch (e) {
             console.log(e);
         }
-        
-
     };
 
     const getDoctors = async () => {

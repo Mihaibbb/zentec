@@ -19,7 +19,7 @@ exports.createOrganisation = async (req, res, next) => {
         let createTableSql = 'CREATE TABLE ?? ( ';
         createTableSql += 'name varchar(128) not null, ';
         createTableSql += 'date date not null, ';
-        createTableSql += 'sms_limit int(10)';
+        createTableSql += 'sms_limit int(10), ';
         createTableSql += '_id varchar(25) not null )';
 
         await db.query(createTableSql, ["details"]);
@@ -87,9 +87,9 @@ exports.createOrganisation = async (req, res, next) => {
         createTableSql += 'firstname varchar(128) not null, ';
         createTableSql += 'lastname varchar(128) not null, ';
         createTableSql += 'email varchar(128) not null, ';
-        createTableSql += 'phone varchar(15) not null, ';
+        createTableSql += 'phone varchar(16) not null, ';
         createTableSql += 'color varchar(16) not null, ';
-        createTableSql += 'schedules json not null, ';
+        createTableSql += 'schedules  json not null, ';
         createTableSql += 'multiple_schedules boolean not null, ';
         createTableSql += 'active boolean not null, ';
         createTableSql += 'date date not null )';
@@ -168,7 +168,7 @@ exports.getOrganisationsData = async (req, res, next) => {
             };
         }));
 
-        res.status(200).json({ success: true, organisations: organisations });
+        res.status(200).json({ success: true, organisations: await organisations });
     } catch (e) {
         console.log(e);
         res.status(404).json({ success: false, message: "An error occured." });
@@ -179,7 +179,7 @@ exports.createUser = async (req, res, next) => {
     const { organisationId, name, username, password, adminId } = req.body;
 
     try {
-        console.log(color);
+   
         let sql = "SELECT * FROM ??";
         const isAdmin = await db.query(sql, [`${process.env.DB_PREFIX}admins.users`, adminId]);
         if (!isAdmin.length) return new ErrorResponse("You cannot add an organisation if you are not an admin!", 404, res);
@@ -194,7 +194,7 @@ exports.createUser = async (req, res, next) => {
 
         sql = "INSERT INTO ?? (userId, name, username, password, date) VALUES (?, ?, ?, ?, ?)";
         const insertedUser = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.users`, userId, name, username, hashPassword, new Date()]);
-
+        
         if (await insertedUser) res.status(201).json({ success: true, message: { en: "User created successfully!", ro: "Utilizator creat cu succes!" }});
     } catch (e) {
         console.log(e);

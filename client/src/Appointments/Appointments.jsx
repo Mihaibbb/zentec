@@ -33,8 +33,10 @@ const Appointments = ({ data }) => {
     const [firstElement, setFirstElement] = useState();
     const [newDay, setNewDay] = useState();
     const [filterActive, setFilterActive] = useState(0);
+    const [doctors, setDoctors] = useState(data.doctors);
 
     const [appointments, setAppointments] = useState(data.organisation.schedules);
+    const [appointmentDoctorId, setAppointmentDoctorId] = useState();
     const [appointmentDateValue, setAppointmentDateValue] = useState();
     const [activeCreateAppointment, setActiveCreateAppointment] = useState(false);
     const [activeEditAppointment, setActiveEditAppointment] = useState(false);
@@ -73,13 +75,12 @@ const Appointments = ({ data }) => {
     const gaps = 4;
     const minutesPerGap = 60 / gaps;
     console.log(data.doctors);
-    const doctors = data.doctors;
     console.log(doctors);
     for (let hour = startHour; hour <= endHour; hour++)  {
         hours.push(hour);   
     }
 
-    const getSchedule = (dayFormat, doctorColor) => {
+    const getSchedule = (dayFormat, doctorColor, doctorObject) => {
         const gapsArr = [];
    
         for (let gap = 0; gap < gaps; gap++)
@@ -98,8 +99,9 @@ const Appointments = ({ data }) => {
                             endhour={(gapIdx + 1) * minutesPerGap < 60 ? (idx + startHour < 10 ? `0${idx + startHour}` : (idx + startHour).toString()) : (idx + startHour + 1 < 10 ? `0${idx + startHour + 1}` : (idx + startHour + 1).toString())}
                             endminutes={(gapIdx + 1) * minutesPerGap < 10 ? `0${(gapIdx + 1) * minutesPerGap}` : (gapIdx + 1) * minutesPerGap < 60 ? ((gapIdx + 1) * minutesPerGap).toString() : "0"}
                             day={dayFormat.toString()}
+                            doctorId={doctorObject._id.toString()}
                             ref={gapsRef} 
-                            onMouseDown={(e) => initiateAppointment(e, idx, gapIdx)}
+                            onMouseDown={(e) => initiateAppointment(e, idx, gapIdx, doctorObject)}
                             onMouseMove={(e) => moveAppointment(e, doctorColor)}
                             onMouseUp={(e) => createAppointment(e)}
                             onTouchStart={e => initiateAppointment(e, idx, gapIdx)}
@@ -117,7 +119,7 @@ const Appointments = ({ data }) => {
         });
     };
 
-    const initiateAppointment = (e, currHour, gap, editing = false) => {
+    const initiateAppointment = (e, currHour, gap, doctorObject, editing = false) => {
       
         if (date.getFullYear() < new Date().getFullYear() || date.getMonth() < new Date().getMonth() || date.getDate() < new Date().getDate()) return;
         if (e.button === 2) return; // check for right click
@@ -134,7 +136,7 @@ const Appointments = ({ data }) => {
         setStartEvent(true);
         setStartPosition(e.clientY);
         setFirstElement(target);
-      
+        setAppointmentDoctorId(doctorObject._id);
         setLastElement(target);
         if (editing) return;
         setAppointmentStartHour(currHour + startHour);
@@ -161,7 +163,6 @@ const Appointments = ({ data }) => {
             setAppointmentEndHour(e.target.getAttribute('endhour'));
             setAppointmentEndMinutes(e.target.getAttribute('endminutes'));
         } 
-        
         
         if (parseInt(e.target.getAttribute('id')) < parseInt(lastElement.getAttribute('id'))) {
             for (let i = parseInt(e.target.getAttribute('id')) + 1; i <= parseInt(lastElement.getAttribute('id')); i++) {
@@ -218,7 +219,7 @@ const Appointments = ({ data }) => {
             startDate: new Date(date.getFullYear(), date.getMonth(), date.getDate(), appointmentStartHour, appointmentStartMinutes),
             endDate: new Date(date.getFullYear(), date.getMonth(), date.getDate(), appointmentEndHour, appointmentEndMinutes),
             patients: [appointmentPatientData],
-            users: [cookies['user-id']],
+            doctors: [appointmentDoctorId],
             _id: data.organisation._id,
             title: appointmentTitle,
             income: appointmentCost,
@@ -244,6 +245,19 @@ const Appointments = ({ data }) => {
             setActiveCreateAppointment(false);
             setLastElement(null);
             setFirstElement(null);
+            setAppointmentStartHour("");
+            setAppointmentStartMinutes("");
+            setAppointmentEndHour("");
+            setAppointmentEndMinutes("");
+            setAppointmentTitle("");
+            setAppointmentPatient("");
+            setAppointmentPatientData();
+            setAppointmentCost("");
+            setAppointmentPatientsList([]);
+            setAppointmentNotes("");
+            setAppointmentPatientPhoneNumber("");
+            setAppointmentDateValue();
+            setAppointmentDoctorId();
         }
        
     };
@@ -275,6 +289,7 @@ const Appointments = ({ data }) => {
         setAppointmentNotes("");
         setAppointmentPatientPhoneNumber("");
         setAppointmentDateValue();
+        setAppointmentDoctorId();
     };
 
     const editAppointment = async (currentAppointmentId) => {
@@ -283,7 +298,7 @@ const Appointments = ({ data }) => {
             startDate: new Date(date.getFullYear(), date.getMonth(), date.getDate(), appointmentStartHour, appointmentStartMinutes),
             endDate: new Date(date.getFullYear(), date.getMonth(), date.getDate(), appointmentEndHour, appointmentEndMinutes),
             patients: [appointmentPatientData],
-            users: [cookies['user-id']],
+            doctors: [appointmentDoctorId],
             _id: data.organisation._id,
             title: appointmentTitle,
             income: appointmentCost,
@@ -339,20 +354,11 @@ const Appointments = ({ data }) => {
         return date1.getDate() === date2.getDate() && date1.getMonth() === date2.getMonth() && date1.getFullYear() === date2.getFullYear();
     };
 
-
     useEffect(() => {
         if (!scheduleRef.current) return;
         console.log(scheduleRef.current.offsetHeight);
         setHourContainerHeight(scheduleRef.current.offsetHeight / 2);
     }, [scheduleRef]);
-
-    useEffect(() => {
-        if (!doctorRef.current) return;
-        // For changing doctor's color
-        // doctors.forEach((doctor, idx) => {
-        //     doctorRef.current[idx].style.setProperty('--doctor-color', doctor.color);
-        // });
-    }, [doctorRef]);
 
     useEffect(() => {
         if (month === date.getMonth() && year === date.getFullYear()) return;
@@ -380,26 +386,28 @@ const Appointments = ({ data }) => {
         console.log(days);
         console.log(appointments);
         if (filterActive === 3 || filterActive === 4) return;
+
+        // Appointments must be filtered for each doctor -> 
+
+        doctors.forEach(doctor => {
+            
+        });
         
+       
         const currentAppointments = filterActive === 0 ? appointments.filter((appointment) => {
             console.log(appointment);
             let sameDoctor = false;
-            if (data?.user?.type.toLowerCase() === "doctor") {
-                console.log(data.user, JSON.parse(appointment.users));
-                const id = data.user?.userId;
-                sameDoctor = JSON.parse(appointment.users).some(user => user === id);
-            }
+            
+            const id = data.user?.userId;
+            sameDoctor = JSON.parse(appointment.doctors).some(doctor => doctor === id);
+            
             console.log(sameDoctor);
-            return sameDay(new Date(appointment.date), date) && (data.user.type.toLowerCase() === "doctor" ? sameDoctor : true);
+            return sameDay(new Date(appointment.date), date) && sameDoctor;
         }) : appointments.filter((appointment) => {
             console.log(appointment);
             return (
-                days[0].getMonth() <= new Date(appointment.date).getMonth() &&
-                days[0].getFullYear() <= new Date(appointment.date).getFullYear() &&
-                days[0].getDate() <= new Date(appointment.date).getDate()) && (
-                new Date(appointment.date).getFullYear() <= days[days.length - 1].getFullYear() && 
-                new Date(appointment.date).getMonth() <= days[days.length - 1].getMonth() &&
-                new Date(appointment.date).getDate() <= days[days.length - 1].getDate()
+                days[0].getTime() <= new Date(appointment.date).getTime() && 
+                new Date(appointment.date).getTime() <= days[days.length - 1].getTime()
             );
         });
 
@@ -455,8 +463,10 @@ const Appointments = ({ data }) => {
                     setAppointmentCost(appointment.income);
                     setAppointmentId(appointment._id);
                     setAppointmentNotes(appointment.notes);
+                    setAppointmentDoctorId(appointment.do);
                 });
             }
+
             console.log(currentGaps);
             const textElement = document.createElement('p');
             textElement.classList.add('appointment-interval');
@@ -464,9 +474,6 @@ const Appointments = ({ data }) => {
             currentGaps[startIdx].appendChild(textElement);
             currentGaps[startIdx].classList.add("resizeable");
             currentGaps[startIdx].classList.add("resizeable-up");
-
-            
-          
 
             // currentGaps.forEach(gap => {
 
@@ -913,13 +920,13 @@ const Appointments = ({ data }) => {
                                 {days.map((day, dayIdx) => (
                                     filterActive === 0 ? (
                                         <div className="day-container" key={dayIdx}>
-                                            {getSchedule(day, doctor.color)}
+                                            {getSchedule(day, doctor.color, doctor)}
                                         </div>
                                     ) : filterActive === 1 || filterActive === 2 ? (
                                         <div key={dayIdx} className="day-of-week-container">
                                             <h2>{`${daysOfWeek[day.getDay()]} ${day.getDate()}`}</h2>
                                             <div className="day-container" >
-                                                {getSchedule(day, doctor.color)}
+                                                {getSchedule(day, doctor.color, doctor)}
                                             </div>
                                         </div>
                                     ) : null

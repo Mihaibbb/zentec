@@ -123,9 +123,7 @@ const Admin = () => {
                     {organisation.users && organisation.users.length > 0  && <div className="first-row">
                         <p>{ cookies.language === "en" ? "No." : "Nr." }</p>
                         <p>{ cookies.language === "en" ? "Name" : "Nume" }</p>
-                        <p>{ cookies.language === "en" ? "Username" : "Username" }</p>
-                        <p>{ cookies.language === "en" ? "Email" : "Email" }</p>
-                        <p>{ cookies.language === "en" ? "Type" : "Tip" }</p>
+                        <p>{ cookies.language === "en" ? "Username" : "Username" }</p>                    
                         <p>{ cookies.language === "en" ? "Options" : "Optiuni" }</p>
                     </div>}
                     {organisation.users && organisation.users.length > 0 && organisation.users.map((user, userIdx) => (
@@ -134,8 +132,7 @@ const Admin = () => {
                                 <p>{userIdx + 1 < 10 ? `0${userIdx + 1}` : userIdx + 1}</p>
                                 <p>{user.name}</p>
                                 <p>{user.username}</p>
-                                <p>{user.email}</p>
-                                <p>{user.type.slice(0, 1).toUpperCase() + user.type.slice(1)}</p>
+                
                                 <div className="options">
                                     <FontAwesomeIcon icon={faEllipsis} className="option-icon" onClick={e => {
                                         document.querySelectorAll(".options-container").forEach(option => option.classList.remove("active"));

@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 const Login = () => {
     
-    const [email, setEmail] = useState("");
+    const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [rememberMe, setRememberMe] = useState(true);
     const [errorMessage, setErrorMessage] = useState("");
@@ -14,12 +14,12 @@ const Login = () => {
     const navigation = useNavigate();
 
     const tryLogin = async () => {
-        console.log(email, password);
-        if (!email || !password) {
+        console.log(username, password);
+        if (!username || !password) {
             setErrorMessage("An error occured.");
             return;
         }
-        if (email.length === 0 || password.length === 0) {
+        if (username.length === 0 || password.length === 0) {
             setErrorMessage("Please fill each field.");
             return;
         }
@@ -29,18 +29,18 @@ const Login = () => {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                email,
+                username,
                 password,
                 rememberMe
             })
         };
 
         try {
-            console.log(window.location.protocol)
+           
             const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/auth/login`, options);
             const res = await request.json();
             console.log(await res);
-            if (!res.success) {
+            if (!await res.success) {
                 setErrorMessage(res.message);
                 return;
             }
@@ -56,7 +56,6 @@ const Login = () => {
         } catch (e) {
             console.log(e);
         }
-
       
     };
 
@@ -67,8 +66,8 @@ const Login = () => {
                 <h2 className="title">Log in to your account!</h2>
                 <div className="login-inputs">
                     <div className="input">
-                        <p>Email</p>
-                        <input type="text" placeholder="Email..." value={email} onChange={e => setEmail(e.target.value)} />
+                        <p>Username</p>
+                        <input type="text" placeholder="Username..." value={username} onChange={e => setUsername(e.target.value)} />
                     </div>
 
                     <div className="input">

@@ -486,7 +486,7 @@ exports.searchPatient = async (req, res, next) => {
 exports.createDoctor = async (req, res, next) => {
     const { organisationId, firstname, lastname, email, phone, color, multipleSchedules, activeDoctor } = req.body;
     try {
-        let sql = "INSERT INTO ?? (_id, firstname, lastname, email, phone, color, schedule, multiple_schedules, active, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        let sql = "INSERT INTO ?? (_id, firstname, lastname, email, phone, color, schedules, multiple_schedules, active, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         const _id = generateId(25);
         const result = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.doctors`, _id, firstname, lastname, email, phone, color.hex, JSON.stringify([]), multipleSchedules, activeDoctor, new Date()]);
         if (await result) return res.status(201).json({ success: true, message: { en: "Doctor created successfully!", ro: "Doctor a fost adaugat cu succes!" } });
@@ -528,13 +528,13 @@ exports.editDoctor = async (req, res, next) => {
     }
 };
 
-exports.searchDoctors = async (req, res, next) => {
+exports.searchDoctor = async (req, res, next) => {
     const { organisationId, searchQuery } = req.body;
     try {
         let sql = "SELECT * FROM ??";
-        const doctors = await sql.query(`${process.env.DB_PREFIX}org_${organisationId}.doctors`);
+        const doctors = await db.query(sql, `${process.env.DB_PREFIX}org_${organisationId}.doctors`);
 
-        const filteredDoctors = await doctors.filter((doctor, idx) => {
+        const filteredDoctors = await doctors && await doctors.length > 0 && await doctors.filter((doctor, idx) => {
             return  (doctor.firstname.toLowerCase().search(searchQuery.toLowerCase()) !== -1 || doctor.firstname.toLowerCase().includes(searchQuery.toLowerCase())) ||
                     (doctor.lastname.toLowerCase().search(searchQuery.toLowerCase()) !== -1 || doctor.lastname.toLowerCase().includes(searchQuery.toLowerCase())) || 
                     (doctor.email.toLowerCase().search(searchQuery.toLowerCase()) !== -1 || doctor.email.toLowerCase().includes(searchQuery.toLowerCase())) ||
@@ -545,7 +545,7 @@ exports.searchDoctors = async (req, res, next) => {
         
 
         if (!await filteredDoctors || !await filteredDoctors.length > 0) return res.status(200).json({ success: false, message: { en: "No results found!", ro: "Nu a fost gasit niciun rezultat!" } });
-        res.status(200).json({ success: true, doctors: await filteredDoctors });
+        res.status(200).json({ success: true, doctors: await filteredDoctors || [] });
         
     } catch (e) {
         console.log(e);
@@ -572,13 +572,13 @@ exports.createDoctorSchedule = async (req, res, next) => {
             startMinutes,
             endHour,
             endMinutes,
-            date,
+            date: new Date(date),
             repeat,
             dayNumber,
             scheduleId
         });
 
-        sql = "UPDATE ?? SET schedule = ? WHERE _id = ?";
+        sql = "UPDATE ?? SET schedules = ? WHERE _id = ?";
         await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.doctors`, JSON.stringify(schedules), doctorId]);
         return res.status(201).json({ success: true, message: { en: "Schedule modified successfully!", ro: "Programul a fost modificat cu succes!" } });
     
@@ -593,7 +593,15 @@ exports.createDoctorSchedule = async (req, res, next) => {
 exports.removeDoctorSchedule = async (req, res, next) => {
     const { organisationId, doctorId, scheduleId } = req.body;
     try {
-        let sql = "";
+        let sql = "SELECT * FROM ?? WHERE _id = ?";
+        const doctors = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.doctors`, doctorId]);
+        if (await doctors.length !== 1) return res.status(404).json({ success: false, message: { en: "Doctor doesn't exist!", ro: "Doctorul nu exista!"} });
+        const schedules = JSON.parse(await doctors[0].schedules);
+
+        const updatedSchedules = schedules.filter(schedule => schedule.scheduleId !== scheduleId);
+        sql = "UPDATE ?? SET schedules = ? WHERE _id = ?";
+        const removedSchedule = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.doctors`, JSON.stringify(updatedSchedules), doctorId]);
+        if (await removedSchedule) res.status(200).json({ success: true, message: { en: "Schedule removed successfully!", ro: "Program sters cu succes!" } });
     } catch (e) {
         console.log(e);
         res.status(404).json({ success: false, message: { en: "An error occurred!", ro: "A aparut o eroare!" } });
@@ -603,7 +611,38 @@ exports.removeDoctorSchedule = async (req, res, next) => {
 // Edit schedule
 
 exports.editDoctorSchedule = async (req, res, next) => {
+    const { organisationId, doctorId, scheduleId, startHour, startMinutes, endHour, endMinutes, repeat, dayNumber } = req.body;
+    try {
+        let sql = "SELECT * FROM ?? WHERE _id = ?";
+        const doctors = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.doctors`, doctorId]);
+        if (await doctors.length !== 1) return res.status(404).json({ success: false, message: { en: "Doctor doesn't exist!", ro: "Doctorul nu exista!"} });
+        const schedules = JSON.parse(await doctors[0].schedules);
+        let found = false;
+        for (let scheduleIdx = 0; scheduleIdx < schedules.length && !found; scheduleIdx++) {
+            if (schedules[scheduleIdx].scheduleId === scheduleId) {
+                found = scheduleIdx;
+            }
+        }
 
+        schedules[found] = {
+            startHour,
+            startMinutes,
+            endHour,
+            endMinutes,
+            repeat,
+            dayNumber,
+            date: new Date(schedules[found].date),
+            scheduleId
+        };
+
+        sql = "UPDATE ?? SET schedules = ? WHERE _id = ?";
+        const updatedSchedule = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.doctors`, JSON.stringify(schedules), doctorId]);
+        if (await updatedSchedule) res.status(200).json({ success: true, message: { en: "Schedule updated successfully!", ro: "Programul a fost editat!" } });
+
+    } catch (e) {
+        console.log(e);
+        res.status(404).json({ success: false, message: { en: "An error occurred!", ro: "A aparut o eroare!" } });
+    }
 };
 
 exports.getStatisticsData = async (req, res, next) => {

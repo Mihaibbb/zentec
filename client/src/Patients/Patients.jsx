@@ -16,44 +16,6 @@ const Patients = ({ data }) => {
     const optionsRef = useRef([]);
     const [cookies, setCookie] = useCookies();
 
-    // const patients = [
-    //     {
-    //         name: 'Mihai',
-    //         surname: 'Barbu',
-    //         phone: "0760331322"
-    //     },
-
-    //     {
-    //         name: 'Claudiu',
-    //         surname: 'Barbu',
-    //         phone: "0732048431"
-    //     },
-
-    //     {
-    //         name: 'Mihai',
-    //         surname: 'Barbu',
-    //         phone: "0760331322"
-    //     },
-
-    //     {
-    //         name: 'Claudiu',
-    //         surname: 'Barbu',
-    //         phone: "0732048431"
-    //     },
-
-    //     {
-    //         name: 'Mihai',
-    //         surname: 'Barbu',
-    //         phone: "0760331322"
-    //     },
-
-    //     {
-    //         name: 'Claudiu',
-    //         surname: 'Barbu',
-    //         phone: "0732048431"
-    //     }
-    // ];
-
     const getPatients = async () => {
         const options = {
             method: 'POST',
@@ -205,7 +167,7 @@ const Patients = ({ data }) => {
                             </div>
                         </div>
                     )) : (
-                        <h2 className="center">{cookies.language === "en" ? "No patients" : "Niciun pacient"}</h2>
+                        <h2 className="center">{cookies.language === "en" ? "No patient found." : "Niciun pacient gasit."}</h2>
                     )}
                 </div>
 

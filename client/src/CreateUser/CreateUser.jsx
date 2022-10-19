@@ -13,21 +13,15 @@ const CreateUser = () => {
 
     const [name, setName] = useState("");
     const [username, setUsername] = useState("");
-    const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [repeatPassword, setRepeatPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
-    const [type, setType] = useState("Doctor");
-    const [doctorColor, setDoctorColor] = useState({});
-    const [startHour, setStartHour] = useState(9);
-    const [endHour, setEndHour] = useState(17);
     const [cookies, setCookie] = useCookies();
 
     const navigate = useNavigate();
     const location = useLocation();
 
     const { _id, organisationName } = location.state;
-
     if (!_id) navigate(-1);
 
     const createNewUser = async () => {
@@ -43,14 +37,9 @@ const CreateUser = () => {
             body: JSON.stringify({
                 name,
                 username,
-                email,
                 password,
-                type,
                 organisationId: _id,
                 adminId: cookies["user-id"],
-                color: doctorColor,
-                startHour,
-                endHour
             })
         };
 
@@ -62,9 +51,7 @@ const CreateUser = () => {
     };
 
 
-    useEffect(() => {
-        console.log(type);
-    }, [type]);
+   
 
 
     return (
@@ -85,11 +72,6 @@ const CreateUser = () => {
                     </div>
 
                     <div className="input">
-                        <p>{cookies.language === "en" ? "Email" : "Adresa de email"}</p>
-                        <input type="text" placeholder={cookies.language === "en" ? "Email" : "Adresa de email"} value={email} onChange={e => setEmail(e.target.value)} />
-                    </div>
-
-                    <div className="input">
                         <p>{cookies.language === "en" ? "Password" : "Parola"}</p>
                         <input type="password" placeholder={cookies.language === "en" ? "Password" : "Parola"} value={password} onChange={e => setPassword(e.target.value)} />
                     </div>
@@ -97,59 +79,6 @@ const CreateUser = () => {
                     <div className="input">
                         <p>{cookies.language === "en" ? "Repeat password" : "Repeta parola"}</p>
                         <input type="password" placeholder={cookies.language === "en" ? "Repeat password" : "Repeta parola"} value={repeatPassword} onChange={e => setRepeatPassword(e.target.value)} />
-                    </div>
-
-                    <div className="grid-container">
-                        <div className="selection">
-                            <p>{cookies.language === "en" ? "Type of user: " : "Tipul de utilizator"}</p>
-                            <select value={type} onChange={e => setType(e.target.value)}>
-                                <option value="Doctor">Doctor</option>
-                                <option value="Reception">{cookies.language === "en" ? "Reception" : "Receptie"}</option>
-                            </select>
-                        </div>
-
-                        {type === "Doctor" && 
-                            <div className="input-color">
-                                <p>{cookies.language === "en" ? "Doctor's color" : "Culoare doctor: "}</p>
-                                <InputColor 
-                                    initialValue="#5e72e4"
-                                    onChange={setDoctorColor}
-                                >
-                                    <div
-                                        style={{
-                                        width: 50,
-                                        height: 50,
-                                        marginTop: 20,
-                                        backgroundColor: doctorColor.rgba,
-                                        }}
-                                    />
-                                </InputColor>
-                            </div>
-                        }
-
-
-                        {/* <div className="input">
-                            <input type="checkbox" checked={rememberMe} onClick={() => setRememberMe(currRememberMe => !currRememberMe)}/>
-                            <p>Remember Me</p>
-                        </div> */}
-
-                        <div className="input interval-container">
-                            <p>{cookies.language === "en" ? "Start Hour" : "Ora inceput"}</p>
-                            <div className="interval">
-                                <FontAwesomeIcon icon={faMinus} className="interval-icon" onClick={() => setStartHour(currHour => Number(currHour) - 1)} />
-                                <input type="number" className="number-input" value={startHour} onChange={e => setStartHour(e.target.value)} />
-                                <FontAwesomeIcon icon={faPlus} className="interval-icon" onClick={() => setStartHour(currHour => Number(currHour) + 1)}/>
-                            </div>
-                        </div>
-
-                        <div className="input interval-container">
-                            <p>{cookies.language === "en" ? "End Hour" : "Ora sfarsit"}</p>
-                            <div className="interval">
-                                <FontAwesomeIcon icon={faMinus} className="interval-icon" onClick={() => setEndHour(currHour => Number(currHour) - 1)} />
-                                <input type="number" className="number-input" value={endHour} onChange={e => setEndHour(e.target.value)} />
-                                <FontAwesomeIcon icon={faPlus} className="interval-icon" onClick={() => setEndHour(currHour => Number(currHour) + 1)} />
-                            </div>
-                        </div>
                     </div>
 
                     <button type="text" onClick={async () => await createNewUser()}>

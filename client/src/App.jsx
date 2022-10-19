@@ -1,4 +1,10 @@
 import { Routes, Route, BrowserRouter, Navigate } from "react-router-dom";
+import { useCookies } from "react-cookie";
+import { useState, useEffect } from "react";
+
+
+import "./App.css";
+
 import Home from "./Home/Home";
 import Dashboard from "./Dashboard/Dashboard";
 import Admin from "./Admin/Admin"; 
@@ -6,14 +12,13 @@ import Patients from "./Patients/Patients";
 import Users from "./Users/Users";
 import Login from "./Login/Login";
 import Appointments from "./Appointments/Appointments";
-import "./App.css";
-import { useCookies } from "react-cookie";
-import { useState, useEffect } from "react";
 import CreateOrganisation from "./CreateOrganisation/CreateOrganisation";
 import CreateUser from "./CreateUser/CreateUser";
 import CreatePatient from "./CreatePatient/CreatePatient";
 import PatientAccount from "./PatientAccount/PatientAccount";
 import Settings from "./Settings/Settings";
+import CreateDoctor from "./CreateDoctor/CreateDoctor";
+
 
 const App = () => {
     const [cookies, setCookie, removeCookie] = useCookies([]);
@@ -61,8 +66,6 @@ const App = () => {
 
     }, []);
 
- 
-
     return data !== null && (
         <BrowserRouter>
              <Routes>
@@ -80,7 +83,7 @@ const App = () => {
                                 {/* <Route path="import-patients" element={<ImportPatients />}/> */}
                                 <Route path="create-patient" element={<CreatePatient data={data} />} />
                                 <Route path="settings" element={<Settings data={data} />} />
-                                
+                                <Route path="create-doctor" element={<CreateDoctor data={data} />} />
                             </>
                         ) : (
                             <>
@@ -92,8 +95,8 @@ const App = () => {
                     </>
                 ) : (
                     <>
-                        <Route path="login" element={<Login language={language} />} />
-                        <Route path="*" element={<Navigate to="/login" language={language} />} />
+                        <Route path="login" element={<Login />} />
+                        <Route path="*" element={<Navigate to="/login" />} />
                     </>
                 )}
 

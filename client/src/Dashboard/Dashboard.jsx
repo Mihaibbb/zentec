@@ -98,60 +98,6 @@ const Dashboard = ({ data }) => {
         })();
     }, []);
 
-
-    const patientsData = [
-        {
-            name: 'Jacad Monie',
-           
-            hour: '17:30',
-            income: 400,
-            typeIncome: "$"
-        },
-
-        {
-            name: 'Killan James',
-            hour: '18:00',
-            income: 300,
-            typeIncome: "$"
-
-        },
-
-        {
-            name: 'Wade Jack',
-            hour: '18:30',
-            income: 350,
-            typeIncome: "$"
-        },
-
-        {
-            name: 'Wade Jack',
-            hour: '18:30',
-            income: 350,
-            typeIncome: "$"
-        },
-
-        {
-            name: 'Wade Jack',
-            hour: '18:30',
-            income: 350,
-            typeIncome: "$"
-        },
-
-        {
-            name: 'Wade Jack',
-            hour: '18:30',
-            income: 350,
-            typeIncome: "$"
-        },
-
-        {
-            name: 'Wade Jack',
-            hour: '18:30',
-            income: 350,
-            typeIncome: "$"
-        },
-    ];
-
     useEffect(() => {
         (async () => {
             await getStatistics();
@@ -290,7 +236,6 @@ const Dashboard = ({ data }) => {
                     </div>
                 </div>
                
-
             </div>
         </div>
     );
