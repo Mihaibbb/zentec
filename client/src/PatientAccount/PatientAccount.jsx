@@ -1,4 +1,4 @@
-import { faAddressBook, faAddressCard, faCheck, faCity, faEnvelope, faIdBadge, faMars, faNoteSticky, faPhone, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faAddressBook, faAddressCard, faAngleLeft, faCheck, faCity, faEnvelope, faIdBadge, faMars, faNoteSticky, faPhone, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState, useEffect, useRef } from "react";
 import { useCookies } from "react-cookie";
@@ -160,6 +160,11 @@ const PatientAccount = ({ data }) => {
 
                 <div className="patient-account-details">
                     <h2 className="title">{cookies.language === "en" ? "Patient's account details " : "Detalii cont pacient"}</h2>
+
+                    <div className="go-back" onClick={() => navigation(-1)}>
+                        <FontAwesomeIcon icon={faAngleLeft} />
+                    </div>
+
                     <div className="inputs-container">
                         <div className="input">
                             <div className="input-title">

@@ -4,7 +4,6 @@ import { useCookies } from "react-cookie";
 import { useLocation, useNavigate } from "react-router-dom";
 import Header from "../Components/Header/Header";
 import Navigation from "../Components/Navigation/Navigation";
-import InputColor from "react-input-color";
 import "./CreateUser.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
@@ -49,11 +48,7 @@ const CreateUser = () => {
         else navigate("/dashboard", { state: { message: { en: "User created successfully!", ro: "Utilizator creat cu succes!" } } });
         
     };
-
-
-   
-
-
+    
     return (
         <div className="center-container">
             <div className="image"></div>

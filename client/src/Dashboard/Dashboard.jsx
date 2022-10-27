@@ -213,7 +213,7 @@ const Dashboard = ({ data }) => {
                             
                         </div>
                     </div>
-                    <div className="right-container">
+                    {/* <div className="right-container">
 
                         <div className="doctors">
                             <h2 className="title">{cookies.language === "en" ? "Doctors" : "Doctori"}</h2>
@@ -233,7 +233,7 @@ const Dashboard = ({ data }) => {
                                 </div>
                             ))}
                        </div>
-                    </div>
+                    </div> */}
                 </div>
                
             </div>

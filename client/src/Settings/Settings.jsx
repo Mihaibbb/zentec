@@ -3,7 +3,6 @@ import Navigation from "../Components/Navigation/Navigation";
 import Header from "../Components/Header/Header";
 import { useCookies } from "react-cookie";
 import { useEffect, useState } from "react";
-import InputColor from "react-input-color";
 import { ColorSlider } from '@react-spectrum/color';
 import { parseColor } from "@react-stately/color";
 import { HuePicker } from "react-color";

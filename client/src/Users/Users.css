@@ -1,0 +1,88 @@
+.column 
+{
+    display: flex;
+    gap: .75rem;
+    
+}
+
+.column .option-container 
+{
+    aspect-ratio: 1 / 1;
+    background: var(--contrast-color);
+    color: var(--text-color);
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.column .option-container .option-icon
+{
+    font-size: 18px;
+}
+
+.column .option-container:nth-child(2) 
+{
+    background: var(--contrast-color-2);
+}
+
+.column .option-container:nth-child(3) 
+{
+    background: var(--contrast-color-3);
+}
+
+.warning-container
+{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--over-color-2);
+  
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.warning-container .warning-card
+{
+    width: 100%;
+    max-width: 350px;
+    
+    background: var(--dark-color);
+    padding: .5rem;
+    border: 1.5px solid var(--contrast-color);
+    border-radius: 16px;
+}
+
+.warning-container .warning-card p
+{
+    text-align: center;
+    font-family: "Inter";
+    color: var(--text-color);
+    font-size: 18px;
+}
+
+
+.warning-container .warning-card .buttons-warning
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: .5rem;
+    width: 100%;
+}
+
+.warning-container .warning-card .buttons-warning button 
+{
+    flex: 1;
+    background: var(--contrast-color);
+    color: var(--text-color);
+    border-radius: 10px;
+    height: 40px;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    font-family: "Inter";
+    cursor: pointer;
+}

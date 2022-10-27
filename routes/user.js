@@ -19,7 +19,9 @@ const {
     removeDoctor, 
     searchDoctor, 
     editDoctorSchedule, 
-    removeDoctorSchedule 
+    removeDoctorSchedule,
+    getDoctorInfo,
+    getSchedulesForDay
 } = require("../controllers/user");
 
 router.post("/create-appointment", createAppointment);
@@ -39,9 +41,11 @@ router.post("/create-doctor", createDoctor);
 router.post("/create-doctor-schedule", createDoctorSchedule);
 router.post("/edit-doctor", editDoctor);
 router.post("/remove-doctor", removeDoctor);
+router.post("/doctor-info", getDoctorInfo);
 router.post("/search-doctor", searchDoctor);
 router.post("/edit-doctor-schedule", editDoctorSchedule);
 router.post("/remove-doctor-schedule", removeDoctorSchedule);
+router.post("/get-schedules-day", getSchedulesForDay);
 
 
 module.exports = router;

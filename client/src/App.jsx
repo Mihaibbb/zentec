@@ -18,7 +18,9 @@ import CreatePatient from "./CreatePatient/CreatePatient";
 import PatientAccount from "./PatientAccount/PatientAccount";
 import Settings from "./Settings/Settings";
 import CreateDoctor from "./CreateDoctor/CreateDoctor";
-
+import DoctorAccount from "./DoctorAccount/DoctorAccount";
+import DoctorSchedule from "./DoctorSchedule/DoctorSchedule";
+import EditDoctorSchedule from "./EditDoctorSchedule/EditDoctorSchedule";
 
 const App = () => {
     const [cookies, setCookie, removeCookie] = useCookies([]);
@@ -78,12 +80,15 @@ const App = () => {
                             <>
                                 <Route path="patients" element={<Patients data={data} />} />
                                 <Route path="patient/:id" element={<PatientAccount data={data} />} />
-                                <Route path="doctors" element={<Users data={data}/>} />
+                                <Route path="doctors" element={<Users data={data} />} />
+                                <Route path="doctors-schedule" element={<DoctorSchedule data={data} />} />
+                                <Route path="doctors-schedule/:date" element={<EditDoctorSchedule data={data} />} />
+                                <Route path="doctor/:id" element={<DoctorAccount data={data} />} />
                                 <Route path="appointments" element={<Appointments data={data} />} />
                                 {/* <Route path="import-patients" element={<ImportPatients />}/> */}
                                 <Route path="create-patient" element={<CreatePatient data={data} />} />
                                 <Route path="settings" element={<Settings data={data} />} />
-                                <Route path="create-doctor" element={<CreateDoctor data={data} />} />
+                                <Route path="create-doctor" element={<CreateDoctor data={data} />} />    
                             </>
                         ) : (
                             <>

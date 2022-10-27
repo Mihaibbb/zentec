@@ -1,4 +1,4 @@
-import { faAngleDown, faAngleUp, faCheck, faTicket } from "@fortawesome/free-solid-svg-icons";
+import { faAngleDown, faAngleLeft, faAngleUp, faCheck, faTicket } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect } from "react";
 import { useRef, useState } from "react";
@@ -174,6 +174,11 @@ const CreatePatient = ({ data, fromAppointments }) => {
             <div className="content">
                 <Header data={data} />
                 <h2 className="title">{cookies.language === "en" ? "Create new patient" : "Creeaza un nou pacient"}</h2>
+                
+                <div className="go-back" onClick={() => navigate(-1)}>
+                    <FontAwesomeIcon icon={faAngleLeft} />
+                </div>
+
                 <div className="form">
                     <div className="input">
                         <p>{cookies.language === "en" ? "First Name" : "Nume"}</p>

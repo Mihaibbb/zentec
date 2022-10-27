@@ -2,16 +2,19 @@ import './Navigation.css';
 import logo from "../../imgs/logo_zentec3.svg";
 import dashboardIcon from "../../imgs/icons/dashboard-icon.svg";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBedPulse, faCalendarDays, faClose, faCoffee, faDashboard, faHandHoldingDollar, faUserDoctor } from "@fortawesome/free-solid-svg-icons"
+import { faAngleDown, faBedPulse, faCalendarDays, faClose, faCoffee, faDashboard, faHandHoldingDollar, faUserDoctor } from "@fortawesome/free-solid-svg-icons"
 import settingsIcon from "../../imgs/icons/settings-icon.svg";
 import { useNavigate } from "react-router-dom";
 import { useCookies } from 'react-cookie';
 import patientIcon from "../../imgs/icons/patient.svg";
+import { useState } from 'react';
 
 const Navigation = ({ show, page }) => {
 
     const navigation = useNavigate();
     const [cookies, setCookie] = useCookies();
+
+    const [doctorsSubmenuActive, setDoctorsSubmenuActive] = useState(false);
 
     return (
         <div className="navigation">
@@ -33,7 +36,15 @@ const Navigation = ({ show, page }) => {
 
             <div className={`item ${page === "doctors" ? "active" : ""}`} onClick={() => navigation("/doctors")}>
                 <FontAwesomeIcon icon={faUserDoctor} className="item-icon" />
-                <h3>{cookies.language === "en" ? "Doctors" : "Doctori"}</h3>
+                <h3>{cookies.language === "en" ? "Doctors" : "Medici"}</h3>
+                <FontAwesomeIcon icon={faAngleDown} className={`submenu-icon ${faAngleDown}`} onClick={() => setDoctorsSubmenuActive(curr => !curr)} />
+            </div>
+
+            <div className={`sub-list ${doctorsSubmenuActive || page === "doctors-schedule" || page === "doctors" ? "active" : ""}`}>
+                <div className={`item ${page === "doctors-schedule" ? "highlight" : ""}`} onClick={() => navigation("/doctors-schedule")}>
+                    <div className="dot" />
+                    <p>{cookies.language === "en" ? "Doctors Schedule" : "Program Doctori"}</p>
+                </div>
             </div>
 
             <div className={`item ${page === "patients" ? "active" : ""}`} onClick={() => navigation("/patients")}>

@@ -30,6 +30,8 @@ app.get("/test", (req, res) => {
     res.send("Hello");
 });
 
+
+
 // Routes
 app.use("/api/auth", authRouter);
 app.use("/api/private", privateRouter);

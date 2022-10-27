@@ -17,8 +17,9 @@
   --text-color-4: rgba(255, 255, 255, .5);
   --selector-color: rgba(10, 110, 114, 0.5);
   --over-color: rgba(0, 0, 0, .2);
+  --over-color-2: rgba(0, 0, 0, .6);
   --over-difference-color: rgba(255, 255, 255, .2);
- 
+  --error-color: crimson;
 }
 
 body {
@@ -58,9 +59,6 @@ body {
   color: #61dafb;
 }
 
-body {
-  
-}
 
 @keyframes App-logo-spin {
   from {

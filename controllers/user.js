@@ -485,10 +485,23 @@ exports.searchPatient = async (req, res, next) => {
 
 exports.createDoctor = async (req, res, next) => {
     const { organisationId, firstname, lastname, email, phone, color, multipleSchedules, activeDoctor } = req.body;
+
+    let sql = "SELECT * FROM ?? WHERE email = ?";
+    const sameEmail = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.doctors`, email]);
+    if (await sameEmail.length) return res.status(200).json({ success: false, message: { en: "Email is already taken!", ro: "Email-ul este deja folosit!" } })
+
+    sql = "SELECT * FROM ?? WHERE phone = ?";
+    const samePhoneNumber = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.doctors`, phone]);
+    if (await samePhoneNumber.length) return res.status(200).json({ success: false, message: { en: "Phone number is already taken!", ro: "Numarul de telefon este deja folosit!" } })
+
+    sql = "SELECT * FROM ?? WHERE color = ?";
+    const sameColor = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.doctors`, color]);
+    if (await sameColor.length) return res.status(200).json({ success: false, message: { en: "Color is already taken!", ro: "Culoarea este deja folosita!" } })
+
     try {
-        let sql = "INSERT INTO ?? (_id, firstname, lastname, email, phone, color, schedules, multiple_schedules, active, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        sql = "INSERT INTO ?? (_id, firstname, lastname, email, phone, color, schedules, multiple_schedules, active, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         const _id = generateId(25);
-        const result = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.doctors`, _id, firstname, lastname, email, phone, color.hex, JSON.stringify([]), multipleSchedules, activeDoctor, new Date()]);
+        const result = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.doctors`, _id, firstname, lastname, email, phone, color, JSON.stringify([]), multipleSchedules, activeDoctor, new Date()]);
         if (await result) return res.status(201).json({ success: true, message: { en: "Doctor created successfully!", ro: "Doctor a fost adaugat cu succes!" } });
     } catch (e) {
         console.log(e);
@@ -508,7 +521,8 @@ exports.removeDoctor = async (req, res, next) => {
 };
 
 exports.editDoctor = async (req, res, next) => {
-    const { organisationId, doctorId, firstname, lastname, email, phone, color, multipleSchedules, activeDoctor} = req.body;
+    const { organisationId, doctorId, firstname, lastname, email, phone, color, multipleSchedules, activeDoctor } = req.body;
+    console.log(activeDoctor);
     try {
         let sql = "UPDATE ?? ";
         sql += 'SET firstname = ?, ';
@@ -518,13 +532,29 @@ exports.editDoctor = async (req, res, next) => {
         sql += 'color = ?, ';
         sql += 'multiple_schedules = ?, ';
         sql += 'active = ? ';
-        sql += 'WHERE doctorId = ?';
+        sql += 'WHERE _id = ?';
 
-        const result = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.doctors`, _id, firstname, lastname, email, phone, color.hex, multipleSchedules, activeDoctor, doctorId]);
+        const result = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.doctors`, firstname, lastname, email, phone, color, multipleSchedules, activeDoctor, doctorId]);
+        console.log(await result);
         if (await result) return res.status(200).json({ success: true, message: { en: "Doctor edited successfully!", ro: "Doctor a fost editat cu succes!" } });
     } catch (e) {
         console.log(e);
         res.status(404).json({ success: false, message: { en: "An error occurred!", ro: "A aparut o eroare!" } });
+    }
+};
+
+exports.getDoctorInfo = async (req, res, next) => {
+    const { organisationId, doctorId } = req.body;
+
+    try {
+        let sql = "SELECT * FROM ?? WHERE _id = ?";
+        const doctors = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.doctors`, doctorId]);
+        if (await doctors.length !== 1) return res.status(200).json({ success: false, message: { en: "The doctor was not found!", ro: "Medicul nu a fost gasit!" } });
+
+        res.status(200).json({ success: true, doctor: await doctors[0] });
+    } catch (e) {
+        console.log(e);
+        res.status(404).json({ success: false, message: { en: "An error occured!", ro: "A aparut o eroare!" } });
     }
 };
 
@@ -543,9 +573,9 @@ exports.searchDoctor = async (req, res, next) => {
                     (doctor.id.toString().search(searchQuery.toLowerCase()) !== -1 || doctor.id.toString().includes(searchQuery.toLowerCase()) );
         });
         
-
-        if (!await filteredDoctors || !await filteredDoctors.length > 0) return res.status(200).json({ success: false, message: { en: "No results found!", ro: "Nu a fost gasit niciun rezultat!" } });
-        res.status(200).json({ success: true, doctors: await filteredDoctors || [] });
+        console.log("HAHA", await filteredDoctors);
+        if (!await filteredDoctors || !await filteredDoctors.length) return res.status(200).json({ success: false, message: { en: "No results found!", ro: "Nu a fost gasit niciun rezultat!" } });
+        res.status(200).json({ success: true, doctors: await filteredDoctors });
         
     } catch (e) {
         console.log(e);
@@ -557,7 +587,7 @@ exports.searchDoctor = async (req, res, next) => {
 
 exports.createDoctorSchedule = async (req, res, next) => {
 
-    const { organisationId, doctorId, startHour, startMinutes, endHour, endMinutes, date, repeat, dayNumber } = req.body;
+    const { organisationId, doctorId, startHour, startMinutes, endHour, endMinutes, date, repeat, dayNumber, notes } = req.body;
     try {
         let sql = "SElECT * FROM ?? WHERE _id = ?";
         const doctors = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.doctors`, doctorId]);
@@ -575,7 +605,8 @@ exports.createDoctorSchedule = async (req, res, next) => {
             date: new Date(date),
             repeat,
             dayNumber,
-            scheduleId
+            scheduleId,
+            notes
         });
 
         sql = "UPDATE ?? SET schedules = ? WHERE _id = ?";
@@ -611,7 +642,7 @@ exports.removeDoctorSchedule = async (req, res, next) => {
 // Edit schedule
 
 exports.editDoctorSchedule = async (req, res, next) => {
-    const { organisationId, doctorId, scheduleId, startHour, startMinutes, endHour, endMinutes, repeat, dayNumber } = req.body;
+    const { organisationId, doctorId, scheduleId, startHour, startMinutes, endHour, endMinutes, repeat, dayNumber, notes } = req.body;
     try {
         let sql = "SELECT * FROM ?? WHERE _id = ?";
         const doctors = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.doctors`, doctorId]);
@@ -632,7 +663,8 @@ exports.editDoctorSchedule = async (req, res, next) => {
             repeat,
             dayNumber,
             date: new Date(schedules[found].date),
-            scheduleId
+            scheduleId,
+            notes
         };
 
         sql = "UPDATE ?? SET schedules = ? WHERE _id = ?";
@@ -642,6 +674,32 @@ exports.editDoctorSchedule = async (req, res, next) => {
     } catch (e) {
         console.log(e);
         res.status(404).json({ success: false, message: { en: "An error occurred!", ro: "A aparut o eroare!" } });
+    }
+};
+
+exports.getSchedulesForDay = async (req, res, next) => {
+    const { day, month, year, organisationId } = req.body;
+
+    try {
+        let sql = "SELECT * FROM ??";
+        const doctors = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.doctors`]);
+        const schedules = await Promise.all(await doctors.map(doctor => {
+            const doctorSchedules = JSON.parse(doctor.schedules);
+            return doctorSchedules.filter(schedule => sameDate(new Date(schedule.date), new Date(year, month, day)));
+        }));
+
+        const finalFormSchedules = [];
+        schedules.forEach(scheduleArr => {
+            scheduleArr.length > 0 && scheduleArr.forEach(schedule => finalFormSchedules.push(schedule));
+        });
+
+        console.log(finalFormSchedules);
+
+        res.status(200).json({ success: true, schedules: finalFormSchedules });
+
+    } catch (e) {
+        console.log(e);
+        res.status(404).json({ success: false, message: { en: "An error occured!", ro: "A aparut o eroare!" } });
     }
 };
 

@@ -61,7 +61,7 @@
 
 
 
-.navigation .item 
+.navigation > .item 
 {
     display: flex;
     align-items: center;
@@ -69,6 +69,56 @@
     cursor: pointer;
     border-radius: 8px;
 }
+
+.navigation > .item .submenu-icon 
+{
+    margin-left: auto;
+    margin-right: 15px;
+    color: var(--text-color);
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+}
+
+.navigation .sub-list:not(.active) 
+{
+    display: none;
+}
+
+
+
+.navigation .sub-list .item 
+{
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    margin-left: 1rem;
+    margin-top: -.5rem;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    padding: 0 1rem;
+
+}
+
+.navigation .sub-list .item.highlight 
+{
+    background: var(--contrast-color);
+}
+
+.navigation .sub-list .item .dot 
+{
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--text-color-3);
+}
+.navigation .sub-list .item p 
+{
+    color: var(--text-color);
+    font-size: 20px;
+}
+
 
 .navigation .item:hover h3,
 .navigation .item:hover .item-icon

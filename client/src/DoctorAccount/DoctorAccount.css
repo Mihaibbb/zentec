@@ -1,0 +1,14 @@
+.doctor-account-container 
+{
+    display: flex;
+    height: 100vh;
+}
+
+.content .title 
+{
+    margin-top: 20vh;
+    font-size: 35px;
+    color: var(--text-color);
+    font-weight: bold;
+    text-align: center;
+}

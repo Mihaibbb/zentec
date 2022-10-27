@@ -1,0 +1,100 @@
+.create-doctor 
+{
+    display: flex;
+    height: 100vh;
+}
+
+.create-doctor h2.title
+{
+    margin: calc(10vh + 2rem) auto 2rem;
+    color: var(--text-color);
+    font-size: 40px;
+}
+
+.option
+{
+    display: flex;
+   
+    align-items: center;
+    gap: 1rem;
+}
+
+.option .box 
+{
+    width: 25px;
+    height: 25px;
+    border: 1px solid var(--contrast-color);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 350ms ease-in-out;
+}
+
+.option .box.active 
+{
+    background: var(--contrast-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.option .css-1yn2e29-InputColor
+{
+    background: transparent;
+    border: none;
+  
+    width: 230px;
+    height: 30px;
+}
+
+.option .css-1yn2e29-InputColor > span 
+{
+    border-radius: 10px;
+}
+
+.option .box.active .check-icon 
+{
+    color: #fff;
+}
+
+.option p 
+{
+    color: var(--text-color);
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.form .error 
+{
+    color: var(--error-color);
+    font-size: 24px;
+    text-align: center;
+    margin: 0 auto;
+    grid-column: 1 / -1;
+}
+
+.go-back 
+{
+    border: 1px solid var(--contrast-color);
+    border-radius: 50%;
+    width: 55px;
+    height: 55px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: calc(20vh - 50px);
+    left: 30px;
+    cursor: pointer;
+    transition: all 350ms ease-in-out;
+}
+
+.go-back:hover 
+{
+    background: var(--contrast-color);
+}
+
+.go-back svg 
+{
+    font-size: 24px;
+    color: var(--text-color);
+}

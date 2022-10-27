@@ -1,9 +1,10 @@
 import "../Patients/Patients.css";
-
+import "./Users.css";
 import Navigation from "../Components/Navigation/Navigation";
 import Header from "../Components/Header/Header";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faEllipsis, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faEllipsis, faSearch, faCheck, faEdit, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { faSquare } from "@fortawesome/free-regular-svg-icons"
 import { useState, useEffect } from "react"; 
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
@@ -13,6 +14,8 @@ const Users = ({ data }) => {
     const [doctors, setDoctors] = useState([]);
     const [query, setQuery] = useState("");
     const [cookies, setCookie] = useCookies();
+    const [warning, setWarning] = useState(false);
+    const [doctorId, setDoctorId] = useState();
     const navigation = useNavigate();
 
     const getDoctors = async () => {
@@ -31,6 +34,73 @@ const Users = ({ data }) => {
         if (!response.success) return;
         setDoctors(response.doctors);
     };     
+
+    const removeDoctor = async (doctorId) => {
+        if (!warning) return;
+
+        try {
+            const options = {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    organisationId: data.organisation._id,
+                    doctorId
+                })
+            };
+
+            const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/remove-doctor`, options);
+            const response = await request.json();
+            setWarning(false);
+            setDoctorId();
+            if (await response.success) navigation("/doctors", { state: { success: true, message: await response[cookies.language]  }});
+            await getDoctors();
+            
+        } catch (e) {
+            console.log(e);
+            navigation("/doctors", { state: { message: cookies.language === "en" ? "An error occured!" : "A aparut o eroare!" } });
+        }
+    };
+
+    const toggleActiveDoctor = async (doctorObj) => {
+        console.log(doctorObj);
+        try {
+            const options = {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    organisationId: data.organisation._id,
+                    doctorId: doctorObj._id,
+                    firstname: doctorObj.firstname,
+                    lastname: doctorObj.lastname,
+                    phone: doctorObj.phone,
+                    email: doctorObj.email,
+                    multipleSchedules: doctorObj.multiple_schedules,
+                    color: doctorObj.color,
+                    activeDoctor: !doctorObj.active
+                })
+            };
+
+            const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/edit-doctor`, options);
+            const response = await request.json();
+            if (await response.success) navigation("/doctors", { state: { 
+                success: true, 
+                message: cookies.language === "en" ? `Doctor ${!doctorObj.active ? "activated" : "disabled"} successfully!` : `Doctor ${!doctorObj.active ? "activat" : "dezactivat"} cu succes!`
+            } })
+
+            await getDoctors();
+
+        } catch (e) {
+            console.log(e);
+            navigation("/doctors", { state: {
+                success: false,
+                message: cookies.language === "en" ? "Doctor's status couldn't be changed!" : "Statusul doctorului nu a putut fi modificat!"
+            }})
+        }
+    };
 
     useEffect(() => {
         (async () => {
@@ -59,7 +129,7 @@ const Users = ({ data }) => {
             const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/search-doctor`, options);
             const response = await request.json();
           
-            if (await response.success) setDoctors(await response.patients || []);
+            if (await response.success) setDoctors(await response.doctors || []);
             else setDoctors([]);
         })();
      
@@ -71,8 +141,8 @@ const Users = ({ data }) => {
 
             <div className="content">
                 <Header data={data} />
-                <h2 className="title">{cookies.language === "en" ? "Doctors" : "Doctori"}</h2>
-
+                <h2 className="title">{cookies.language === "en" ? "Doctors List" : "Lista Medici"}</h2>
+        
                 {doctors && <div className="search-container">
                     <input type="text" value={query} onChange={e => setQuery(e.target.value)} placeholder={cookies.language === "en" ? "Search patient..." : "Cauta doctor..."} />
                     <FontAwesomeIcon icon={faSearch} className="search-icon" />
@@ -94,9 +164,7 @@ const Users = ({ data }) => {
                             <p>{cookies.language === "en" ? "Name" : "Prenume"}</p>
                         </div>
 
-                        <div className="column">
-                            <p>Email</p>
-                        </div>
+                        
 
                         <div className="column">
                             <p>{cookies.language === "en" ? "Phone" : "Telefon"}</p>
@@ -116,7 +184,7 @@ const Users = ({ data }) => {
                         <div className="row" key={idx}>
                             
                             <div className="column">
-                                <p>{doctor.id}</p>
+                                <p>{idx + 1}</p>
                             </div>
 
                             <div className="column">
@@ -128,19 +196,26 @@ const Users = ({ data }) => {
                             </div>
 
                             <div className="column">
-                                <p>{doctor.email}</p>
-                            </div>
-
-                            <div className="column">
                                 <p>{doctor.phone}</p>
                             </div>
 
                             <div className="column">
-                                <div className="square" style={{ backgroundColor: doctor.color }} />
+                                <div className="square" style={{ width: 50, height: 20, borderRadius: 10, backgroundColor: doctor.color }} />
                             </div>
 
                             <div className="column">
-                                <FontAwesomeIcon className="column-icon" icon={faEllipsis}/>
+                                <div className="option-container" onClick={async () => await toggleActiveDoctor(doctor)}>
+                                    <FontAwesomeIcon icon={doctor.active ? faCheck : faSquare} className="option-icon" />
+                                </div>
+                                <div className="option-container" onClick={() => navigation(`/doctor/${doctor._id}`)}>
+                                    <FontAwesomeIcon icon={faEdit} className="option-icon" />
+                                </div>
+                                <div className="option-container" onClick={async () => {
+                                    setWarning(cookies.language === "en" ? "Are you sure that you want to remove this doctor?" : "Sunteti sigur ca doriti sa stergeti acest doctor?");
+                                    setDoctorId(doctor._id);
+                                }}>
+                                    <FontAwesomeIcon icon={faTimes} className="option-icon" />
+                                </div>
                             </div>
                         </div>
                     )) : (
@@ -154,7 +229,18 @@ const Users = ({ data }) => {
                     <FontAwesomeIcon icon={faPlus} className="add-icon"/>
                 </div>
 
-             
+                {warning && <div className="warning-container">
+                    <div className="warning-card">
+                        <p>{warning}</p>
+                        <div className="buttons-warning">
+                            <button onClick={async () => await removeDoctor(doctorId)}>{cookies.language === "en" ? "Yes" : "Da"}</button>
+                            <button onClick={() => {
+                                setDoctorId();
+                                setWarning(false);
+                            }}>{cookies.language === "en" ? "No" : "Nu"}</button>
+                        </div>
+                    </div>
+                </div>}
             </div>
         </div>
     );
