@@ -1,4 +1,4 @@
-import { faAngleLeft, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faAngleDown, faAngleLeft, faAngleUp, faCheck, faPlus, faTimes, faZ } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect } from "react";
 import { useState } from "react";
@@ -9,14 +9,20 @@ import Navigation from "../Components/Navigation/Navigation";
 import Select from 'react-select';
 import "./EditDoctorSchedule.css";
 
+const GAPS = 4;
+const END_SCHEDULE_HOUR = 23;
+const START_SCHEDULE_HOUR = 0;
+
 const EditDoctorSchedule = ({ data }) => {
 
+    const minutesPerGap = 60 / GAPS;
 
     const { date } = useParams();
     const dateJS = new Date(date);
     const day = dateJS.getDate();
     const month = dateJS.getMonth();
     const year = dateJS.getFullYear();
+    const dayNumber = dateJS.getDay();
 
     const [schedules, setSchedules] = useState([]);
     const [editing, setEditing] = useState(false);
@@ -27,6 +33,12 @@ const EditDoctorSchedule = ({ data }) => {
     const [endHourValue, setEndHourValue] = useState([]);
     const [endMinutesValue, setEndMinutesValue] = useState([]);
     const [notes, setNotes] = useState([]);
+    const [applyToCalendarValue, setApplyToCalendarValue] = useState(false);
+    const [startHourActiveMenu, setStartHourActiveMenu] = useState([]);
+    const [endHourActiveMenu, setEndHourActiveMenu] = useState([]);
+    const [doctorNameValue, setDoctorNameValue] = useState([]);
+    const [successMessage, setSuccessMessage] = useState("");
+    const [errorMessages, setErrorMessages] = useState([]);
 
     const [cookies, setCookie] = useCookies();
     const navigate = useNavigate();
@@ -53,7 +65,8 @@ const EditDoctorSchedule = ({ data }) => {
         option: (provided, state) => ({
             ...provided,
             color: "var(--text-color)",
-            background: state.isSelected ? "var(--contrast-color)" : state.isFocused ? "var(--selector-color)" : "initial"
+            background: state.isSelected ? "var(--contrast-color)" : state.isFocused ? "var(--selector-color)" : "initial",
+            borderRadius: 10
         }),
         
         menu: (provided, state) => ({
@@ -62,6 +75,8 @@ const EditDoctorSchedule = ({ data }) => {
             
             background: "var(--dark-color)",
             border: "none",
+            borderRadius: 10,
+            boxShadow: "0 0 15px var(--dark-color)"
         }),
 
         singleValue: (provided) => ({
@@ -75,11 +90,13 @@ const EditDoctorSchedule = ({ data }) => {
 
         data.organisation.doctors.forEach(doctor => {
             const currSchedules = JSON.parse(doctor.schedules);
-            const foundSchedule = currSchedules.find(schedule => sameDay(date, new Date(schedule.date)));
+            console.log(currSchedules);
+            const foundSchedule = currSchedules.find(schedule => sameDay(new Date(date), new Date(schedule.date)));
             if (foundSchedule) totalDateSchedules.push({...
                 foundSchedule,
                 color: doctor.color,
-                name: `${doctor.firstname} ${doctor.lastname}`
+                name: `${doctor.firstname} ${doctor.lastname}`,
+                doctorId: doctor._id
             });
         });
 
@@ -90,18 +107,100 @@ const EditDoctorSchedule = ({ data }) => {
         return date1.getDate() === date2.getDate() && date1.getMonth() === date2.getMonth() && date1.getFullYear() === date2.getFullYear();
     };
 
-    const removeSchedule = (idx) => {
-        
+    const removeSchedule = async (scheduleId, doctorId, idx) => {
+        if (!scheduleId || !doctorId) 
+            return setSchedules(currSchedules => {
+                return currSchedules.filter((schedule, scheduleIdx) => scheduleIdx !== idx);
+            });
+    
+        try {
+            const options = {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            };
+
+            const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/remove-doctor-schedule?organisationId=${data.organisation._id}&doctorId=${doctorId}&scheduleId=${scheduleId}`, options);
+            const response = await request.json();
+            if (await response.success) {
+
+                setSchedules(currSchedules => {
+                    return currSchedules.filter((schedule, scheduleIdx) => scheduleIdx !== idx);
+                });
+
+                setSuccessMessage(await response.message[cookies.language]);
+            }
+        } catch (e) {
+            console.log(e);
+        }
     };
     
-    const saveChanges = () => {
+    const saveChanges = async () => {
+        console.log(doctorValue, startHourValue, startMinutesValue, endHourValue, endMinutesValue);
         if (doctorValue && doctorValue.length && doctorValue.some(doctor => doctor === "")) return;
         if (startHourValue && startHourValue.length && startHourValue.some(hour => hour === "")) return;
         if (startMinutesValue && startMinutesValue.length && startMinutesValue.some(minutesValue => minutesValue === "")) return;
         if (endHourValue && endHourValue.length && endHourValue.some(hour => hour === "")) return;
         if (endMinutesValue && endMinutesValue.length && endMinutesValue.some(minutesValue => minutesValue === "")) return;
 
-        navigate(-1);
+        doctorValue.forEach((currDoctorValue, idx) => {
+            const sumStart = Number(startHourValue[idx]) * 60 + Number(startMinutesValue[idx]);
+            const sumEnd = Number(endHourValue[idx]) * 60 + Number(endMinutesValue[idx]);
+
+            if (sumStart <= sumEnd) {
+                return setErrorMessages(currErrMessages => {
+                    return currErrMessages.map((errMessage, errMessageIdx) => {
+                        if (errMessageIdx !== idx) return errMessage;
+                        return cookies.language === "en" ? "Start schedule must be earlier than end schedule!" : "Inceputul programului trebuie sa fie inaintea sfarsitului!";
+                    });
+                });
+            }
+        });
+
+     
+
+        const currSchedules = [];
+
+        doctorValue.forEach((currDoctorValue, idx) => {
+            currSchedules.push({
+                organisationId: data.organisation._id,
+                doctorId: currDoctorValue,
+                scheduleId: schedules.length > idx && schedules[idx]?.scheduleId ? schedules[idx].scheduleId : null,
+                startHour: startHourValue[idx],
+                startMinutes: startMinutesValue[idx],
+                endHour: endHourValue[idx],
+                endMinutes: endMinutesValue[idx],
+                date: schedules.length > idx && schedules[idx]?.scheduleId ? null : dateJS,
+                repeat: applyToCalendarValue[idx],
+                dayNumber: dayNumber,
+                notes: notes[idx]
+            });
+        });
+        
+        currSchedules.forEach((schedule, idx) => {
+            (async () => {
+                
+                const options = {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(schedule)
+                };
+
+                try {
+                    const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/edit-doctor-schedule`, options);
+                    const response = await request.json();
+                } catch(e) {
+                    console.log(e);
+                }
+
+            })();
+        });
+
+        window.location.replace("/doctors-schedule");
+
     };
 
     useEffect(() => {
@@ -111,23 +210,64 @@ const EditDoctorSchedule = ({ data }) => {
     useEffect(() => {
         if (!schedules || !schedules.length) return;
         setDoctorValue([]);
+        setDoctorNameValue([]);
         setStartHourValue([]);
         setStartMinutesValue([]);
         setEndHourValue([]);
         setEndMinutesValue([]);
         setNotes([]);
+        setApplyToCalendarValue([]);
+        setStartHourActiveMenu([]);
+        setEndHourActiveMenu([]);
+        setErrorMessages([]);
 
         schedules.forEach((schedule, idx) => {
-            setDoctorValue(currValues => [...currValues, schedule?.name || ""]);
+            console.log(schedule);
+            setDoctorValue(currValues => [...currValues, schedule?.doctorId || ""]);
+            setDoctorNameValue(currValues => [...currValues, schedule?.name || ""]);
             setStartHourValue(currValue => [...currValue, schedule?.startHour || 0]);
             setStartMinutesValue(currValue => [...currValue, schedule?.startMinutes || 0]);
             setEndHourValue(currValue => [...currValue, schedule?.endHour || 0]);
             setEndMinutesValue(currValue => [...currValue, schedule?.endMinutes || 0]);
             setNotes(currValue => [...currValue, schedule?.notes || ""]);
+            setApplyToCalendarValue(currValue => [...currValue, schedule?.repeat]);
+            setStartHourActiveMenu(currValue => [...currValue, false]);
+            setEndHourActiveMenu(currValue => [...currValue, false]);
+            setErrorMessages(currValue => [...currValue, ""]);
         });
 
     }, [schedules]);
 
+    useEffect(() => {
+        console.log(doctorValue);
+    }, [doctorValue]);
+
+    const focusActiveMenu = (method1, method2, idx) => {
+        console.log("focus");
+        method1(currMenus => {
+            console.log(currMenus);
+            return currMenus.map((activeMenu, menuIdx) => {
+                if (menuIdx !== idx) return activeMenu;
+                return !activeMenu;
+            })
+        });
+
+        method2(currMenus => {
+            console.log(currMenus);
+            return currMenus.map((menu) => false);
+        });
+    };
+
+    const blurActiveMenu = () => {
+        console.log("blur");
+        setStartHourActiveMenu(currMenus => {
+            return currMenus.map((menu) => false);
+        });
+
+        setEndHourActiveMenu(currMenus => {
+            return currMenus.map((menu) => false);
+        });
+    };
 
     return (
         <div className="edit-doctors-schedule">
@@ -149,7 +289,24 @@ const EditDoctorSchedule = ({ data }) => {
 
                 {schedules && schedules.length && (
                     <div className="first-row">
-
+                        <div className="row">
+                            <p>{cookies.language === "en" ? "Doctor" : "Medic"}</p>
+                        </div>
+                        <div className="row">
+                            <p>{cookies.language === "en" ? "Start" : "Inceput"}</p>
+                        </div>
+                        <div className="row">
+                            <p>{cookies.language === "en" ? "Stop" : "Sfarsit"}</p>
+                        </div>
+                        <div className="row">
+                            <p>{cookies.language === "en" ? "Notes" : "Observatii"}</p>
+                        </div>
+                        <div className="row">
+                            <p>{cookies.language === "en" ? "Apply for calendar" : "Aplica pt. tot calendarul"}</p>
+                        </div>
+                        <div className="row">
+                            <p>{cookies.language === "en" ? "Remove" : "Sterge"}</p>
+                        </div>
                     </div>
                 )}
 
@@ -157,7 +314,7 @@ const EditDoctorSchedule = ({ data }) => {
                     <div className="schedule" key={idx}>
 
                         <div className="input">
-                            <Select options={doctorOptions} styles={customStyles} onChange={e => {
+                            <Select options={doctorOptions} placeholder={doctorNameValue[idx]} value={{ label: doctorNameValue[idx], value: doctorValue[idx] }} styles={customStyles} onChange={e => {
                                
                                 setDoctorValue(currDoctors => {
                                     return currDoctors.map((currDoctorValue, doctorIdx) => {
@@ -169,51 +326,238 @@ const EditDoctorSchedule = ({ data }) => {
                         </div>
 
                         <div className="input">
-                            <input type="number" className="time-input" value={startHourValue[idx]} onChange={e => {
-                                setStartHourValue(currData => {
-                                    return currData.map((startHour, hourIdx) => {
-                                        if (hourIdx !== idx) return startHour;
-                                        return e.target.value;
-                                    })
-                                })
-                            }} />
+                            <input 
+                                type="text" 
+                                className="time-input" 
+                                value={`${Number(startHourValue[idx]) < 10 ? `0${startHourValue[idx]}` : startHourValue[idx]}:${startMinutesValue[idx] < 10 ? `0${startMinutesValue[idx]}` : startMinutesValue[idx]}`} 
+                                onClick={() => focusActiveMenu(setStartHourActiveMenu, setEndHourActiveMenu, idx)}  
+
+                                // onBlur={() => blurActiveMenu()}
+                                readOnly
+                            />
+
+                            <div className={`hour-frame ${startHourActiveMenu[idx] ? "active" : ""}`}>
+                                <div className="hour-interval">
+                                    <FontAwesomeIcon 
+                                        icon={faAngleDown} 
+                                        className="angle-icon" 
+                                        onClick={() => {
+                                            setStartHourValue(currValues => {
+                                                return currValues.map((currValue, valueIdx) => {
+                                                    if (valueIdx !== idx) return Number(currValue);
+                                                    if (Number(currValue) - 1 < START_SCHEDULE_HOUR) {
+                                                        setStartMinutesValue(currMinutesValues => {
+                                                            return currMinutesValues.map((value, minutesValueIdx) => {
+                                                                if (minutesValueIdx !== idx) return value;
+                                                                return 60 - minutesPerGap;
+                                                            });
+                                                        });
+
+                                                        return END_SCHEDULE_HOUR;
+                                                    }
+                                                    return Number(currValue) - 1;
+                                                });
+                                            });
+
+                                            
+                                        }}
+                                    />
+                                    <p className="number">{Number(startHourValue[idx]) < 10 ? `0${startHourValue[idx]}` : startHourValue[idx]}</p>
+                                    <FontAwesomeIcon 
+                                        icon={faAngleUp} 
+                                        className="angle-icon" 
+                                        onClick={() => setStartHourValue(currValues => {
+                                            return currValues.map((currValue, valueIdx) => {
+                                                if (valueIdx !== idx) return Number(currValue);
+                                                if (Number(currValue) + 1 > END_SCHEDULE_HOUR) {
+                                                    setStartMinutesValue(currMinutesValues => {
+                                                        return currMinutesValues.map((value, minutesValueIdx) => {
+                                                            if (minutesValueIdx !== idx) return Number(value);
+                                                            return 0;
+                                                        });
+                                                    });
+                                                    
+                                                    return START_SCHEDULE_HOUR;
+                                                }
+
+                                                return Number(currValue) + 1;
+                                            });
+                                        })}
+                                    />
+                                </div>
+                                <div className="differentiator">
+                                    <p>:</p>
+                                </div>
+                                <div className="minutes-interval">
+                                    <FontAwesomeIcon 
+                                        icon={faAngleDown} 
+                                        className="angle-icon"
+                                        onClick={() => {
+                                            setStartMinutesValue(currValues => {
+                                                return currValues.map((currValue, valueIdx) => {
+                                                    if (valueIdx !== idx) return Number(currValue);
+                                                    if (Number(currValue) - minutesPerGap < 0) {
+                                                        setStartHourValue(currHourValues => {
+                                                            return currHourValues.map((hourValue, hourValueIdx) => {
+                                                                if (hourValueIdx !== idx) return Number(hourValue);
+                                                                if (Number(hourValue) === START_SCHEDULE_HOUR) return END_SCHEDULE_HOUR;
+                                                                return Number(hourValue) - 1;
+                                                            });
+                                                        });
+                                                        return 60 - minutesPerGap;
+                                                    }
+                                                    return Number(currValue) - minutesPerGap;
+                                                });
+                                            });
+                                        }} 
+                                    />
+                                    <p className="number">{Number(startMinutesValue[idx]) < 10 ? `0${startMinutesValue[idx]}` : startMinutesValue}</p>
+                                    <FontAwesomeIcon 
+                                        icon={faAngleUp} 
+                                        className="angle-icon" 
+                                        onClick={() => {
+                                            setStartMinutesValue(currValues => {
+                                                return currValues.map((currValue, valueIdx) => {
+                                                    if (valueIdx !== idx) return Number(currValue);
+                                                    if (Number(currValue) + minutesPerGap >= 60) {
+                                                        setStartHourValue(currHourValues => {
+                                                            return currHourValues.map((hourValue, hourValueIdx) => {
+                                                                if (hourValueIdx !== idx) return Number(hourValue);
+                                                                if (Number(hourValue) === END_SCHEDULE_HOUR) return START_SCHEDULE_HOUR;
+                                                                return Number(hourValue) + 1;
+                                                            });
+                                                        });
+
+                                                        return 0;
+                                                    }
+                                                    return Number(currValue) + minutesPerGap;
+                                                });
+                                            });
+                                        }}
+                                    />
+                                </div>
+                            </div>
                         </div>
 
                         <div className="input">
-                            <input type="number" className="time-input" value={startMinutesValue[idx]} onChange={e => {
-                                setStartMinutesValue(currData => {
-                                    return currData.map((minutesValue, minutesIdx) => {
-                                        if (minutesIdx !== idx) return minutesValue;
-                                        return e.target.value;
-                                    })
-                                })
-                            }} />
+                            <input 
+                                type="text" 
+                                className="time-input" 
+                                value={`${endHourValue[idx] < 10 ? `0${endHourValue[idx]}` : endHourValue[idx]}:${endMinutesValue[idx] < 10 ? `0${endMinutesValue[idx]}` : endMinutesValue[idx]}`} 
+                                onClick={() => focusActiveMenu(setEndHourActiveMenu, setStartHourActiveMenu, idx)}  
+                                
+                                // onBlur={() => blurActiveMenu()}
+                                readOnly
+                            />
+
+                            <div className={`hour-frame ${endHourActiveMenu[idx] ? "active" : ""}`}>
+                                <div className="hour-interval">
+                                    <FontAwesomeIcon 
+                                        icon={faAngleDown} 
+                                        className="angle-icon" 
+                                        onClick={() => {
+                                            setEndHourValue(currValues => {
+                                                return currValues.map((currValue, valueIdx) => {
+                                                    if (valueIdx !== idx) return Number(currValue);
+                                                    if (Number(currValue) - 1 < START_SCHEDULE_HOUR) {
+                                                        setEndMinutesValue(currMinutesValues => {
+                                                            return currMinutesValues.map((value, minutesValueIdx) => {
+                                                                if (minutesValueIdx !== idx) return Number(value);
+                                                                return 60 - minutesPerGap;
+                                                            });
+                                                        });
+
+                                                        return END_SCHEDULE_HOUR;
+                                                    }
+                                                    return Number(currValue) - 1;
+                                                });
+                                            });
+
+                                            
+                                        }}
+                                    />
+                                    <p className="number">{Number(endHourValue[idx]) < 10 ? `0${endHourValue[idx]}` : endHourValue[idx]}</p>
+                                    <FontAwesomeIcon 
+                                        icon={faAngleUp} 
+                                        className="angle-icon" 
+                                        onClick={() => setEndHourValue(currValues => {
+                                            return currValues.map((currValue, valueIdx) => {
+                                                if (valueIdx !== idx) return Number(currValue);
+                                                if (Number(currValue) + 1 > END_SCHEDULE_HOUR) {
+                                                    setEndMinutesValue(currMinutesValues => {
+                                                        return currMinutesValues.map((value, minutesValueIdx) => {
+                                                            if (minutesValueIdx !== idx) return value;
+                                                            return 0;
+                                                        });
+                                                    });
+                                                    
+                                                    return START_SCHEDULE_HOUR;
+                                                }
+
+                                                return Number(currValue) + 1;
+                                            });
+                                        })}
+                                    />
+                                </div>
+                                <div className="differentiator">
+                                    <p>:</p>
+                                </div>
+                                <div className="minutes-interval">
+                                    <FontAwesomeIcon 
+                                        icon={faAngleDown} 
+                                        className="angle-icon"
+                                        onClick={(e) => {
+                                            setEndMinutesValue(currValues => {
+                                                return currValues.map((currValue, valueIdx) => {
+                                                    if (valueIdx !== idx) return Number(currValue);
+                                                    if (Number(currValue) - minutesPerGap < 0) {
+                                                        setEndHourValue(currHourValues => {
+                                                            return currHourValues.map((hourValue, hourValueIdx) => {
+                                                                if (hourValueIdx !== idx) return hourValue;
+                                                                if (Number(hourValue) === START_SCHEDULE_HOUR) return END_SCHEDULE_HOUR;
+                                                                return Number(hourValue) - 1;
+                                                            });
+                                                        });
+                                                        return 60 - minutesPerGap;
+                                                    }
+                                                    return Number(currValue) - minutesPerGap;
+                                                });
+                                            });
+
+                                        }} 
+                                    />
+                                    <p className="number">{Number(endMinutesValue[idx]) < 10 ? `0${endMinutesValue[idx]}` : endMinutesValue[idx]}</p>
+                                    <FontAwesomeIcon 
+                                        icon={faAngleUp} 
+                                        className="angle-icon" 
+                                        onClick={() => {
+                                            setEndMinutesValue(currValues => {
+                                                return currValues.map((currValue, valueIdx) => {
+                                                    if (valueIdx !== idx) return Number(currValue);
+                                                    if (Number(currValue) + minutesPerGap >= 60) {
+                                                        setEndHourValue(currHourValues => {
+                                                            return currHourValues.map((hourValue, hourValueIdx) => {
+                                                                if (hourValueIdx !== idx) return Number(hourValue);
+                                                                if (Number(hourValue) === END_SCHEDULE_HOUR) return START_SCHEDULE_HOUR;
+                                                                return Number(hourValue) + 1;
+                                                            });
+                                                        });
+
+                                                        return 0;
+                                                    }
+                                                    return Number(currValue) + minutesPerGap;
+                                                });
+                                            });
+                                        }}
+                                    />
+                                </div>
+                            </div>
+
                         </div>
 
-                        <div className="input">
-                            <input type="number" className="time-input" value={endHourValue[idx]} onChange={e => {
-                                setEndHourValue(currData => {
-                                    return currData.map((endHour, hourIdx) => {
-                                        if (hourIdx !== idx) return endHour;
-                                        return e.target.value;
-                                    })
-                                })
-                            }} />
-                        </div>
 
                         <div className="input">
-                            <input type="number" className="time-input" value={endMinutesValue[idx]} onChange={e => {
-                                setEndMinutesValue(currData => {
-                                    return currData.map((endMinutes, minuteIdx) => {
-                                        if (minuteIdx !== idx) return endMinutes;
-                                        return e.target.value;
-                                    })
-                                })
-                            }} />
-                        </div>
-
-                        <div className="input">
-                            <textarea className="doctor-notes" value={notes[idx]} onChange={e => {
+                            <textarea className="doctor-notes" spellCheck={false} value={notes[idx]} onChange={e => {
                                 setNotes(currNotes => {
                                     return currNotes.map((currNote, noteIdx) => {
                                         if (noteIdx !== idx) return currNote;
@@ -222,21 +566,34 @@ const EditDoctorSchedule = ({ data }) => {
                                 });
                             }} />
                         </div>
+
+                        <div className="input">
+                            <div className={`square ${applyToCalendarValue[idx] ? "active" : ""}`} onClick={() => setApplyToCalendarValue(currValues => {
+                                return currValues.map((currValue, valueIdx) => {
+                                    if (valueIdx !== idx) return currValue;
+                                    return !currValue;
+                                })
+                            })}>
+                                <FontAwesomeIcon icon={faCheck} className="check-icon" />
+                            </div>
+                        </div>
+
+                        <div className="input">
+                            <FontAwesomeIcon className="remove-button" icon={faTimes} onClick={async () => await removeSchedule(schedule?.id, doctorValue[idx] || null, idx)} />
+                        </div>
                     </div>
                 ))}
 
                 <div className="add-button">
                     <FontAwesomeIcon icon={faPlus} className="add-icon" onClick={() => {
                         setSchedules(currSchedules => [...currSchedules, {}]);
-
-                    }}/>
+                    }} />
                 </div>
 
 
-                <button type="button" className={`save-button show`} onClick={() => saveChanges()}>
+                <button type="button" className={`save-button show`} onClick={async () => await saveChanges()}>
                     <p>{cookies.language === "en" ? "Save changes" : "Salveaza modificarile"}</p>
                 </button>
-            
 
             </div>
 
