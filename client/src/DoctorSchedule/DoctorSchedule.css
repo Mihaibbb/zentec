@@ -9,9 +9,10 @@
     width: calc(90% - 2rem);
     margin: 1rem auto;
     display: flex;
-    align-items: center;
-    gap: .5rem;
-    padding-inline: 1rem;
+    flex-direction: column;
+    
+    gap: 1rem;
+    padding: .5rem 1rem;
     border: 1px solid var(--over-difference-color);
 }
 
@@ -20,7 +21,7 @@
     width: 25px;
     height: 25px;
     border-radius: 50%;
-
+    margin-left: 25px;
 }
 
 .list-of-doctors .doctor 
@@ -29,6 +30,15 @@
     align-items: center;
     gap: .75rem;
     cursor: pointer;
+    background: var(--dark-color);
+    box-shadow: 0 0 10px var(--selector-color);
+    border-radius: 20px;
+    
+}
+
+.list-of-doctors .doctor.active 
+{
+    background: var(--selected-color);
 }
 
 .list-of-doctors .doctor p 
@@ -348,6 +358,7 @@
 {
     font-size: 24px;
     color: var(--text-color);
+    margin-right: 10px;
 } 
 
 .doctor-schedule .schedule-container .schedules .day-container .schedule-card 

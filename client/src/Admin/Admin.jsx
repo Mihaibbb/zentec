@@ -8,7 +8,7 @@ import './Admin.css';
 const Admin = () => {
 
     const [organisations, setOrganisations] = useState([]);
-    const [cookies, setCookie] = useCookies(['user-id']);
+    const [cookies, setCookie, removeCookie] = useCookies(['user-id']);
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -84,6 +84,13 @@ const Admin = () => {
             console.log(e);
         }
     };  
+
+    const removeCookies = () => {
+        Object.keys(cookies).forEach(cookie => {
+            removeCookie(cookie);
+        });
+        window.location.reload();
+    };
     
     return (
         <div className="admin">
@@ -154,6 +161,10 @@ const Admin = () => {
 
                 </div>
             ))}
+
+            <button type="button" className="logout-button" onClick={() => removeCookies()}>
+                <p>{cookies.language === "en" ? "Log out" : "Delogare"}</p>
+            </button>
         </div>
     );
 };

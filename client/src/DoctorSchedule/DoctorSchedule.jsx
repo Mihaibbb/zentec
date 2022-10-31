@@ -20,6 +20,7 @@ const DoctorSchedule = ({ data }) => {
     const [totalSchedules, setTotalSchedules] = useState([]);
     const [doctorQuery, setDoctorQuery] = useState("");
     const [doctorsList, setDoctorsList] = useState([]);
+    const [triggerDoctorInput, setTriggerDoctorInput] = useState(false);
     
     const filters = cookies.language === "en" ? ["Working Week", "Week", "Month"] : ["Saptamana Lucratoare", "Saptamana", "Luna"];
     const months = cookies.language === "en" ? 
@@ -52,8 +53,9 @@ const DoctorSchedule = ({ data }) => {
         })();
     }, [doctorQuery]);
 
-    const getSearchedDoctors = async () => {
-        if (!doctorQuery || doctorQuery?.length === 0) {
+    const getSearchedDoctors = async (fromFocus = false) => {
+    
+        if ((!doctorQuery || doctorQuery?.length === 0) && !fromFocus) {
             setDoctorsList([]);
             return;
         }
@@ -177,7 +179,7 @@ const DoctorSchedule = ({ data }) => {
     const getSchedulesForDate = (date) => {
         const totalDateSchedules = [];
 
-        data.organisation.doctors.forEach(doctor => {
+        activeDoctors.forEach(doctor => {
             const currSchedules = JSON.parse(doctor.schedules);
             const foundSchedule = currSchedules.find(schedule => sameDay(date, new Date(schedule.date)));
             if (foundSchedule) totalDateSchedules.push({...
@@ -205,9 +207,19 @@ const DoctorSchedule = ({ data }) => {
         setActiveDoctors(currActiveDoctors => {
             return currActiveDoctors.filter(currDoctor => currDoctor._id !== doctorId);
         });
+        setDoctorQuery("");
+        setDoctorsList([]);
     };
 
-    const addActiveDoctor = (doctor) => setActiveDoctors(currActiveDoctors => [...currActiveDoctors, doctor]);
+    const addActiveDoctor = (doctor) => {
+        setActiveDoctors(currActiveDoctors => [...currActiveDoctors, doctor]);
+        setDoctorsList([]);
+        setDoctorQuery("");
+    }
+
+    const isActiveDoctor = (doctor, currDoctorsList) => {
+        return currDoctorsList.some(currDoctor => currDoctor._id === doctor._id);
+    };
 
     const sameDay = (date1, date2) => {
         return date1.getDate() === date2.getDate() && date1.getMonth() === date2.getMonth() && date1.getFullYear() === date2.getFullYear();
@@ -236,13 +248,22 @@ const DoctorSchedule = ({ data }) => {
                         </div>
                     ))}
 
-                    <input type="text" value={doctorQuery} onChange={e => setDoctorQuery(e.target.value)} />
+                    <input 
+                        type="text"
+                        value={doctorQuery}
+                        onFocus={() => getSearchedDoctors(true)}
+                        onClick={() => {
+                            triggerDoctorInput ? setDoctorsList([]) : getSearchedDoctors(true);
+                            setTriggerDoctorInput(currStatus => !currStatus);
+                        }}
+                        onChange={e => setDoctorQuery(e.target.value)} 
+                    />
                     
                 </div>
 
                 {doctorsList && doctorsList.length > 0 && <div className="list-of-doctors">
                     { doctorsList.map((doctor, idx) => (
-                        <div className="doctor" key={idx}>
+                        <div className={`doctor ${isActiveDoctor(doctor, activeDoctors) ? "active" : ""}`} key={idx} onClick={() => !isActiveDoctor(doctor, activeDoctors) ? addActiveDoctor(doctor) : removeActiveDoctor(doctor._id)}>
                             <div className="doctor-color" style={{ backgroundColor: doctor.color }}/>
                             <p>{doctor.firstname} {doctor.lastname}</p>
                         </div>

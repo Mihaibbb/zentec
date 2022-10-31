@@ -81,7 +81,8 @@ const EditDoctorSchedule = ({ data }) => {
 
         singleValue: (provided) => ({
             ...provided,
-            color: "var(--text-color)"
+            color: "var(--text-color)",
+            width: "100%"
         })
     };
 
@@ -567,7 +568,7 @@ const EditDoctorSchedule = ({ data }) => {
                             }} />
                         </div>
 
-                        <div className="input">
+                        <div className="input input-square">
                             <div className={`square ${applyToCalendarValue[idx] ? "active" : ""}`} onClick={() => setApplyToCalendarValue(currValues => {
                                 return currValues.map((currValue, valueIdx) => {
                                     if (valueIdx !== idx) return currValue;

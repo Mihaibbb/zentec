@@ -218,3 +218,24 @@
     font-size: 30px;
 
 }
+
+.admin button 
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    outline: none;
+    background: var(--contrast-color);
+    border-radius: 20px;
+    width: 90%;
+    cursor: pointer;
+}
+
+.admin button p 
+{
+    font-family: "Source Sans Pro";
+    font-size: 20px;
+    margin: 0;
+    padding: 1rem;
+}
