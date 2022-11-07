@@ -10,12 +10,24 @@ exports.createAppointment = async (req, res, next) => {
     
     try {
         const appointmentId = generateId(25);
-        sql = "INSERT INTO ?? (_id, startDate, endDate, users, patients, title, income, typeIncome, notes, finished, date, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        sql = "INSERT INTO ?? (_id, startDate, endDate, users, patients, title, income, typeIncome, notes, finished, confirmed, date, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         const insertedAppointment = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.schedules`, appointmentId, new Date(startDate), new Date(endDate), JSON.stringify(users), JSON.stringify(patients), title, income, typeIncome, notes, false, new Date(date), new Date()]);
         if (!insertedAppointment) return new ErrorResponse("An error occured!", 404);
         
-        // Sms Api for patient
+        // --- Sms Api for patient ---
 
+        // Get api key
+
+        sql = "SELECT * FROM ??";
+        const detailsOrganisationRows = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.details`]);
+        const detailsOrganisation = await detailsOrganisationRows[0];
+        const smsMessageRaw = await detailsOrganisation["sms_message"];
+        const apiKey = await detailsOrganisation["api_key"];
+        let smsMessage = await smsMessageRaw.replaceAll("{NUME_ORGANIZATIE}", await detailsOrganisation.name);
+        smsMessage = await smsMessage.replaceAll("{DATA_PROGRAMARE}", `${new Date(startDate).getDate()} ${new Date(startDate).getMonth() + 1} ${new Date(startDate).getFullYear()}`);
+        smsMessage = await smsMessage.replaceAll("{ORA_PROGRAMARE}", `${new Date(startDate).getHours()}:${new Date(startDate).getMinutes()}`);
+        smsMessage = await smsMessage.replaceAll("{LINK_CONFIRMARE}", `${process.env.BACKEND_URL}/api/patient/confirm-appointment?organisationId=${_id}&doctorId=${users[0]}&appointmentId=${appointmentId}`);
+        
         // 1 day earlier message
 
         let patientsPhones = "";
@@ -24,7 +36,7 @@ exports.createAppointment = async (req, res, next) => {
 
         let data = JSON.stringify({
             phone: patientsPhones,
-            shortTextMessage: `Buna ziua! Clinica Zen Tec va asteapta maine la ora ${new Date(startDate).getHours()}:${new Date(startDate).getMinutes()}.`,
+            shortTextMessage: smsMessage,
             startDate: new Date(startDate).getTime() - (1000 * 60 * 60 * 24),
             endDate: new Date(startDate).getTime() - (1000 * 60 * 60 * 24) + (1000 * 60 * 3)
         });
@@ -33,7 +45,7 @@ exports.createAppointment = async (req, res, next) => {
             method: 'post',
             url: process.env.SMS_URL,
             headers: {
-                Authorization: process.env.SMS_API,
+                Authorization: await apiKey,
                 'Content-Type': 'application/json',
             },
             data: data
@@ -47,34 +59,7 @@ exports.createAppointment = async (req, res, next) => {
             console.log("Error: ", e);
         }
 
-        // 1 hour earlier message
-        console.log(new Date(startDate))
-
-        data = JSON.stringify({
-            phone: patientsPhones,
-            shortTextMessage: language === "ro" ? `Buna ziua! Clinica Zen Tec va asteapta astazi la ora ${new Date(startDate).getHours()}:${new Date(startDate).getMinutes()}.` : ``,
-            startDate: new Date(startDate).getTime() - (1000 * 60 * 60) - (1000 * 60 * 3),
-            endDate: new Date(startDate).getTime() - (1000 * 60 * 60),
-        });
-
-        config = {
-            method: 'post',
-            url: process.env.SMS_URL,
-            headers: {
-                Authorization: process.env.SMS_API,
-                'Content-Type': 'application/json',
-            },
-            data: data
-        };
-
-        try {
-            const response = await axios(config);
-            if (!response) console.log("Error sending scheduled SMS.");
-            else console.log(response.data)
-        } catch (e) {
-            console.log("Error: ", e);
-        }
-
+       
         if (req.body?.saved) return res.status(200).json({ success: true, message: { en: "Appointment added successfully!", ro: "Programare adaugata cu succes!" } });
         
         // Push to patient's historic
@@ -702,6 +687,8 @@ exports.getSchedulesForDay = async (req, res, next) => {
         res.status(404).json({ success: false, message: { en: "An error occured!", ro: "A aparut o eroare!" } });
     }
 };
+
+
 
 exports.getStatisticsData = async (req, res, next) => {
     const { _id } = req.body; 

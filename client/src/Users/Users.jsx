@@ -143,7 +143,7 @@ const Users = ({ data }) => {
                 <Header data={data} />
                 <h2 className="title">{cookies.language === "en" ? "Doctors List" : "Lista Medici"}</h2>
         
-                {doctors && <div className="search-container">
+                {doctors && doctors.length > 0 && <div className="search-container">
                     <input type="text" value={query} onChange={e => setQuery(e.target.value)} placeholder={cookies.language === "en" ? "Search patient..." : "Cauta doctor..."} />
                     <FontAwesomeIcon icon={faSearch} className="search-icon" />
                 </div>}

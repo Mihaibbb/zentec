@@ -4,7 +4,7 @@ const bcrypt = require("bcryptjs");
 const db = require("../db");
 
 exports.createOrganisation = async (req, res, next) => {
-    const { name, adminId, orgId, smsLimit } = req.body;
+    const { name, adminId, orgId, smsLimit, smsMessage, apiKey } = req.body;
    
     try {
         
@@ -20,6 +20,8 @@ exports.createOrganisation = async (req, res, next) => {
         createTableSql += 'name varchar(128) not null, ';
         createTableSql += 'date date not null, ';
         createTableSql += 'sms_limit int(10), ';
+        createTableSql += 'sms_message text not null, ';
+        createTableSql += 'api_key varchar(128) not null, ';
         createTableSql += '_id varchar(25) not null )';
 
         await db.query(createTableSql, ["details"]);
@@ -62,6 +64,7 @@ exports.createOrganisation = async (req, res, next) => {
         createTableSql += 'notes text, ';
         createTableSql += 'users json not null, ';
         createTableSql += 'finished boolean not null, ';
+        createTableSql += 'confirmed boolean not null, ';
         createTableSql += 'date date not null, ';
         createTableSql += 'createdAt date not null )';
 
@@ -99,8 +102,8 @@ exports.createOrganisation = async (req, res, next) => {
 
         // Insert into details a row of organisation's details
 
-        let sql = 'INSERT INTO ?? (name, date, sms_limit, _id) VALUES (?, ?, ?, ?)';
-        const result = await db.query(sql, ['details', name, new Date(), smsLimit, orgId]);
+        let sql = 'INSERT INTO ?? (name, date, sms_limit, sms_message, api_key, _id) VALUES (?, ?, ?, ?, ?, ?)';
+        const result = await db.query(sql, ['details', name, new Date(), smsLimit, smsMessage, apiKey, orgId]);
         if (await result) res.status(201).json({ message: { en: "Organisation created successfully!", ro: "Organizatia a fost creata cu succes!" }, success: true });
     } catch (e) {
         console.log(e);
@@ -144,6 +147,8 @@ exports.getOrganisationsData = async (req, res, next) => {
             const _id = await detail._id;
             const name = await detail.name;
             const date = await detail.date;
+            const smsMessage = await detail.smsMessage;
+            const apiKey = await detail.apiKey;
             const schedules = await db.query("SELECT * FROM ??", [`${org.Database}.schedules`]);
             const patients = await db.query("SELECT * FROM ??", [`${org.Database}.patients`]);
             const doctors = await db.query("SELECT * FROM ??", [`${org.Database}.doctors`]);
@@ -152,6 +157,8 @@ exports.getOrganisationsData = async (req, res, next) => {
                 _id: await _id,
                 name: await name,
                 date: await date,
+                smsMessage: await smsMessage,
+                apiKey: await apiKey,
                 schedules: await schedules,
                 patients: await patients,
                 doctors: await doctors
@@ -163,6 +170,8 @@ exports.getOrganisationsData = async (req, res, next) => {
                 name: await name,
                 date: await date,
                 schedules: await schedules,
+                smsMessage: await smsMessage,
+                apiKey: await apiKey,
                 patients: await patients,
                 doctors: await doctors
             };

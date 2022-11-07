@@ -7,9 +7,12 @@ import { useEffect } from "react";
 const CreateOrganisation = () => {
 
     const [organisationName, setOrganisationName] = useState("");
+    const [smsApiKey, setSmsApiKey] = useState("");
+    const [smsMessage, setSmsMessage] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
     const [cookies, setCookie] = useCookies();
     const [orgId, setOrgId] = useState();
+    const textVariables = ["Nume Organizatie", "Data Programare", "Ora Programare", "Link Confirmare"];
     const navigate = useNavigate();
 
     const generateId = (length) => {
@@ -24,7 +27,7 @@ const CreateOrganisation = () => {
     }
     
     const createCurrentOrganisation = async () => {
-        if (organisationName.length === 0) {
+        if (organisationName.length === 0 || smsApiKey.length === 0 || smsMessage.length === 0) {
             setErrorMessage(cookies.language === "en" ? "Please fill each field." : "Compleateaza fiecare camp.");
             return;
         } else if (organisationName.length < 4) {
@@ -40,7 +43,9 @@ const CreateOrganisation = () => {
             body: JSON.stringify({
                 name: organisationName,
                 adminId: cookies['user-id'],
-                orgId
+                orgId,
+                apiKey: smsApiKey,
+                smsMessage
             })
         };
 
@@ -54,6 +59,11 @@ const CreateOrganisation = () => {
         setOrgId(generateId(25));
     }, []);
 
+    const addVariable = (textVariable) => {
+        const text = textVariable.replaceAll(" ", "_");
+        setSmsMessage(currMessage => `${currMessage} ${text.toUpperCase()}`);
+    };
+
     return orgId && (
         <div className="center-container">
             <div className="image"></div>
@@ -64,6 +74,26 @@ const CreateOrganisation = () => {
                     <div className="input">
                         <p>{cookies.language === "en" ? "Organisation Name" : "Numele organizatiei"}</p>
                         <input type="text" placeholder={cookies.language === "en" ? "Organisation Name" : "Numele organizatiei"} value={organisationName} onChange={e => setOrganisationName(e.target.value)} />
+                    </div>
+
+                    <div className="input">
+                        <p>{cookies.language === "en" ? "SMS API Key" : "SMS Cheie API"}</p>
+                        <input type="text" placeholder={cookies.language === "en" ? "Key" : "Cheie"} value={smsApiKey} onChange={e => setSmsApiKey(e.target.value)} />
+                    </div>
+
+                    <div className="input">
+                        <p>{cookies.language === "en" ? "SMS General Message" : "SMS Mesaj General"}</p>
+                        <textarea value={smsMessage} onChange={e => setSmsMessage(e.target.value)} />
+                        <div className="text-variables">
+                            <p>{cookies.language === "en" ? "Text variables:" : "Variabile Text:"}</p>
+                            <div className="list">
+                                {textVariables.map((textVariable, idx) => (
+                                    <div className="item" key={idx} onClick={() => addVariable(textVariable)}>
+                                        <p className="item-text">{textVariable}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
                     </div>
 
                     <button type="text" onClick={async () => await createCurrentOrganisation()}>

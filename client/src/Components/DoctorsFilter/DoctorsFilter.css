@@ -1,0 +1,128 @@
+
+ .filter-container
+{
+    width: 100%;
+    max-width: 90%;
+    margin: 0 auto;
+    border-radius: 12px;
+    border: 1px solid var(--over-difference-color);
+    padding: .5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+ .filter-container input 
+{
+    border: none;
+    outline: none;
+    width: 100%;
+    background: transparent;
+    color: var(--text-color);
+    font-size: 18px;
+}
+
+.filter-container .filter-doctor
+{
+    display: flex;
+    min-width: 200px;
+    align-items: center;
+    justify-content: space-around;
+    border: 1.5px solid var(--contrast-color);
+    border-radius: 12px;
+    padding-inline: 1rem;
+}
+
+ .filter-container .filter-doctor p
+{
+    color: var(--text-color);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    margin-inline: .25rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.element-title 
+{
+    width: 90%;
+    margin: 1rem auto;
+}
+
+.filter-container .filter-doctor .close-icon
+{
+    color: var(--error-color);
+    cursor: pointer;
+    width: 18px;
+    height: 18px;
+    transition: all 400ms ease-in-out;
+    
+}
+
+.filter-container .filter-doctor .close-icon:hover
+{
+    background: var(--error-color);
+    color: var(--text-color);
+    padding: .5rem;
+    border-radius: 50%;
+}
+
+.filter-container .filter-doctor .color 
+{
+    aspect-ratio: 1;
+
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
+}
+
+
+.list-of-doctors
+{
+    width: calc(90% - 2rem);
+    margin: 1rem auto;
+    display: flex;
+    flex-direction: column;
+    
+    gap: 1rem;
+    padding: .5rem 1rem;
+    border: 1px solid var(--over-difference-color);
+}
+
+.list-of-doctors .doctor-color
+{
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    margin-left: 25px;
+}
+
+.list-of-doctors .doctor 
+{
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    cursor: pointer;
+    background: var(--dark-color);
+    box-shadow: 0 0 10px var(--selector-color);
+    border-radius: 20px;
+    
+}
+
+.list-of-doctors .doctor.active 
+{
+    background: var(--selected-color);
+}
+
+.list-of-doctors .doctor p 
+{
+    color: var(--text-color);
+}
+
+.element-title
+{
+    font-size: 20px;
+    color: var(--text-color-2);
+    
+}

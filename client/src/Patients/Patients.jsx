@@ -112,7 +112,7 @@ const Patients = ({ data }) => {
                 {location.state?.message && <div className="message">{location.state?.message[cookies['language']]}</div>}
                 <h2 className="title">{cookies.language === "en" ? "Patients" : "Pacienti"}</h2>
 
-                {patients && <div className="search-container">
+                {patients && patients.length > 0 && <div className="search-container">
                     <input type="text" value={query} onChange={e => setQuery(e.target.value)} placeholder={cookies.language === "en" ? "Search patient..." : "Cauta pacient..."} />
                     <FontAwesomeIcon icon={faSearch} className="search-icon" />
                 </div>}

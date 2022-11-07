@@ -10,6 +10,7 @@ const imagesRouter = require("./routes/images");
 const adminRouter = require("./routes/admin");
 const organisationRouter = require("./routes/organisation");
 const userRouter = require("./routes/user");
+const patientRouter = require("./routes/patient");
 const connection = require("./db");
 const cors = require("cors");
 const path = require("path");
@@ -39,6 +40,7 @@ app.use("/api/upload-image", imagesRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api/organisation", organisationRouter);
 app.use("/api/user", userRouter);
+app.use("/api/patient", patientRouter);
 
 // Error Handler
 app.use(errorHandler);

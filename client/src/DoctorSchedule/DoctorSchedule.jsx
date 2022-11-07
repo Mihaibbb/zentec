@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
+import DoctorsFilter from "../Components/DoctorsFilter/DoctorsFilter";
 import Header from "../Components/Header/Header";
 import Navigation from "../Components/Navigation/Navigation";
 import "./DoctorSchedule.css";
@@ -15,12 +16,9 @@ const DoctorSchedule = ({ data }) => {
     const [date, setDate] = useState(new Date());
     const [days, setDays] = useState([new Date()]);
     const [filterActiveIdx, setFilterActiveIdx] = useState(0);
-    const [doctors, setDoctors] = useState(data.organisation.doctors || []);
+    const [doctors, setDoctors] = useState(data.organisation?.doctors || []);
     const [activeDoctors, setActiveDoctors] = useState(doctors);
     const [totalSchedules, setTotalSchedules] = useState([]);
-    const [doctorQuery, setDoctorQuery] = useState("");
-    const [doctorsList, setDoctorsList] = useState([]);
-    const [triggerDoctorInput, setTriggerDoctorInput] = useState(false);
     
     const filters = cookies.language === "en" ? ["Working Week", "Week", "Month"] : ["Saptamana Lucratoare", "Saptamana", "Luna"];
     const months = cookies.language === "en" ? 
@@ -46,42 +44,7 @@ const DoctorSchedule = ({ data }) => {
         else setDays(getMonth(date));
 
     }, [filterActiveIdx, date]);
-
-    useEffect(() => {
-        (async () => {
-            await getSearchedDoctors();
-        })();
-    }, [doctorQuery]);
-
-    const getSearchedDoctors = async (fromFocus = false) => {
     
-        if ((!doctorQuery || doctorQuery?.length === 0) && !fromFocus) {
-            setDoctorsList([]);
-            return;
-        }
-
-        try {
-            const options = {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    organisationId: data.organisation._id,
-                    searchQuery: doctorQuery
-                })
-            };
-
-            const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/search-doctor`, options);
-            const response = await request.json();
-
-            if (await response.success) setDoctorsList(await response.doctors);
-            else setDoctorsList([]);
-            
-        } catch (e) {
-            console.log(e);
-        }
-    };
 
     const getWorkingWeek = (currDate) => {
         if (currDate.getDay() === 6) currDate = new Date(currDate.getTime() - 24 * 60 * 60 * 1000);
@@ -202,27 +165,13 @@ const DoctorSchedule = ({ data }) => {
         return invisibleDays;
     }; 
 
-    const removeActiveDoctor = (doctorId) => {
-        if (activeDoctors.length === 1) return;
-        setActiveDoctors(currActiveDoctors => {
-            return currActiveDoctors.filter(currDoctor => currDoctor._id !== doctorId);
-        });
-        setDoctorQuery("");
-        setDoctorsList([]);
-    };
-
-    const addActiveDoctor = (doctor) => {
-        setActiveDoctors(currActiveDoctors => [...currActiveDoctors, doctor]);
-        setDoctorsList([]);
-        setDoctorQuery("");
-    }
-
-    const isActiveDoctor = (doctor, currDoctorsList) => {
-        return currDoctorsList.some(currDoctor => currDoctor._id === doctor._id);
-    };
 
     const sameDay = (date1, date2) => {
         return date1.getDate() === date2.getDate() && date1.getMonth() === date2.getMonth() && date1.getFullYear() === date2.getFullYear();
+    };
+
+    const changeActiveDoctors = (newActiveDoctors) => {
+        setActiveDoctors(newActiveDoctors);
     };
 
     const editScheduleDay = (date) => navigate(`/doctors-schedule/${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`);
@@ -238,40 +187,9 @@ const DoctorSchedule = ({ data }) => {
                 <h2 className="title">{cookies.language === "en" ? "Doctors Schedule" : "Program Medici"}</h2>
 
                  {/* Filter for doctors */}
-                <h3 className="element-title">{cookies.language === "en" ? "Doctors" : "Medici"}</h3>
-                <div className="filter-container">
-                    {activeDoctors && activeDoctors.length > 0 && activeDoctors.map((activeDoctor, idx) => (
-                        <div className="filter-doctor" key={idx}>
-                            <div className="color" style={{ backgroundColor: activeDoctor.color }}/>
-                            <p>{activeDoctor.firstname} {activeDoctor.lastname}</p>
-                            <FontAwesomeIcon icon={faTimes} className="close-icon" onClick={() => removeActiveDoctor(activeDoctor._id)} />
-                        </div>
-                    ))}
-
-                    <input 
-                        type="text"
-                        value={doctorQuery}
-                        onFocus={() => getSearchedDoctors(true)}
-                        onClick={() => {
-                            triggerDoctorInput ? setDoctorsList([]) : getSearchedDoctors(true);
-                            setTriggerDoctorInput(currStatus => !currStatus);
-                        }}
-                        onChange={e => setDoctorQuery(e.target.value)} 
-                    />
-                    
-                </div>
-
-                {doctorsList && doctorsList.length > 0 && <div className="list-of-doctors">
-                    { doctorsList.map((doctor, idx) => (
-                        <div className={`doctor ${isActiveDoctor(doctor, activeDoctors) ? "active" : ""}`} key={idx} onClick={() => !isActiveDoctor(doctor, activeDoctors) ? addActiveDoctor(doctor) : removeActiveDoctor(doctor._id)}>
-                            <div className="doctor-color" style={{ backgroundColor: doctor.color }}/>
-                            <p>{doctor.firstname} {doctor.lastname}</p>
-                        </div>
-                    ))}
-                </div>}
-
+                <DoctorsFilter data={data} changeValue={changeActiveDoctors} />
+                
                 <div className="schedule-container">
-
                     <div className="schedule-filter">
                         {filters.map((filter, idx) => (
                             <div className={`filter ${filterActiveIdx === idx ? "active" : ""}`} key={idx} onClick={() => setFilterActiveIdx(idx)}>

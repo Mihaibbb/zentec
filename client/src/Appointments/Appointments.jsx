@@ -8,6 +8,8 @@ import { faCheck, faAngleDown, faAngleLeft, faAngleRight, faAngleUp, faBan, faMi
 import { useCookies } from 'react-cookie';
 import CreatePatient from '../CreatePatient/CreatePatient';
 import * as React from 'react';
+import DoctorsFilter from '../Components/DoctorsFilter/DoctorsFilter';
+import "../DoctorSchedule/DoctorSchedule.css";
 
 const Appointments = ({ data }) => {
 
@@ -33,8 +35,8 @@ const Appointments = ({ data }) => {
     const [firstElement, setFirstElement] = useState();
     const [newDay, setNewDay] = useState();
     const [filterActive, setFilterActive] = useState(0);
-    const [doctors, setDoctors] = useState(data.doctors);
-
+    const [doctors, setDoctors] = useState(data.organisation.doctors);
+    
     const [appointments, setAppointments] = useState(data.organisation.schedules);
     const [appointmentDoctorId, setAppointmentDoctorId] = useState();
     const [appointmentDateValue, setAppointmentDateValue] = useState();
@@ -259,7 +261,6 @@ const Appointments = ({ data }) => {
             setAppointmentDateValue();
             setAppointmentDoctorId();
         }
-       
     };
 
     const closeCreateAppointment = () => {
@@ -629,9 +630,7 @@ const Appointments = ({ data }) => {
         let dayIdx = currDate.getDay();
         
         const currWeek = [];
-
         currWeek.push(currDate);
-
 
         while (dayIdx < 5) {
             currDate = new Date(currDate.getTime() + 24 * 60 * 60 * 1000);
@@ -696,6 +695,7 @@ const Appointments = ({ data }) => {
     };
 
     const getMonthData = (doctorColor) => {
+
         const daysInMonth = new Date(date.getFullYear(), date.getMonth(), 0).getDate();
         console.log(new Date(date.getFullYear(), date.getMonth(), 0));
         const dayComponents = [];
@@ -789,7 +789,9 @@ const Appointments = ({ data }) => {
 
     };
 
-    
+    const changeActiveDoctors = (currActiveDoctors) => {
+        setDoctors(currActiveDoctors);
+    };
 
     return !activeCreatePatient ? (
         <div className="appointments">
@@ -893,6 +895,8 @@ const Appointments = ({ data }) => {
                     </div>
                 </div>
 
+                <DoctorsFilter data={data} changeValue={changeActiveDoctors} />
+
                 <div className="options">
                     <div className="option">
                         <div className={`option-icon ${activeGaps ? "active" : ""}`} onClick={() => setActiveGaps(currStatus => !currStatus)}>
@@ -915,25 +919,29 @@ const Appointments = ({ data }) => {
 
                     <div className="schedules" style={{ marginTop: hourContainerHeight }}>
                         {doctors && doctors.length > 0 && doctors.map((doctor, idx) => (
-                            filterActive !== 3 && filterActive !== 4 ? 
-                            <div className={`schedule-container ${activeGaps ? "active-gaps" : ""}`} key={idx} ref={ref => doctorRef.current[idx] = ref}>
-                                {days.map((day, dayIdx) => (
-                                    filterActive === 0 ? (
-                                        <div className="day-container" key={dayIdx}>
-                                            {getSchedule(day, doctor.color, doctor)}
-                                        </div>
-                                    ) : filterActive === 1 || filterActive === 2 ? (
-                                        <div key={dayIdx} className="day-of-week-container">
-                                            <h2>{`${daysOfWeek[day.getDay()]} ${day.getDate()}`}</h2>
-                                            <div className="day-container" >
+                            filterActive !== 3 && filterActive !== 4 ?
+                            <div className="schedule-parent-container">
+                                <h2 className="doctors-title">{doctor.firstname} {doctor.lastname}</h2>
+                                <div className={`schedule-container ${activeGaps ? "active-gaps" : ""}`} key={idx} ref={ref => doctorRef.current[idx] = ref}>
+                                    {days && days.length > 0 && days.map((day, dayIdx) => (
+                                        filterActive === 0 ? (
+                                            <div className="day-container" key={dayIdx}>
                                                 {getSchedule(day, doctor.color, doctor)}
                                             </div>
-                                        </div>
-                                    ) : null
-                                   
-                                ))}
+                                        ) : filterActive === 1 || filterActive === 2 ? (
+                                            <div key={dayIdx} className="day-of-week-container">
+                                                <h2>{`${daysOfWeek[day.getDay()]} ${day.getDate()}`}</h2>
+                                                <div className="day-container" >
+                                                    {getSchedule(day, doctor.color, doctor)}
+                                                </div>
+                                            </div>
+                                        ) : null
+                                    
+                                    ))}
                                 
-                            </div> : filterActive === 3 ?
+                                </div> 
+                            </div> 
+                            : filterActive === 3 ?
                             <div className="month-schedule" key={idx} ref={ref => doctorRef.current[idx] = ref}>
                                 {getMonthData(doctor.color)}
                             </div> : filterActive === 4 ?
@@ -1105,7 +1113,6 @@ const Appointments = ({ data }) => {
 
                     </div>
                 </div>
-
 
                 <div className={`appointment-details ${activeEditAppointment ? "active" : ""}`}>
                     <div className="appointment-details-card">

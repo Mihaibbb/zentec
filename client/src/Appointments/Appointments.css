@@ -68,7 +68,7 @@ input[type=number] {
 .appointments .content .scheduler 
 {
     display: flex;
-    margin: 1rem 0rem;
+    margin: 3rem 0rem;
     width: 100%;
 }
 
@@ -164,14 +164,42 @@ input[type=number] {
 
 }
 
+.appointments .schedule-parent-container
+{
+    width: 100%;
+    height: 100%;
+    margin: 0 1rem;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.appointments .schedule-parent-container h2 
+{
+    color: var(--text-color);
+    text-align: center;
+    position: absolute;
+    top: -125px;
+}
+
 .appointments .schedule-container
 {
    width: 100%;
    height: 103.5%;
    --doctor-color: var(--contrast-color);
    display: flex;
-   margin: 5rem auto;
+   margin: 0rem auto;
+   position: relative;
    margin-right: 2rem;
+}
+
+.appointments .schedule-container h2
+{
+    position: absolute;
+    top: -60px;
+    margin: 0;
+   
 }
 
 .appointments .schedule-container .day-container
