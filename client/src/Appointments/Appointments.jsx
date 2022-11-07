@@ -907,40 +907,42 @@ const Appointments = ({ data }) => {
                 </div>
             
                 <div className="scheduler">
-                    {filterActive !== 3 && filterActive !== 4 && 
-                        <div className="hours">
-                            {hours.map((hour, hourIdx) => (
-                                <div className="hour" key={hourIdx}>
-                                    <p>{hour < 10 ? `0${hour}:00` : `${hour}:00`}</p>
-                                </div>
-                            ))}
-                        </div>
-                    }
+                    
 
                     <div className="schedules" style={{ marginTop: hourContainerHeight }}>
                         {doctors && doctors.length > 0 && doctors.map((doctor, idx) => (
                             filterActive !== 3 && filterActive !== 4 ?
-                            <div className="schedule-parent-container">
-                                <h2 className="doctors-title">{doctor.firstname} {doctor.lastname}</h2>
-                                <div className={`schedule-container ${activeGaps ? "active-gaps" : ""}`} key={idx} ref={ref => doctorRef.current[idx] = ref}>
-                                    {days && days.length > 0 && days.map((day, dayIdx) => (
-                                        filterActive === 0 ? (
-                                            <div className="day-container" key={dayIdx}>
-                                                {getSchedule(day, doctor.color, doctor)}
-                                            </div>
-                                        ) : filterActive === 1 || filterActive === 2 ? (
-                                            <div key={dayIdx} className="day-of-week-container">
-                                                <h2>{`${daysOfWeek[day.getDay()]} ${day.getDate()}`}</h2>
-                                                <div className="day-container" >
+                            <div className="schedule-content">
+                                <div className="hours">
+                                    {hours.map((hour, hourIdx) => (
+                                        <div className="hour" key={hourIdx}>
+                                            <p>{hour < 10 ? `0${hour}:00` : `${hour}:00`}</p>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                <div className="schedule-parent-container">
+                                    <h2 className="doctors-title">{doctor.firstname} {doctor.lastname}</h2>
+                                    <div className={`schedule-container ${activeGaps ? "active-gaps" : ""}`} key={idx} ref={ref => doctorRef.current[idx] = ref}>
+                                        {days && days.length > 0 && days.map((day, dayIdx) => (
+                                            filterActive === 0 ? (
+                                                <div className="day-container" key={dayIdx}>
                                                     {getSchedule(day, doctor.color, doctor)}
                                                 </div>
-                                            </div>
-                                        ) : null
+                                            ) : filterActive === 1 || filterActive === 2 ? (
+                                                <div key={dayIdx} className="day-of-week-container">
+                                                    <h2>{`${daysOfWeek[day.getDay()]} ${day.getDate()}`}</h2>
+                                                    <div className="day-container" >
+                                                        {getSchedule(day, doctor.color, doctor)}
+                                                    </div>
+                                                </div>
+                                            ) : null
+                                        
+                                        ))}
                                     
-                                    ))}
-                                
+                                    </div> 
                                 </div> 
-                            </div> 
+                            </div>
                             : filterActive === 3 ?
                             <div className="month-schedule" key={idx} ref={ref => doctorRef.current[idx] = ref}>
                                 {getMonthData(doctor.color)}

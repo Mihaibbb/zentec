@@ -146,6 +146,7 @@ input[type=number] {
     min-height: 100%;
     flex: 1;
     justify-content: center;
+    margin-inline: 1rem;
 }
 
 .appointments .scheduler .hours .hour p 
@@ -153,6 +154,11 @@ input[type=number] {
     color: var(--text-color);
     font-size: 17px;
     font-family: "Inter";
+}
+
+.appointments .scheduler .hours .hour:last-child 
+{
+    opacity: 0;
 }
 
 .appointments .scheduler .hours .hour 
@@ -171,6 +177,7 @@ input[type=number] {
     margin: 0 1rem;
     position: relative;
     display: flex;
+
     flex-direction: column;
     align-items: center;
 }
@@ -180,7 +187,7 @@ input[type=number] {
     color: var(--text-color);
     text-align: center;
     position: absolute;
-    top: -125px;
+    top: -100px;
 }
 
 .appointments .schedule-container
@@ -258,10 +265,19 @@ input[type=number] {
     width: 100%;
     height: 100%;
     display: flex;
-   
+    flex-direction: column;
     align-items: center;
     flex: 6;
- 
+    gap: 5rem;
+}
+
+.appointments .schedules .schedule-content 
+{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+   
 }
 
 .appointments .schedule-container .day-container .schedule-hour 
