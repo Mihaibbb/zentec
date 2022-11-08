@@ -1,0 +1,41 @@
+.input .text-variables > p 
+{
+    
+    font-weight: bold;
+}
+
+.input .text-variables .list
+{
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.input .text-variables .list .item 
+{
+    background: var(--contrast-color);
+    padding: .5rem;
+    border-radius: 2rem;
+    cursor: pointer;
+}
+
+.input .text-variables .list .item .item-text 
+{
+    margin: 0;
+}
+
+.input textarea
+{
+    resize: vertical;
+    width: 100%;
+    min-height: 50px;
+    border: none;
+    outline: none;
+    background: transparent;
+    border: 1.5px solid var(--background-color);
+    border-radius: 10px;
+    font-size: 18px;
+    color: var(--text-color);
+    padding: .5rem;
+    font-family: "Source Sans Pro";
+}

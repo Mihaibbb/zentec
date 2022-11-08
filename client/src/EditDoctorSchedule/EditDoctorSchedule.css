@@ -1,3 +1,5 @@
+
+
 .no-schedules 
 {
     display: flex;
@@ -77,6 +79,11 @@
     width: 100%;
 }
 
+.schedule 
+{
+    margin: 1rem auto;
+}
+
 
 .schedule .input
 {
@@ -138,8 +145,9 @@
     font-size: 18px;
     font-family: "Source Sans Pro";
     width: 100%;
-    height: 30px;
-    min-height: 30px;
+    height: 35px;
+    min-height: 35px;
+    padding-block: 0;
 }
 
 .schedule .input .time-input 
@@ -154,6 +162,7 @@
 {
     opacity: 0;
     user-select: none;
+    z-index: -1;
 }
 
 .hour-frame 

@@ -10,7 +10,6 @@ const Login = () => {
     const [rememberMe, setRememberMe] = useState(true);
     const [errorMessage, setErrorMessage] = useState("");
     const [cookies, setCookie, removeCookie] = useCookies([]);
-    
     const navigation = useNavigate();
 
     const tryLogin = async () => {
@@ -39,9 +38,8 @@ const Login = () => {
            
             const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/auth/login`, options);
             const res = await request.json();
-            console.log(await res);
             if (!await res.success) {
-                setErrorMessage(res.message);
+                setErrorMessage(res.message[cookies?.language ? cookies.language : "en"]);
                 return;
             }
             if (await res.objectId && await res.hashedPassword) {

@@ -50,7 +50,7 @@ const Dashboard = ({ data }) => {
 
         const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/next-appointments`, options);
         const response = await request.json();
-        console.log(JSON.parse(await response.appointments[0].patients));
+      
         if (response.success) setNextAppointments(response.appointments.map(appointment => {
             return {
                 name: `${JSON.parse(appointment.patients)[0].firstname} ${JSON.parse(appointment.patients)[0].lastname}`,

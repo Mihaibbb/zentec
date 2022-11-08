@@ -939,7 +939,7 @@ input[type=number] {
     display: flex;
     align-items: center;
     width: 100%;
-    margin: 0 3.5rem;
+    margin: 1rem 3.5rem;
 }
 
 .content .options .option 
@@ -948,6 +948,7 @@ input[type=number] {
     justify-content: center;
     align-items: center;
     gap: .5rem;
+    
 }
 
 .content .options .option p 

@@ -628,18 +628,18 @@ exports.removeDoctorSchedule = async (req, res, next) => {
 
 exports.editDoctorSchedule = async (req, res, next) => {
     const { organisationId, doctorId, scheduleId, startHour, startMinutes, endHour, endMinutes, repeat, dayNumber, notes } = req.body;
+    console.log("Patent");
     try {
         let sql = "SELECT * FROM ?? WHERE _id = ?";
         const doctors = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.doctors`, doctorId]);
         if (await doctors.length !== 1) return res.status(404).json({ success: false, message: { en: "Doctor doesn't exist!", ro: "Doctorul nu exista!"} });
         const schedules = JSON.parse(await doctors[0].schedules);
         let found = false;
-        for (let scheduleIdx = 0; scheduleIdx < schedules.length && !found; scheduleIdx++) {
-            if (schedules[scheduleIdx].scheduleId === scheduleId) {
+        for (let scheduleIdx = 0; scheduleIdx < schedules.length && !found; scheduleIdx++)
+            if (schedules[scheduleIdx].scheduleId === scheduleId) 
                 found = scheduleIdx;
-            }
-        }
-
+        
+        
         schedules[found] = {
             startHour,
             startMinutes,

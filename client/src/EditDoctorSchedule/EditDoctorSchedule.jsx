@@ -108,6 +108,10 @@ const EditDoctorSchedule = ({ data }) => {
         return date1.getDate() === date2.getDate() && date1.getMonth() === date2.getMonth() && date1.getFullYear() === date2.getFullYear();
     };
 
+    useEffect(() => {
+        console.log(doctorNameValue);
+    }, [doctorNameValue]);
+
     const removeSchedule = async (scheduleId, doctorId, idx) => {
         if (!scheduleId || !doctorId) 
             return setSchedules(currSchedules => {
@@ -145,21 +149,38 @@ const EditDoctorSchedule = ({ data }) => {
         if (endHourValue && endHourValue.length && endHourValue.some(hour => hour === "")) return;
         if (endMinutesValue && endMinutesValue.length && endMinutesValue.some(minutesValue => minutesValue === "")) return;
 
-        doctorValue.forEach((currDoctorValue, idx) => {
-            const sumStart = Number(startHourValue[idx]) * 60 + Number(startMinutesValue[idx]);
-            const sumEnd = Number(endHourValue[idx]) * 60 + Number(endMinutesValue[idx]);
-
-            if (sumStart <= sumEnd) {
-                return setErrorMessages(currErrMessages => {
-                    return currErrMessages.map((errMessage, errMessageIdx) => {
-                        if (errMessageIdx !== idx) return errMessage;
-                        return cookies.language === "en" ? "Start schedule must be earlier than end schedule!" : "Inceputul programului trebuie sa fie inaintea sfarsitului!";
-                    });
-                });
+        let timeErrorsIdx = [];
+        startHourValue.forEach((hourValue, idx) => {
+            const startTime = Number(hourValue) * 60 + Number(startMinutesValue[idx]);
+            const endTime = Number(endHourValue[idx]) * 60 + Number(endMinutesValue[idx]);
+            if (startTime >= endTime) {
+                timeErrorsIdx.push(idx);
             }
         });
 
-     
+        // Verify if start hour is >= end hour
+        timeErrorsIdx.forEach((timeErrorIdx) => {
+            setErrorMessages(currErrorMessages => {
+                return [...currErrorMessages, {
+                    idx: timeErrorIdx,
+                    message: cookies.language === "en" ? 
+                    "Start hours must not be after the end ones!" :
+                    "Orele de inceput nu pot fi dupa cele de sfarsit!"
+                }];
+            });
+        });      
+
+        const appearedDoctors = {};
+        doctorValue.forEach((doctorId, idx) => {
+            if (!appearedDoctors[doctorId]) appearedDoctors[doctorId] = [idx];
+            else appearedDoctors[doctorId].push(idx);
+        }); 
+
+        for (let doctorId in appearedDoctors) {
+            appearedDoctors[doctorId].forEach(idx => {
+
+            });
+        }
 
         const currSchedules = [];
 
@@ -181,9 +202,9 @@ const EditDoctorSchedule = ({ data }) => {
         
         currSchedules.forEach((schedule, idx) => {
             (async () => {
-                
+                console.log(schedule);
                 const options = {
-                    method: "PUT",
+                    method: schedule?.scheduleId ? "PUT" : "POST",
                     headers: {
                         "Content-Type": "application/json"
                     },
@@ -191,7 +212,7 @@ const EditDoctorSchedule = ({ data }) => {
                 };
 
                 try {
-                    const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/edit-doctor-schedule`, options);
+                    const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/${schedule?.scheduleId ? "edit-doctor-schedule" : "create-doctor-schedule"}`, options);
                     const response = await request.json();
                 } catch(e) {
                     console.log(e);
@@ -270,6 +291,19 @@ const EditDoctorSchedule = ({ data }) => {
         });
     };
 
+    const scheduleInteractions = (idx1, idx2) => {
+        return (
+            (
+                Number(startHourValue[idx2]) >= Number(startHourValue[idx1]) &&
+                Number(startHourValue[idx2]) <= Number(endHourValue[idx1])
+            ) ||
+            (
+                Number(endHourValue[idx2]) >= Number(startHourValue[idx1]) &&
+                Number(endHourValue[idx2]) <= Number(endHourValue[idx1])
+            )
+        );
+    };
+
     return (
         <div className="edit-doctors-schedule">
             <Navigation page="doctors-schedule" />
@@ -313,7 +347,7 @@ const EditDoctorSchedule = ({ data }) => {
 
                 {schedules && schedules.length && schedules.map((schedule, idx) => (
                     <div className="schedule" key={idx}>
-
+                        
                         <div className="input">
                             {idx === 0 && <p className="title">{cookies.language === "en" ? "Doctor" : "Medic"}</p> }
                             <Select options={doctorOptions} placeholder={doctorNameValue[idx]} value={{ label: doctorNameValue[idx], value: doctorValue[idx] }} styles={customStyles} onChange={e => {
@@ -323,7 +357,14 @@ const EditDoctorSchedule = ({ data }) => {
                                         if (idx !== doctorIdx) return currDoctorValue;
                                         return e.value;
                                     });
-                                })
+                                });
+
+                                setDoctorNameValue(currDoctorsName => {
+                                    return currDoctorsName.map((currDoctorName, doctorIdx) => {
+                                        if (idx !== doctorIdx) return currDoctorName;
+                                        return e.label;
+                                    });
+                                });
                             }} />
                         </div>
 

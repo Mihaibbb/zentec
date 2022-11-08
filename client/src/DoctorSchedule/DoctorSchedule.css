@@ -155,8 +155,14 @@
 .doctor-schedule .schedule-container .schedules .day-container 
 {
     aspect-ratio: 1 / 1;
-  
     border: 1px solid var(--contrast-color);
+    overflow: auto;
+}
+
+.doctor-schedule .schedule-container .schedules:not(.grid-5) .day-container
+{
+    
+    max-height: 200px;
 }
 
 .doctor-schedule .schedule-container .schedules .day-container.invisible 
@@ -240,7 +246,7 @@
     width: 95%;
     
     margin: .25rem auto 1rem;
-    padding: .25rem 0;
+    padding: 0rem 0;
     border-radius: 15px;
     cursor: pointer;
     transition: all 350ms ease-in-out;
@@ -257,8 +263,9 @@
     font-size: 17px;
     text-overflow: ellipsis; 
     text-align: center;
+    white-space: nowrap;
     overflow: hidden; 
-    margin: 0;
+    margin: 0 .25rem;
 }
 
 .doctor-schedule .schedule-container .schedules .day-container .schedule-card p.name 

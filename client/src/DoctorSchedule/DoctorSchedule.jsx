@@ -143,7 +143,9 @@ const DoctorSchedule = ({ data }) => {
         const totalDateSchedules = [];
 
         activeDoctors.forEach(doctor => {
+            console.log(doctor);
             const currSchedules = JSON.parse(doctor.schedules);
+            console.log(currSchedules);
             const foundSchedule = currSchedules.find(schedule => sameDay(date, new Date(schedule.date)));
             if (foundSchedule) totalDateSchedules.push({...
                 foundSchedule,

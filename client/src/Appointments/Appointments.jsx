@@ -101,7 +101,7 @@ const Appointments = ({ data }) => {
                             endhour={(gapIdx + 1) * minutesPerGap < 60 ? (idx + startHour < 10 ? `0${idx + startHour}` : (idx + startHour).toString()) : (idx + startHour + 1 < 10 ? `0${idx + startHour + 1}` : (idx + startHour + 1).toString())}
                             endminutes={(gapIdx + 1) * minutesPerGap < 10 ? `0${(gapIdx + 1) * minutesPerGap}` : (gapIdx + 1) * minutesPerGap < 60 ? ((gapIdx + 1) * minutesPerGap).toString() : "0"}
                             day={dayFormat.toString()}
-                            doctorId={doctorObject._id.toString()}
+                            doctorid={doctorObject._id.toString()}
                             ref={gapsRef} 
                             onMouseDown={(e) => initiateAppointment(e, idx, gapIdx, doctorObject)}
                             onMouseMove={(e) => moveAppointment(e, doctorColor)}
@@ -720,7 +720,7 @@ const Appointments = ({ data }) => {
                     }}>{currDay}</p>
                     <div className="month-appointments">
                         {currAppointments.map((appointment, idx) => (
-                            <div style={{ "--doctor-color-css": doctorColor }} className="month-appointment" onClick={() => {
+                            <div style={{ "--doctor-color-css": doctorColor }} key={idx} className="month-appointment" onClick={() => {
                                 setActiveEditAppointment(true);
                                 setAppointmentTitle(appointment.title);
                                 setAppointmentPatient(`${JSON.parse(appointment.patients)[0].firstname} ${JSON.parse(appointment.patients)[0].lastname}`);
@@ -764,8 +764,9 @@ const Appointments = ({ data }) => {
                         {currDays.map((currDay, dayIdx) => (
                             <div className="month-day" key={dayIdx}>
                                 <p className="day-number" onClick={() => {
-                                    setDate(currDate => new Date(currDate.getFullYear(), monthIdx, currDay))
                                     setFilterActive(0);
+                                    setDate(currDate => new Date(currDate.getFullYear(), monthIdx, currDay))
+                                    setDays([new Date(date)]);
                                 }}>{currDay}</p>
                             </div>
                         ))}
@@ -888,8 +889,9 @@ const Appointments = ({ data }) => {
 
                     <div className="half">
                         <p className="normal-text" onClick={() => {
-                            setDate(new Date());
+                           
                             setFilterActive(0);
+                            setDate(new Date());
                             setDays([new Date()]);
                         }}>{cookies.langauge === "en" ? "Today" : "Astazi"}</p>
                     </div>
@@ -918,9 +920,9 @@ const Appointments = ({ data }) => {
                     }
 
                     <div className="schedules" style={{ marginTop: hourContainerHeight }}>
-                        {doctors && doctors.length > 0 && doctors.map((doctor, idx) => (
-                            filterActive !== 3 && filterActive !== 4 ?
-                            <div className="schedule-parent-container">
+                        {filterActive !== 3 && filterActive !== 4 ? doctors && doctors.length > 0 && doctors.map((doctor, idx) => (
+                            
+                            <div className="schedule-parent-container" key={idx}>
                                 <h2 className="doctors-title">{doctor.firstname} {doctor.lastname}</h2>
                                 <div className={`schedule-container ${activeGaps ? "active-gaps" : ""}`} key={idx} ref={ref => doctorRef.current[idx] = ref}>
                                     {days && days.length > 0 && days.map((day, dayIdx) => (
@@ -941,14 +943,16 @@ const Appointments = ({ data }) => {
                                 
                                 </div> 
                             </div> 
-                            : filterActive === 3 ?
-                            <div className="month-schedule" key={idx} ref={ref => doctorRef.current[idx] = ref}>
-                                {getMonthData(doctor.color)}
-                            </div> : filterActive === 4 ?
-                            <div className="year-schedule" key={idx} ref={ref => doctorRef.current[idx] = ref}>
-                                {getYearData(doctor.color)}
-                            </div> : null
-                        ))}
+                            
+                        )) : filterActive === 3 ? (
+                            <div className="month-schedule">
+                                {getMonthData(doctors[0].color)}
+                            </div>
+                        ) : filterActive === 4 ? (
+                            <div className="year-schedule">
+                                {getYearData(doctors[0].color)}
+                            </div>
+                        ) : null}
                     </div>
                     
                 </div>
@@ -982,7 +986,7 @@ const Appointments = ({ data }) => {
                                     {appointmentPatientsList && appointmentPatientsList.length > 0 ?
                                         <div className="patient-list">
                                             {appointmentPatientsList.map((patient, idx) => (
-                                                <div className="patient-container" onClick={() => {
+                                                <div className="patient-container" key={idx} onClick={() => {
                                                     console.log(patient);
                                                     setAppointmentPatient(`${patient.firstname} ${patient.lastname}`);
                                                     setAppointmentPatientsList([]);
@@ -1135,7 +1139,7 @@ const Appointments = ({ data }) => {
                                 {appointmentPatientsList && appointmentPatientsList.length > 0 && 
                                     <div className="patient-list">
                                         {appointmentPatientsList.map((patient, idx) => (
-                                            <div className="patient-container" onClick={() => {
+                                            <div className="patient-container" key={idx} onClick={() => {
                                                 setAppointmentPatient(`${patient.firstname} ${patient.lastname}`);
                                                 setAppointmentPatientsList([]);
                                             }}>
