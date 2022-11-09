@@ -397,14 +397,17 @@ input[type=number] {
 .appointments .schedule-container .day-container .schedule-hour .gap .appointment-interval 
 {
     color: #fff;
-    font-size: 16px;
+    font-size: 100%;
+    
     font-family: "Inter";
     font-weight: 500;
     position: absolute;
     top: calc(-100% + 6px);
     left: 5px;
     user-select: none;
-    z-index: 100;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    z-index: 10;
 }
 
 

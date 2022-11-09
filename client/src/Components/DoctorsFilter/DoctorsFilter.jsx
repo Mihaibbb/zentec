@@ -12,7 +12,30 @@ const DoctorsFilter = ({ data, changeValue }) => {
     const [doctorQuery, setDoctorQuery] = useState("");
     const [cookies, setCookie] = useCookies();
 
-   
+    const searchDoctor = async (doctorQuery) => {
+        if (doctorQuery === "") return;
+        try {
+            const options = {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    organisationId: data.organisation._id,
+                    searchQuery: doctorQuery
+                })
+            };
+
+            const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/search-doctor`, options);
+            const response = await request.json();
+
+            if (await response.success) setDoctorsList(await response.doctors);
+            
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
     const removeActiveDoctor = (doctorId) => {
         if (activeDoctors.length === 1) return;
         setActiveDoctors(currActiveDoctors => {
@@ -35,6 +58,12 @@ const DoctorsFilter = ({ data, changeValue }) => {
     useEffect(() => {
         changeValue(activeDoctors);
     }, [activeDoctors]);
+
+    useEffect(() => {
+        (async () => {
+            await searchDoctor(doctorQuery);
+        })();
+    }, [doctorQuery]);
     
     return (
         <div className="doctors-filter">

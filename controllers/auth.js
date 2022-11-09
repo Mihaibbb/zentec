@@ -4,7 +4,7 @@ const db = require("../db");
 
 exports.login = async (req, res, next) => {
     const { username, password, rememberMe } = req.body;
-    console.log("here");
+    console.log("here", username);
     try {
         const dbs = await db.query("SHOW DATABASES");
         const organisationsUnfiltered = await dbs.map(currDb => {
@@ -16,8 +16,7 @@ exports.login = async (req, res, next) => {
         console.log(organisations);
         let user, organisationName, isUser;
         
-        await organisations && await organisations.length > 0 && await organisations.forEach(organisation => {
-            (async () => {
+        await organisations && await organisations.length > 0 && await Promise.all(await organisations.map(async organisation => {
                 
                 const selectedUsers = await db.query('SELECT * FROM ?? WHERE username = ?', [`${organisation}.users`, username]);
                 const detailsArr = await db.query("SELECT * FROM ??", `${organisation}.details`);
@@ -33,15 +32,15 @@ exports.login = async (req, res, next) => {
                             organisationName = await details.name;
                             isUser = true;
                         }
+
+                        
                     } catch (e) {
                         console.log("ERROR", e);
                         // return res.status(404).json({ success: false });
                        
                     }
                 }
-           
-            })();
-        });
+        }));
 
         // check if the user is admin 
         if (!user) {
@@ -55,11 +54,7 @@ exports.login = async (req, res, next) => {
             }
         }
        
-        if (!user && !organisationName) {
-            res.status(200).json({ success: false, message: {en: "Email or password is incorrect!", ro: "Email-ul sau parola sunt incorecte!" }});
-            return;
-        }
-           
+        if (!user && !organisationName) return res.status(200).json({ success: false, message: {en: "Email or password is incorrect!", ro: "Email-ul sau parola sunt incorecte!" }});
         
         const userData = {
             name: `${user.firstname} ${user.lastname}`, 
@@ -69,8 +64,7 @@ exports.login = async (req, res, next) => {
         
         console.log(userData);
         
-        return res.status(200).json(!rememberMe ? { userData, success: true } : {userData, success: true, objectId: isUser ? user.userId : user._id, hashedPassword: user.password, type: isUser === true ? 'user' : isUser === false ?  'admin' : null } );
-            
+        return res.status(200).json(!rememberMe ? { userData, success: true } : {userData, success: true, objectId: isUser ? user.userId : user._id, hashedPassword: user.password, type: isUser === true ? 'user' : isUser === false ?  'admin' : null } );   
     } catch (e) {
         console.log(e);
         res.status(404).json({ success: false, message: { en: "An error occured!", ro: "A aparut o eroare!" } });

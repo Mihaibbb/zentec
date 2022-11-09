@@ -112,7 +112,8 @@ const Appointments = ({ data }) => {
                         >
                             {firstElement?.getAttribute('id') === (idx * gaps + gapIdx).toString() && 
                             firstElement?.getAttribute('day') === dayFormat.toString() && !activeResizing &&
-                                <p className='appointment-interval'>{appointmentStartHour}:{appointmentStartMinutes < 10 ? `0${appointmentStartMinutes}` : appointmentStartMinutes} - {appointmentEndHour}:{appointmentEndMinutes < 10 ? `0${appointmentEndMinutes}` : appointmentEndMinutes}</p>
+                            doctorObject._id === appointmentDoctorId &&
+                                <p className="appointment-interval">{appointmentStartHour}:{appointmentStartMinutes < 10 ? `0${appointmentStartMinutes}` : appointmentStartMinutes} - {appointmentEndHour}:{appointmentEndMinutes < 10 ? `0${appointmentEndMinutes}` : appointmentEndMinutes}</p>
                             }
                         </div>
                     ))}
@@ -137,8 +138,10 @@ const Appointments = ({ data }) => {
         setAppointmentDateValue(filterActive === 0 ? date : new Date(e.target.getAttribute('day')));
         setStartEvent(true);
         setStartPosition(e.clientY);
-        setFirstElement(target);
+        
         setAppointmentDoctorId(doctorObject._id);
+        console.log(target);
+        setFirstElement(target);
         setLastElement(target);
         if (editing) return;
         setAppointmentStartHour(currHour + startHour);
@@ -149,12 +152,19 @@ const Appointments = ({ data }) => {
     };
 
     const moveAppointment = (e, doctorColor, editing = false, gap = null) => {
-        console.log(editing);
         
         if (!startEvent || modifyEvent) return;
         if (startPosition >= e.clientY) return;
-       
-        console.log(e.target);
+        
+        const targetDoctorId = e.target?.getAttribute("doctorid") ||  e.target.parentElement?.getAttribute("doctorid");
+        const targetDay = e.target?.getAttribute("day") || e.target.parentElement?.getAttribute("day");
+        const targetId = e.target?.getAttribute("id") || e.target.parentElement?.getAttribute("id");
+        const targetEndHour = e.target?.getAttribute("endhour") || e.target.parentElement?.getAttribute("endhour");
+        const targetEndMinutes = e.target?.getAttribute("endminutes") || e.target.parentElement?.getAttribute("endminutes");
+
+        if (targetDoctorId !== appointmentDoctorId) return;
+        if (firstElement.getAttribute("day") !== targetDay) return;
+
         if (e.target.classList.contains("highlight") && parseInt(e.target.getAttribute('id')) > parseInt(lastElement.getAttribute('id'))) return;
         if (e.target.parentElement.classList.contains("inactive")) return;
         const lastPos = lastElement.getBoundingClientRect();
@@ -162,19 +172,19 @@ const Appointments = ({ data }) => {
         console.log(firstElement);
         if (!firstElement.classList.contains('highlight')) firstElement.classList.add("highlight");
         if (!editing) {
-            setAppointmentEndHour(e.target.getAttribute('endhour'));
-            setAppointmentEndMinutes(e.target.getAttribute('endminutes'));
+            setAppointmentEndHour(targetEndHour);
+            setAppointmentEndMinutes(targetEndMinutes);
         } 
         
-        if (parseInt(e.target.getAttribute('id')) < parseInt(lastElement.getAttribute('id'))) {
-            for (let i = parseInt(e.target.getAttribute('id')) + 1; i <= parseInt(lastElement.getAttribute('id')); i++) {
+        if (Number(targetId) < Number(lastElement.getAttribute('id'))) {
+            for (let i = Number(targetId) + 1; i <= Number(lastElement.getAttribute('id')); i++) {
                 const child = lastElement.parentElement.parentElement.querySelector(`[id="${i.toString()}"]`);
                 console.log(i, lastElement.parentElement.parentElement.querySelector(`[id="${i}"]`) );
                 child.classList.remove("highlight");
             }
         }
-        else if (parseInt(e.target.getAttribute('id')) > parseInt(lastElement.getAttribute('id'))) {
-            for (let i = parseInt(lastElement.getAttribute('id')) + 1; i <= parseInt(e.target.getAttribute('id')); i++) {
+        else if (Number(targetId) > Number(firstElement.getAttribute('id'))) {
+            for (let i = Number(firstElement.getAttribute('id')) + 1; i <= Number(targetId); i++) {
                 const child = lastElement.parentElement.parentElement.querySelector(`[id="${i.toString()}"]`);
                 console.log(i, lastElement.parentElement.parentElement.querySelector(`[id="${i}"]`) );
                 child.classList.add("highlight");
@@ -221,7 +231,7 @@ const Appointments = ({ data }) => {
             startDate: new Date(date.getFullYear(), date.getMonth(), date.getDate(), appointmentStartHour, appointmentStartMinutes),
             endDate: new Date(date.getFullYear(), date.getMonth(), date.getDate(), appointmentEndHour, appointmentEndMinutes),
             patients: [appointmentPatientData],
-            doctors: [appointmentDoctorId],
+            users: [appointmentDoctorId],
             _id: data.organisation._id,
             title: appointmentTitle,
             income: appointmentCost,
@@ -241,7 +251,7 @@ const Appointments = ({ data }) => {
 
         const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/create-appointment`, options);
         const response = await request.json();
-        if (response.success) {
+        if (await response.success) {
             setAppointments(currAppointments => [...currAppointments, appointmentData]);
             setStatusMessage(response.message[cookies.language]);
             setActiveCreateAppointment(false);
@@ -270,7 +280,7 @@ const Appointments = ({ data }) => {
         const finalId = parseInt(lastElement.getAttribute('id'));
         const currentDay = firstElement.getAttribute('day');
         while (currentId <= finalId) {
-            const currentElement = document.querySelector(`.gap[id="${currentId.toString()}"][day="${currentDay}"]`)
+            const currentElement = document.querySelector(`.gap[id="${currentId.toString()}"][day="${currentDay}"][doctorid="${appointmentDoctorId}"]`)
             currentElement.classList.remove("highlight");
             currentId++;
         }
@@ -367,6 +377,10 @@ const Appointments = ({ data }) => {
     }, [year, month]);
 
     useEffect(() => {
+        console.log(days);
+    }, [days]);
+
+    useEffect(() => {
         console.log(appointments);
         const currentGaps = document.querySelectorAll('.gap');
 
@@ -400,10 +414,9 @@ const Appointments = ({ data }) => {
             let sameDoctor = false;
             
             const id = data.user?.userId;
-            sameDoctor = JSON.parse(appointment.doctors).some(doctor => doctor === id);
             
             console.log(sameDoctor);
-            return sameDay(new Date(appointment.date), date) && sameDoctor;
+            return sameDay(new Date(appointment.date), date);
         }) : appointments.filter((appointment) => {
             console.log(appointment);
             return (
@@ -419,7 +432,7 @@ const Appointments = ({ data }) => {
             const appointmentDate = new Date(appointment.startDate);
             const startHourAppointment = appointmentDate.getHours();
             const startMinutesAppointment = appointmentDate.getMinutes();
-            
+            const doctorIdAppointment = JSON.parse(appointment.users)[0];
             const endHourAppointment = new Date(appointment.endDate).getHours();
             const endMinutesAppointment = new Date(appointment.endDate).getMinutes();
             console.log(startHourAppointment, startMinutesAppointment, endHourAppointment, endMinutesAppointment)
@@ -428,16 +441,17 @@ const Appointments = ({ data }) => {
             currentGaps.forEach((gap, gapIdx) => {
                 if (Number(gap.getAttribute('starthour')) === startHourAppointment &&
                     Number(gap.getAttribute('startminutes')) === startMinutesAppointment && 
-                    (filterActive !== 0 ? sameDay(new Date(gap.getAttribute('day')), appointmentDate) : true)
+                    (filterActive !== 0 ? sameDay(new Date(gap.getAttribute('day')), appointmentDate) : true) &&
+                    gap.getAttribute("doctorid") === doctorIdAppointment
                 ) {
-                    console.log(gapIdx, startHourAppointment, startMinutesAppointment);
 
                     startIdx = gapIdx;
                 }
 
                 if (Number(gap.getAttribute('endhour')) === endHourAppointment && 
                     Number(gap.getAttribute('endminutes')) === endMinutesAppointment && 
-                    (filterActive !== 0 ? sameDay(new Date(gap.getAttribute('day')), appointmentDate) : true)
+                    (filterActive !== 0 ? sameDay(new Date(gap.getAttribute('day')), appointmentDate) : true) &&
+                    gap.getAttribute("doctorid") === doctorIdAppointment
                 ) {
                     console.log(gapIdx, endHourAppointment, endMinutesAppointment);
                     endIdx = gapIdx;
@@ -456,7 +470,7 @@ const Appointments = ({ data }) => {
                     setAppointmentTitle(appointment.title);
                     setAppointmentPatient(`${JSON.parse(appointment.patients)[0].firstname} ${JSON.parse(appointment.patients)[0].lastname}`);
                     setAppointmentPatientsList([]);
-                    setAppointmentPatientData(appointment.patients[0]);
+                    setAppointmentPatientData(JSON.parse(appointment.patients)[0]);
                     setAppointmentStartHour(new Date(appointment.startDate).getHours() < 10 ? `0${new Date(appointment.startDate).getHours()}` : new Date(appointment.startDate).getHours());
                     setAppointmentStartMinutes(new Date(appointment.startDate).getMinutes() < 10 ? `0${new Date(appointment.startDate).getMinutes()}` : new Date(appointment.startDate).getMinutes());
                     setAppointmentEndHour(new Date(appointment.endDate).getHours() < 10 ? `0${new Date(appointment.endDate).getHours()}` : new Date(appointment.endDate).getHours());
@@ -464,7 +478,7 @@ const Appointments = ({ data }) => {
                     setAppointmentCost(appointment.income);
                     setAppointmentId(appointment._id);
                     setAppointmentNotes(appointment.notes);
-                    setAppointmentDoctorId(appointment.do);
+                    setAppointmentDoctorId(JSON.parse(appointment.users)[0]);
                 });
             }
 
@@ -711,12 +725,14 @@ const Appointments = ({ data }) => {
             console.log(currAppointments, currDay);
             dayComponents.push(
                 <div className="month-day" key={currDay} onDoubleClick={() => {
-                    setDate(currDate => new Date(currDate.getFullYear(), currDate.getMonth(), currDay));
                     setFilterActive(0);
+                    setDate(currDate => new Date(currDate.getFullYear(), currDate.getMonth(), currDay));
+                    setDays([date]);
                 }}>
                     <p className={`day-number`} onClick={() => {
-                        setDate(currDate => new Date(currDate.getFullYear(), currDate.getMonth(), currDay));
                         setFilterActive(0);
+                        setDate(currDate => new Date(currDate.getFullYear(), currDate.getMonth(), currDay));
+                        setDays([date]);
                     }}>{currDay}</p>
                     <div className="month-appointments">
                         {currAppointments.map((appointment, idx) => (
@@ -764,9 +780,15 @@ const Appointments = ({ data }) => {
                         {currDays.map((currDay, dayIdx) => (
                             <div className="month-day" key={dayIdx}>
                                 <p className="day-number" onClick={() => {
+                                    setDate(currDate => {
+
+                                        return new Date(currDate.getFullYear(), monthIdx, currDay);
+                                    });
+                                    setDays([date]);
                                     setFilterActive(0);
-                                    setDate(currDate => new Date(currDate.getFullYear(), monthIdx, currDay))
-                                    setDays([new Date(date)]);
+
+                              
+
                                 }}>{currDay}</p>
                             </div>
                         ))}

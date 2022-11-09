@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useRef, useState } from "react";
 import { useCookies } from "react-cookie";
 import { useLocation, useNavigate } from "react-router-dom";
+import Select from "react-select";
 import Header from "../Components/Header/Header";
 import Navigation from "../Components/Navigation/Navigation";
 import "./CreatePatient.css";
@@ -17,8 +18,7 @@ const CreatePatient = ({ data, fromAppointments }) => {
     const birthRef = useRef();
     const gendersRef = useRef([]);
     const genders = cookies.language === "en" ? ['Male', 'Female', 'Not mentioned'] : ['Barbat', 'Femeie', 'Nespecificat'];
-
-    const [doctors, setDoctors] = useState([]);
+    const [doctors, setDoctors] = useState(data.organisation.doctors);
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [username, setUsername] = useState(null);
@@ -36,6 +36,50 @@ const CreatePatient = ({ data, fromAppointments }) => {
     const [dropMenu, setDropMenu] = useState(false);
     const [errorMessage, setErrorMessage] = useState();
     const [numberPatients, setNumberPatients] = useState();
+
+    const doctorOptions = doctors.map(doctor => {
+        return {
+            value: `${doctor._id}`,
+            label: `${doctor.firstname} ${doctor.lastname}`
+        };
+    });
+
+    const customStyles = {
+        control: (base, state) => ({
+            ...base,
+            background: "var(--dark-color)",
+            border: "none",
+            borderRadius: 10,
+            width: "100%",
+            margin: "0 auto",
+            boxShadow: "0 0 10px var(--contrast-color)",
+            color: "#000"
+        }),
+
+        option: (provided, state) => ({
+            ...provided,
+            color: "var(--text-color)",
+            background: state.isSelected ? "var(--contrast-color)" : state.isFocused ? "var(--selector-color)" : "initial",
+            borderRadius: 10
+        }),
+        
+        menu: (provided, state) => ({
+            ...provided,
+            
+            
+            background: "var(--dark-color)",
+            border: "none",
+            borderRadius: 10,
+            boxShadow: "0 0 15px var(--dark-color)"
+        }),
+
+        singleValue: (provided) => ({
+            ...provided,
+            color: "var(--text-color)",
+            width: "100%"
+        })
+    };
+
 
     const createNewPatient = async () => {
         if (firstName === "" || lastName === "" || phoneNumber === "" || birthDate === "") {
@@ -99,22 +143,6 @@ const CreatePatient = ({ data, fromAppointments }) => {
         }
     };
 
-    const getDoctors = async () => {
-        const options = {
-            method: 'POST',
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                _id: data.organisation._id
-            })
-        };
-
-        const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/get-doctors`, options);
-        const response = await request.json();
-        if (response.success && response.doctors) setDoctors(response.doctors);
-    };
-
     const getNumberOfPatients = async () => {
         const options = {
             method: 'POST',
@@ -141,7 +169,6 @@ const CreatePatient = ({ data, fromAppointments }) => {
 
     useEffect(() => {
         (async() => {
-            await getDoctors();
             await getNumberOfPatients();
         })();
     }, []);
@@ -167,6 +194,10 @@ const CreatePatient = ({ data, fromAppointments }) => {
         birthRef.current.setAttribute("min", inputMin);
 
     }, [birthRef]);
+
+    useEffect(() => {
+        console.log(doctor);
+    }, [doctor ]);
 
     return (
         <div className="create-patient">
@@ -200,18 +231,10 @@ const CreatePatient = ({ data, fromAppointments }) => {
                         <input type="date" placeholder={cookies.language === "en" ? "Birthdate" : "Data de nastere"} ref={birthRef} value={birthDate} onChange={e => setBirthDate(e.target.value)} required />
                     </div>
 
-                    {data.user.type !== "doctor" && doctors.length > 0 ? (
-                        <div className="input">
-                            <p>Doctor</p>
-                            <select value={doctor} onChange={e => setDoctor(e.target.value)}>
-                                {doctors.map((doctor, idx) => (
-                                    <option value={doctor.name} key={idx}>
-                                        {doctor.name}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                    ) : null}
+                    <div className="input">
+                        <p>{cookies.language === "en" ? "Doctor" : "Medic"}</p>
+                        <Select options={doctorOptions} styles={customStyles} value={doctor} onChange={e => setDoctor(e)} />
+                    </div>
 
                     <div className="info">
                         <p>{cookies.language === "en" ? "Optional fields" : "Campuri optionale"}</p>

@@ -304,6 +304,8 @@ const EditDoctorSchedule = ({ data }) => {
         );
     };
 
+  
+
     return (
         <div className="edit-doctors-schedule">
             <Navigation page="doctors-schedule" />

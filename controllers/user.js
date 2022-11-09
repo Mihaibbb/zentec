@@ -7,15 +7,15 @@ const generateId = require("../functions/generateId");
 exports.createAppointment = async (req, res, next) => {
     const { _id, startDate, endDate, users, patients, title, income, typeIncome, notes, date, language } = req.body;
     console.log( new Date(startDate).getMonth(), new Date(startDate).getDate(), new Date(startDate).getHours(), new Date(startDate).getMinutes());
-    
+    console.log(users);
     try {
         const appointmentId = generateId(25);
         sql = "INSERT INTO ?? (_id, startDate, endDate, users, patients, title, income, typeIncome, notes, finished, confirmed, date, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        const insertedAppointment = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.schedules`, appointmentId, new Date(startDate), new Date(endDate), JSON.stringify(users), JSON.stringify(patients), title, income, typeIncome, notes, false, new Date(date), new Date()]);
+        const insertedAppointment = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.schedules`, appointmentId, new Date(startDate), new Date(endDate), JSON.stringify(users), JSON.stringify(patients), title, income, typeIncome, notes, false, false, new Date(date), new Date()]);
         if (!insertedAppointment) return new ErrorResponse("An error occured!", 404);
         
-        // --- Sms Api for patient ---
 
+        // --- Sms Api for patient ---
         // Get api key
 
         sql = "SELECT * FROM ??";

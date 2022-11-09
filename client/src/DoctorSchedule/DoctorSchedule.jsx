@@ -178,7 +178,6 @@ const DoctorSchedule = ({ data }) => {
 
     const editScheduleDay = (date) => navigate(`/doctors-schedule/${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`);
     
-
     return (
         <div className="doctor-schedule">
             <Navigation page="doctors-schedule" />
