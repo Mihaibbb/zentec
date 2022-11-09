@@ -432,7 +432,7 @@ const Appointments = ({ data }) => {
             const appointmentDate = new Date(appointment.startDate);
             const startHourAppointment = appointmentDate.getHours();
             const startMinutesAppointment = appointmentDate.getMinutes();
-            const doctorIdAppointment = JSON.parse(appointment.users)[0];
+            const doctorIdAppointment = isJSON(appointment.users) ? JSON.parse(appointment.users)[0] : appointment.users[0];
             const endHourAppointment = new Date(appointment.endDate).getHours();
             const endMinutesAppointment = new Date(appointment.endDate).getMinutes();
             console.log(startHourAppointment, startMinutesAppointment, endHourAppointment, endMinutesAppointment)
@@ -815,6 +815,16 @@ const Appointments = ({ data }) => {
     const changeActiveDoctors = (currActiveDoctors) => {
         setDoctors(currActiveDoctors);
     };
+
+    const isJSON = (json) => {
+        try {
+            JSON.parse(json);
+        } catch (e) {
+            return false;
+        }
+
+        return true;
+    }
 
     return !activeCreatePatient ? (
         <div className="appointments">
