@@ -10,6 +10,7 @@
   --contrast-color-2: #579AFF;
   --contrast-color-3: #FF447C;
   --background-color: #192846;
+  --background-contrast: rgba(0, 0, 0, .6);
   --dark-color: rgb(7,11,19);
   --text-color: rgba(255, 255, 255, .8);
   --text-color-2: #fff;
@@ -19,6 +20,7 @@
   --over-color: rgba(0, 0, 0, .2);
   --over-color-2: rgba(0, 0, 0, .6);
   --over-difference-color: rgba(255, 255, 255, .2);
+  --over-difference-color-2: rgba(255, 255, 255, .075);
   --error-color: crimson;
   --selected-color: rgba(95, 61, 128, 0.973)
 }

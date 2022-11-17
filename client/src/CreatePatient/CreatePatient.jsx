@@ -59,7 +59,7 @@ const CreatePatient = ({ data, fromAppointments }) => {
         option: (provided, state) => ({
             ...provided,
             color: "var(--text-color)",
-            background: state.isSelected ? "var(--contrast-color)" : state.isFocused ? "var(--selector-color)" : "initial",
+            background: state.isSelected ? "var(--contrast-color)" : state.isFocused ? "var(--selected-color)" : "initial",
             borderRadius: 10
         }),
         

@@ -18,7 +18,11 @@ const Header = ({ data }) => {
 
             <div className="account-details">
 
-                <FontAwesomeIcon icon={faBars} className="navigation-icon" onClick={() => document.querySelector(".navigation").classList.add("active")} />
+                <FontAwesomeIcon icon={faBars} className="navigation-icon" onClick={() => {
+                    document.querySelector(".navigation").classList.add("active");
+                    document.querySelector('.header').classList.remove("no-navigation");
+                    document.querySelector(".content").classList.remove("no-navigation");
+                }} />
 
                 <div className="notifications">
                     <FontAwesomeIcon icon={faBell} className="notification-icon" />

@@ -1,15 +1,17 @@
-import { faEllipsis, faPlus, faSearch, faTimes, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faEllipsis, faFileArrowDown, faFileArrowUp, faPlus, faSearch, faTimes, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState, useEffect, useRef } from "react";
 import { useCookies } from "react-cookie";
 import { useLocation, useNavigate } from "react-router-dom";
 import Header from "../Components/Header/Header";
 import Navigation from "../Components/Navigation/Navigation";
+import ExportExcel from "../ExportPatients/ExportPatients";
 import "./Patients.css";
 
 const Patients = ({ data }) => {
     
     const [patients, setPatients] = useState([]);
+    const [patientsExportData, setPatientsExportData] = useState([]);
     const [query, setQuery] = useState("");
     const navigation = useNavigate();
     const location = useLocation();
@@ -103,6 +105,42 @@ const Patients = ({ data }) => {
         })();
     }, [query]);
 
+    useEffect(() => {
+        setPatientsExportData(patients.map((currPatient, idx) => {
+            if (cookies.language === "en") {
+                return {
+                    FirstName: currPatient.firstname,
+                    LastName: currPatient.lastname,
+                    Email: currPatient.email,
+                    BirthDate: `${new Date(currPatient.birthdate).getDate()}-${new Date(currPatient.birthdate).getMonth() + 1}-${new Date(currPatient.birthdate).getFullYear()}`,
+                    Phone: currPatient?.phone || "", 
+                    Username: currPatient?.username || "",
+                    PersonalCode: currPatient?.cnp || "",
+                    Gender: currPatient?.gender || "",
+                    address: currPatient?.address || "",
+                    City: currPatient?.city || "",
+                    Country: currPatient?.country || "",
+                    Notes: currPatient?.notes || ""
+                };
+            }
+
+            return {
+                Nume: currPatient.firstname,
+                Prenume: currPatient.lastname,
+                Email: currPatient.email,
+                DataNastere: `${new Date(currPatient.birthdate).getDate()}-${new Date(currPatient.birthdate).getMonth() + 1}-${new Date(currPatient.birthdate).getFullYear()}`,
+                Telefon: currPatient?.phone || "", 
+                Username: currPatient?.username || "",
+                CNP: currPatient?.cnp || "",
+                Gen: currPatient?.gender || "",
+                Adresa: currPatient?.address || "",
+                Oras: currPatient?.city || "",
+                Tara: currPatient?.country || "",
+                Observatii: currPatient?.notes || ""
+            };
+        }));
+    }, [patients]);
+
     return (
         <div className="patients">
             <Navigation page="patients" />
@@ -117,6 +155,17 @@ const Patients = ({ data }) => {
                     <FontAwesomeIcon icon={faSearch} className="search-icon" />
                 </div>}
 
+                <div className="excel-container">
+                    <div className="button" onClick={() => navigation("/import-patients")}>
+                        <FontAwesomeIcon icon={faFileArrowUp} className="excel-icon" />
+                        <p>{cookies.language === "en" ? "Import Patients" : "Importa pacienti"}</p>
+                    </div>
+                    <div className="button" onClick={() => ExportExcel(patientsExportData, cookies.language === "en" ? "Patients" : "Pacienti")}>
+                        <FontAwesomeIcon icon={faFileArrowDown} className="excel-icon" />
+                        <p>{cookies.language === "en" ? "Export Patients" : "Exporta pacienti"}</p>
+                    </div>
+                </div>
+                
                 <div className="patients-container">
                     {patients.length > 0 && <div className="first-row">
                         <div className="column">

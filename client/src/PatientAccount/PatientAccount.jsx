@@ -151,6 +151,11 @@ const PatientAccount = ({ data }) => {
         else setShowUpdate(false);
     }, [firstName, lastName, phoneNumber, username, email, city, county, address, gender, fileNumber, PIC, notes]);
 
+    window.addEventListener("beforeunload", e => {
+        return "Any string value here forces a dialog box to \n" + 
+         "appear before closing the window.";
+    }); 
+
     return (
         <div className="account-container"> 
             <Navigation />

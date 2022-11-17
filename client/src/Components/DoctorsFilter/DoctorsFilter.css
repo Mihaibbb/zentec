@@ -7,9 +7,10 @@
     border-radius: 12px;
     border: 1px solid var(--over-difference-color);
     padding: .5rem;
-    display: flex;
+    display: grid;
     align-items: center;
     gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 }
 
  .filter-container input 

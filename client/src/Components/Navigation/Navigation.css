@@ -3,7 +3,7 @@
     background: var(--background-color);
     border-right: 1px solid rgba(255, 255, 255, .25);
     display: flex;
-    
+    z-index: 11;
     flex-direction: column;
     gap: .35rem;
     padding: 2.5rem 1rem 0;
@@ -192,6 +192,21 @@
 {
     fill: #000;
     color: #000;
+}
+
+@media only screen and (min-width: 1200px)
+{
+    .navigation .close-icon 
+    {
+        display: block;
+        right: 10px;
+        left: initial;
+    }
+
+    .navigation:not(.active) 
+    {
+        display: none;
+    }
 }
 
 @media only screen and (max-width: 1200px) {

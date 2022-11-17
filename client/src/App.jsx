@@ -1,4 +1,4 @@
-import { Routes, Route, BrowserRouter, Navigate } from "react-router-dom";
+import { Routes, Route, BrowserRouter, Navigate, useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import { useState, useEffect } from "react";
 
@@ -21,12 +21,14 @@ import CreateDoctor from "./CreateDoctor/CreateDoctor";
 import DoctorAccount from "./DoctorAccount/DoctorAccount";
 import DoctorSchedule from "./DoctorSchedule/DoctorSchedule";
 import EditDoctorSchedule from "./EditDoctorSchedule/EditDoctorSchedule";
+import ImportPatients from "./ImportPatients/ImportPatients";
 
 const App = () => {
     const [cookies, setCookie, removeCookie] = useCookies([]);
     const [language, setLanguage] = useState("en");
     const [data, setData] = useState(null);
     const [isAdmin, setIsAdmin] = useState(null);
+  
 
     useEffect(() => {
 
@@ -39,7 +41,7 @@ const App = () => {
             }
             
             const [userId, password] = [cookies["user-id"], cookies["pwd"]];
-            console.log(userId, password);
+            console.log(cookies);
             const options = {
                 method: 'POST',
                 headers: {
@@ -60,6 +62,7 @@ const App = () => {
                 setData(false);
                 return;
             }
+            //if (await result.admin && navigation())
             console.log(await result);
             setData(await result);
             setIsAdmin(await result.admin);
@@ -85,7 +88,7 @@ const App = () => {
                                 <Route path="doctors-schedule/:date" element={<EditDoctorSchedule data={data} />} />
                                 <Route path="doctor/:id" element={<DoctorAccount data={data} />} />
                                 <Route path="appointments" element={<Appointments data={data} />} />
-                                {/* <Route path="import-patients" element={<ImportPatients />}/> */}
+                                <Route path="import-patients" element={<ImportPatients data={data} />}/>
                                 <Route path="create-patient" element={<CreatePatient data={data} />} />
                                 <Route path="settings" element={<Settings data={data} />} />
                                 <Route path="create-doctor" element={<CreateDoctor data={data} />} />    

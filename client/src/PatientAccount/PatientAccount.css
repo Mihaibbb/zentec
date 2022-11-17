@@ -5,13 +5,17 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-bottom: 4rem;
 }
 
 .patient-account-details h2.title 
 {
     color: var(--text-color);
     font-size: 40px;
+}
+
+.content .patient-historic .title 
+{
+    margin-top: 0;
 }
 
 .patient-account-details .inputs-container 
@@ -181,9 +185,9 @@
 {
     width: 100%;
     max-width: 90%;
-    background: var(--dark-color);
+    background: var(--over-color);
     margin: 0 auto 2rem;
-    box-shadow: 0 0 10px var(--text-color-3);
+    /* box-shadow: 0 0 10px var(--text-color-3); */
     border-radius: 10px;
     padding: 1rem;
 }
@@ -213,7 +217,7 @@
 
 .patient-historic .historic-container .historic-item 
 {
-    border-bottom: 1px solid var(--text-color-4);
+    border-bottom: 1px solid var(--over-difference-color);
     display: flex;
     
     margin: .5rem auto;

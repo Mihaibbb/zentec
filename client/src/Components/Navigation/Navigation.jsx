@@ -13,13 +13,17 @@ const Navigation = ({ show, page }) => {
 
     const navigation = useNavigate();
     const [cookies, setCookie] = useCookies();
-
+    const [closed, setClosed] = useState(false);
     const [doctorsSubmenuActive, setDoctorsSubmenuActive] = useState(false);
 
     return (
-        <div className="navigation">
+        <div className="navigation active">
 
-            <FontAwesomeIcon icon={faClose} className="close-icon" onClick={e => e.target.parentElement.classList.remove("active")} />
+            <FontAwesomeIcon icon={faClose} className="close-icon" onClick={e => {
+                e.target.parentElement.classList.remove("active");
+                document.querySelector(".header").classList.add("no-navigation");
+                document.querySelector(".content").classList.add("no-navigation");
+            }} />
             <div className="logo">
                 <img src={logo} className="logo-img" />
             </div>

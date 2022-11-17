@@ -17,6 +17,12 @@
     
 }
 
+.content.no-navigation 
+{
+    margin-left: 0;
+    max-width: 100%;
+}
+
 .sm-content 
 {
     margin: 1rem auto 2rem auto;

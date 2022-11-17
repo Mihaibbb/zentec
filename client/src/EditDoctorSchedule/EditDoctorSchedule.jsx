@@ -65,7 +65,7 @@ const EditDoctorSchedule = ({ data }) => {
         option: (provided, state) => ({
             ...provided,
             color: "var(--text-color)",
-            background: state.isSelected ? "var(--contrast-color)" : state.isFocused ? "var(--selector-color)" : "initial",
+            background: state.isSelected ? "var(--contrast-color)" : state.isFocused ? "var(--selected-color)" : "initial",
             borderRadius: 10
         }),
         
@@ -113,6 +113,7 @@ const EditDoctorSchedule = ({ data }) => {
     }, [doctorNameValue]);
 
     const removeSchedule = async (scheduleId, doctorId, idx) => {
+        console.log(scheduleId, doctorId);
         if (!scheduleId || !doctorId) 
             return setSchedules(currSchedules => {
                 return currSchedules.filter((schedule, scheduleIdx) => scheduleIdx !== idx);
@@ -128,6 +129,7 @@ const EditDoctorSchedule = ({ data }) => {
 
             const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/remove-doctor-schedule?organisationId=${data.organisation._id}&doctorId=${doctorId}&scheduleId=${scheduleId}`, options);
             const response = await request.json();
+            console.log(await response);
             if (await response.success) {
 
                 setSchedules(currSchedules => {
@@ -135,6 +137,7 @@ const EditDoctorSchedule = ({ data }) => {
                 });
 
                 setSuccessMessage(await response.message[cookies.language]);
+                window.location.reload();
             }
         } catch (e) {
             console.log(e);
@@ -303,8 +306,6 @@ const EditDoctorSchedule = ({ data }) => {
             )
         );
     };
-
-  
 
     return (
         <div className="edit-doctors-schedule">
@@ -648,7 +649,7 @@ const EditDoctorSchedule = ({ data }) => {
                         <div className="input">
                             {idx === 0 && <p className="title">{cookies.language === "en" ? "Remove" : "Sterge"}</p> }
 
-                            <FontAwesomeIcon className="remove-button" icon={faTimes} onClick={async () => await removeSchedule(schedule?.id, doctorValue[idx] || null, idx)} />
+                            <FontAwesomeIcon className="remove-button" icon={faTimes} onClick={async () => await removeSchedule(schedule?.scheduleId, doctorValue[idx] || null, idx)} />
                         </div>
                     </div>
                 ))}

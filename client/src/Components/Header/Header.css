@@ -13,6 +13,11 @@
     border-left: 1px solid rgba(255, 255, 255, .25);
 }
 
+.header.no-navigation 
+{
+    max-width: 100%;
+}
+
 .header .navigation-icon
 {
     display: none;
@@ -149,6 +154,14 @@
 .header .account-details .account-info-icon:hover
 {
     transform: translateY(5px);
+}
+
+@media only screen and (min-width: 1200px)
+{
+    .header.no-navigation .navigation-icon
+    {
+        display: block;
+    }
 }
 
 @media only screen and (max-width: 1200px) {

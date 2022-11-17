@@ -100,13 +100,15 @@ exports.updateAppointment = async (req, res, next) => {
     const { appointmentId, _id, startDate, endDate, users, patients, title, income, typeIncome, notes, date, finished } = req.body;
     
     try {
+        console.log(_id);
         let sql = 'UPDATE ?? SET startDate = ?, endDate = ?, users = ?, patients = ?, title = ?, income = ?, typeIncome = ?, notes = ?, date = ?, finished = ? WHERE _id = ?';
-        const updatedAppointment = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.schedules`, new Date(startDate), new Date(endDate), JSON.stringify(users), JSON.stringify(patients), title, income, typeIncome, notes, date, finished, appointmentId]);
+        const updatedAppointment = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.schedules`, new Date(startDate), new Date(endDate), JSON.stringify(users), JSON.stringify(patients), title, income, typeIncome, notes, new Date(date), finished, appointmentId]);
        
         if (!updatedAppointment) return res.status(200).json({ success: false, message: { en: "Appointment could not be updated!", ro: "Programarea nu a putut fi modificata!" } })
         
         res.status(200).json({ success: true, message: { en: "Appointment updated successfully!", ro: "Programare modificata cu succes!"}})
     } catch (e) {
+        console.log(e);
         res.status(404).json({ success: false, message: "An error occured." });
     }
 };
@@ -148,15 +150,15 @@ exports.analytics = async (req, res, next) => {
         const schedulesDb = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.schedules`]);
         
         // Schedules made
-    
+        console.log(new Date(schedulesDb[0].createdAt).getDate(), new Date().getMonth());
         if (filter === "day") {
             const patients = await patientsDb.filter(patient => new Date(patient.date).getFullYear() === new Date().getFullYear() &&
                                                                      new Date(patient.date).getMonth() === new Date().getMonth() &&
-                                                                     new Date(patient.date).getDate() - 1 === new Date().getDate());
+                                                                     new Date(patient.date).getDate() === new Date().getDate());
     
             const appointments = await schedulesDb.filter(schedule => new Date(schedule.createdAt).getFullYear() === new Date().getFullYear() &&
                                                                            new Date(schedule.createdAt).getMonth() === new Date().getMonth() &&
-                                                                            new Date(schedule.createdAt).getDate() - 1 === new Date().getDate());
+                                                                            new Date(schedule.createdAt).getDate() === new Date().getDate());
          
             let totalIncome = 0;
             await appointments.forEach(appointment => totalIncome += appointment.income); 
@@ -594,6 +596,24 @@ exports.createDoctorSchedule = async (req, res, next) => {
             notes
         });
 
+        if (repeat) {
+            const foundDate = new Date(date);
+            const threeYearsInUnix = 1000 * 60 * 60 * 24 * 365
+            for (let currDate = foundDate.getTime(); currDate <= foundDate.getTime() + threeYearsInUnix; currDate += 1000 * 60 * 60 * 24 * 7) {
+                schedules.push({
+                    startHour,
+                    startMinutes,
+                    endHour,
+                    endMinutes,
+                    repeat: false,
+                    dayNumber,
+                    date: new Date(currDate),
+                    scheduleId: generateId(25),
+                    notes
+                });
+            }
+        }
+
         sql = "UPDATE ?? SET schedules = ? WHERE _id = ?";
         await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.doctors`, JSON.stringify(schedules), doctorId]);
         return res.status(201).json({ success: true, message: { en: "Schedule modified successfully!", ro: "Programul a fost modificat cu succes!" } });
@@ -607,17 +627,39 @@ exports.createDoctorSchedule = async (req, res, next) => {
 // Remove schedule
 
 exports.removeDoctorSchedule = async (req, res, next) => {
-    const { organisationId, doctorId, scheduleId } = req.body;
+    console.log("HAHHAH", req.query);
+    const { organisationId, doctorId, scheduleId } = req.query;
     try {
+
         let sql = "SELECT * FROM ?? WHERE _id = ?";
         const doctors = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.doctors`, doctorId]);
+        
         if (await doctors.length !== 1) return res.status(404).json({ success: false, message: { en: "Doctor doesn't exist!", ro: "Doctorul nu exista!"} });
         const schedules = JSON.parse(await doctors[0].schedules);
+        const foundSchedule = await schedules.find(schedule => schedule.scheduleId === scheduleId);
+        console.log(schedules);
+        const updatedSchedules = await schedules.filter(schedule => {
+            
+            const sameTime = (
+                Number(schedule.dayNumber) === Number(foundSchedule.dayNumber) &&
+                Number(schedule.startHour) === Number(foundSchedule.startHour) &&
+                Number(schedule.startMinutes) === Number(foundSchedule.startMinutes) &&
+                Number(schedule.endHour) === Number(foundSchedule.endHour) &&
+                Number(schedule.endMinutes) === Number(foundSchedule.endMinutes)
+            );
 
-        const updatedSchedules = schedules.filter(schedule => schedule.scheduleId !== scheduleId);
+            console.log(sameTime);
+                
+            if (sameTime && foundSchedule.repeat) return false;
+            return (schedule.scheduleId !== scheduleId);
+        });
+
+        console.log(await updatedSchedules);
+
         sql = "UPDATE ?? SET schedules = ? WHERE _id = ?";
-        const removedSchedule = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.doctors`, JSON.stringify(updatedSchedules), doctorId]);
+        const removedSchedule = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.doctors`, JSON.stringify(await updatedSchedules), doctorId]);
         if (await removedSchedule) res.status(200).json({ success: true, message: { en: "Schedule removed successfully!", ro: "Program sters cu succes!" } });
+        
     } catch (e) {
         console.log(e);
         res.status(404).json({ success: false, message: { en: "An error occurred!", ro: "A aparut o eroare!" } });
@@ -633,12 +675,52 @@ exports.editDoctorSchedule = async (req, res, next) => {
         let sql = "SELECT * FROM ?? WHERE _id = ?";
         const doctors = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.doctors`, doctorId]);
         if (await doctors.length !== 1) return res.status(404).json({ success: false, message: { en: "Doctor doesn't exist!", ro: "Doctorul nu exista!"} });
-        const schedules = JSON.parse(await doctors[0].schedules);
+        let schedules = JSON.parse(await doctors[0].schedules);
         let found = false;
+
         for (let scheduleIdx = 0; scheduleIdx < schedules.length && !found; scheduleIdx++)
             if (schedules[scheduleIdx].scheduleId === scheduleId) 
                 found = scheduleIdx;
         
+        if (schedules[found].repeat && !repeat) {
+            const foundDayNumber = schedules[found].dayNumber;
+            const foundStartHour = schedules[found].startHour;
+            const foundStartMinutes = schedules[found].startMinutes;
+            const foundEndHour = schedules[found].endHour;
+            const foundEndMinutes = schedules[found].endMinutes;
+
+            schedules = schedules.filter((schedule, idx) => {
+                const sameDay = schedule.dayNumber === foundDayNumber;
+                const sameStartHour = schedule.startHour === foundStartHour;
+                const sameStartMinutes = schedule.startMinutes === foundStartMinutes;
+                const sameEndHour = schedule.endHour === foundEndHour;
+                const sameEndMinutes = schedule.endMinutes === foundEndMinutes;
+                return idx === found || !(sameDay && sameStartHour && sameStartMinutes && sameEndHour && sameEndMinutes);
+            });
+
+        } else if (!schedules[found].repeat && repeat) {
+            const foundDate = new Date(schedules[found].date);
+            const threeYearsInUnix = 1000 * 60 * 60 * 24 * 365
+            for (let currDate = foundDate.getTime(); currDate <= foundDate.getTime() + threeYearsInUnix; currDate += 1000 * 60 * 60 * 24 * 7) {
+                schedules.push({
+                    startHour,
+                    startMinutes,
+                    endHour,
+                    endMinutes,
+                    repeat: false,
+                    dayNumber,
+                    date: new Date(currDate),
+                    scheduleId: generateId(25),
+                    notes
+                });
+            }
+        }
+
+        // Repeat getting idx because the idx might have suffered because of adding elements and deleting them
+        found = false;
+        for (let scheduleIdx = 0; scheduleIdx < schedules.length && !found; scheduleIdx++)
+            if (schedules[scheduleIdx].scheduleId === scheduleId) 
+                found = scheduleIdx;
         
         schedules[found] = {
             startHour,

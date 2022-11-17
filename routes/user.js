@@ -44,7 +44,7 @@ router.post("/remove-doctor", removeDoctor);
 router.post("/doctor-info", getDoctorInfo);
 router.post("/search-doctor", searchDoctor);
 router.put("/edit-doctor-schedule", editDoctorSchedule);
-router.post("/remove-doctor-schedule", removeDoctorSchedule);
+router.delete("/remove-doctor-schedule", removeDoctorSchedule);
 router.post("/get-schedules-day", getSchedulesForDay);
 
 
