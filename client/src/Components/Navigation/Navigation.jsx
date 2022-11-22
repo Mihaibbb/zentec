@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { useCookies } from 'react-cookie';
 import patientIcon from "../../imgs/icons/patient.svg";
 import { useState } from 'react';
+import { useRef } from 'react';
 
 const Navigation = ({ show, page }) => {
 
@@ -16,14 +17,18 @@ const Navigation = ({ show, page }) => {
     const [closed, setClosed] = useState(false);
     const [doctorsSubmenuActive, setDoctorsSubmenuActive] = useState(false);
 
-    return (
-        <div className="navigation active">
+    const navigationElement = useRef();
 
+    return (
+        <div className="navigation active" ref={navigationElement}>
+           
             <FontAwesomeIcon icon={faClose} className="close-icon" onClick={e => {
-                e.target.parentElement.classList.remove("active");
+                
+                navigationElement.current.classList.remove("active");
                 document.querySelector(".header").classList.add("no-navigation");
                 document.querySelector(".content").classList.add("no-navigation");
             }} />
+
             <div className="logo">
                 <img src={logo} className="logo-img" />
             </div>
@@ -62,10 +67,10 @@ const Navigation = ({ show, page }) => {
                 <h3>{cookies.language === "en" ? "Analytics" : "Vanzari"}</h3>
             </div>
 
-            <div className={`settings ${page === "settings" ? "active" : ""}`} onClick={() => navigation("/settings")}>
+            {/* <div className={`settings ${page === "settings" ? "active" : ""}`} onClick={() => navigation("/settings")}>
                 <img src={settingsIcon} className="item-img" />
                 <h3>{cookies.language === "en" ? "Settings" : "Setari"}</h3>
-            </div>
+            </div> */}
         </div>
     );
 };

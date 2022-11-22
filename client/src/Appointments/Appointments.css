@@ -146,7 +146,7 @@ input[type=number] {
     min-height: 100%;
     flex: 1;
     justify-content: center;
-    margin-inline: 1rem;
+    margin-inline: 1.5rem;
 }
 
 .appointments .scheduler .hours .hour p 
@@ -174,7 +174,7 @@ input[type=number] {
 {
     width: 100%;
     height: 100%;
-    margin: 0 1rem;
+    margin: 0 2rem 0 1rem;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -346,11 +346,19 @@ input[type=number] {
     border-top-right-radius: 20px;
 }
 
+
 .appointments .schedule-container .day-container .schedule-hour:not(.inactive) .gap:last-child
 {
-    border-bottom: 1px solid rgba(125, 125, 255, .2);
+    border-bottom: 1px solid rgba(0, 0, 0, .05);
+}
+
+.appointments .schedule-container .day-container .schedule-hour:not(.inactive) .gap:not(.dark):last-child
+{
+    border-bottom: 1px solid rgba(255, 255, 255, .05);
    
 }
+
+
 
 .appointments .schedule-container > .day-container .schedule-hour:nth-last-child(2) .gap:last-child
 {
@@ -744,12 +752,12 @@ input[type=number] {
 .appointments .appointment-details.active .appointment-details-card 
 {
     width: 65%;
-    height: 75%;
+    height: min-content;
     background: var(--background-color);
     border-radius: 20px;
     margin-top: 15vh;
     position: relative;
-   
+    padding: 1rem;
 }
 
 .appointments .appointment-details.active .appointment-details-card .close-icon
@@ -1102,4 +1110,12 @@ input[type=number] {
 {
     background: var(--contrast-color);
 
+}
+
+@media only screen and (max-width: 800px)
+{
+    .appointments .appointment-details.active .appointment-details-card 
+    {
+        width: 85%;
+    }
 }

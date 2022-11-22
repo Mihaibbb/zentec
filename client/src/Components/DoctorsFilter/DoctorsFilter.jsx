@@ -86,6 +86,7 @@ const DoctorsFilter = ({ data, changeValue }) => {
                             setTriggerDoctorInput(currStatus => !currStatus);
                         }}
                         onChange={e => setDoctorQuery(e.target.value)} 
+                        placeholder={cookies.language === "en" ? "Search for a doctor..." : "Cauta un doctor..."}
                     />
                     
                 </div>

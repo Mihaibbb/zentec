@@ -50,13 +50,14 @@
     display: flex;
     justify-content: center;
     align-items: center;
-
+    
 }
 
 .navigation .logo img 
 {
     width: 90%;
     height: auto;
+    user-select: none;
 }
 
 

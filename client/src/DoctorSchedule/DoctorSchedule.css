@@ -157,6 +157,7 @@
     aspect-ratio: 1 / 1;
     border: 1px solid var(--contrast-color);
     overflow: auto;
+    overflow-x: hidden;
 }
 
 .doctor-schedule .schedule-container .schedules:not(.grid-5) .day-container
@@ -271,4 +272,23 @@
 .doctor-schedule .schedule-container .schedules .day-container .schedule-card p.name 
 {
     font-weight: bold;
+}
+
+@media only screen and (max-width: 1000px)
+{
+    .patients .content .patients-container {
+        margin: 0 1.5rem;
+    }
+
+    .patients .content .patients-container .row div p
+    {
+        font-size: 100%;
+    }
+}
+
+@media only screen and (max-width: 800px)
+{
+    .patients .content .patients-container {
+        margin: 0 .5rem;
+    }
 }
