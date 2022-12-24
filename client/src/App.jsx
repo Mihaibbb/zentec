@@ -31,6 +31,11 @@ const App = () => {
   
 
     useEffect(() => {
+        
+        (async () => {
+            const cacheNames = await caches.keys();
+            cacheNames.forEach(cacheName => caches.delete(cacheName));
+        })();
 
         cookies.language && setLanguage(cookies.language);
 

@@ -206,7 +206,7 @@
 
     .navigation:not(.active) 
     {
-        display: none;
+        transform: translateX(-100%);
     }
 }
 

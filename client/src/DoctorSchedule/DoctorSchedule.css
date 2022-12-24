@@ -107,6 +107,8 @@
     width: 200px;
     height: 100%;
     cursor: pointer;
+    background: var(--dark-color);
+    transition: all 400ms ease-in-out;
 }
 
 .doctor-schedule .schedule-container .schedule-filter .filter:first-child

@@ -158,15 +158,18 @@ const Appointments = ({ data }) => {
     const initiateAppointment = (e, currHour, gap, doctorObject, editing = false) => {
         const target = e.target?.classList.contains("gap") ? e.target : e.target.parentElement;
         const day = new Date(target.getAttribute("day"));
-
+       
         if (date.getFullYear() < new Date().getFullYear() || date.getMonth() < new Date().getMonth() || date.getDate() < new Date().getDate()) return;
         if (day.getFullYear() < new Date().getFullYear() || day.getMonth() < new Date().getMonth() || day.getDate() < new Date().getDate()) return;
+        console.log(day, date);
         if (e.button === 2) return; // check for right click
         if (modifyEvent) return;
         if (editing) {
             e.target = e;
             setActiveResizing(true);
         }
+
+      
         
         if (!target.classList.contains("resizeable") && target.classList.contains("created")) return initiateDragAppointment(target.getBoundingClientRect().y, target.getAttribute("starthour"), target.getAttribute("startminutes"), target.getAttribute("endhour"), target.getAttribute("endminutes"), target.getAttribute("day"));
         if (target.classList.contains('highlight') && !editing) return;
@@ -426,6 +429,7 @@ const Appointments = ({ data }) => {
                 dragInitEndMinutes === Number(new Date(appointment.endDate).getMinutes()),
                 dragFirstElement.getAttribute("doctorid") === JSON.parse(appointment.users)[0]
             );
+            
             return (
                 sameDay(new Date(appointment.date), new Date(dragFirstElement.getAttribute("day"))) &&
                 dragInitStartHour === Number(new Date(appointment.startDate).getHours()) &&
@@ -540,10 +544,11 @@ const Appointments = ({ data }) => {
 
         const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/create-appointment`, options);
         const response = await request.json();
+        console.log(await response);
         if (await response.success) {
             setAppointments(currAppointments => [...currAppointments, appointmentData]);
             setStatusMessage(response.message[cookies.language]);
-         
+            resetAppointmentData();
         }
     };
 
@@ -648,6 +653,7 @@ const Appointments = ({ data }) => {
     };
 
     const removeAppointment = async (appointmentId1) => {
+
         const options = {
             method: 'POST',
             headers: {
@@ -670,6 +676,8 @@ const Appointments = ({ data }) => {
                     return currAppointment._id !== appointmentId;
                 });
             });
+
+            resetAppointmentData();
         }
     };
 
@@ -708,7 +716,7 @@ const Appointments = ({ data }) => {
             gap.classList.remove("resizeable-up");
             gap.classList.remove("resizeable-down");
             while (gap?.firstChild) {
-                console.log('here');
+                console.log(gap.firstChild);
                 gap.removeChild(gap.firstChild);
                 console.log('here2');
             }
@@ -723,7 +731,6 @@ const Appointments = ({ data }) => {
         doctors.forEach(doctor => {
             
         });
-        
        
         const currentAppointments = filterActive === 0 ? appointments.filter((appointment) => {
             console.log(appointment);
@@ -753,15 +760,14 @@ const Appointments = ({ data }) => {
             const endMinutesAppointment = new Date(appointment.endDate).getMinutes();
             let startIdx, endIdx;
 
-            const doctorColor = doctors.find(doctor => doctor._id === JSON.parse(appointment.users)[0]).color;
-            
+            const doctorColor = doctors.find(doctor => doctor._id === (isJSON(appointment.users) ? JSON.parse(appointment.users)[0] : appointment.users[0])).color;
+           
             currentGaps.forEach((gap, gapIdx) => {
                 if (Number(gap.getAttribute('starthour')) === startHourAppointment &&
                     Number(gap.getAttribute('startminutes')) === startMinutesAppointment && 
                     (filterActive !== 0 ? sameDay(new Date(gap.getAttribute('day')), appointmentDate) : true) &&
                     gap.getAttribute("doctorid") === doctorIdAppointment
                 ) {
-
                     startIdx = gapIdx;
                 }
 
@@ -858,16 +864,16 @@ const Appointments = ({ data }) => {
 
             const titleAppointmentElement = document.createElement('p');
             titleAppointmentElement.classList.add("appointment-interval");
+            titleAppointmentElement.classList.add("appointment-interval-title");
             titleAppointmentElement.innerText = appointment.title;
-            titleAppointmentElement.style.fontSize = '24px';
-            titleAppointmentElement.style.top = "calc(-100% - 5px)";
             titleAppointmentElement.style.color = getContrastForText(doctorColor);
-            titleAppointmentElement.style.fontWeight = "bold";
+            
             currentGaps[startIdx].appendChild(titleAppointmentElement);
 
             const patientNameElement = document.createElement('p');
             patientNameElement.classList.add("appointment-interval");
-            patientNameElement.innerText = `${JSON.parse(appointment.patients)[0].firstname} ${JSON.parse(appointment.patients)[0].lastname}`;
+            console.log(appointment.patients);
+            patientNameElement.innerText = `${isJSON(appointment.patients) ? JSON.parse(appointment.patients)[0].firstname : appointment.patients[0].firstname} ${isJSON(appointment.patients) ? JSON.parse(appointment.patients)[0].lastname : appointment.patients[0].lastname}`;
             patientNameElement.style.top = 'calc(-100% + 60px)';
             patientNameElement.style.fontSize = '20px';
             patientNameElement.style.color = getContrastForText(doctorColor);
@@ -1447,7 +1453,7 @@ const Appointments = ({ data }) => {
                                         </div>
                                     }
                             </div>
-                            
+           
                             <div className={`non-visible ${appointmentPatient.length > 0 && !appointmentPatientData ? "active" : ""}`} />
 
                             <div className="label">
@@ -1487,10 +1493,10 @@ const Appointments = ({ data }) => {
                                 <p>{cookies.language === "en" ? "End Hour" : "Ora sfarsit"}</p>
                                 <div className="label-row">
                                     <div className="input">
-                                        <input type="number" placeholder={cookies.language === "en" ? "Hour" : "Ora"} value={appointmentEndHour < 10 ? `0${appointmentEndHour}` : appointmentEndHour} onChange={e => setAppointmentEndHour(e.target.value)} />
+                                        <input type="text" placeholder={cookies.language === "en" ? "Hour" : "Ora"} value={Number(appointmentEndHour) < 10 ? `0${Number(appointmentEndHour)}` : Number(appointmentEndHour)} onChange={e => setAppointmentEndHour(Number(e.target.value))} />
                                         <div className="scale">
-                                            <FontAwesomeIcon icon={faAngleUp} className="scale-icon" onClick={() => Number(appointmentEndHour) + 1 <= endHour && setAppointmentEndHour(value => Number(value) + 1)} />
-                                            <FontAwesomeIcon icon={faAngleDown} className="scale-icon" onClick={() => Number(appointmentEndHour) - 1 >= startHour && setAppointmentEndHour(value => Number(value) - 1)} />
+                                            <FontAwesomeIcon icon={faAngleUp} className="scale-icon" onClick={() => Number(appointmentEndHour) + 1 <= Number(endHour) && setAppointmentEndHour(value => Number(value) + 1)} />
+                                            <FontAwesomeIcon icon={faAngleDown} className="scale-icon" onClick={() => Number(appointmentEndHour) - 1 >= Number(startHour) && setAppointmentEndHour(value => Number(value) - 1)} />
                                         </div>
                                     </div>
 
@@ -1613,10 +1619,10 @@ const Appointments = ({ data }) => {
                                 <p>{cookies.language === "en" ? "End Hour" : "Ora sfarsit"}</p>
                                 <div className="label-row">
                                     <div className="input">
-                                        <input type="number" placeholder={cookies.language === "en" ? "Hour" : "Ora"} value={appointmentEndHour} onChange={e => setAppointmentEndHour(e.target.value)} />
+                                        <input type="number" placeholder={cookies.language === "en" ? "Hour" : "Ora"} value={appointmentEndHour} onChange={e => setAppointmentEndHour(Number(e.target.value))} />
                                         <div className="scale">
-                                            <FontAwesomeIcon icon={faAngleUp} className="scale-icon" onClick={() => appointmentEndHour + 1 <= endHour && setAppointmentEndHour(value => value + 1)} />
-                                            <FontAwesomeIcon icon={faAngleDown} className="scale-icon" onClick={() => appointmentEndHour - 1 >= startHour && setAppointmentEndHour(value => value - 1)} />
+                                            <FontAwesomeIcon icon={faAngleUp} className="scale-icon" onClick={() => Number(appointmentEndHour) + 1 <= Number(endHour) && setAppointmentEndHour(value => Number(value) + 1)} />
+                                            <FontAwesomeIcon icon={faAngleDown} className="scale-icon" onClick={() => Number(appointmentEndHour) - 1 >= Number(startHour) && setAppointmentEndHour(value => Number(value) - 1)} />
                                         </div>
                                     </div>
                                     <div className="input">

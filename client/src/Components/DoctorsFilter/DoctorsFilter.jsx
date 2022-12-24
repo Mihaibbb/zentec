@@ -64,6 +64,23 @@ const DoctorsFilter = ({ data, changeValue }) => {
             await searchDoctor(doctorQuery);
         })();
     }, [doctorQuery]);
+
+    document.addEventListener('click', async e => {
+        if (doctorsList.length === 0) return;
+        const selectionInput = document.querySelector("input.selection-input");
+        let target = e.target, sameParent = false;
+        while (!target?.classList.contains('content') && !sameParent) {
+            if (target === document.querySelector(".doctors-filter .filter-container")) sameParent = true;
+            target = target.parentElement;
+        }
+        console.log(target);
+        if (e.target === selectionInput) e.preventDefault();
+        else if (!sameParent) {
+            setDoctorsList([]);
+            setTriggerDoctorInput(currStatus => !currStatus);
+        } 
+
+    });
     
     return (
         <div className="doctors-filter">
@@ -80,11 +97,13 @@ const DoctorsFilter = ({ data, changeValue }) => {
                     <input 
                         type="text"
                         value={doctorQuery}
-                        onFocus={() => setDoctorsList(data.organisation.doctors)}
-                        onClick={() => {
-                            triggerDoctorInput ? setDoctorsList([]) : setDoctorsList(data.organisation.doctors);
+                        onFocus={async () => doctorQuery.length > 0 ? setDoctorsList(await searchDoctor(doctorQuery)) : setDoctorsList(data.organisation.doctors)}
+                        onClick={async () => {
+                            const currDoctors =  await searchDoctor(doctorQuery);
+                            triggerDoctorInput ? setDoctorsList([]) : (doctorQuery.length > 0 ? setDoctorsList(currDoctors) : setDoctorsList(data.organisation.doctors));
                             setTriggerDoctorInput(currStatus => !currStatus);
                         }}
+                        className="selection-input"
                         onChange={e => setDoctorQuery(e.target.value)} 
                         placeholder={cookies.language === "en" ? "Search for a doctor..." : "Cauta un doctor..."}
                     />

@@ -1,4 +1,5 @@
 const getContrastForText = (hex) => {
+    console.log(hex);
     if (hex.length === 8) hex = hex.slice(0, 7);
     const hexColor = hex.replace("#", "");
     const [red, green, blue] = [

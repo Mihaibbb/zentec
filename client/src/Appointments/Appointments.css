@@ -81,6 +81,9 @@ input[type=number] {
     width: 100%;
     max-width: 700px;
     margin-inline: auto;
+    background: var(--over-color);
+    height: 35px;
+
     
 }
 
@@ -100,11 +103,12 @@ input[type=number] {
     display: flex;
     justify-content: center;
     align-items: center;
+    transition: all 350ms ease-in-out;
 }
 
 .appointments .filter div.active 
 {
-    background: rgba(125, 125, 255, .15);
+    background: var(--contrast-color);
 }
 
 .appointments .filter div p 
@@ -445,7 +449,17 @@ input[type=number] {
     z-index: 10;
 }
 
-
+.appointments .schedule-container .day-container .schedule-hour .gap .appointment-interval-title
+{
+    font-size: 24px;
+    width: 100%;
+    text-align: center;
+    top: calc(-100% - 10px);
+    font-weight: bold;
+    background: rgba(0, 0, 0, .25);
+    border-radius: 10px;
+    left: initial;
+}
 
 .appointments .schedule-container .day-container .schedule-hour .gap.highlight
 {
@@ -511,8 +525,10 @@ input[type=number] {
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    aspect-ratio: 1;
     
 }
+
 
 .appointments .month-schedule .month-day .day-number 
 {
@@ -566,6 +582,16 @@ input[type=number] {
   
     gap: .5rem;
     
+}
+
+.appointments .month-schedule .month-day .month-appointments:not(.scroll-element)::-webkit-scrollbar {
+    display: none;
+}
+
+.appointments .month-schedule .month-day .month-appointments:not(.scroll-element)
+{
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
 
 .appointments .month-schedule .month-day .month-appointments .month-appointment
@@ -904,6 +930,9 @@ input[type=number] {
     color: var(--text-color);
     padding: .3rem .5rem;
     border-radius: 8px;
+    font-family: 'Source Sans Pro';
+    font-size: 15px;
+    font-weight: 600;
 }
 
 .appointments .appointment-details.active .appointment-details-card .appointment-details .patient-list-container:not(.active)
@@ -1042,6 +1071,7 @@ input[type=number] {
 .appointments .appointment-details.active .appointment-details-card .appointment-details .label
 {
     color: var(--text-color);
+    font-weight: 700
 }
 
 .appointments .appointment-details.active .appointment-details-card .add-appointment
@@ -1056,16 +1086,17 @@ input[type=number] {
     background: var(--contrast-color);
     border: none;
     outline: none;
-    border-radius: 24px;
+    border-radius: 50px;
     cursor: pointer;
+    
 }   
 
 .appointments .appointment-details.active .appointment-details-card .add-appointment p
 {
     color: var(--text-color);
-    font-size: 18px;
-    font-family: "Inter";
-    font-weight: 600;
+    font-size: 20px;
+    font-family: "Source Sans Pro";
+    font-weight: 800;
 }
 
 .content .options 

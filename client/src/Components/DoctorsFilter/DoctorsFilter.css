@@ -5,7 +5,7 @@
     max-width: 90%;
     margin: 0 auto;
     border-radius: 12px;
-    border: 1px solid var(--over-difference-color);
+    background: var(--dark-color);
     padding: 1rem;
     display: grid;
     align-items: center;
@@ -23,6 +23,7 @@
     color: var(--text-color);
     font-size: 18px;
     font-family: "Source Sans Pro";
+
 }
 
 .filter-container .filter-doctor
