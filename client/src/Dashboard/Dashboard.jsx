@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCab, faCalendar, faCoins, faE, faEllipsis, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { useState, useEffect } from "react";
 import { useCookies } from 'react-cookie';
+import { useLocation } from 'react-router-dom';
 
 const Dashboard = ({ data }) => {
 
@@ -15,6 +16,19 @@ const Dashboard = ({ data }) => {
     const [income, setIncome] = useState();
     const [filter, setFilter] = useState("day");
     const [typeIncome, setTypeIncome] = useState("");
+
+    const location = useLocation();
+
+    useEffect(() => {
+      
+        const navigationElement = document.querySelector(".navigation");
+        if (!navigationElement || !navigationElement?.classList?.contains("active")) return;
+        if (window.innerWidth >= 1200) return;
+        navigationElement.classList.remove("active");
+        document.querySelector(".header").classList.add("no-navigation");
+        document.querySelector(".content").classList.add("no-navigation");
+        
+    }, [location]);
     
     const [cookies, setCookie] = useCookies();
 

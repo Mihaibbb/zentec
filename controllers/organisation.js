@@ -5,7 +5,7 @@ const db = require("../db");
 
 exports.createOrganisation = async (req, res, next) => {
     const { name, adminId, orgId, smsLimit, smsMessage, apiKey } = req.body;
-   
+    
     try {
         
         const isAdmin = await db.query("SELECT * FROM ?? WHERE _id = ?", [`${process.env.DB_PREFIX}admins.users`, adminId]);

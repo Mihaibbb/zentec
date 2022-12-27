@@ -1,8 +1,8 @@
 import { faAngleLeft, faAngleRight, faEdit, faPencil, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useCookies } from "react-cookie";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import DoctorsFilter from "../Components/DoctorsFilter/DoctorsFilter";
 import Header from "../Components/Header/Header";
 import Navigation from "../Components/Navigation/Navigation";
@@ -19,6 +19,8 @@ const DoctorSchedule = ({ data }) => {
     const [doctors, setDoctors] = useState(data.organisation?.doctors || []);
     const [activeDoctors, setActiveDoctors] = useState(doctors);
     const [totalSchedules, setTotalSchedules] = useState([]);
+
+    const daysRef = useRef([]);
     
     const filters = cookies.language === "en" ? ["Working Week", "Week", "Month"] : ["Saptamana Lucratoare", "Saptamana", "Luna"];
     const months = cookies.language === "en" ? 
@@ -44,6 +46,25 @@ const DoctorSchedule = ({ data }) => {
         else setDays(getMonth(date));
 
     }, [filterActiveIdx, date]);
+
+    useEffect(() => {
+
+        if (!daysRef?.current) return;
+
+         // For scrolling effects
+
+        let isScrolling;
+        daysRef.current.forEach(dayRef => {
+            dayRef.addEventListener("scroll", () => {
+                window.clearTimeout(isScrolling);
+                dayRef.classList.add("active");
+                isScrolling = setTimeout(() => {
+                    dayRef.classList.remove("active");
+                }, 500);
+            });
+        });
+
+    }, [daysRef]);
     
 
     const getWorkingWeek = (currDate) => {
@@ -167,7 +188,6 @@ const DoctorSchedule = ({ data }) => {
         return invisibleDays;
     }; 
 
-
     const sameDay = (date1, date2) => {
         return date1.getDate() === date2.getDate() && date1.getMonth() === date2.getMonth() && date1.getFullYear() === date2.getFullYear();
     };
@@ -178,6 +198,19 @@ const DoctorSchedule = ({ data }) => {
 
     const editScheduleDay = (date) => navigate(`/doctors-schedule/${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`);
     
+    const location = useLocation();
+
+    useEffect(() => {
+      
+        const navigationElement = document.querySelector(".navigation");
+        if (!navigationElement || !navigationElement?.classList?.contains("active")) return;
+        if (window.innerWidth >= 1200) return;
+        navigationElement.classList.remove("active");
+        document.querySelector(".header").classList.add("no-navigation");
+        document.querySelector(".content").classList.add("no-navigation");
+        
+    }, [location]);
+
     return (
         <div className="doctor-schedule">
             <Navigation page="doctors-schedule" />
@@ -216,7 +249,7 @@ const DoctorSchedule = ({ data }) => {
                         </div>
                     </div>
 
-                    {filterActiveIdx && <div className="days-name">
+                    {filterActiveIdx !== null && <div className="days-name">
                         {filterActiveIdx === 0 ? workingWeekDays.map((workingWeekDay, idx) => (
                             <div className="day-name" key={idx}>
                                 <p>{workingWeekDay}</p>
@@ -233,7 +266,7 @@ const DoctorSchedule = ({ data }) => {
                         {filterActiveIdx === 2 && addInvisibleDays()}
 
                         {days && days.length && days.map((day, idx) => (
-                            <div className={`day-container ${idx === 0 ? "first-active" : ""}`} key={idx}>
+                            <div className={`day-container ${idx === 0 ? "first-active" : ""}`} key={idx} ref={ref => daysRef.current[idx] = ref}>
                                 <div className="first-row">
                                     <div className="edit" onClick={() => navigate(`/doctors-schedule/${day.getFullYear()}-${day.getMonth() + 1}-${day.getDate()}`)}>
                                         <FontAwesomeIcon icon={faPencil} className="edit-icon" />

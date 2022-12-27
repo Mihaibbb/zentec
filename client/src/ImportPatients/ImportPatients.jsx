@@ -8,7 +8,7 @@ import { useRef } from "react";
 import { useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCloudArrowDown, faCloudArrowUp, faAngleLeft } from "@fortawesome/free-solid-svg-icons";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const ImportPatients = ({ data }) => {
 
@@ -119,6 +119,19 @@ const ImportPatients = ({ data }) => {
             handleFile(e.dataTransfer.files);
         }
     };
+
+    const location = useLocation();
+
+    useEffect(() => {
+      
+        const navigationElement = document.querySelector(".navigation");
+        if (!navigationElement || !navigationElement?.classList?.contains("active")) return;
+        if (window.innerWidth >= 1200) return;
+        navigationElement.classList.remove("active");
+        document.querySelector(".header").classList.add("no-navigation");
+        document.querySelector(".content").classList.add("no-navigation");
+        
+    }, [location]);
 
     return (
         <div className="import-container">

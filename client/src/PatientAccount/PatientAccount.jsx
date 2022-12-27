@@ -151,10 +151,25 @@ const PatientAccount = ({ data }) => {
         else setShowUpdate(false);
     }, [firstName, lastName, phoneNumber, username, email, city, county, address, gender, fileNumber, PIC, notes]);
 
-    window.addEventListener("beforeunload", e => {
-        return "Any string value here forces a dialog box to \n" + 
-         "appear before closing the window.";
-    }); 
+    useEffect(() => {
+      
+        const navigationElement = document.querySelector(".navigation");
+        if (!navigationElement || !navigationElement?.classList?.contains("active")) return;
+        if (window.innerWidth >= 1200) return;
+        navigationElement.classList.remove("active");
+        document.querySelector(".header").classList.add("no-navigation");
+        document.querySelector(".content").classList.add("no-navigation");
+        
+    }, [location]);
+
+    useEffect(() => {
+        window.addEventListener("beforeunload", e => {
+            return "Any string value here forces a dialog box to \n" + 
+             "appear before closing the window.";
+        }); 
+    }, []);
+
+    
 
     return (
         <div className="account-container"> 

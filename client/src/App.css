@@ -1,28 +1,75 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
+ /* width */
+html ::-webkit-scrollbar 
+{
+  width: 9px;
+  border-radius: 10px;
+ 
+  transition: all 350ms ease-in-out;
+}
 
 
-:root {
-  --background: rgb(4, 14, 54);
-  --contrast-color: rgb(11,86,243);
-  --contrast-color-highlight: #bdff7a;
+html.active ::-webkit-scrollbar:hover 
+{
+    width: 11px;
+}
+
+/* Track */
+html ::-webkit-scrollbar-track 
+{
+  background: transparent; 
+  border-radius: 10px;
+}
+
+html.active ::-webkit-scrollbar-track
+{
+  background: var(--dark-color);
+}
+
+/* Handle */
+html ::-webkit-scrollbar-thumb 
+{
+  background: transparent; 
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 500ms ease-in-out;
+}
+
+html.active ::-webkit-scrollbar-thumb 
+{
+  background: linear-gradient(#5d37dc, #8146ff);
+}
+
+/* Handle on hover */
+html ::-webkit-scrollbar-thumb:hover 
+{
+    background: linear-gradient(#5d37dc, #e83771); 
+}
+
+:root 
+{
+  --background: #080f23;
+  --contrast-color: #8146ff;
+  --contrast-color-highlight: #6f36e9;
   --contrast-color-2: #579AFF;
   --contrast-color-3: #FF447C;
   --background-color: #192846;
   --background-contrast: rgba(0, 0, 0, .6);
-  --dark-color: rgb(7,11,19);
+  --dark-color: #000;
+  --light-color: #fff;
   --text-color: rgba(255, 255, 255, .8);
   --text-color-2: #fff;
   --text-color-3: rgba(255, 255, 255, .6);
   --text-color-4: rgba(255, 255, 255, .5);
   --selector-color: rgba(10, 110, 114, 0.5);
-  --over-color: rgba(0, 0, 0, .5);
-  --over-color-2: rgba(0, 0, 0, .7);
+  --over-color: rgba(0, 0, 0, .2);
+  --over-color-2: rgba(0, 0, 0, .6);
   --over-difference-color: rgba(255, 255, 255, .2);
   --over-difference-color-2: rgba(255, 255, 255, .075);
   --error-color: crimson;
-  --selected-color: rgb(11,86,243);
+  --selected-color: rgba(95, 61, 128, 0.973);
 }
 
 body {

@@ -154,6 +154,11 @@
     justify-content: center;
     align-items: center;
     opacity: 0;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    
+    cursor: pointer;
     transition: all 350ms ease-in-out;
 }
 
@@ -168,10 +173,11 @@
 .patient-account-details button.active
 {
     opacity: 1;
-    animation-delay: 350ms;
+    animation-delay: 200ms;
     animation-name: update_btn;
-    animation-duration: 400ms;
+    animation-duration: 500ms;
     animation-iteration-count: 1;
+  
 }
 
 .patient-historic .title
@@ -237,11 +243,11 @@
 
 @keyframes update_btn {
     33% {
-        transform: rotateZ(-5deg);
+        transform: rotateZ(-2deg);
     }
 
     66% {
-        transform: rotateZ(5deg);
+        transform: rotateZ(2deg);
     }
 
     100% {

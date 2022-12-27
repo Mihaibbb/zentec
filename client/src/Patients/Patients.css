@@ -116,6 +116,7 @@
     border-radius: 30px;
 }
 
+
 .patients .content .patients-container .row 
 {
     width: 100%;
@@ -137,11 +138,32 @@
 .patients .content .patients-container .first-row div,
 .patients .content .patients-container .row div
 {
-    width: 25%;
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
 }
+
+.patients .content .patients-container .first-row .column 
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: .35rem;
+}
+
+.patients .content .patients-container .first-row .column .sort-icon 
+{
+    font-size: 20px;
+    color: var(--text-color-2);
+    transition: all 350ms ease-in-out;
+}
+
+.patients .content .patients-container .first-row .column .sort-icon.up 
+{
+    transform: rotateZ(180deg);
+}
+
 
 .patients .content .patients-container .row div p
 {

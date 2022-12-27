@@ -2,7 +2,7 @@ import "../Login/Login.css";
 import "./CreateOrganisation.css";
 import { useState } from "react";
 import { useCookies } from "react-cookie";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
 const CreateOrganisation = () => {
@@ -59,6 +59,19 @@ const CreateOrganisation = () => {
     useEffect(() => {
         setOrgId(generateId(25));
     }, []);
+
+    const location = useLocation();
+
+    useEffect(() => {
+      
+        const navigationElement = document.querySelector(".navigation");
+        if (!navigationElement || !navigationElement?.classList?.contains("active")) return;
+        if (window.innerWidth >= 1200) return;
+        navigationElement.classList.remove("active");
+        document.querySelector(".header").classList.add("no-navigation");
+        document.querySelector(".content").classList.add("no-navigation");
+        
+    }, [location]);
 
     const addVariable = (textVariable) => {
         const text = textVariable.replaceAll(" ", "_");

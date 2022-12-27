@@ -1,4 +1,4 @@
-import { faEllipsis, faFileArrowDown, faFileArrowUp, faPlus, faSearch, faTimes, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faEllipsis, faFileArrowDown, faFileArrowUp, faPlus, faSearch, faSortDown, faSortUp, faTimes, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState, useEffect, useRef } from "react";
 import { useCookies } from "react-cookie";
@@ -13,9 +13,16 @@ const Patients = ({ data }) => {
     const [patients, setPatients] = useState([]);
     const [patientsExportData, setPatientsExportData] = useState([]);
     const [query, setQuery] = useState("");
-    const navigation = useNavigate();
-    const location = useLocation();
+    const [arrowElements, setArrowElements] = useState([]);
+
+    const firstNameArrow = useRef();
+    const lastNameArrow = useRef();
+    const fileNumberArrow = useRef();
+
     const optionsRef = useRef([]);
+
+    const location = useLocation();
+    const navigation = useNavigate();
     const [cookies, setCookie] = useCookies();
 
     const getPatients = async () => {
@@ -141,6 +148,42 @@ const Patients = ({ data }) => {
         }));
     }, [patients]);
 
+    useEffect(() => {
+      
+        const navigationElement = document.querySelector(".navigation");
+        if (!navigationElement || !navigationElement?.classList?.contains("active")) return;
+        if (window.innerWidth >= 1200) return;
+        navigationElement.classList.remove("active");
+        document.querySelector(".header").classList.add("no-navigation");
+        document.querySelector(".content").classList.add("no-navigation");
+        
+    }, [location]);
+
+    useEffect(() => {
+        if (!fileNumberArrow?.current) return;
+        fileNumberArrow.current.classList.add("up");
+    }, []);
+
+    useEffect(() => {
+        setArrowElements([fileNumberArrow?.current, firstNameArrow?.current, lastNameArrow?.current]);
+    }, []);
+
+    const changeActiveArrow = (newActiveArrow, type) => {
+        if (!arrowElements || !arrowElements.length) return;
+        newActiveArrow.classList.toggle("up");
+        
+        setPatients(currPatients => {
+            if (type === "number") return currPatients.sort((a, b) => newActiveArrow.classList.contains("up") ? a - b : b - a);
+            return newActiveArrow.classList.contains("up") ? currPatients.sort() : currPatients.reverse();
+        });
+
+        arrowElements.forEach(arrowElement => {
+            if (arrowElement.innerHTML !== newActiveArrow.innerHTML) {
+                arrowElement.classList.remove("up");
+            }
+        });
+    };
+
     return (
         <div className="patients">
             <Navigation page="patients" />
@@ -170,15 +213,34 @@ const Patients = ({ data }) => {
                     {patients.length > 0 && <div className="first-row">
                         <div className="column">
                             <p>{cookies.language === "en" ? "File Nr." : "Nr. fisa"}</p>
+                            <FontAwesomeIcon 
+                                icon={faSortDown} 
+                                ref={fileNumberArrow} 
+                                className="sort-icon"
+                                onClick={() => changeActiveArrow(fileNumberArrow?.current, "number")}
+                            />
                         </div>
                         <div className="column">
                             <p>{cookies.language === "en" ? "First Name" : "Nume"}</p>
+                            <FontAwesomeIcon 
+                                icon={faSortDown} 
+                                ref={firstNameArrow} 
+                                className="sort-icon"
+                                onClick={() => changeActiveArrow(firstNameArrow?.current, "string")}
+                            />
                         </div>
                         <div className="column">
                             <p>{cookies.language === "en" ? "Last Name" : "Prenume"}</p>
+                            <FontAwesomeIcon 
+                                icon={faSortDown} 
+                                ref={lastNameArrow} 
+                                className="sort-icon"
+                                onClick={() => changeActiveArrow(lastNameArrow?.current, "string")}
+                            />
                         </div>
                         <div className="column">
                             <p>{cookies.language === "en" ? "Phone" : "Telefon"}</p>
+                            
                         </div>
                         <div className="column">
                             <p>{cookies.language === "en" ? "Options" : "Optiuni"}</p>
@@ -187,19 +249,23 @@ const Patients = ({ data }) => {
 
                     {patients.length > 0 ? patients.map((patient, idx) => (
                         <div className="row" key={idx}>
+
                             <div className="column">
-                                <p>{idx + 1}</p>
+                                <p>{patient.fileNumber}</p>
                             </div>
 
                             <div className="column">
                                 <p>{patient.firstname}</p>
                             </div>
+
                             <div className="column">
                                 <p>{patient.lastname}</p>
                             </div>
+
                             <div className="column">
                                 <p>{patient.phone}</p>
                             </div>
+
                             <div className="column pressable" onClick={() => triggerOptions(idx)}>
                                 <FontAwesomeIcon className="column-icon" icon={faEllipsis}/>
                                 <div className="options-container" ref={ref => optionsRef.current[idx] = ref}>

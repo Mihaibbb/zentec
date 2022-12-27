@@ -2,7 +2,6 @@ import { Routes, Route, BrowserRouter, Navigate, useNavigate } from "react-route
 import { useCookies } from "react-cookie";
 import { useState, useEffect } from "react";
 
-
 import "./App.css";
 
 import Home from "./Home/Home";
@@ -28,9 +27,21 @@ const App = () => {
     const [language, setLanguage] = useState("en");
     const [data, setData] = useState(null);
     const [isAdmin, setIsAdmin] = useState(null);
-  
 
+    
+  
     useEffect(() => {
+
+        // For scrolling effects
+
+        let isScrolling;
+		window.addEventListener("scroll", () => {
+        	window.clearTimeout(isScrolling);
+            document.querySelector("html").classList.add("active");
+            isScrolling = setTimeout(() => {
+     	        document.querySelector("html").classList.remove("active");
+            }, 500);
+		});
         
         (async () => {
             const cacheNames = await caches.keys();
@@ -76,14 +87,21 @@ const App = () => {
 
     }, []);
 
+    useEffect(() => {
+        document.addEventListener("wheel", (event) => {
+            if (document.activeElement.type === "number"){
+                document.activeElement.blur();
+            }
+        });        
+    }, []);
+
     return data !== null && (
         <BrowserRouter>
              <Routes>
-                {/* <Route path="/" element={<Home />} /> */}
                 {data ? (
                     <>
                         <Route path="dashboard" element={isAdmin ? <Admin data={data} /> : <Dashboard data={data} />} />
-                        
+
                         {!isAdmin ? (
                             <>
                                 <Route path="patients" element={<Patients data={data} />} />
@@ -113,7 +131,9 @@ const App = () => {
                     </>
                 )}
 
-               
+                <Route path="/" element={<Home />} />
+
+
                 {/*
                 <Route path="statistics" element={<Statistics />} />
                 <Route path="search:query" element={<Search />} />

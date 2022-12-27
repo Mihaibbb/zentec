@@ -7,8 +7,7 @@ import settingsIcon from "../../imgs/icons/settings-icon.svg";
 import { useNavigate } from "react-router-dom";
 import { useCookies } from 'react-cookie';
 import patientIcon from "../../imgs/icons/patient.svg";
-import { useState } from 'react';
-import { useRef } from 'react';
+import { useState, useRef } from 'react';
 
 const Navigation = ({ show, page }) => {
 

@@ -6,6 +6,22 @@
     height: 100vh;
 }
 
+.content .options .option p
+{
+    font-size: 16px;
+}
+
+.form .options 
+{
+    grid-gap: 1rem;
+    max-width: min-content;
+   
+}
+
+.content .options 
+{
+    margin: 0 0 0 5px;
+}
 
 .input input::-webkit-outer-spin-button,
 .input input::-webkit-inner-spin-button {

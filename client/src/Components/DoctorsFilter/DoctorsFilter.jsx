@@ -73,7 +73,7 @@ const DoctorsFilter = ({ data, changeValue }) => {
             if (target === document.querySelector(".doctors-filter .filter-container")) sameParent = true;
             target = target.parentElement;
         }
-        console.log(target);
+    
         if (e.target === selectionInput) e.preventDefault();
         else if (!sameParent) {
             setDoctorsList([]);

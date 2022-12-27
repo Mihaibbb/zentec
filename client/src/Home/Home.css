@@ -1,0 +1,12 @@
+.home-container
+{
+    width: 100%;
+    min-height: 100vh;
+    background: var(--light-color);
+    
+}
+
+.home-container .content
+{
+    
+}

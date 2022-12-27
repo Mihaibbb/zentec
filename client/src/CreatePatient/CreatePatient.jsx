@@ -1,10 +1,8 @@
 import { faAngleDown, faAngleLeft, faAngleUp, faCheck, faTicket } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useEffect } from "react";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
 import { useLocation, useNavigate } from "react-router-dom";
-import Select from "react-select";
 import Header from "../Components/Header/Header";
 import Navigation from "../Components/Navigation/Navigation";
 import "./CreatePatient.css";
@@ -197,7 +195,19 @@ const CreatePatient = ({ data, fromAppointments }) => {
 
     useEffect(() => {
         console.log(doctor);
-    }, [doctor ]);
+    }, [doctor]);
+
+
+    useEffect(() => {
+      
+        const navigationElement = document.querySelector(".navigation");
+        if (!navigationElement || !navigationElement?.classList?.contains("active")) return;
+        if (window.innerWidth >= 1200) return;
+        navigationElement.classList.remove("active");
+        document.querySelector(".header").classList.add("no-navigation");
+        document.querySelector(".content").classList.add("no-navigation");
+        
+    }, [location]);
 
     return (
         <div className="create-patient">
@@ -212,12 +222,12 @@ const CreatePatient = ({ data, fromAppointments }) => {
 
                 <div className="form">
                     <div className="input">
-                        <p>{cookies.language === "en" ? "First Name" : "Nume"}</p>
+                        <p>{cookies.language === "en" ? "First Name *" : "Nume *"}</p>
                         <input type="text" placeholder={cookies.language === "en" ? "First Name" : "Nume"} value={firstName} onChange={e => setFirstName(e.target.value)} required />
                     </div>
 
                     <div className="input">
-                        <p>{cookies.language === "en" ? "Last Name" : "Prenume"}</p>
+                        <p>{cookies.language === "en" ? "Last Name *" : "Prenume *"}</p>
                         <input type="text" placeholder={cookies.language === "en" ? "Last Name" : "Prenume"} value={lastName} onChange={e => setLastName(e.target.value)} required />
                     </div>
 
@@ -231,13 +241,18 @@ const CreatePatient = ({ data, fromAppointments }) => {
                         <input type="date" placeholder={cookies.language === "en" ? "Birthdate" : "Data de nastere"} ref={birthRef} value={birthDate} onChange={e => setBirthDate(e.target.value)} required />
                     </div>
 
-                    <div className="input">
+                    {/* <div className="input">
                         <p>{cookies.language === "en" ? "Doctor" : "Medic"}</p>
                         <Select options={doctorOptions} styles={customStyles} value={doctor} onChange={e => setDoctor(e)} />
+                    </div> */}
+
+                    <div className="input">
+                        <p>{cookies.language === "en" ? "File Number" : "Nr. fisa"}</p>
+                        <input type="number" placeholder={cookies.language === "en" ? "File Number" : "Nr. fisa"} value={fileNumber || ""} onChange={e => setFileNumber(e.target.value)}/>
                     </div>
 
                     <div className="info">
-                        <p>{cookies.language === "en" ? "Optional fields" : "Campuri optionale"}</p>
+                        <p>{cookies.language === "en" ? "Other fields" : "Alte campuri"}</p>
                         <FontAwesomeIcon className={`option-icon ${dropMenu ? "active" : ""}`} icon={faAngleDown} onClick={() => setDropMenu(currStatus => !currStatus)}/>
                     </div>
                    
@@ -279,11 +294,7 @@ const CreatePatient = ({ data, fromAppointments }) => {
                             
                             </div>
                         </div>
-                        
-                        <div className="input">
-                            <p>{cookies.language === "en" ? "File Number" : "Nr. fisa"}</p>
-                            <input type="number" placeholder={cookies.language === "en" ? "File Number" : "Nr. fisa"} value={fileNumber || ""} onChange={e => setFileNumber(e.target.value)}/>
-                        </div>
+                
 
                         <div className="input">
                             <p>{cookies.language === "en" ? "PIC" : "CNP"}</p>

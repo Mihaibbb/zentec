@@ -7,7 +7,7 @@ import { faPlus, faEllipsis, faSearch, faCheck, faEdit, faTimes } from "@fortawe
 import { faSquare } from "@fortawesome/free-regular-svg-icons"
 import { useState, useEffect } from "react"; 
 import { useCookies } from "react-cookie";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Users = ({ data }) => {
 
@@ -102,6 +102,19 @@ const Users = ({ data }) => {
         }
     };
 
+    const location = useLocation();
+
+    useEffect(() => {
+      
+        const navigationElement = document.querySelector(".navigation");
+        if (!navigationElement || !navigationElement?.classList?.contains("active")) return;
+        if (window.innerWidth >= 1200) return;
+        navigationElement.classList.remove("active");
+        document.querySelector(".header").classList.add("no-navigation");
+        document.querySelector(".content").classList.add("no-navigation");
+        
+    }, [location]);
+
     useEffect(() => {
         (async () => {
             await getDoctors();
@@ -134,6 +147,8 @@ const Users = ({ data }) => {
         })();
      
     }, [query]);
+
+
 
     return (
         <div className="patients">

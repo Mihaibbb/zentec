@@ -12,6 +12,15 @@ const Admin = () => {
     const location = useLocation();
     const navigate = useNavigate();
 
+    // useEffect(() => {
+      
+    //     const navigationElement = document.querySelector(".navigation");
+    //     if (!navigationElement || !navigationElement?.classList?.contains("active")) return;
+    //     if (window.innerWidth >= 1200) return;
+    //     navigationElement.classList.remove("active");
+        
+    // }, [location]);
+
 
     useEffect(() => {
         (async () => {

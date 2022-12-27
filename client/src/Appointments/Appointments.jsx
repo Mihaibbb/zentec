@@ -1,3 +1,4 @@
+import "../DoctorSchedule/DoctorSchedule.css";
 import './Appointments.css';
 import Navigation from '../Components/Navigation/Navigation';
 import Header from '../Components/Header/Header';
@@ -7,11 +8,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faAngleDown, faAngleLeft, faAngleRight, faAngleUp, faBan, faMinus, faPlus, faTimes, faUser } from '@fortawesome/free-solid-svg-icons';
 import { useCookies } from 'react-cookie';
 import CreatePatient from '../CreatePatient/CreatePatient';
-import * as React from 'react';
 import DoctorsFilter from '../Components/DoctorsFilter/DoctorsFilter';
-import "../DoctorSchedule/DoctorSchedule.css";
 import getContrastForText from '../Functions/Contrast';
-import e from 'cors';
 
 const Appointments = ({ data }) => {
 
@@ -86,7 +84,6 @@ const Appointments = ({ data }) => {
     const doctorRef = useRef([]);
     const gapsRef = useRef([]);
 
-    const location = useLocation();
     // const { startHour, endHour, gaps, doctors } = location?.state;
     const startHour = 9;
     const endHour = 18;
@@ -97,10 +94,25 @@ const Appointments = ({ data }) => {
         hours.push(hour);   
     }
 
-    window.addEventListener("resize", () => {
-        if (window.innerWidth <= 800) setActivePlusButton(true);
-        else setActivePlusButton(false);
-    });
+    const location = useLocation();
+
+    useEffect(() => {
+      
+        const navigationElement = document.querySelector(".navigation");
+        if (!navigationElement || !navigationElement?.classList?.contains("active")) return;
+        if (window.innerWidth >= 1200) return;
+        navigationElement.classList.remove("active");
+        document.querySelector(".header").classList.add("no-navigation");
+        document.querySelector(".content").classList.add("no-navigation");
+        
+    }, [location]);
+    
+    useEffect(() => {
+        window.addEventListener("resize", () => {
+            if (window.innerWidth <= 800) setActivePlusButton(true);
+            else setActivePlusButton(false);
+        });
+    }, []);
 
     const getSchedule = (dayFormat, doctorColor, doctorObject) => {
         const gapsArr = [];
@@ -168,8 +180,6 @@ const Appointments = ({ data }) => {
             e.target = e;
             setActiveResizing(true);
         }
-
-      
         
         if (!target.classList.contains("resizeable") && target.classList.contains("created")) return initiateDragAppointment(target.getBoundingClientRect().y, target.getAttribute("starthour"), target.getAttribute("startminutes"), target.getAttribute("endhour"), target.getAttribute("endminutes"), target.getAttribute("day"));
         if (target.classList.contains('highlight') && !editing) return;
@@ -759,9 +769,9 @@ const Appointments = ({ data }) => {
             const endHourAppointment = new Date(appointment.endDate).getHours();
             const endMinutesAppointment = new Date(appointment.endDate).getMinutes();
             let startIdx, endIdx;
-
-            const doctorColor = doctors.find(doctor => doctor._id === (isJSON(appointment.users) ? JSON.parse(appointment.users)[0] : appointment.users[0])).color;
-           
+            
+            const doctorColor = doctors.find(doctor => doctor._id === (isJSON(appointment.users) ? JSON.parse(appointment.users)[0] : appointment.users[0]))?.color;
+            console.log(doctorColor)
             currentGaps.forEach((gap, gapIdx) => {
                 if (Number(gap.getAttribute('starthour')) === startHourAppointment &&
                     Number(gap.getAttribute('startminutes')) === startMinutesAppointment && 
@@ -865,19 +875,19 @@ const Appointments = ({ data }) => {
             const titleAppointmentElement = document.createElement('p');
             titleAppointmentElement.classList.add("appointment-interval");
             titleAppointmentElement.classList.add("appointment-interval-title");
-            titleAppointmentElement.innerText = appointment.title;
+            titleAppointmentElement.innerText = `${isJSON(appointment.patients) ? JSON.parse(appointment.patients)[0].firstname : appointment.patients[0].firstname} ${isJSON(appointment.patients) ? JSON.parse(appointment.patients)[0].lastname : appointment.patients[0].lastname} -> ${appointment.title}`;
             titleAppointmentElement.style.color = getContrastForText(doctorColor);
             
             currentGaps[startIdx].appendChild(titleAppointmentElement);
 
-            const patientNameElement = document.createElement('p');
-            patientNameElement.classList.add("appointment-interval");
-            console.log(appointment.patients);
-            patientNameElement.innerText = `${isJSON(appointment.patients) ? JSON.parse(appointment.patients)[0].firstname : appointment.patients[0].firstname} ${isJSON(appointment.patients) ? JSON.parse(appointment.patients)[0].lastname : appointment.patients[0].lastname}`;
-            patientNameElement.style.top = 'calc(-100% + 60px)';
-            patientNameElement.style.fontSize = '20px';
-            patientNameElement.style.color = getContrastForText(doctorColor);
-            currentGaps[startIdx].appendChild(patientNameElement);
+            // const patientNameElement = document.createElement('p');
+            // patientNameElement.classList.add("appointment-interval");
+            // console.log(appointment.patients);
+            // patientNameElement.innerText = `${isJSON(appointment.patients) ? JSON.parse(appointment.patients)[0].firstname : appointment.patients[0].firstname} ${isJSON(appointment.patients) ? JSON.parse(appointment.patients)[0].lastname : appointment.patients[0].lastname}`;
+            // patientNameElement.style.top = 'calc(-100% + 60px)';
+            // patientNameElement.style.fontSize = '20px';
+            // patientNameElement.style.color = getContrastForText(doctorColor);
+            // currentGaps[startIdx].appendChild(patientNameElement);
 
             currentGaps[endIdx].classList.add("resizeable");
             currentGaps[endIdx].classList.add("resizeable-down");
@@ -1292,7 +1302,7 @@ const Appointments = ({ data }) => {
 
                 <DoctorsFilter data={data} changeValue={changeActiveDoctors} />
 
-                <div className="options">
+                <div className="options-appointments">
                     <div className="option">
                         <div className={`option-icon ${activeGaps ? "active" : ""}`} onClick={() => setActiveGaps(currStatus => !currStatus)}>
                             {activeGaps && <FontAwesomeIcon icon={faCheck} className="tick-icon" />}

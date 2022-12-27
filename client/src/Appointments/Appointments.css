@@ -1099,7 +1099,7 @@ input[type=number] {
     font-weight: 800;
 }
 
-.content .options 
+.content .options-appointments
 {
     display: flex;
     align-items: center;
@@ -1107,7 +1107,7 @@ input[type=number] {
     margin: 1rem 3.5rem;
 }
 
-.content .options .option 
+.content .options-appointments .option 
 {
     display: flex;
     justify-content: center;
@@ -1116,7 +1116,7 @@ input[type=number] {
     
 }
 
-.content .options .option p 
+.content .options-appointments .option p 
 {
     color: var(--text-color);
     font-size: 22px;
@@ -1137,7 +1137,7 @@ input[type=number] {
     color: #fff;
 }
 
-.content .options .option-icon.active
+.content .options-appointments .option-icon.active
 {
     background: var(--contrast-color);
 

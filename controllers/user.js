@@ -301,7 +301,7 @@ exports.updatePatient = async (req, res, next) => {
     const { organisationId, patientId, firstname, username, lastname, email, phone, birthdate, cnp, gender, address, doctors, fileNumber, notes, city, county } = req.body;
     console.log(username);
     try {
-        let sql = "SHOW DATABASES LIKE ??";
+        let sql = "SELECT * FROM ?? IF EXISTS";
         const organisation = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}`]);
         if (!organisation || !organisation.length) return res.status(404).json({ success: false, message: "An error occured!" });
 
@@ -427,7 +427,9 @@ exports.getPatients = async (req, res, next) => {
         let sql = "SELECT * FROM ??";
         const patients = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.patients`]);
         if (!await patients || !await patients.length) return res.status(200).json({ success: false, message: { en: "No patient was found!", ro: "Nu a fost gasit niciun pacient!" }});
-        res.status(200).json({ success: true, patients: await patients });
+        const sortedPatients = await patients.sort((patient1, patient2) => patient1.fileNumber - patient2.fileNumber);
+        
+        res.status(200).json({ success: true, patients: await sortedPatients });
     } catch (e) {
         console.log(e);
         res.status(404).json({ success: false, message: "An error occured." });

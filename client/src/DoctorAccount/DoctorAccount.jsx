@@ -57,7 +57,7 @@ const DoctorAccount = ({ data }) => {
 
     const submitEditDoctor = async () => {
 
-        if (firstname.length < 3 || lastname.length < 3 || (!color && !color?.hex) || !phone || email.length < 3) {
+        if (firstname.length < 3 || lastname.length < 3 || (!color && !color?.hex) || !phone) {
             setErrorMessage(cookies.language === "en" ? "Fill each field!" : "Completeaza toate campurile!");
             return;
         } 
@@ -73,7 +73,7 @@ const DoctorAccount = ({ data }) => {
                     doctorId: id,
                     firstname,
                     lastname,
-                    email,
+                    email : email && email?.length > 3 ? email : "",
                     phone,
                     color: color?.hex ? color.hex : initialColor,
                     multipleSchedules,
@@ -99,6 +99,19 @@ const DoctorAccount = ({ data }) => {
             await getDoctorInfo();
         })();
     }, []);
+
+    const location = useLocation();
+
+    useEffect(() => {
+      
+        const navigationElement = document.querySelector(".navigation");
+        if (!navigationElement || !navigationElement?.classList?.contains("active")) return;
+        if (window.innerWidth >= 1200) return;
+        navigationElement.classList.remove("active");
+        document.querySelector(".header").classList.add("no-navigation");
+        document.querySelector(".content").classList.add("no-navigation");
+        
+    }, [location]);
     
     return initialColor && (
         <div className="doctor-account-container">

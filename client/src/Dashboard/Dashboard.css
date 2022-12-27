@@ -44,13 +44,15 @@
 
 .dashboard .left-container .new-appointments
 {
-    background: var(--over-color);
+    background: var(--dark-color);
     width: 100%;
     border-radius: 14px;
     padding: 2rem 0 0 0rem;
     margin: 0rem auto 5rem;
     max-height: 80vh;
-    overflow-y: auto;
+    overflow-y: scroll;
+    box-shadow: 0 0 10px var(--over-difference-color);
+    border: 1px solid var(--contrast-color-highlight);
 }
 
 .dashboard .left-container .new-appointments .message h2
@@ -205,8 +207,8 @@
     align-items: center;
     
     border-radius: 10px;
-    /* box-shadow: 0 0 10px var(--over-difference-color); */
-    background: var(--over-color);
+    box-shadow: 0 0 10px var(--over-difference-color);
+    background: var(--dark-color);
     border: 1px solid var(--contrast-color-highlight);
     width: 100%;
     

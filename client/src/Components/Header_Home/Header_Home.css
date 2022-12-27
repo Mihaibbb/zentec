@@ -1,0 +1,80 @@
+header 
+{
+    background: rgba(0, 0, 0, .9);
+    backdrop-filter: blur(30px);
+    display: flex;
+
+    align-items: center;
+    min-height: 65px;
+    padding: 0 1rem 0 1rem;
+
+}
+
+header .logo
+{
+    display: flex;
+    margin: 0 1rem;
+    align-items: center;
+
+}
+
+header .logo p
+{
+    font-weight: bolder;
+    color: var(--text-color);
+    display: none;
+}
+
+
+header .items
+{
+    display: flex;
+    justify-content: flex-start;
+    gap: 1rem;
+
+}
+
+header .items .item 
+{
+    color: var(--text-color);
+    cursor: pointer;
+    font-size: 16gpx;
+    font-family: "Inter";
+    font-weight: 600;
+}
+
+header .right-container,
+header .left-container
+{
+    display: flex;
+    flex: 1;
+    width: 100%;
+}
+
+header .right-container
+{
+    justify-content: flex-end;
+    align-items: center;
+    margin-left: auto;
+}
+
+header .right-container .button
+{
+    width: 100%;
+    max-width: 100px;
+    max-height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid var(--contrast-color);
+    border-radius: 35px;
+    cursor: pointer;
+    transition: all 400ms ease-in-out;
+}
+
+header .right-container .button p 
+{
+    color: var(--contrast-color-highlight);
+    font-family: "Inter";
+    font-weight: bold;
+}

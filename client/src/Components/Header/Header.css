@@ -1,16 +1,18 @@
 .header 
 {
     width: 100%;
-    max-width: calc(82.5% - 2rem);
+    /* max-width: calc(82.5% - 2rem); */
 
     height: 10vh;
     display: flex;
     align-items: center;
-    background: var(--background-color);
-    position: fixed;
+    background: transparent;
+    position: absolute;
     z-index: 1000;
     justify-content: space-between;
-    border-left: 1px solid rgba(255, 255, 255, .25);
+    /* border-left: 1px solid rgba(255, 255, 255, .25); */
+    max-width: 100%;
+
 }
 
 .header.no-navigation 
@@ -60,7 +62,6 @@
     color: rgba(255, 255, 255, .8);
     font-size: 18px;
     font-family: "Source Sans Pro";
- 
 }
 
 .header .searchbar .search-icon 
