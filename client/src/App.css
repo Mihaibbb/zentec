@@ -48,6 +48,22 @@ html ::-webkit-scrollbar-thumb:hover
     background: linear-gradient(#5d37dc, #e83771); 
 }
 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+input[type=date] {
+    color-scheme: dark;
+}
+
+
 :root 
 {
   --background: #080f23;

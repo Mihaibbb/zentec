@@ -68,9 +68,9 @@ const Dashboard = ({ data }) => {
         if (response.success) setNextAppointments(response.appointments.map(appointment => {
             return {
                 name: `${JSON.parse(appointment.patients)[0].firstname} ${JSON.parse(appointment.patients)[0].lastname}`,
-                hour: `${new Date(appointment.startDate).getHours()}:${new Date(appointment.startDate).getMinutes()}`,
-                income: appointment.income,
-                typeIncome: appointment.typeIncome
+                hour: `${new Date(appointment.startDate).getHours() < 10 ? `0${new Date(appointment.startDate).getHours()}` : new Date(appointment.startDate).getHours()}:${new Date(appointment.startDate).getMinutes() < 10 ? `0${new Date(appointment.startDate).getMinutes()}` : new Date(appointment.startDate).getMinutes()}`,
+                income: appointment?.income || "Nedefinit",
+                typeIncome: appointment?.typeIncome || ""
             };
         }));
     };

@@ -154,8 +154,9 @@
 
 .patients .content .patients-container .first-row .column .sort-icon 
 {
-    font-size: 20px;
+    font-size: 16px;
     color: var(--text-color-2);
+    cursor: pointer;
     transition: all 350ms ease-in-out;
 }
 
@@ -172,6 +173,95 @@
     font-size: 20px;
     font-family: "Inter";
     font-weight: 400;
+}
+
+.patients .pages-container 
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 50%;
+    margin: 0 auto;
+}
+
+.patients .pages-container > div 
+{
+    flex: 1;
+}
+
+.patients .pages-container .page-input
+{
+    display: flex;
+    gap: .5rem;
+    background: var(--dark-color);
+    border-radius: 30px;
+    border: 2px solid var(--over-difference-color);
+    padding: 0.35rem;
+}
+
+.patients .pages-container .page-input .value-container
+{
+    cursor: pointer;
+    border-radius: 50%;
+    transition: all 350ms ease-in-out;
+}
+
+.patients .pages-container .page-input .value-container:hover
+{
+    background: var(--contrast-color);
+}
+
+.patients .pages-container .page-input .value-container .value-icon 
+{
+    color: var(--contrast-color);
+    width: 20px;
+    height: 20px;
+    padding: .5rem;
+    transition: all 350ms ease-in-out;
+}
+
+.patients .pages-container .page-input .value-container:hover .value-icon 
+{
+    color: var(--text-color);
+}
+
+.patients .pages-container .page-input input 
+{
+    background: transparent;
+    border: none;
+    outline: none;
+    text-align: center;
+    color: var(--text-color);
+    width: 50px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.patients .pages-container .page-container 
+{
+    background: var(--over-color);
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    margin: 0 1rem;
+    cursor: pointer;
+    transition: all 350ms ease-in-out;
+}
+
+.patients .pages-container .page-container p
+{
+    padding: 0;
+    color: var(--text-color);
+    font-size: 20px;
+}
+
+.patients .pages-container .page-container:hover 
+{
+    background: var(--contrast-color);
+
 }
 
 .patients .content .patients-container .row div .column-icon 

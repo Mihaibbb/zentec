@@ -1,4 +1,3 @@
-const Organisation = require("../models/organisationModel");
 const ErrorResponse = require("../handlers/error");
 const axios = require("axios");
 const db = require("../db");
@@ -167,20 +166,22 @@ exports.analytics = async (req, res, next) => {
         
         } else if (filter === "week") {
             const days = getWeekDays(new Date());
-
-            const patients = await patientsDb.filter(patient => (new Date(patient.date).getFullYear() >= days[0].getFullYear() && new Date(patient.date).getFullYear() <= days[days.length - 1].getFullYear()) &&
-                                                                (new Date(patient.date).getMonth() >= days[0].getMonth() && new Date(patient.date).getMonth() <= days[days.length - 1].getMonth()) &&
-                                                                inArr(days, new Date(patient.date).getDate() - 1));
+            
+            try {
+                 const patients = await patientsDb.filter(patient => new Date(patient.date).getTime() >= new Date(days[0].getFullYear(), days[0].getMonth(), days[0].getDate()).getTime() && new Date(patient.date).getTime() <= new Date(days.at(-1).getFullYear(), days.at(-1).getMonth(), days.at(-1).getDate()).getTime());
     
-            const appointments = await schedulesDb.filter(schedule => (new Date(schedule.createdAt).getFullYear() >= days[0].getFullYear() && new Date(schedule.createdAt).getFullYear() <= days[days.length - 1].getFullYear()) &&
-                                                                      (new Date(schedule.createdAt).getMonth() >= days[0].getMonth() && new Date(schedule.createdAt).getMonth() <= days[days.length - 1].getMonth()) &&
-                                                                      inArr(days, new Date(schedule.createdAt).getDate() - 1));
-            console.log(patients);
-            let totalIncome = 0;
-            await appointments.forEach(appointment => totalIncome += appointment.income); 
-            
-            res.status(200).json({ success: true, patients: await patients.length, appointments: await appointments.length, income: totalIncome, typeIncome: await appointments.length > 0 && await appointments[0].typeIncome ? await appointments[0].typeIncome : "LEI" });
-            
+                const appointments = await schedulesDb.filter(schedule => new Date(schedule.createdAt).getTime() >= new Date(days[0].getFullYear(), days[0].getMonth(), days[0].getDate()).getTime() && new Date(schedule.createdAt).getTime() <= new Date(days.at(-1).getFullYear(), days.at(-1).getMonth(), days.at(-1).getDate()).getTime());
+                console.log(patients);
+                let totalIncome = 0;
+                await appointments.forEach(appointment => totalIncome += appointment.income); 
+                
+                res.status(200).json({ success: true, week: days, patients: await patients.length, appointments: await appointments.length, income: totalIncome, typeIncome: await appointments.length > 0 && await appointments[0].typeIncome ? await appointments[0].typeIncome : "LEI" });
+                
+            } catch (e) {
+                res.status(400).json({ message: e });
+            }
+
+          
             
         } else if (filter === "month") {
       
@@ -228,6 +229,8 @@ exports.checkPatient = async (req, res, next) => {
 
 exports.createPatient = async (req, res, next) => {
     const { _id, firstname, username, lastname, email, phone, birthdate, cnp, gender, address, doctors, fileNumber, notes, city, county } = req.body;
+
+    
     try {
         console.log("phone number", phone);
     
@@ -240,15 +243,18 @@ exports.createPatient = async (req, res, next) => {
             }
         }
 
-        const phoneNumberValidation = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
-        const phoneNumberSecondValidation = /^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/g;
+        // const phoneNumberValidation = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+        // const phoneNumberSecondValidation = /^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/g;
 
-        if (!phone.match(phoneNumberValidation) && !phone.match(phoneNumberSecondValidation)) {
-            res.status(200).json({ success: false, message: { en: "Please enter a valid phone number!", ro: "Va rugam introduceti un numar de telefon valid!" } });
-            return;
-        } 
+        // if (!phone.match(phoneNumberValidation) && !phone.match(phoneNumberSecondValidation)) {
+        //     res.status(200).json({ success: false, message: { en: "Please enter a valid phone number!", ro: "Va rugam introduceti un numar de telefon valid!" } });
+        //     return;
+        // } 
 
         // Verifying if unique username / email / phone number
+
+        if (!validPhoneNumber("RO", phone)) return res.status(200).json({ success: false, message: { en: "Phone number is not valid!", ro: "Numarul de telefon nu este valid!" }});
+
 
         sql = "SELECT * FROM ?? WHERE phone = ?";
         const phoneUsed = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.patients`, phone]);
@@ -300,21 +306,18 @@ exports.updatePatient = async (req, res, next) => {
 
     const { organisationId, patientId, firstname, username, lastname, email, phone, birthdate, cnp, gender, address, doctors, fileNumber, notes, city, county } = req.body;
     console.log(username);
+
     try {
-        let sql = "SELECT * FROM ?? IF EXISTS";
-        const organisation = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}`]);
-        if (!organisation || !organisation.length) return res.status(404).json({ success: false, message: "An error occured!" });
+        let sql = "USE ??";
+        // const organisation = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}`]);
+        // if (!organisation || !organisation.length) return res.status(404).json({ success: false, message: "An error occured!" });
 
         if (email && email.length > 0) {
             const emailValidation = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
             if (!email.match(emailValidation)) return res.status(200).json({ success: false, message: { en: "Please enter a valid email!", ro: "Va rugam introduceti un email valid!" } });
         }
 
-        const phoneNumberValidation = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
-        const phoneNumberSecondValidation = /^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/g;
-
-        if (!phone.match(phoneNumberValidation) && !phone.match(phoneNumberSecondValidation)) 
-            return res.status(200).json({ success: false, message: { en: "Please enter a valid phone number!", ro: "Va rugam introduceti un numar de telefon valid!" } });
+        if (!validPhoneNumber("RO", phone)) return res.status(200).json({ success: false, message: {en: "Phone number is not valid!", ro: "Numarul de telefon nu este valid!" }});
 
         // Verifying if unique username / email / phone number
         sql = "SELECT * FROM ?? WHERE phone = ? AND _id != ?";
@@ -344,18 +347,18 @@ exports.updatePatient = async (req, res, next) => {
         }
 
         if (fileNumber && fileNumber.length > 0) {
-            sql = "SELECT * FROM ?? WHERE fileNumber = ? AND id != ?";
+            sql = "SELECT * FROM ?? WHERE fileNumber = ? AND _id != ?";
             const fileNumberUsed = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.patients`, fileNumber, patientId]);
             if (await fileNumberUsed && await fileNumberUsed.length > 0) return res.status(200).json({ success: false, message: {en: "File number is already used!", ro: "Numarul de fisa este deja inregistrat!"} });
         }
         // Update every field of patient's account  
         const params = [`${process.env.DB_PREFIX}org_${organisationId}.patients`];
-        sql = "UPDATE ?? SET firstname = ?, "; params.push(firstname)
+        sql = "UPDATE ?? SET firstname = ?, "; params.push(firstname);
         sql += "lastname = ?, "; params.push(lastname);
         sql += "username = ?, "; params.push(username);
         sql += "email = ?, "; params.push(email);
         sql += "phone = ?, "; params.push(phone);
-        sql += "birthdate = ?, "; params.push(birthdate);
+       // sql += "birthdate = ?, "; params.push(birthdate);
         sql += "cnp = ?, "; params.push(cnp);
         sql += "gender = ?, "; params.push(gender);
         sql += "city = ?, "; params.push(city);
@@ -373,7 +376,7 @@ exports.updatePatient = async (req, res, next) => {
 
     } catch (e) {
         console.log(e);
-        res.status(404).json({ success: false, message: "An error occured!" });
+        res.status(404).json({ success: false, message: e });
     }
 };
 
@@ -475,10 +478,14 @@ exports.searchPatient = async (req, res, next) => {
 exports.createDoctor = async (req, res, next) => {
     const { organisationId, firstname, lastname, email, phone, color, multipleSchedules, activeDoctor } = req.body;
 
-    let sql = "SELECT * FROM ?? WHERE email = ?";
-    const sameEmail = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.doctors`, email]);
-    if (await sameEmail.length) return res.status(200).json({ success: false, message: { en: "Email is already taken!", ro: "Email-ul este deja folosit!" } })
+    if (!validPhoneNumber("RO", phone)) return res.status(200).json({ success: false, message: {en: "Phone number is not valid!", ro: "Numarul de telefon nu este valid!" }});
 
+    if (email && email.length) {
+        let sql = "SELECT * FROM ?? WHERE email = ?";
+        const sameEmail = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.doctors`, email]);
+        if (await sameEmail.length) return res.status(200).json({ success: false, message: { en: "Email is already taken!", ro: "Email-ul este deja folosit!" } });    
+    }
+    
     sql = "SELECT * FROM ?? WHERE phone = ?";
     const samePhoneNumber = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.doctors`, phone]);
     if (await samePhoneNumber.length) return res.status(200).json({ success: false, message: { en: "Phone number is already taken!", ro: "Numarul de telefon este deja folosit!" } })
@@ -501,17 +508,32 @@ exports.createDoctor = async (req, res, next) => {
 exports.removeDoctor = async (req, res, next) => {
     const { organisationId, doctorId } = req.body;
     try {
+      
+             
+        const schedules = await db.query("SELECT * FROM ??", [`${process.env.DB_PREFIX}org_${organisationId}.schedules`]);
+        
+        await schedules && await schedules?.length && await schedules.forEach(async schedule => {
+
+            const users = JSON.parse(await schedule.users);
+            if (users.includes(doctorId)) await db.query("DELETE FROM ?? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.schedules`, await schedule._id]);
+            
+        });
+
         let sql = "DELETE FROM ?? WHERE _id = ?";
         const result = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.doctors`, doctorId]);
+
         if (await result) return res.status(200).json({ success: true, message: { en: "Doctor removed successfully!", ro: "Doctorul a fost sters cu succes!" } })
     } catch (e) {
         console.log(e);
+        res.status(404).json({ success: false, message: { en: e, ro: e } });
     }
 };
 
 exports.editDoctor = async (req, res, next) => {
     const { organisationId, doctorId, firstname, lastname, email, phone, color, multipleSchedules, activeDoctor } = req.body;
-    console.log(activeDoctor);
+ 
+    if (!validPhoneNumber("RO", phone)) return res.status(200).json({ success: false, message: {en: "Phone number is not valid!", ro: "Numarul de telefon nu este valid!" }});
+    
     try {
         let sql = "UPDATE ?? ";
         sql += 'SET firstname = ?, ';
@@ -820,4 +842,11 @@ const inArr = (arr, number) => {
 
 const inArrId = (arr, id, key) => {
     return arr.some(element => element[key] === id);
+};
+
+const validPhoneNumber = (system, phoneNumber) => {
+    if (system === "RO") {
+        let currentPhoneNumber = phoneNumber.replace(/\(|\)|\s+|-/g, "");
+        return currentPhoneNumber.length > 9 && currentPhoneNumber.match(/^(?:(?:(?:00\s?|\+)40\s?|0)(?:7\d{2}\s?\d{3}\s?\d{3}|(21|31)\d{1}\s?\d{3}\s?\d{3}|((2|3)[3-7]\d{1})\s?\d{3}\s?\d{3}|(8|9)0\d{1}\s?\d{3}\s?\d{3}))$/);
+    }
 };

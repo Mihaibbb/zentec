@@ -69,9 +69,9 @@ const DoctorsFilter = ({ data, changeValue }) => {
         if (doctorsList.length === 0) return;
         const selectionInput = document.querySelector("input.selection-input");
         let target = e.target, sameParent = false;
-        while (!target?.classList.contains('content') && !sameParent) {
+        while (target?.parentElement && !target?.classList.contains('content') && !sameParent) {
             if (target === document.querySelector(".doctors-filter .filter-container")) sameParent = true;
-            target = target.parentElement;
+            target = target?.parentElement;
         }
     
         if (e.target === selectionInput) e.preventDefault();

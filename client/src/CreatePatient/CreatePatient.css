@@ -23,21 +23,6 @@
     margin: 0 0 0 5px;
 }
 
-.input input::-webkit-outer-spin-button,
-.input input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-/* Firefox */
-.input input[type=number] {
-  -moz-appearance: textfield;
-}
-
-input[type=date] {
-    color-scheme: dark;
-}
-
 .create-patient h2.title
 {
     margin: calc(10vh + 2rem) auto 2rem;

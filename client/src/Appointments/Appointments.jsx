@@ -77,7 +77,8 @@ const Appointments = ({ data }) => {
     const [statusMessage, setStatusMessage] = useState();
     const [activeGaps, setActiveGaps] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
-
+    const [activeErrorMessage, setActiveErrorMessage] = useState();
+    
     const hours = [];
     const filterRef = useRef();
     const scheduleRef = useRef();
@@ -85,8 +86,8 @@ const Appointments = ({ data }) => {
     const gapsRef = useRef([]);
 
     // const { startHour, endHour, gaps, doctors } = location?.state;
-    const startHour = 9;
-    const endHour = 18;
+    const startHour = 8;
+    const endHour = 20;
     const gaps = 4;
     const minutesPerGap = 60 / gaps;
     
@@ -170,9 +171,16 @@ const Appointments = ({ data }) => {
     const initiateAppointment = (e, currHour, gap, doctorObject, editing = false) => {
         const target = e.target?.classList.contains("gap") ? e.target : e.target.parentElement;
         const day = new Date(target.getAttribute("day"));
+        const dateTime = date.getTime();
+        const dayTime = day.getTime();
+    
        
-        if (date.getFullYear() < new Date().getFullYear() || date.getMonth() < new Date().getMonth() || date.getDate() < new Date().getDate()) return;
-        if (day.getFullYear() < new Date().getFullYear() || day.getMonth() < new Date().getMonth() || day.getDate() < new Date().getDate()) return;
+        if (dateTime < new Date().getTime() || dayTime < new Date().getTime()) {
+            setActiveErrorMessage(true);
+            setTimeout(() => setActiveErrorMessage(false), 5000);
+            return;
+        }
+
         console.log(day, date);
         if (e.button === 2) return; // check for right click
         if (modifyEvent) return;
@@ -420,6 +428,7 @@ const Appointments = ({ data }) => {
     };
 
     const finishDragAppointment = async () => {
+        if (!dragAppointment) return;
         setDragAppointment(false);
         setDragPosition();
         const dragFirstElement = dragGaps[0];
@@ -1081,8 +1090,11 @@ const Appointments = ({ data }) => {
                         setDays([date]);
                     }}>{currDay}</p>
                     <div className="month-appointments">
-                        {currAppointments.map((appointment, idx) => (
-                            <div style={{ "--doctor-color-css": doctorColor }} key={idx} className="month-appointment" onClick={() => {
+                        {currAppointments.map((appointment, idx) => {
+                            const appointmentDoctorId = isJSON(appointment.users) ? JSON.parse(appointment.users)[0] : appointment.users[0];
+                            const currDoctor = data.organisation.doctors.find(doctor => doctor._id === appointmentDoctorId);
+                            const currDoctorColor = currDoctor?.color;
+                            return (<div style={{ "--doctor-color-css": currDoctorColor || doctorColor }} key={idx} className="month-appointment" onClick={() => {
                                 setActiveEditAppointment(true);
                                 setAppointmentTitle(appointment.title);
                                 setAppointmentPatient(`${JSON.parse(appointment.patients)[0].firstname} ${JSON.parse(appointment.patients)[0].lastname}`);
@@ -1101,8 +1113,8 @@ const Appointments = ({ data }) => {
                                 <p>{appointment.title.substring(0, 9)}{appointment.title.length <= 10 ? "" : ".."}</p>
                                 <p>{new Date(appointment.startDate).getHours()}:{new Date(appointment.startDate).getMinutes()}</p>
                               
-                            </div>
-                        ))}
+                            </div>);
+                        })}
                     </div>
                 </div>
             );
@@ -1117,7 +1129,7 @@ const Appointments = ({ data }) => {
             const currDays = [];
             for (let currDay = 1; currDay <= daysInMonth; currDay++) 
                 currDays.push(currDay);
-
+            
             return (
                 <div className="year-month-container" key={monthIdx}>
                     <p className="month-number" onClick={() => {
@@ -1158,14 +1170,15 @@ const Appointments = ({ data }) => {
         setPatientSaved(true);
         setActiveCreatePatient(true);
         setPhoneNumberReadOnly(true);
-
     };
 
     const changeActiveDoctors = (currActiveDoctors) => {
         setDoctors(currActiveDoctors);
     };
 
+    // Checking if is json
     const isJSON = (json) => {
+        
         try {
             JSON.parse(json);
         } catch (e) {
@@ -1746,9 +1759,15 @@ const Appointments = ({ data }) => {
                     </div>
                 }
 
-                {activePlusButton && <div className="add-button" onClick={() => setActiveCreateAppointment(true)}>
+                {activePlusButton ? <div className="add-button" onClick={() => setActiveCreateAppointment(true)}>
                     <FontAwesomeIcon icon={faPlus} className="add-icon" />
-                </div>}
+                </div> : null}
+
+           
+                <div className={`error-message-button ${activeErrorMessage ? "active" : ""}`}>
+                    <p>{cookies?.language === "en" ? "You can't create / edit an appointment in the past!" : "Nu puteti crea / edita o programare in trecut!"}</p>
+                </div> 
+             
             </div>
         </div>
     ) : <CreatePatient data={data} fromAppointments={true} />;

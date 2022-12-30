@@ -1,4 +1,4 @@
-import { faEllipsis, faFileArrowDown, faFileArrowUp, faPlus, faSearch, faSortDown, faSortUp, faTimes, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faEllipsis, faFileArrowDown, faFileArrowUp, faMinus, faPlus, faSearch, faSortDown, faSortUp, faTimes, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState, useEffect, useRef } from "react";
 import { useCookies } from "react-cookie";
@@ -11,10 +11,15 @@ import "./Patients.css";
 const Patients = ({ data }) => {
     
     const [patients, setPatients] = useState([]);
+    const [totalPatients, setTotalPatients] = useState([]);
     const [patientsExportData, setPatientsExportData] = useState([]);
     const [query, setQuery] = useState("");
     const [arrowElements, setArrowElements] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
 
+    const patientsPerPage = 10;
+    const [pages, setPages] = useState();
+    
     const firstNameArrow = useRef();
     const lastNameArrow = useRef();
     const fileNumberArrow = useRef();
@@ -35,19 +40,24 @@ const Patients = ({ data }) => {
                 _id: data.organisation._id
             })
         };
+
         try {
             const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/get-patients`, options);
             const response = await request.json();
             console.log(await response);
             if (!await response.success) return;
-
-            setPatients(await response.patients);
+            
+            setPatients(currPatients => {
+                return response.patients.filter((patient, idx) => {
+                    return (idx + 1) > patientsPerPage * (currentPage - 1) && (idx + 1) <= patientsPerPage * currentPage;
+                });
+            });
+            
+            setTotalPatients(await response.patients);
 
         } catch (e) {
             console.log(e);
         }
-     
-
     };
 
     const removePatient = async (patientId) => {
@@ -107,12 +117,22 @@ const Patients = ({ data }) => {
             const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/search-patient`, options);
             const response = await request.json();
           
-            if (response.success) setPatients(response.patients || []);
-            else setPatients([]);
+            if (response.success) {
+                setPatients(currPatients => {
+                    return response.patients.filter((patient, idx) => {
+                        return (idx + 1) > patientsPerPage * (currentPage - 1) && (idx + 1) <= patientsPerPage * currentPage;
+                    });
+                });
+                setTotalPatients(response.patients || []);
+            } else {
+                setPatients([]);
+                setTotalPatients([]);
+            }
         })();
     }, [query]);
 
     useEffect(() => {
+        if (!patients || !patients?.length) return;
         setPatientsExportData(patients.map((currPatient, idx) => {
             if (cookies.language === "en") {
                 return {
@@ -146,7 +166,14 @@ const Patients = ({ data }) => {
                 Observatii: currPatient?.notes || ""
             };
         }));
+        console.log(patients);
+
     }, [patients]);
+
+    useEffect(() => {
+        setPages(Math.floor(totalPatients.length / patientsPerPage) + (totalPatients.length % patientsPerPage !== 0 ? 1 : 0));
+
+    }, [totalPatients]);
 
     useEffect(() => {
       
@@ -162,23 +189,47 @@ const Patients = ({ data }) => {
     useEffect(() => {
         if (!fileNumberArrow?.current) return;
         fileNumberArrow.current.classList.add("up");
-    }, []);
+    }, [fileNumberArrow?.current]);
 
     useEffect(() => {
+        if (!lastNameArrow?.current) return;
         setArrowElements([fileNumberArrow?.current, firstNameArrow?.current, lastNameArrow?.current]);
-    }, []);
+    }, [lastNameArrow?.current]);
+
+    useEffect(() => {
+        console.log(arrowElements);
+    }, [arrowElements]);
+
+    useEffect(() => {
+        console.log(pages);
+    }, [pages]);
+
+    useEffect(() => {
+        setPatients(currPatients => {
+            return [...totalPatients].filter((patient, idx) => {
+                return (idx + 1) > patientsPerPage * (currentPage - 1) && (idx + 1) <= patientsPerPage * currentPage;
+            });
+        });
+    }, [currentPage]);
 
     const changeActiveArrow = (newActiveArrow, type) => {
+        console.log(arrowElements);
         if (!arrowElements || !arrowElements.length) return;
         newActiveArrow.classList.toggle("up");
         
         setPatients(currPatients => {
-            if (type === "number") return currPatients.sort((a, b) => newActiveArrow.classList.contains("up") ? a - b : b - a);
-            return newActiveArrow.classList.contains("up") ? currPatients.sort() : currPatients.reverse();
+            if (type === "fileNumber") return [...currPatients].sort((patient1, patient2) => newActiveArrow.classList.contains("up") ? patient1.fileNumber - patient2.fileNumber : patient2.fileNumber - patient1.fileNumber);
+            
+            return [...currPatients].sort((patient1, patient2) => {
+                if (patient1[type] < patient2[type]) return newActiveArrow.classList.contains("up") ? -1 : 1;
+                if (patient1[type] > patient2[type]) return newActiveArrow.classList.contains("up") ? 1 : -1;
+                return 0;
+            });
+
         });
 
         arrowElements.forEach(arrowElement => {
-            if (arrowElement.innerHTML !== newActiveArrow.innerHTML) {
+            if (arrowElement !== newActiveArrow) {
                 arrowElement.classList.remove("up");
             }
         });
@@ -217,7 +268,7 @@ const Patients = ({ data }) => {
                                 icon={faSortDown} 
                                 ref={fileNumberArrow} 
                                 className="sort-icon"
-                                onClick={() => changeActiveArrow(fileNumberArrow?.current, "number")}
+                                onClick={() => changeActiveArrow(fileNumberArrow?.current, "fileNumber")}
                             />
                         </div>
                         <div className="column">
@@ -226,7 +277,7 @@ const Patients = ({ data }) => {
                                 icon={faSortDown} 
                                 ref={firstNameArrow} 
                                 className="sort-icon"
-                                onClick={() => changeActiveArrow(firstNameArrow?.current, "string")}
+                                onClick={() => changeActiveArrow(firstNameArrow?.current, "firstname")}
                             />
                         </div>
                         <div className="column">
@@ -235,7 +286,7 @@ const Patients = ({ data }) => {
                                 icon={faSortDown} 
                                 ref={lastNameArrow} 
                                 className="sort-icon"
-                                onClick={() => changeActiveArrow(lastNameArrow?.current, "string")}
+                                onClick={() => changeActiveArrow(lastNameArrow?.current, "lastname")}
                             />
                         </div>
                         <div className="column">
@@ -284,6 +335,37 @@ const Patients = ({ data }) => {
                     )) : (
                         <h2 className="center">{cookies.language === "en" ? "No patient found." : "Niciun pacient gasit."}</h2>
                     )}
+
+                    {pages > 1 ? <div className="pages-container">
+                        <div className="page-container" onClick={() => setCurrentPage(1)}>
+                            <p>1</p>
+                        </div>
+                        <div className="page-input">
+                            <div 
+                                className="value-container"
+                                onClick={() => currentPage > 1 ? setCurrentPage(currValue => currValue - 1) : null}
+                            >
+                                <FontAwesomeIcon icon={faMinus} className="value-icon" />
+                            </div>
+                            
+                            <input 
+                                type="number" 
+                                placeholder={cookies.language === "en" ? "Page's number" : "Numarul paginii"}
+                                value={currentPage}
+                                onChange={e => Number(e.target.value) ? setCurrentPage(Number(e.target.value)) : setCurrentPage("")}
+                            />
+
+                            <div 
+                                className="value-container"
+                                onClick={() => currentPage < pages ? setCurrentPage(currValue => currValue + 1) : null}
+                            >
+                                <FontAwesomeIcon icon={faPlus} className="value-icon" />
+                            </div>
+                        </div>
+                        <div className="page-container" onClick={() => setCurrentPage(pages)}>
+                            <p>{pages}</p>
+                        </div>
+                    </div> : null}
                 </div>
 
                 <div className="add-button" onClick={() => navigation("/create-patient")}>

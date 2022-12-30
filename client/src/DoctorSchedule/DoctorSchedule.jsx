@@ -180,7 +180,7 @@ const DoctorSchedule = ({ data }) => {
 
     const addInvisibleDays = () => {
         const invisibleDays = [];
-        for (let i = 1; i < days[0].getDay(); i++)
+        for (let i = 1; i < (days[0].getDay() === 0 ? 7 : days[0].getDay()); i++)
             invisibleDays.push(
                 <div className="day-container invisible" key={i} />
             );

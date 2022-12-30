@@ -1,4 +1,4 @@
-import { faAddressBook, faAddressCard, faAngleLeft, faCheck, faCity, faEnvelope, faIdBadge, faMars, faNoteSticky, faPhone, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faAddressBook, faAddressCard, faAngleLeft, faCalendar, faCheck, faCity, faEnvelope, faIdBadge, faMars, faNoteSticky, faPhone, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState, useEffect, useRef } from "react";
 import { useCookies } from "react-cookie";
@@ -14,6 +14,7 @@ const PatientAccount = ({ data }) => {
     const location = useLocation();
    
     const [cookies, setCookie] = useCookies();
+    const birthRef = useRef();
 
 
     console.log(location?.state, data);
@@ -35,12 +36,13 @@ const PatientAccount = ({ data }) => {
     const initialFileNumber = patient.fileNumber || "";
     const initialPIC = patient.cnp || "";
     const initialNotes = patient.notes || "";
-
+    const initialBirthdate = patient.birthdate || "";
     
     const [firstName, setFirstName] = useState(initialFirstName);
     const [lastName, setLastName] = useState(initialLastName);
     const [username, setUsername] = useState(initialUsername);
     const [phoneNumber, setPhoneNumber] = useState(initialPhone);
+    const [birthDate, setBirthDate] = useState(initialBirthdate);
     const [email, setEmail] = useState(initialEmail);
     const [city, setCity] = useState(initialCity); 
     const [county, setCounty] = useState(initialCounty);
@@ -99,7 +101,7 @@ const PatientAccount = ({ data }) => {
                 username: username,
                 email: email,
                 phone: phoneNumber,
-                birthdate: patient.birthdate,
+                birthdate: birthDate !== "" ? birthDate : patient.birthdate,
                 cnp: PIC,
                 gender: gender,
                 city,
@@ -169,7 +171,24 @@ const PatientAccount = ({ data }) => {
         }); 
     }, []);
 
-    
+    useEffect(() => {
+        if (!birthRef.current) return;
+        const today = new Date();
+        let day = today.getDate();
+        let month = today.getMonth() + 1;
+        const year = today.getFullYear();
+        
+        if (day < 10) day = '0' + day;
+        
+        
+        if (month < 10) month = '0' + month;
+           
+        const inputMax = `${year}-${month}-${day}`;
+        const inputMin = `${year - 100}-${month}-${day}`;
+        birthRef.current.setAttribute("max", inputMax);
+        birthRef.current.setAttribute("min", inputMin);
+
+    }, [birthRef]);
 
     return (
         <div className="account-container"> 
@@ -203,6 +222,14 @@ const PatientAccount = ({ data }) => {
                             
                             <input type="text" value={lastName} onChange={e => setLastName(e.target.value)}/>
                         </div>  
+
+                        <div className="input">
+                            <div className="input-title">
+                                <FontAwesomeIcon className="icon" icon={faCalendar} />
+                                <p>{cookies.language === "en" ? "Date of birth" : "Data de nastere"}</p>
+                            </div>
+                            <input type="date" placeholder={cookies.language === "en" ? "Birthdate" : "Data de nastere"} ref={birthRef} value={birthDate} onChange={e => setBirthDate(e.target.value)} required />
+                        </div>
 
                         <div className="input">
                             <div className="input-title">
@@ -315,7 +342,6 @@ const PatientAccount = ({ data }) => {
                      
                         {errorMessage && <p className="error-message">{errorMessage}</p>}
                     </div> 
-                    
                         
                 </div>
 

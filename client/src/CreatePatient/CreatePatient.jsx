@@ -11,7 +11,7 @@ const CreatePatient = ({ data, fromAppointments }) => {
 
     const location = useLocation();
     const navigate = useNavigate();
-    const cookies = useCookies();
+    const [cookies, setCookie] = useCookies();
 
     const birthRef = useRef();
     const gendersRef = useRef([]);
@@ -80,20 +80,20 @@ const CreatePatient = ({ data, fromAppointments }) => {
 
 
     const createNewPatient = async () => {
-        if (firstName === "" || lastName === "" || phoneNumber === "" || birthDate === "") {
-            setErrorMessage(cookies.language === "en" ? "Please fill every required field!" : "Te rog completeaza fiecare camp!");
+        setErrorMessage(null);
+        if (firstName === "" || lastName === "" || phoneNumber === "") {
+            setErrorMessage(cookies.language === "en" ? "Fill every required field!" : "Completeaza fiecare camp!");
             return;
         }
-        let realPhoneNumber = phoneNumber.length > 10 ? `+${phoneNumber}` : phoneNumber;
+        let realPhoneNumber = phoneNumber;
         console.log(birthDate);
         const birthDateJS = new Date(birthDate);
-        const phoneNumberValidation =  /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
-        const phoneNumberSecondValidation = /^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/g;
-        if (!realPhoneNumber.match(phoneNumberValidation) && !realPhoneNumber.match(phoneNumberSecondValidation)) {
-            setErrorMessage(cookies.language === "en" ? "Please enter a valid phone number!" : "Te rog introdu un numar de telefon valid!");
-            console.log("error");
-            return;
-        }
+        // const phoneNumberValidation =  /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+        // const phoneNumberSecondValidation = /^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/g;
+        // if (!realPhoneNumber.match(phoneNumberValidation) && !realPhoneNumber.match(phoneNumberSecondValidation)) {
+        //     setErrorMessage(cookies.language === "en" ? "Please enter a valid phone number!" : "Te rog introdu un numar de telefon valid!");
+        //     console.log("error");
+        // }
 
         const emailValidation = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
@@ -112,7 +112,7 @@ const CreatePatient = ({ data, fromAppointments }) => {
                 firstname: firstName,
                 lastname: lastName,
                 username,
-                email,
+                email: email,
                 phone: realPhoneNumber,
                 birthdate: birthDate,
                 cnp: PIC,
@@ -125,13 +125,16 @@ const CreatePatient = ({ data, fromAppointments }) => {
                 fileNumber: fileNumber
             })
         };
+
         try {
             const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/create-patient`, options);
             const response = await request.json();
-            if (!await response.success) {
-                console.log(await response.message);
-                setErrorMessage(await response.message[cookies.language]);
-                return;
+            console.log(await response);
+            const success = await response.success;
+            if (!await success) {
+                const message = await response.message;
+                console.log(await message, cookies.language);
+                return setErrorMessage(await message[cookies.language]);
             }
 
             if (!fromAppointments) navigate("/patients", { state: { message: { en: "Patient added successfully!", ro: "Pacient adaugat cu succes." } } });
@@ -232,12 +235,12 @@ const CreatePatient = ({ data, fromAppointments }) => {
                     </div>
 
                     <div className="input">
-                        <p>{cookies.language === "en" ? "Phone number" : "Numar de telefon"}</p>
+                        <p>{cookies.language === "en" ? "Phone number *" : "Numar de telefon *"}</p>
                         <input type="number" placeholder={cookies.language === "en" ? "Phone number" : "Numar de telefon"} value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)} required />
                     </div>
 
                     <div className="input">
-                        <p>{cookies.language === "en" ? "Birthdate" : "Data de nastere"}</p>
+                        <p>{cookies.language === "en" ? "Date of birth" : "Data de nastere"}</p>
                         <input type="date" placeholder={cookies.language === "en" ? "Birthdate" : "Data de nastere"} ref={birthRef} value={birthDate} onChange={e => setBirthDate(e.target.value)} required />
                     </div>
 
@@ -308,8 +311,7 @@ const CreatePatient = ({ data, fromAppointments }) => {
                     </>
                     }
 
-                   
-
+                    {errorMessage ? <p className="error">{errorMessage}</p> : null}
                     <button type="button" onClick={async () => await createNewPatient()}>{cookies.language === "en" ? "Add patient" : "Adauga pacient"}</button>
                 </div>
             </div>
