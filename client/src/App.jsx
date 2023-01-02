@@ -88,11 +88,15 @@ const App = () => {
     }, []);
 
     useEffect(() => {
+        // Stop increasing / decreasing value of input number from scrolling on it
         document.addEventListener("wheel", (event) => {
             if (document.activeElement.type === "number"){
                 document.activeElement.blur();
             }
-        });        
+        });   
+
+        // Before page loads 
+        //window.addEventListener("")
     }, []);
 
     return data !== null && (

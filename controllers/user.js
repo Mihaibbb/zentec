@@ -2,6 +2,7 @@ const ErrorResponse = require("../handlers/error");
 const axios = require("axios");
 const db = require("../db");
 const generateId = require("../functions/generateId");
+const { basename } = require("path");
 
 exports.createAppointment = async (req, res, next) => {
     const { _id, startDate, endDate, users, patients, title, income, typeIncome, notes, date, language } = req.body;
@@ -149,67 +150,67 @@ exports.analytics = async (req, res, next) => {
         const schedulesDb = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.schedules`]);
         
         // Schedules made
-        console.log(new Date(schedulesDb[0].createdAt).getDate(), new Date().getMonth());
+ 
         if (filter === "day") {
-            const patients = await patientsDb.filter(patient => new Date(patient.date).getFullYear() === new Date().getFullYear() &&
+            const patients = await patientsDb && await patientsDb?.length && await patientsDb.filter(patient => new Date(patient.date).getFullYear() === new Date().getFullYear() &&
                                                                      new Date(patient.date).getMonth() === new Date().getMonth() &&
                                                                      new Date(patient.date).getDate() === new Date().getDate());
     
-            const appointments = await schedulesDb.filter(schedule => new Date(schedule.createdAt).getFullYear() === new Date().getFullYear() &&
+            const appointments = await schedulesDb && await schedulesDb?.length && await schedulesDb.filter(schedule => new Date(schedule.createdAt).getFullYear() === new Date().getFullYear() &&
                                                                            new Date(schedule.createdAt).getMonth() === new Date().getMonth() &&
                                                                             new Date(schedule.createdAt).getDate() === new Date().getDate());
          
             let totalIncome = 0;
-            await appointments.forEach(appointment => totalIncome += appointment.income); 
+            await appointments && await appointments?.length && await appointments.forEach(appointment => totalIncome = totalIncome + (appointment?.income || 0)); 
             
-            res.status(200).json({ success: true, patients: await patients.length, appointments: await appointments.length, income: totalIncome, typeIncome: await appointments.length > 0 && await appointments[0].typeIncome ? await appointments[0].typeIncome : "LEI" });
+            res.status(200).json({ success: true, patients: await patients?.length || 0, appointments: await appointments?.length || 0, income: totalIncome, typeIncome: await appointments && await appointments.length > 0 && await appointments[0]?.typeIncome ? await appointments[0]?.typeIncome : "LEI" });
         
         } else if (filter === "week") {
             const days = getWeekDays(new Date());
             
             try {
-                 const patients = await patientsDb.filter(patient => new Date(patient.date).getTime() >= new Date(days[0].getFullYear(), days[0].getMonth(), days[0].getDate()).getTime() && new Date(patient.date).getTime() <= new Date(days.at(-1).getFullYear(), days.at(-1).getMonth(), days.at(-1).getDate()).getTime());
+                 const patients = await patientsDb && await patientsDb?.length && await patientsDb.filter(patient => new Date(patient.date).getTime() >= new Date(days[0].getFullYear(), days[0].getMonth(), days[0].getDate()).getTime() && new Date(patient.date).getTime() <= new Date(days.at(-1).getFullYear(), days.at(-1).getMonth(), days.at(-1).getDate()).getTime());
     
-                const appointments = await schedulesDb.filter(schedule => new Date(schedule.createdAt).getTime() >= new Date(days[0].getFullYear(), days[0].getMonth(), days[0].getDate()).getTime() && new Date(schedule.createdAt).getTime() <= new Date(days.at(-1).getFullYear(), days.at(-1).getMonth(), days.at(-1).getDate()).getTime());
+                const appointments = await schedulesDb && await schedulesDb.length && await schedulesDb.filter(schedule => new Date(schedule.createdAt).getTime() >= new Date(days[0].getFullYear(), days[0].getMonth(), days[0].getDate()).getTime() && new Date(schedule.createdAt).getTime() <= new Date(days.at(-1).getFullYear(), days.at(-1).getMonth(), days.at(-1).getDate()).getTime());
                 console.log(patients);
                 let totalIncome = 0;
-                await appointments.forEach(appointment => totalIncome += appointment.income); 
+                await appointments && await appointments?.length && await appointments.forEach(appointment => totalIncome = totalIncome + (appointment?.income || 0)); 
                 
-                res.status(200).json({ success: true, week: days, patients: await patients.length, appointments: await appointments.length, income: totalIncome, typeIncome: await appointments.length > 0 && await appointments[0].typeIncome ? await appointments[0].typeIncome : "LEI" });
+                res.status(200).json({ success: true, week: days, patients: await patients?.length || 0, appointments: await appointments?.length || 0, income: totalIncome, typeIncome: await appointments && await appointments.length > 0 && await appointments[0]?.typeIncome ? await appointments[0].typeIncome : "LEI" });
                 
             } catch (e) {
-                res.status(400).json({ message: e });
+                res.status(404).json({ success: false, message: e });
             }
 
           
             
         } else if (filter === "month") {
       
-            const patients = await patientsDb.filter(patient => new Date(patient.date).getFullYear() === new Date().getFullYear() &&
+            const patients = await patientsDb && await patientsDb?.length && await patientsDb.filter(patient => new Date(patient.date).getFullYear() === new Date().getFullYear() &&
                                                                      new Date(patient.date).getMonth() === new Date().getMonth());
 
-            const appointments = await schedulesDb.filter(schedule => new Date(schedule.createdAt).getFullYear() === new Date().getFullYear() &&
+            const appointments = await schedulesDb && await schedulesDb?.length && await schedulesDb.filter(schedule => new Date(schedule.createdAt).getFullYear() === new Date().getFullYear() &&
                                                                            new Date(schedule.createdAt).getMonth() === new Date().getMonth());
             let totalIncome = 0;
-            await appointments.forEach(appointment => totalIncome += appointment.income); 
+            await appointments && await appointments?.length && await appointments.forEach(appointment => totalIncome = totalIncome + (appointment?.income || 0)); 
             
             console.log(patients, appointments, totalIncome);
-            res.status(200).json({ success: true, patients: await patients.length, appointments: await appointments.length, income: totalIncome, typeIncome: await appointments.length > 0 && await appointments[0].typeIncome ? await appointments[0].typeIncome : "LEI"});
+            res.status(200).json({ success: true, patients: await patients?.length || 0, appointments: await appointments?.length || 0, income: totalIncome, typeIncome: await appointments && await appointments.length > 0 && await appointments[0]?.typeIncome ? await appointments[0].typeIncome : "LEI"});
             
         }
         else if (filter === "year") {
-            const patients = await patientsDb.filter(patient => new Date(patient.date).getFullYear() === new Date().getFullYear());
+            const patients = await patientsDb && await patientsDb?.length && await patientsDb.filter(patient => new Date(patient.date).getFullYear() === new Date().getFullYear());
     
-            const appointments = await schedulesDb.filter(schedule => new Date(schedule.createdAt).getFullYear() === new Date().getFullYear());
+            const appointments = await schedulesDb && await schedulesDb?.length && await schedulesDb.filter(schedule => new Date(schedule.createdAt).getFullYear() === new Date().getFullYear());
             let totalIncome = 0;
-            await appointments.forEach(appointment => totalIncome += appointment.income); 
+            await appointments && await appointments?.length && await appointments.forEach(appointment => totalIncome = totalIncome + (appointment?.income || 0)); 
     
-            res.status(200).json({ success: true, patients: await patients.length, appointments: await appointments.length, income: totalIncome, typeIncome: await appointments.length > 0 && await appointments[0].typeIncome ? await appointments[0].typeIncome : "LEI" });
+            res.status(200).json({ success: true, patients: await patients?.length || 0, appointments: await appointments?.length || 0, income: totalIncome, typeIncome: await appointments && await appointments.length > 0 && await appointments[0]?.typeIncome ? await appointments[0].typeIncome : "LEI" });
         }
 
     } catch (e) {
         console.log(e);
-        res.status(404).json({ success: false, message: "An error occured." });
+        res.status(404).json({ success: false, message: e });
     }
     
 };  
@@ -291,7 +292,7 @@ exports.createPatient = async (req, res, next) => {
         const patientId = generateId(25);
 
         sql = "INSERT INTO ?? (_id, firstname, lastname, username, email, phone, birthdate, cnp, gender, city, county, address, doctors, date, notes, fileNumber, historic, profileImage) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        const params = [`${process.env.DB_PREFIX}org_${_id}.patients`, patientId, firstname, lastname, username, email, phone, birthdate, cnp, gender, city, county, address, JSON.stringify(doctors), new Date(), notes, fileNumber, JSON.stringify([]), JSON.stringify([])];
+        const params = [`${process.env.DB_PREFIX}org_${_id}.patients`, patientId, firstname, lastname, username, email, phone, new Date(birthdate), cnp, gender, city, county, address, JSON.stringify(doctors), new Date(), notes, fileNumber, JSON.stringify([]), JSON.stringify([])];
         const insertedPatient = await db.query(sql, params);
         if (!insertedPatient) return new ErrorResponse("An error occured!", 404);
         
@@ -358,7 +359,7 @@ exports.updatePatient = async (req, res, next) => {
         sql += "username = ?, "; params.push(username);
         sql += "email = ?, "; params.push(email);
         sql += "phone = ?, "; params.push(phone);
-       // sql += "birthdate = ?, "; params.push(birthdate);
+        sql += "birthdate = ?, "; params.push(new Date(birthdate));
         sql += "cnp = ?, "; params.push(cnp);
         sql += "gender = ?, "; params.push(gender);
         sql += "city = ?, "; params.push(city);
@@ -386,8 +387,22 @@ exports.removePatient = async (req, res, next) => {
     try {
         let sql = "DELETE FROM ?? WHERE _id = ?";
         const deletedPatient = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.patients`, patientId]);
-        
-        if (!await deletedPatient) return new ErrorResponse("An error occured!", 404);
+        if (!deletedPatient) return new ErrorResponse("An error occured!", 404);
+
+        sql = "SELECT * FROM ??";
+        const schedules = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.schedules`]);
+
+        // The schedules that the current patient has taken a part into must be removed
+        const removingSchedules = schedules.filter(schedule => {
+            return JSON.parse(schedule.patients).some(patient => {
+                return patient._id === patientId;
+            });
+        });
+
+        removingSchedules.forEach(async removingSchedule => {
+            sql = "DELETE FROM ?? WHERE _id = ?";
+            await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.schedules`, removingSchedule._id]);
+        });
         
         res.status(200).json({ success: true, message: { en: "Patient removed successfully!", ro: "Pacientul a fost sters cu succes!" }});
         
@@ -412,14 +427,34 @@ exports.getDoctors = async (req, res, next) => {
 exports.getLatestSchedules = async (req, res, next) => {
     const { _id } = req.body;
     try {
-        let sql = "SELECT * FROM ?? WHERE startDate >= ?";
-        const schedules = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.schedules`, new Date()]);
-    
+        const endLimit = new Date(new Date().getTime() + 1 * 1000 * 60 * 60 * 24);
+        let sql = "SELECT * FROM ?? WHERE startDate >= ? AND endDate <= ?";
+        const schedules = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.schedules`, new Date(), endLimit]);
+        // Adding a key of doctor's name in schedules object
+        const schedulesWithDoctors = await Promise.all(schedules.map(async (schedule, idx) => {
+            const doctors = JSON.parse(await schedule.users);
+            let doctorFullname = "";
+            sql = "SELECT * FROM ?? WHERE _id = ?";
 
-        res.status(200).json({ success: true, schedules: await schedules });
+            if (doctors.length > 1) doctors.forEach(async doctorId => {
+                const foundDoctor = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.doctors`, doctorId]);
+                if (foundDoctor && foundDoctor[0]) doctorFullname = `${doctorFullname}, ${foundDoctor[0]?.firstname} ${foundDoctor[0]?.lastname}`;
+            })
+            else {
+                const foundDoctor = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.doctors`, doctors[0]]);
+                doctorFullname = `${foundDoctor[0]?.firstname} ${foundDoctor[0]?.lastname}`;
+            }
+
+            return {
+                ...schedule,
+                doctorName: doctorFullname
+            };
+        }));
+
+        res.status(200).json({ success: true, appointments: schedulesWithDoctors });
     } catch (e) {
         console.log(e);
-        res.status(404).json({ success: false, message: 'An error occured.' });
+        res.status(404).json({ success: false, message: 'An error occured.', error: e });
     }
 };
 
@@ -510,19 +545,18 @@ exports.removeDoctor = async (req, res, next) => {
     try {
       
              
-        const schedules = await db.query("SELECT * FROM ??", [`${process.env.DB_PREFIX}org_${organisationId}.schedules`]);
+        const schedules = await db.query("SELECT * FROM ??;", [`${process.env.DB_PREFIX}org_${organisationId}.schedules`]);
         
-        await schedules && await schedules?.length && await schedules.forEach(async schedule => {
+        schedules && schedules?.length && schedules.forEach(async schedule => {
 
-            const users = JSON.parse(await schedule.users);
-            if (users.includes(doctorId)) await db.query("DELETE FROM ?? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.schedules`, await schedule._id]);
-            
+            const users = JSON.parse(schedule.users);
+            if (users.includes(doctorId)) await db.query("DELETE FROM ?? WHERE _id = ?;", [`${process.env.DB_PREFIX}org_${organisationId}.schedules`, schedule._id]);
         });
 
-        let sql = "DELETE FROM ?? WHERE _id = ?";
+        let sql = "DELETE FROM ?? WHERE _id = ?;";
         const result = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.doctors`, doctorId]);
 
-        if (await result) return res.status(200).json({ success: true, message: { en: "Doctor removed successfully!", ro: "Doctorul a fost sters cu succes!" } })
+        if (result) return res.status(200).json({ success: true, message: { en: "Doctor removed successfully!", ro: "Doctorul a fost sters cu succes!" } })
     } catch (e) {
         console.log(e);
         res.status(404).json({ success: false, message: { en: e, ro: e } });
@@ -850,3 +884,9 @@ const validPhoneNumber = (system, phoneNumber) => {
         return currentPhoneNumber.length > 9 && currentPhoneNumber.match(/^(?:(?:(?:00\s?|\+)40\s?|0)(?:7\d{2}\s?\d{3}\s?\d{3}|(21|31)\d{1}\s?\d{3}\s?\d{3}|((2|3)[3-7]\d{1})\s?\d{3}\s?\d{3}|(8|9)0\d{1}\s?\d{3}\s?\d{3}))$/);
     }
 };
+
+const asyncFilter = async (arr, predicate) => {
+    const results = await Promise.all(arr.map(predicate));
+    return arr.filter((_, index) => results[index]);  
+};
+

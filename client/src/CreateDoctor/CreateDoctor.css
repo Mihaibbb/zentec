@@ -63,7 +63,7 @@
     font-size: 18px;
 }
 
-.form .error 
+p.error 
 {
     color: var(--error-color);
     font-size: 24px;

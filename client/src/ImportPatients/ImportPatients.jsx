@@ -19,14 +19,13 @@ const ImportPatients = ({ data }) => {
     const [errorMessage, setErrorMessage] = useState();
     const [errorList, setErrorList] = useState([]);
     const [dragActive, setDragActive] = useState(false);
+    const [currentFileNumber, setCurrentFileNumber] = useState();
     const fileType = ['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
     const navigate = useNavigate();
-
-
     const uploadFileInputRef = useRef();
 
     const uploadPatients = async () => {
-        await Promise.all(excelData.map(async (row, rowIdx) => {
+       excelData.forEach(async (row, rowIdx) => {
             try {
                 const options = {
                     method: "POST",
@@ -47,17 +46,19 @@ const ImportPatients = ({ data }) => {
                         city: row?.City || row?.Oras, 
                         address: row?.Address || row.Adresa,
                         gender: row.Gender || row.Gen,
-                        notes: row.Notes || row.Observatii
+                        notes: row.Notes || row.Observatii,
+                        fileNumber: row?.FileNumber || row?.NumarFisa || currentFileNumber
                     })
                 };
     
                 const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/create-patient`, options);
                 const response = await request.json();
-                if (!await response.success) setErrorList(currList => [...currList, row.Email]);
+                if (!response.success) setErrorList(currList => [...currList, row.Email]);
+                updateFileNumber();
             } catch (e) {
                 console.log(e);
             }
-        }));
+        });
     };
 
     const handleFile = e => {
@@ -120,6 +121,12 @@ const ImportPatients = ({ data }) => {
         }
     };
 
+    const updateFileNumber = () => {
+        const patients = data.organisation.patients;
+        const patientsSorted = patients.sort((patient1, patient2) => patient2.fileNumber - patient1.fileNumber);
+        setCurrentFileNumber(patientsSorted[0].fileNumber + 1);
+    };
+
     const location = useLocation();
 
     useEffect(() => {
@@ -132,6 +139,10 @@ const ImportPatients = ({ data }) => {
         document.querySelector(".content").classList.add("no-navigation");
         
     }, [location]);
+
+    useEffect(() => {
+        updateFileNumber();
+    }, []);
 
     return (
         <div className="import-container">

@@ -221,7 +221,7 @@ input[type=number] {
     height: 100%;
     display: flex;
     justify-content: center;
-
+    min-height: 175vh;
 }
 
 .appointments .schedule-container h2
@@ -451,7 +451,7 @@ input[type=number] {
 
 .appointments .schedule-container .day-container .schedule-hour .gap .appointment-interval-title
 {
-    font-size: 24px;
+    font-size: 18px;
     width: 100%;
     text-align: center;
     top: calc(-100% - 10px);
@@ -459,6 +459,16 @@ input[type=number] {
     background: rgba(0, 0, 0, .25);
     border-radius: 10px;
     left: initial;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+}
+
+.appointments .schedule-container > .day-container .schedule-hour .gap .appointment-interval-title
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .appointments .schedule-container .day-container .schedule-hour .gap.highlight
@@ -1158,6 +1168,7 @@ input[type=number] {
     height: 45px;
     grid-column: 1 / -1;
     position: fixed;
+    z-index: 103;
     transition: all .35s ease-in-out;
 }
 

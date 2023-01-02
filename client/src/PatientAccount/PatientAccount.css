@@ -140,7 +140,7 @@
     opacity: 1;
 }
 
-.patient-account-details button 
+.patient-account-details button.update
 {
     grid-column: 1 / -1;
     width: 100%;
@@ -157,12 +157,11 @@
     position: fixed;
     bottom: 0;
     left: 0;
-    
     cursor: pointer;
     transition: all 350ms ease-in-out;
 }
 
-.patient-account-details button p
+.patient-account-details button.update p
 {
     color: #fff;
     font-size: 18px;
@@ -170,7 +169,7 @@
     font-family: "Source Sans Pro";
 }
 
-.patient-account-details button.active
+.patient-account-details button.update.active
 {
     opacity: 1;
     animation-delay: 200ms;
@@ -178,6 +177,11 @@
     animation-duration: 500ms;
     animation-iteration-count: 1;
   
+}
+
+.patient-historic
+{
+    margin-top: 7.5rem;
 }
 
 .patient-historic .title

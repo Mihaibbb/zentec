@@ -6,7 +6,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Header from "../Components/Header/Header";
 import Navigation from "../Components/Navigation/Navigation";
 import "./CreatePatient.css";
-
+import DateCustomInput from "../Components/DatePicker/DatePicker";
 const CreatePatient = ({ data, fromAppointments }) => {
 
     const location = useLocation();
@@ -158,7 +158,10 @@ const CreatePatient = ({ data, fromAppointments }) => {
         const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/get-patients`, options);
         const response = await request.json();
         console.log(response);
-        if (response.success) setFileNumber(response.patients.length + 1);
+        if (response.success) {
+            const patientsSorted = response.patients.sort((patient1, patient2) => patient2.fileNumber - patient1.fileNumber);
+            setFileNumber(patientsSorted[0].fileNumber + 1);
+        }
         else setFileNumber(1);
     };
 
@@ -212,6 +215,8 @@ const CreatePatient = ({ data, fromAppointments }) => {
         
     }, [location]);
 
+    const handleChangeDate = (newBirthdate) => setBirthDate(new Date(newBirthdate));
+
     return (
         <div className="create-patient">
             <Navigation page={fromAppointments ? "appointments" : "patients"}/>
@@ -241,7 +246,8 @@ const CreatePatient = ({ data, fromAppointments }) => {
 
                     <div className="input">
                         <p>{cookies.language === "en" ? "Date of birth" : "Data de nastere"}</p>
-                        <input type="date" placeholder={cookies.language === "en" ? "Birthdate" : "Data de nastere"} ref={birthRef} value={birthDate} onChange={e => setBirthDate(e.target.value)} required />
+                        {/* <input type="date" placeholder={cookies.language === "en" ? "Birthdate" : "Data de nastere"} ref={birthRef} value={birthDate} onChange={e => setBirthDate(e.target.value)} required /> */}
+                        <DateCustomInput initialDate={new Date()} changeDate={handleChangeDate} />
                     </div>
 
                     {/* <div className="input">
@@ -312,7 +318,7 @@ const CreatePatient = ({ data, fromAppointments }) => {
                     }
 
                     {errorMessage ? <p className="error">{errorMessage}</p> : null}
-                    <button type="button" onClick={async () => await createNewPatient()}>{cookies.language === "en" ? "Add patient" : "Adauga pacient"}</button>
+                    <button type="button" className="confirm-button" onClick={async () => await createNewPatient()}>{cookies.language === "en" ? "Add patient" : "Adauga pacient"}</button>
                 </div>
             </div>
         </div>

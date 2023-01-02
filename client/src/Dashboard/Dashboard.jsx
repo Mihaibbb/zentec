@@ -62,17 +62,28 @@ const Dashboard = ({ data }) => {
             })
         };
 
-        const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/next-appointments`, options);
-        const response = await request.json();
-      
-        if (response.success) setNextAppointments(response.appointments.map(appointment => {
-            return {
-                name: `${JSON.parse(appointment.patients)[0].firstname} ${JSON.parse(appointment.patients)[0].lastname}`,
-                hour: `${new Date(appointment.startDate).getHours() < 10 ? `0${new Date(appointment.startDate).getHours()}` : new Date(appointment.startDate).getHours()}:${new Date(appointment.startDate).getMinutes() < 10 ? `0${new Date(appointment.startDate).getMinutes()}` : new Date(appointment.startDate).getMinutes()}`,
-                income: appointment?.income || "Nedefinit",
-                typeIncome: appointment?.typeIncome || ""
-            };
-        }));
+        try {
+
+            const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/get-latest-schedules`, options);
+            const response = await request.json();
+            
+            if (response.success) {
+                setNextAppointments(await response.appointments.map(appointment => {
+                    return {
+                        name: `${JSON.parse(appointment.patients)[0].firstname} ${JSON.parse(appointment.patients)[0].lastname}`,
+                        hour: `${new Date(appointment.startDate).getHours() < 10 ? `0${new Date(appointment.startDate).getHours()}` : new Date(appointment.startDate).getHours()}:${new Date(appointment.startDate).getMinutes() < 10 ? `0${new Date(appointment.startDate).getMinutes()}` : new Date(appointment.startDate).getMinutes()}`,
+                        income: appointment?.income || "Nedefinit",
+                        typeIncome: appointment?.typeIncome || "",
+                        doctorName: appointment?.doctorName
+                    };
+                }));
+                console.log(response);
+            }
+            else console.log(response);
+        } catch (e) {
+            console.log(e);
+        }
+
     };
 
     const getStatistics = async () => {
@@ -123,7 +134,7 @@ const Dashboard = ({ data }) => {
 
     return (
         <div className="dashboard">
-            <Navigation page="dashboard"/>
+            <Navigation page="dashboard" />
             
             <div className="content">
                 <Header data={data} />
@@ -190,17 +201,24 @@ const Dashboard = ({ data }) => {
 
                         <div className="new-appointments">
                             <h2 className="title">{cookies.language === "en" ? "Appointment Patients List" : "Lista programari pacienti"}</h2>
+                            
                             <div className="first-row">
                                 <p>{cookies.language === "en" ? "No." : "Nr."}</p>
-                                <p>{cookies.language === "en" ? "Name" : "Nume"}</p>
+                                <p>{cookies.language === "en" ? "Doctor" : "Medic"}</p>
+                                <p>{cookies.language === "en" ? "Patient" : "Pacient"}</p>
                                 <p>{cookies.language === "en" ? "Date of admit" : "Ora"}</p>
                                 <p>{cookies.language === "en" ? "Icome" : "Venit"}</p>
                                 <p>{cookies.language === "en" ? "Action" : "Optiuni"}</p>
                             </div>
+
                             {nextAppointments && nextAppointments.length > 0 ? nextAppointments.map((patient, idx) => (
                                 <div className="row" key={idx}>
                                     <div className="number-patient">
                                         <p>{idx + 1 < 10 ? `0${idx + 1}` : idx + 1}</p>
+                                    </div>
+
+                                    <div className="doctor-name">
+                                        <p>{patient.doctorName}</p>
                                     </div>
 
                                     <div className="patient-name">

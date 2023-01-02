@@ -6,6 +6,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Header from "../Components/Header/Header";
 import Navigation from "../Components/Navigation/Navigation";
 import "./PatientAccount.css";
+import DateCustomInput from "../Components/DatePicker/DatePicker";
 
 const PatientAccount = ({ data }) => {
 
@@ -15,7 +16,6 @@ const PatientAccount = ({ data }) => {
    
     const [cookies, setCookie] = useCookies();
     const birthRef = useRef();
-
 
     console.log(location?.state, data);
     
@@ -126,7 +126,6 @@ const PatientAccount = ({ data }) => {
         } catch(e) {
             console.log(e);
         }
-       
     };
 
     useEffect(() => {
@@ -190,6 +189,8 @@ const PatientAccount = ({ data }) => {
 
     }, [birthRef]);
 
+    const handleChangeDate = (newBirthdate) => setBirthDate(newBirthdate);
+    
     return (
         <div className="account-container"> 
             <Navigation />
@@ -228,7 +229,7 @@ const PatientAccount = ({ data }) => {
                                 <FontAwesomeIcon className="icon" icon={faCalendar} />
                                 <p>{cookies.language === "en" ? "Date of birth" : "Data de nastere"}</p>
                             </div>
-                            <input type="date" placeholder={cookies.language === "en" ? "Birthdate" : "Data de nastere"} ref={birthRef} value={birthDate} onChange={e => setBirthDate(e.target.value)} required />
+                            <DateCustomInput initialDate={initialBirthdate} changeDate={handleChangeDate} />
                         </div>
 
                         <div className="input">
@@ -324,14 +325,14 @@ const PatientAccount = ({ data }) => {
                             
                             <input type="number" value={PIC} onChange={e => setPIC(e.target.value)}/>
                         </div> 
-
+                        
 
                         <div className="input">
                             <div className="input-title">
                                 <FontAwesomeIcon className="icon" icon={faNoteSticky} />
                                 <p>{cookies.language === "en" ? "Notes" : "Observatii"}</p>
                             </div>
-                            
+                            /
                             <textarea value={notes} onChange={e => setNotes(e.target.value)} />
                         </div> 
 
@@ -358,9 +359,9 @@ const PatientAccount = ({ data }) => {
                         {historic && historic.length > 0 && historic.map(historicItem => (
                             <div className="historic-item">
                                 <div className="col">{historicItem.title}</div>
-                                <div className="col">{new Date(historicItem.date).getDate()}-{new Date(historicItem.date).getMonth() + 1}-{new Date(historicItem.date).getFullYear()}</div>
-                                <div className="col">{historicItem.startHour}:{historicItem.startMinutes} - {historicItem.endHour}:{historicItem.endMinutes}</div>
-                                <div className="col">{historicItem.price} {historicItem.typePrice}</div>
+                                <div className="col">{new Date(historicItem.date).getDate() < 10 ? `0${new Date(historicItem.date).getDate()}` : new Date(historicItem.date).getDate()}/{new Date(historicItem.date).getMonth() + 1 < 10 ? `0${new Date(historicItem.date).getMonth() + 1}` : new Date(historicItem.date).getMonth() + 1}/{new Date(historicItem.date).getFullYear()}</div>
+                                <div className="col">{historicItem.startHour < 10 ? `0${historicItem.startHour}` : historicItem.startHour}:{historicItem.startMinutes < 10 ? `0${historicItem.startMinutes}` : historicItem.startMinutes} - {historicItem.endHour < 10 ? `0${historicItem.endHour}` : historicItem.endHour}:{historicItem.endMinutes < 10 ? `0${historicItem.endMinutes}` : historicItem.endMinutes}</div>
+                                <div className="col">{historicItem?.price || "Nedefinit"} {historicItem?.price ? historicItem?.typePrice : ""}</div>
                             </div>
                         ))}
                     </div>

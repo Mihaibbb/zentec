@@ -22,6 +22,8 @@ const DoctorAccount = ({ data }) => {
     const [multipleSchedules, setMultipleSchedules] = useState();
     const [activeDoctor, setActiveDoctor] = useState();
     const [errorMessage, setErrorMessage] = useState();
+    const [historic, setHistoric] = useState([]);
+    
     const navigate = useNavigate();
 
     const getDoctorInfo = async () => {
@@ -48,7 +50,10 @@ const DoctorAccount = ({ data }) => {
             setInitialColor(await fetchedData.color);
             setMultipleSchedules(await fetchedData.multiple_schedules);
             setActiveDoctor(await fetchedData.active);
-
+            
+            const currentSchedules = data.organisation.schedules;
+            const doctorsSchedules = currentSchedules.filter(schedule => JSON.parse(schedule.users).includes(id));
+            setHistoric(doctorsSchedules);
         } catch (e) {
             console.log(e);
             setErrorMessage(cookies.langauge === "en" ? "An error occured!" : "A aparut o eroare!");
@@ -167,8 +172,31 @@ const DoctorAccount = ({ data }) => {
                         </div>
                     </div>
 
-                    <button type="submit" onClick={async () => await submitEditDoctor()}>{cookies.language === "en" ? "Save modifications": "Salveaza modificarile"}</button>
+                    <button type="submit" className="confirm-button" onClick={async () => await submitEditDoctor()}>{cookies.language === "en" ? "Save modifications": "Salveaza modificarile"}</button>
                     <p className="error">{errorMessage}</p>
+                </div>
+
+                <div className="patient-historic">
+                    <h2 className="title">{cookies.language === "en" ? "Doctor's historic" : "Istoric Medic"}</h2>
+                    
+                    <div className="historic-container">
+                        <div className="first-row">
+                            <div className="col">{cookies.language === "en" ? "Title" : "Titlu"}</div>
+                            <div className="col">{cookies.language === "en" ? "Patient" : "Pacient"}</div>
+                            <div className="col">{cookies.language === "en" ? "Date" : "Data"}</div>
+                            <div className="col">{cookies.language === "en" ? "Interval": "Interval"}</div>
+                            <div className="col">{cookies.language === "en" ? "Income": "Venit"}</div>
+                        </div>
+                        {historic && historic.length > 0 && historic.map(historicItem => (
+                            <div className="historic-item">
+                                <div className="col">{historicItem.title}</div>
+                                <div className="col">{JSON.parse(historicItem.patients)[0].firstname} {JSON.parse(historicItem.patients)[0].lastname}</div>
+                                <div className="col">{new Date(historicItem.date).getDate() < 10 ? `0${new Date(historicItem.date).getDate()}` : new Date(historicItem.date).getDate()}/{new Date(historicItem.date).getMonth() + 1 < 10 ? `0${new Date(historicItem.date).getMonth() + 1}` : new Date(historicItem.date).getMonth() + 1}/{new Date(historicItem.date).getFullYear()}</div>
+                                <div className="col">{new Date(historicItem.startDate).getHours() < 10 ? `0${new Date(historicItem.startDate).getHours()}` : new Date(historicItem.startDate).getHours()}:{new Date(historicItem.startDate).getMinutes() < 10 ? `0${new Date(historicItem.startDate).getMinutes()}` : new Date(historicItem.startDate).getMinutes()} - {new Date(historicItem.endDate).getHours() < 10 ? `0${new Date(historicItem.endDate).getHours()}` : new Date(historicItem.endDate).getHours()}:{new Date(historicItem.endDate).getMinutes() < 10 ? `0${new Date(historicItem.endDate).getMinutes()}` : new Date(historicItem.endDate).getMinutes()}</div>
+                                <div className="col">{historicItem?.income || "Nedefinit"} {historicItem?.income ? historicItem?.typeIncome : ""}</div>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </div>
         </div>

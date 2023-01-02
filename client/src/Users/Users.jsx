@@ -218,7 +218,8 @@ const Users = ({ data }) => {
                                 <div className="square" style={{ width: 50, height: 20, borderRadius: 10, backgroundColor: doctor.color }} />
                             </div>
 
-                            <div className="column">
+                            <div className="column pressable">
+                                <FontAwesomeIcon icon={faEllipsis} className="column-icon" />
                                 <div className="option-container" onClick={async () => await toggleActiveDoctor(doctor)}>
                                     <FontAwesomeIcon icon={doctor.active ? faCheck : faSquare} className="option-icon" />
                                 </div>

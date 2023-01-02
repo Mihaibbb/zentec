@@ -84,9 +84,8 @@ const Patients = ({ data }) => {
     };
 
     const triggerOptions = (idx) => {
-        optionsRef.current[idx].classList.toggle("show");
-        optionsRef.current.forEach((option, currIdx) => currIdx !== idx && option.classList.remove("show"));
-        
+        optionsRef?.current?.length && optionsRef?.current[idx]?.classList?.toggle("show");
+        optionsRef?.current?.length && optionsRef?.current.forEach((option, currIdx) => currIdx !== idx && option?.classList?.remove("show"));
     };
 
     useEffect(() => {

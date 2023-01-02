@@ -123,7 +123,7 @@ const CreateDoctor = ({ data }) => {
                         </div>
                     </div>
 
-                    <button type="submit" onClick={async () => await createDoctorRequest()}>{cookies.language === "en" ? "Save": "Salveaza"}</button>
+                    <button type="submit"  className="confirm-button" onClick={async () => await createDoctorRequest()}>{cookies.language === "en" ? "Save": "Salveaza"}</button>
                     <p className="error">{errorMessage}</p>
                 </div>
             </div>
