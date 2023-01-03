@@ -489,19 +489,20 @@ input[type=number] {
 
 .appointments .schedule-container .day-container .schedule-hour .gap.highlight.resizeable
 {
-    cursor: move;
 }
 
 .appointments .schedule-container .day-container .schedule-hour .gap.highlight.resizeable-down
 {
     border-bottom-left-radius: 18px;
     border-bottom-right-radius: 18px;
+    cursor: s-resize;
 }
 
 .appointments .schedule-container .day-container .schedule-hour .gap.highlight.resizeable-up
 {
     border-top-left-radius: 18px;
     border-top-right-radius: 18px;
+    /*cursor: n-resize*/
 }
 
 .appointments .schedule-container .day-container .schedule-hour .gap.highlight.mouse-over-gap

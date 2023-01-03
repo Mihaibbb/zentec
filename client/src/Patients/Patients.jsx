@@ -316,8 +316,8 @@ const Patients = ({ data }) => {
                                 <p>{patient.phone}</p>
                             </div>
 
-                            <div className="column pressable" onClick={() => triggerOptions(idx)}>
-                                <FontAwesomeIcon className="column-icon" icon={faEllipsis}/>
+                            <div className="column pressable">
+                                <FontAwesomeIcon className="column-icon" icon={faEllipsis} onClick={() => triggerOptions(idx)}/>
                                 <div className="options-container" ref={ref => optionsRef.current[idx] = ref}>
                                     <div className="option" onClick={async () => optionsRef.current[idx].classList.contains("show") ? await removePatient(patient._id) : null}>
                                         <FontAwesomeIcon icon={faTimes} className="option-icon" /> 

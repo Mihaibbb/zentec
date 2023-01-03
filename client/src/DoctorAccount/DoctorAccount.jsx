@@ -172,7 +172,7 @@ const DoctorAccount = ({ data }) => {
                         </div>
                     </div>
 
-                    <button type="submit" className="confirm-button" onClick={async () => await submitEditDoctor()}>{cookies.language === "en" ? "Save modifications": "Salveaza modificarile"}</button>
+                    <button type="submit" className="confirm-button" onClick={async () => await submitEditDoctor()}>{cookies.language === "en" ? "Save changes": "Salveaza modificarile"}</button>
                     <p className="error">{errorMessage}</p>
                 </div>
 

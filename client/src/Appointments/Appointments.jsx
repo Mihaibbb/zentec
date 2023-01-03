@@ -10,12 +10,15 @@ import { useCookies } from 'react-cookie';
 import CreatePatient from '../CreatePatient/CreatePatient';
 import DoctorsFilter from '../Components/DoctorsFilter/DoctorsFilter';
 import getContrastForText from '../Functions/Contrast';
+import { useMemo } from "react";
 
 const Appointments = ({ data }) => {
 
     const currDay = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
 
     const [cookies, setCookie] = useCookies();
+    const location = useLocation();
+
     const months = cookies.language === "en" ? 
     ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'] :
     ['Ianuarie', 'Februarie', 'Martie', 'Aprilie', 'Mai', 'Iunie', 'Iulie', 'August', 'Septembrie', 'Octombrie', 'Noiembrie', 'Decembrie'];
@@ -96,6 +99,8 @@ const Appointments = ({ data }) => {
     const scheduleRef = useRef();
     const doctorRef = useRef([]);
     const gapsRef = useRef([]);
+    const editAppointmentRef = useRef();
+    const createAppointmentRef = useRef();
 
     // const { startHour, endHour, gaps, doctors } = location?.state;
     const startHour = 8;
@@ -107,7 +112,6 @@ const Appointments = ({ data }) => {
         hours.push(hour);   
     }
 
-    const location = useLocation();
 
     useEffect(() => {
       
@@ -809,6 +813,8 @@ const Appointments = ({ data }) => {
         return date1.getDate() === date2.getDate() && date1.getMonth() === date2.getMonth() && date1.getFullYear() === date2.getFullYear();
     };
 
+
+
     useEffect(() => {
         if (document.documentElement.clientWidth <= 800) setActivePlusButton(true);
     }, []);
@@ -827,6 +833,18 @@ const Appointments = ({ data }) => {
     useEffect(() => {
         console.log(days);
     }, [days]);
+
+    useEffect(() => {
+        if (!filterActive) return;
+        if (filterActive === 1) setDays(setWorkingWeek());
+        else if (filterActive === 2) setDays(setWeek());
+        window.history.replaceState(null, "");
+    }, []);
+
+    useEffect(() => {
+        if (activeEditAppointment && editAppointmentRef?.current) editAppointmentRef.current.style.marginTop = `calc(5vh + ${window.scrollY}px)`; 
+        if (activeCreateAppointment && createAppointmentRef?.current) createAppointmentRef.current.style.marginTop = `calc(5vh + ${window.scrollY}px)`;
+    }, [activeEditAppointment, activeCreateAppointment]);
 
     useEffect(() => {
         console.log(appointments);
@@ -913,6 +931,7 @@ const Appointments = ({ data }) => {
                 if (appointment.finished) currentGaps[i].classList.add("finished");
                 currentGaps[i].addEventListener('click', () => {
                     console.log(appointment);
+                    if (new Date(appointment.date).getTime() < new Date().getTime()) return;
                     if (!sameDay( new Date(currentGaps[i].getAttribute("day")), new Date(appointment.date) )) return;
                     setActiveEditAppointment(true);
                     setAppointmentTitle(appointment.title);
@@ -943,8 +962,8 @@ const Appointments = ({ data }) => {
 
             textElement.style.color = getContrastForText(doctorColor);
             currentGaps[startIdx].appendChild(textElement);
-            currentGaps[startIdx].classList.add("resizeable");
-            currentGaps[startIdx].classList.add("resizeable-up");
+            // currentGaps[startIdx].classList.add("resizeable");
+            // currentGaps[startIdx].classList.add("resizeable-up");
 
             const textElement2 = document.createElement('p');
             textElement2.classList.add('appointment-interval');
@@ -1024,7 +1043,6 @@ const Appointments = ({ data }) => {
 
             currentGaps[endIdx].classList.add("resizeable");
             currentGaps[endIdx].classList.add("resizeable-down");
-            console.log(currentGaps[startIdx]);
             const appointmentHourIdx = Number(currentGaps[startIdx].getAttribute("starthour")) - startHour;
             const appointmentGapIdx = Number(currentGaps[startIdx].getAttribute("key"));
      
@@ -1032,9 +1050,9 @@ const Appointments = ({ data }) => {
                 initiateAppointment(e, appointmentHourIdx, appointmentGapIdx, appointmentDoctor, true);
             });
 
-            currentGaps[startIdx].addEventListener("mousedown", e => {
-                initiateAppointment(e, appointmentHourIdx, appointmentGapIdx, appointmentDoctor, true);
-            });
+            // currentGaps[startIdx].addEventListener("mousedown", e => {
+            //     initiateAppointment(e, appointmentHourIdx, appointmentGapIdx, appointmentDoctor, true);
+            // });
 
             // currentGaps[endIdx].addEventListener("mousemove", e => {
             //     moveAppointment(e, true, currentGaps[startIdx]);
@@ -1045,7 +1063,7 @@ const Appointments = ({ data }) => {
             const activeGaps = [...currentGaps].filter(currentGap => currentGap.classList.contains("highlight") && currentGap.classList.contains("created"));
 
             // Hover appointment event
-            console.log(activeGaps);
+          
             activeGaps.forEach((currentGap, idx) => {
                 currentGap.addEventListener("mouseover", e => {
                     let firstIdx = idx, lastIdx = idx;
@@ -1447,7 +1465,7 @@ const Appointments = ({ data }) => {
                     </div>
                 </div>
 
-                <DoctorsFilter data={data} changeValue={changeActiveDoctors} />
+                <DoctorsFilter data={data} changeValue={changeActiveDoctors} initialValue={data.organisation.doctors} />
 
                 <div className="options-appointments">
                     <div className="option">
@@ -1562,7 +1580,7 @@ const Appointments = ({ data }) => {
                 }
 
                 <div className={`appointment-details ${activeCreateAppointment ? "active" : ""}`}>
-                    <div className="appointment-details-card">
+                    <div className="appointment-details-card" ref={createAppointmentRef}>
                         <div className="close-button">
                             <FontAwesomeIcon icon={faTimes} className="close-icon" onClick={() => closeCreateAppointment()} />
                         </div>
@@ -1727,7 +1745,7 @@ const Appointments = ({ data }) => {
                 </div>
 
                 <div className={`appointment-details ${activeEditAppointment ? "active" : ""}`}>
-                    <div className="appointment-details-card">
+                    <div className="appointment-details-card" ref={editAppointmentRef}>
                         <div className="close-button">
                             <FontAwesomeIcon icon={faTimes} className="close-icon" onClick={() => closeEditAppointment()} />
                         </div>

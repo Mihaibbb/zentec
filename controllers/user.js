@@ -20,25 +20,27 @@ exports.createAppointment = async (req, res, next) => {
 
         sql = "SELECT * FROM ??";
         const detailsOrganisationRows = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.details`]);
-        const detailsOrganisation = await detailsOrganisationRows[0];
-        const smsMessageRaw = await detailsOrganisation["sms_message"];
-        const apiKey = await detailsOrganisation["api_key"];
-        let smsMessage = await smsMessageRaw.replaceAll("{NUME_ORGANIZATIE}", await detailsOrganisation.name);
-        smsMessage = await smsMessage.replaceAll("{DATA_PROGRAMARE}", `${new Date(startDate).getDate()} ${new Date(startDate).getMonth() + 1} ${new Date(startDate).getFullYear()}`);
-        smsMessage = await smsMessage.replaceAll("{ORA_PROGRAMARE}", `${new Date(startDate).getHours()}:${new Date(startDate).getMinutes()}`);
-        smsMessage = await smsMessage.replaceAll("{LINK_CONFIRMARE}", `${process.env.BACKEND_URL}/api/patient/confirm-appointment?organisationId=${_id}&doctorId=${users[0]}&appointmentId=${appointmentId}`);
+        const detailsOrganisation = detailsOrganisationRows[0];
+        const smsMessageRaw = detailsOrganisation["sms_message"];
+        const apiKey = detailsOrganisation["api_key"];
+        let smsMessage = smsMessageRaw.replaceAll("{NUME_ORGANIZATIE}", detailsOrganisation.name);
+        smsMessage = smsMessage.replaceAll("{DATA_PROGRAMARE}", `${new Date(startDate).getDate()} ${new Date(startDate).getMonth() + 1} ${new Date(startDate).getFullYear()}`);
+        smsMessage = smsMessage.replaceAll("{ORA_PROGRAMARE}", `${new Date(startDate).getHours()}:${new Date(startDate).getMinutes()}`);
+        smsMessage = smsMessage.replaceAll("{LINK_CONFIRMARE}", `${process.env.BACKEND_URL}/api/patient/confirm-appointment?organisationId=${_id}&doctorId=${users[0]}&appointmentId=${appointmentId}`);
         
         // 1 day earlier message
 
         let patientsPhones = "";
         console.log(patients);
         patients.forEach((currPatient, idx) => idx !== patients.length - 1 ? patientsPhones += `${currPatient.phone},` : patientsPhones += currPatient.phone);
+        const smsStartDate =  new Date(startDate).getTime() - (1000 * 60 * 60 * 24) < new Date().getTime() ? new Date().getTime() + 1000 : new Date(startDate).getTime() - (1000 * 60 * 60 * 24);
+
 
         let data = JSON.stringify({
             phone: patientsPhones,
             shortTextMessage: smsMessage,
-            startDate: new Date(startDate).getTime() - (1000 * 60 * 60 * 24),
-            endDate: new Date(startDate).getTime() - (1000 * 60 * 60 * 24) + (1000 * 60 * 3)
+            startDate: smsStartDate,
+            endDate: smsStartDate + (1000 * 60 * 3)
         });
 
         let config = {

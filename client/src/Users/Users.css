@@ -86,3 +86,10 @@
     font-family: "Inter";
     cursor: pointer;
 }
+
+.patients .content .patients-container .row .column .options-container 
+{
+    top: calc(100% - .75rem);
+    right: -105px;
+    bottom: initial;
+}

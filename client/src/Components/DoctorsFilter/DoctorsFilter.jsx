@@ -4,9 +4,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import "./DoctorsFilter.css";
 
-const DoctorsFilter = ({ data, changeValue }) => {
+const DoctorsFilter = ({ data, changeValue, initialValue }) => {
 
-    const [activeDoctors, setActiveDoctors] = useState(data.organisation.doctors);
+    const [activeDoctors, setActiveDoctors] = useState(initialValue || data.organisation.doctors);
     const [doctorsList, setDoctorsList] = useState([]);
     const [triggerDoctorInput, setTriggerDoctorInput] = useState(false);
     const [doctorQuery, setDoctorQuery] = useState("");
