@@ -139,9 +139,21 @@
 
 .header .account-details .account-name 
 {
-    font-size: 22px;
-    color: #fff;
+    font-size: 25px;
+    color: var(--contrast-color);
+    font-weight: 700;
     cursor: pointer;
+}
+
+.header .account-details .account-name-container 
+{
+    width: 55px;
+    height: 55px;
+    background: var(--dark-color);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .header .account-details .account-info-icon

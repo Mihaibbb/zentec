@@ -7,7 +7,7 @@ const Home = ({ data }) => {
     const [cookies, setCookies] = useCookies();
     
     return (
-        <div className="home-container">
+        <div className="home-container" style={{ display: 'none' }}>
             <HeaderHome data={data}/>
             
 

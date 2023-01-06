@@ -93,18 +93,18 @@ exports.createAppointment = async (req, res, next) => {
     } catch (e) {
         console.log(e);
         
-        res.status(404).json({ success: false, message: "An error occured!" });
+        res.status(404).json({ success: false, message: "An error occured!", error: e });
     }
 
 };
 
 exports.updateAppointment = async (req, res, next) => {
-    const { appointmentId, _id, startDate, endDate, users, patients, title, income, typeIncome, notes, date, finished } = req.body;
+    const { appointmentId, _id, startDate, endDate, users, patients, title, income, typeIncome, notes, date, finished, confirmed } = req.body;
     
     try {
         console.log(_id);
-        let sql = 'UPDATE ?? SET startDate = ?, endDate = ?, users = ?, patients = ?, title = ?, income = ?, typeIncome = ?, notes = ?, date = ?, finished = ? WHERE _id = ?';
-        const updatedAppointment = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.schedules`, new Date(startDate), new Date(endDate), JSON.stringify(users), JSON.stringify(patients), title, income, typeIncome, notes, new Date(date), finished, appointmentId]);
+        let sql = 'UPDATE ?? SET startDate = ?, endDate = ?, users = ?, patients = ?, title = ?, income = ?, typeIncome = ?, notes = ?, date = ?, finished = ?, confirmed = ? WHERE _id = ?';
+        const updatedAppointment = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.schedules`, new Date(startDate), new Date(endDate), JSON.stringify(users), JSON.stringify(patients), title, income, typeIncome, notes, new Date(date), finished, confirmed, appointmentId]);
        
         if (!updatedAppointment) return res.status(200).json({ success: false, message: { en: "Appointment could not be updated!", ro: "Programarea nu a putut fi modificata!" } })
         
@@ -158,22 +158,22 @@ exports.analytics = async (req, res, next) => {
                                                                      new Date(patient.date).getMonth() === new Date().getMonth() &&
                                                                      new Date(patient.date).getDate() === new Date().getDate());
     
-            const appointments = await schedulesDb && await schedulesDb?.length && await schedulesDb.filter(schedule => new Date(schedule.createdAt).getFullYear() === new Date().getFullYear() &&
-                                                                           new Date(schedule.createdAt).getMonth() === new Date().getMonth() &&
-                                                                            new Date(schedule.createdAt).getDate() === new Date().getDate());
+            const appointments = await schedulesDb && await schedulesDb?.length && await schedulesDb.filter(schedule => new Date(schedule.date).getFullYear() === new Date().getFullYear() &&
+                                                                           new Date(schedule.date).getMonth() === new Date().getMonth() &&
+                                                                            new Date(schedule.date).getDate() === new Date().getDate());
          
             let totalIncome = 0;
             await appointments && await appointments?.length && await appointments.forEach(appointment => totalIncome = totalIncome + (appointment?.income || 0)); 
             
-            res.status(200).json({ success: true, patients: await patients?.length || 0, appointments: await appointments?.length || 0, income: totalIncome, typeIncome: await appointments && await appointments.length > 0 && await appointments[0]?.typeIncome ? await appointments[0]?.typeIncome : "LEI" });
-        
+            res.status(200).json({ success: true, schedulesDb: schedulesDb, patients: await patients?.length || 0, appointments: await appointments?.length || 0, income: totalIncome, typeIncome: await appointments && await appointments.length > 0 && await appointments[0]?.typeIncome ? await appointments[0]?.typeIncome : "LEI" });
+
         } else if (filter === "week") {
             const days = getWeekDays(new Date());
             
             try {
                  const patients = await patientsDb && await patientsDb?.length && await patientsDb.filter(patient => new Date(patient.date).getTime() >= new Date(days[0].getFullYear(), days[0].getMonth(), days[0].getDate()).getTime() && new Date(patient.date).getTime() <= new Date(days.at(-1).getFullYear(), days.at(-1).getMonth(), days.at(-1).getDate()).getTime());
     
-                const appointments = await schedulesDb && await schedulesDb.length && await schedulesDb.filter(schedule => new Date(schedule.createdAt).getTime() >= new Date(days[0].getFullYear(), days[0].getMonth(), days[0].getDate()).getTime() && new Date(schedule.createdAt).getTime() <= new Date(days.at(-1).getFullYear(), days.at(-1).getMonth(), days.at(-1).getDate()).getTime());
+                const appointments = await schedulesDb && await schedulesDb.length && await schedulesDb.filter(schedule => new Date(schedule.date).getTime() >= new Date(days[0].getFullYear(), days[0].getMonth(), days[0].getDate()).getTime() && new Date(schedule.date).getTime() <= new Date(days.at(-1).getFullYear(), days.at(-1).getMonth(), days.at(-1).getDate()).getTime());
                 console.log(patients);
                 let totalIncome = 0;
                 await appointments && await appointments?.length && await appointments.forEach(appointment => totalIncome = totalIncome + (appointment?.income || 0)); 
@@ -191,8 +191,8 @@ exports.analytics = async (req, res, next) => {
             const patients = await patientsDb && await patientsDb?.length && await patientsDb.filter(patient => new Date(patient.date).getFullYear() === new Date().getFullYear() &&
                                                                      new Date(patient.date).getMonth() === new Date().getMonth());
 
-            const appointments = await schedulesDb && await schedulesDb?.length && await schedulesDb.filter(schedule => new Date(schedule.createdAt).getFullYear() === new Date().getFullYear() &&
-                                                                           new Date(schedule.createdAt).getMonth() === new Date().getMonth());
+            const appointments = await schedulesDb && await schedulesDb?.length && await schedulesDb.filter(schedule => new Date(schedule.date).getFullYear() === new Date().getFullYear() &&
+                                                                           new Date(schedule.date).getMonth() === new Date().getMonth());
             let totalIncome = 0;
             await appointments && await appointments?.length && await appointments.forEach(appointment => totalIncome = totalIncome + (appointment?.income || 0)); 
             
@@ -203,7 +203,7 @@ exports.analytics = async (req, res, next) => {
         else if (filter === "year") {
             const patients = await patientsDb && await patientsDb?.length && await patientsDb.filter(patient => new Date(patient.date).getFullYear() === new Date().getFullYear());
     
-            const appointments = await schedulesDb && await schedulesDb?.length && await schedulesDb.filter(schedule => new Date(schedule.createdAt).getFullYear() === new Date().getFullYear());
+            const appointments = await schedulesDb && await schedulesDb?.length && await schedulesDb.filter(schedule => new Date(schedule.date).getFullYear() === new Date().getFullYear());
             let totalIncome = 0;
             await appointments && await appointments?.length && await appointments.forEach(appointment => totalIncome = totalIncome + (appointment?.income || 0)); 
     
@@ -430,8 +430,9 @@ exports.getLatestSchedules = async (req, res, next) => {
     const { _id } = req.body;
     try {
         const endLimit = new Date(new Date().getTime() + 1 * 1000 * 60 * 60 * 24);
+        const startEndLimit = new Date(endLimit.getFullYear(), endLimit.getMonth(), endLimit.getDate());
         let sql = "SELECT * FROM ?? WHERE startDate >= ? AND endDate <= ?";
-        const schedules = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.schedules`, new Date(), endLimit]);
+        const schedules = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.schedules`, new Date(), startEndLimit]);
         // Adding a key of doctor's name in schedules object
         const schedulesWithDoctors = await Promise.all(schedules.map(async (schedule, idx) => {
             const doctors = JSON.parse(await schedule.users);
@@ -499,7 +500,9 @@ exports.searchPatient = async (req, res, next) => {
                     (patient.county && (patient.county.toLowerCase().search(searchQuery.toLowerCase()) !== -1 || patient.county.toLowerCase().includes(searchQuery.toLowerCase()))) ||
                     (patient.address && (patient.address.toLowerCase().search(searchQuery.toLowerCase()) !== -1 || patient.address.toLowerCase().includes(searchQuery.toLowerCase()))) ||
                     (patient.fileNumber && (patient.fileNumber.toString().toLowerCase().search(searchQuery.toLowerCase()) !== -1 || patient.fileNumber.toString().toLowerCase().includes(searchQuery.toLowerCase()))) ||
-                    (patient.cnp && (patient.PIC.toString().toLowerCase().search(searchQuery.toLowerCase()) !== -1 || patient.PIC.toString().toLowerCase().includes(searchQuery.toLowerCase())));
+                    (patient.cnp && (patient.PIC.toString().toLowerCase().search(searchQuery.toLowerCase()) !== -1 || patient.PIC.toString().toLowerCase().includes(searchQuery.toLowerCase()))) ||
+                    (`${patient.firstname.toLowerCase()} ${patient.lastname.toLowerCase()}`.search(searchQuery.toLowerCase()) !== -1 || `${patient.firstname.toLowerCase()} ${patient.lastname.toLowerCase()}`.includes(searchQuery.toLowerCase())) ||
+                    (`${patient.lastname.toLowerCase()} ${patient.firstname.toLowerCase()}`.search(searchQuery.toLowerCase()) !== -1 || `${patient.lastname.toLowerCase()} ${patient.firstname.toLowerCase()}`.includes(searchQuery.toLowerCase()));
         });
         console.log(await searchedPatients);
         if (!await searchedPatients || !await searchedPatients.length > 0) return res.status(200).json({ success: false, message: { en: "No results", ro: "Niciun rezultat" } });
@@ -830,6 +833,19 @@ exports.getSchedulesForDay = async (req, res, next) => {
     }
 };
 
+exports.sendFeedback = async (req, res, next) => {
+    const { from, type, feedbackMessage, applicationMessage, organisationId } = req.body;
+
+    try {
+        let sql = "INSERT INTO ?? (_id, application_message, feedback_message, username, type) VALUES (?, ?, ?, ?, ?)";
+        const result = await db.query(sql, [`${process.env.DB_PREFIX}zentec.feedback`, organisationId, applicationMessage, feedbackMessage, from, type]);
+        if (!result) return res.status(200).json({ success: false, message: "An error occured!", error: result });
+        res.status(200).json({ success: true, message: "Feedback sent!" });
+    } catch (e) {
+        console.log(e);
+        res.status(404).json({ success: false, message: "An error occured!", error: e });
+    }
+};
 
 
 exports.getStatisticsData = async (req, res, next) => {

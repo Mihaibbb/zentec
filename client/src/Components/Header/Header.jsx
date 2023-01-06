@@ -2,8 +2,12 @@ import { faAngleDown, faBars, faBell, faSearch, faUser } from '@fortawesome/free
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import accountImage from "../../imgs/account-image.jpeg";
 import './Header.css';
+import { useNavigate } from 'react-router-dom';
 
 const Header = ({ data }) => {
+
+    const navigate = useNavigate();
+
     console.log(data);
     return (
         <div className="header">
@@ -28,11 +32,15 @@ const Header = ({ data }) => {
                     <FontAwesomeIcon icon={faBell} className="notification-icon" />
                     <div className="notification-signal" />
                 </div>
-                <div className="account-photo">
+                {/* <div className="account-photo">
                     <FontAwesomeIcon icon={faUser} className="account-icon" />
+                </div> */}
+
+                <div className="account-name-container" onClick={() => navigate("/account")}>
+                    <p className="account-name">{data.user.name.split(" ")[0][0].toUpperCase()}{data.user.name.split(" ")[1][0].toUpperCase()}</p>
                 </div>
-                <p className="account-name">{data.user.name}</p>
-                <FontAwesomeIcon icon={faAngleDown} className="account-info-icon" />
+
+                {/* <FontAwesomeIcon icon={faAngleDown} className="account-info-icon" /> */}
             </div>  
         </div>
     );

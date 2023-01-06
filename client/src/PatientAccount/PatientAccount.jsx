@@ -229,7 +229,7 @@ const PatientAccount = ({ data }) => {
                                 <FontAwesomeIcon className="icon" icon={faCalendar} />
                                 <p>{cookies.language === "en" ? "Date of birth" : "Data de nastere"}</p>
                             </div>
-                            <DateCustomInput initialDate={initialBirthdate} changeDate={handleChangeDate} />
+                            <DateCustomInput initialDate={initialBirthdate} changeDate={handleChangeDate} future={false} past={true} />
                         </div>
 
                         <div className="input">

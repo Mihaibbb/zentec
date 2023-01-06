@@ -76,7 +76,7 @@ const Patients = ({ data }) => {
             const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/remove-patient`, options);
             const response = await request.json();
             console.log(response);
-            if (response.success) window.location.reload()
+            if (response.success) window.location.reload();
         } catch (e) {
             console.log(e);
         }

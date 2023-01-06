@@ -59,12 +59,11 @@ const Users = ({ data }) => {
             const response = await request.json();
             setWarning(false);
             setDoctorId();
-            if (await response.success) navigation("/doctors", { state: { success: true, message: await response[cookies.language]  }});
-            await getDoctors();
+            if (await response.success) navigation("/doctors", { state: { success: true, message: await response[cookies.language], notEdit: true }});
             
         } catch (e) {
             console.log(e);
-            navigation("/doctors", { state: { message: cookies.language === "en" ? "An error occured!" : "A aparut o eroare!" } });
+            navigation("/doctors", { state: { message: cookies.language === "en" ? "An error occured!" : "A aparut o eroare!" }, notEdit: true });
         }
     };
 
@@ -93,32 +92,40 @@ const Users = ({ data }) => {
             const response = await request.json();
             if (await response.success) navigation("/doctors", { state: { 
                 success: true, 
-                message: cookies.language === "en" ? `Doctor ${!doctorObj.active ? "activated" : "disabled"} successfully!` : `Doctor ${!doctorObj.active ? "activat" : "dezactivat"} cu succes!`
+                message: cookies.language === "en" ? `Doctor ${!doctorObj.active ? "activated" : "disabled"} successfully!` : `Doctor ${!doctorObj.active ? "activat" : "dezactivat"} cu succes!`,
+                notEdit: true
             } })
 
-            await getDoctors();
+            
 
         } catch (e) {
             console.log(e);
             navigation("/doctors", { state: {
                 success: false,
-                message: cookies.language === "en" ? "Doctor's status couldn't be changed!" : "Statusul doctorului nu a putut fi modificat!"
+                message: cookies.language === "en" ? "Doctor's status couldn't be changed!" : "Statusul doctorului nu a putut fi modificat!",
+                notEdit: true
             }})
         }
     };
 
     const location = useLocation();
 
-
     useEffect(() => {
-        
-        if (location?.state?.message && location?.state?.oneTime) {
+       
+        console.log(location?.state);
+        if (window.history?.state?.message && window.history?.state?.oneTime && window?.history?.state?.success != null) {
+            
             setMessage({
-                success: location.state?.success,
-                message: location.state?.message
+                success: window.history?.state?.success,
+                message: window.history?.state?.message
             });
 
-            return;
+            const timer = setTimeout(() => {
+                setMessage();
+            }, 2500);
+
+            return () => clearTimeout(timer);
+        
             // const time = setTimeout(() =>  setMessage(), 2500);
 
             // return () => {
@@ -126,13 +133,12 @@ const Users = ({ data }) => {
             // };
         }
        
-        if (location?.state?.oneTime || location?.state?.message == null) return;
+        if (location?.state?.message == null) return;
         const newLocationState = location?.state || {};
         newLocationState["oneTime"] = true;
         window.history.replaceState(newLocationState, '');
         window.location.reload();
-
-    }, []);
+    }, [location?.state]);
 
     useEffect(() => {
         const navigationElement = document.querySelector(".navigation");
@@ -254,15 +260,16 @@ const Users = ({ data }) => {
                             <div className="column pressable">
                                 <FontAwesomeIcon icon={faEllipsis} className="column-icon" onClick={() => triggerOptions(idx)} />
                                 <div className="options-container" ref={ref => optionsRef.current[idx] = ref}>
-                                    <div className="option" onClick={async () => await toggleActiveDoctor(doctor)}>
+                                    <div className="option" onClick={async () => optionsRef.current[idx].classList.contains("show") && await toggleActiveDoctor(doctor)}>
                                         <FontAwesomeIcon icon={doctor.active ? faCheck : faSquare} className="option-icon" />
                                         <p>{doctor.active ? (cookies.language === "en" ? "Disable" : "Dezactiveaza") : (cookies.language === "en" ? "Enable" : "Activeaza")}</p>
                                     </div>
-                                    <div className="option" onClick={() => navigation(`/doctor/${doctor._id}`)}>
+                                    <div className="option" onClick={() => optionsRef.current[idx].classList.contains("show") && navigation(`/doctor/${doctor._id}`)}>
                                         <FontAwesomeIcon icon={faEdit} className="option-icon" />
                                         <p>{cookies.language === "en" ? "Edit" : "Editeaza"}</p>
                                     </div>
                                     <div className="option" onClick={async () => {
+                                        if (!optionsRef.current[idx].classList.contains("show")) return;
                                         setWarning(cookies.language === "en" ? "Are you sure that you want to remove this doctor?" : "Sunteti sigur ca doriti sa stergeti acest doctor?");
                                         setDoctorId(doctor._id);
                                     }}>
@@ -283,9 +290,9 @@ const Users = ({ data }) => {
                     <FontAwesomeIcon icon={faPlus} className="add-icon"/>
                 </div>
 
-                {message ? <div className={`message-container ${message.success ? "success-message" : "error-message"}`}>
-                    <p>{message.message}</p>
-                </div> : null}
+                <div className={`message-container ${message?.success ? "success-message" : "error-message"} ${message ? "show" : ""}`}>
+                    <p>{message?.message}</p>
+                </div>
 
                 {warning && <div className="warning-container">
                     <div className="warning-card">

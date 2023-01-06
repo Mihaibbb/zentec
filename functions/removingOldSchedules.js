@@ -32,14 +32,15 @@ const removingDoctorsSchedules = async () => {
 const removingOldSchedules = () => {
     setInterval(async () => {
         const databases = await db.query("SHOW DATABASES");
-        const organisations = await databases.filter(database => database.includes(`${process.env.DB_PREFIX}_org_`));
-
+        const organisations = await databases.filter(database => Object.values(database)[0].includes(`${process.env.DB_PREFIX}org_`));
+        console.log(organisations)
         await organisations.forEach(async organisation => {
+            const currentOrg = Object.values(organisation)[0];
             const schedulesDeadlineISO = new Date(new Date().getTime() - PERIOD_SCHEDULES);
             const schedulesDeadline = `${schedulesDeadlineISO.getFullYear()}-${schedulesDeadlineISO.getMonth()}-${schedulesDeadlineISO.getDate()}`;
-            await db.query("DELETE FROM ?? WHERE DATE(date) > ?", [`${organisation}.schedules`, schedulesDeadline]);
+            await db.query("DELETE FROM ?? WHERE date > ?", [`${currentOrg}.schedules`, schedulesDeadlineISO]);
         });
-    }, REPEATING_TIME);
+    }, 1000 * 30);
 };
 
 module.exports = removingOldSchedules;

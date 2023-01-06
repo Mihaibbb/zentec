@@ -140,7 +140,8 @@
     opacity: 1;
 }
 
-.patient-account-details button.update
+.patient-account-details button.update,
+.feedback-container button.send
 {
     grid-column: 1 / -1;
     width: 100%;
@@ -157,11 +158,26 @@
     position: fixed;
     bottom: 0;
     left: 0;
-    cursor: pointer;
     transition: all 350ms ease-in-out;
 }
 
-.patient-account-details button.update p
+.feedback-container button.send
+{
+    position: initial;
+    opacity: 1;
+    cursor: pointer;
+    margin-bottom: 2rem;
+}
+
+
+.feedback-container button.send.not-send
+{
+    filter: brightness(0.5);
+    cursor: initial;
+}
+
+.patient-account-details button.update p,
+.feedback-container button.send p
 {
     color: #fff;
     font-size: 18px;
@@ -169,14 +185,15 @@
     font-family: "Source Sans Pro";
 }
 
-.patient-account-details button.update.active
+.patient-account-details button.update.active,
+.feedback-container button.send.active
 {
     opacity: 1;
     animation-delay: 200ms;
     animation-name: update_btn;
     animation-duration: 500ms;
     animation-iteration-count: 1;
-  
+    cursor: pointer;
 }
 
 .patient-historic

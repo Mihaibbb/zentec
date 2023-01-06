@@ -35,7 +35,6 @@ app.get("/test", (req, res) => {
 });
 
 
-
 // Routes
 app.use("/api/auth", authRouter);
 app.use("/api/private", privateRouter);

@@ -2,12 +2,12 @@ import './Navigation.css';
 import logo from "../../imgs/logo_zentec3.svg";
 import dashboardIcon from "../../imgs/icons/dashboard-icon.svg";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAngleDown, faBedPulse, faCalendarDays, faClose, faCoffee, faDashboard, faHandHoldingDollar, faUserDoctor } from "@fortawesome/free-solid-svg-icons"
+import { faAngleDown, faBedPulse, faCalendarDays, faClose, faCoffee, faDashboard, faHandHoldingDollar, faHeart, faUserDoctor } from "@fortawesome/free-solid-svg-icons"
 import settingsIcon from "../../imgs/icons/settings-icon.svg";
 import { useNavigate } from "react-router-dom";
 import { useCookies } from 'react-cookie';
 import patientIcon from "../../imgs/icons/patient.svg";
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 const Navigation = ({ show, page }) => {
 
@@ -17,6 +17,12 @@ const Navigation = ({ show, page }) => {
     const [doctorsSubmenuActive, setDoctorsSubmenuActive] = useState(false);
 
     const navigationElement = useRef();
+    const settingsRef = useRef();
+
+    useEffect(() => {
+        if (!settingsRef?.current) return;
+        settingsRef.current.style.marginBottom = `${settingsRef.current.clientHeight}px`;
+    }, [settingsRef]);
 
     return (
         <div className="navigation active" ref={navigationElement}>
@@ -66,10 +72,10 @@ const Navigation = ({ show, page }) => {
                 <h3>{cookies.language === "en" ? "Analytics" : "Vanzari"}</h3>
             </div>
 
-            {/* <div className={`settings ${page === "settings" ? "active" : ""}`} onClick={() => navigation("/settings")}>
-                <img src={settingsIcon} className="item-img" />
-                <h3>{cookies.language === "en" ? "Settings" : "Setari"}</h3>
-            </div> */}
+            <div className={`item ${page === "feedback" ? "active" : ""} bottom`} onClick={() => navigation("/feedback")} ref={settingsRef}>
+                <FontAwesomeIcon icon={faHeart} className="item-icon" />
+                <h3>{cookies.language === "en" ? "Feedback" : "Feedback"}</h3>
+            </div>
         </div>
     );
 };

@@ -9,12 +9,14 @@ import { useLocation } from 'react-router-dom';
 
 const Dashboard = ({ data }) => {
 
+    const filters_server = ["day", "week", "month", "year"] 
+
     const [doctors, setDoctors] = useState([]);
     const [nextAppointments, setNextAppointments] = useState([]);
     const [appointments, setAppointments] = useState();
     const [newPatients, setNewPatients] = useState();
     const [income, setIncome] = useState();
-    const [filter, setFilter] = useState("day");
+    const [filter, setFilter] = useState(filters_server[0]);
     const [typeIncome, setTypeIncome] = useState("");
 
     const location = useLocation();
@@ -129,7 +131,6 @@ const Dashboard = ({ data }) => {
         })();
     }, [filter]);
 
-    const filters_server = ["day", "week", "month", "year"] 
     const filters = cookies.language === "en" ? ["Day", "Week", "Month", "Year"] : ["Zi", "Saptamana", "Luna", "An"];
 
     return (

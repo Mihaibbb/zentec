@@ -103,6 +103,11 @@
 
 }
 
+.navigation .item.bottom 
+{
+    margin-top: auto;
+}
+
 .navigation .sub-list .item.highlight 
 {
     background: var(--contrast-color);
@@ -128,7 +133,7 @@
     color: #fff;
 }
 
-.navigation .item.active 
+.navigation .item:not(.bottom).active 
 {
     background: var(--contrast-color);
 }
@@ -164,11 +169,7 @@
 
 .navigation .settings 
 {
-    position: absolute; 
-    bottom: 55px;
-    display: flex;
-    width: 100%;
-    gap: .75rem;
+    margin-top: 0;
     cursor: pointer;
 }
 

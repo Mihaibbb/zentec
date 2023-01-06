@@ -7,7 +7,7 @@ import Header from "../Components/Header/Header";
 import Navigation from "../Components/Navigation/Navigation";
 import "./CreatePatient.css";
 import DateCustomInput from "../Components/DatePicker/DatePicker";
-const CreatePatient = ({ data, fromAppointments }) => {
+const CreatePatient = ({ data, fromAppointments, patientSaved }) => {
 
     const location = useLocation();
     const navigate = useNavigate();
@@ -138,7 +138,7 @@ const CreatePatient = ({ data, fromAppointments }) => {
             }
 
             if (!fromAppointments) navigate("/patients", { state: { message: { en: "Patient added successfully!", ro: "Pacient adaugat cu succes." } } });
-            else navigate("/appointments", {  });
+            else patientSaved();
         } catch (e) {
             console.log(e);
         }
@@ -219,7 +219,7 @@ const CreatePatient = ({ data, fromAppointments }) => {
 
     return (
         <div className="create-patient">
-            <Navigation page={fromAppointments ? "appointments" : "patients"}/>
+            <Navigation page={fromAppointments ? "appointments" : "patients"} />
             <div className="content">
                 <Header data={data} />
                 <h2 className="title">{cookies.language === "en" ? "Create new patient" : "Creeaza un nou pacient"}</h2>
@@ -247,7 +247,7 @@ const CreatePatient = ({ data, fromAppointments }) => {
                     <div className="input">
                         <p>{cookies.language === "en" ? "Date of birth" : "Data de nastere"}</p>
                         {/* <input type="date" placeholder={cookies.language === "en" ? "Birthdate" : "Data de nastere"} ref={birthRef} value={birthDate} onChange={e => setBirthDate(e.target.value)} required /> */}
-                        <DateCustomInput initialDate={new Date()} changeDate={handleChangeDate} />
+                        <DateCustomInput initialDate={new Date()} changeDate={handleChangeDate} future={false} past={true} />
                     </div>
 
                     {/* <div className="input">

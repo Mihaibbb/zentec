@@ -21,6 +21,8 @@ import DoctorAccount from "./DoctorAccount/DoctorAccount";
 import DoctorSchedule from "./DoctorSchedule/DoctorSchedule";
 import EditDoctorSchedule from "./EditDoctorSchedule/EditDoctorSchedule";
 import ImportPatients from "./ImportPatients/ImportPatients";
+import Feedback from "./Feedback/Feedback";
+import Profile from "./Profile/Profile";
 
 const App = () => {
     const [cookies, setCookie, removeCookie] = useCookies([]);
@@ -28,10 +30,7 @@ const App = () => {
     const [data, setData] = useState(null);
     const [isAdmin, setIsAdmin] = useState(null);
 
-    
-  
     useEffect(() => {
-
         // For scrolling effects
 
         let isScrolling;
@@ -119,6 +118,8 @@ const App = () => {
                                 <Route path="create-patient" element={<CreatePatient data={data} />} />
                                 <Route path="settings" element={<Settings data={data} />} />
                                 <Route path="create-doctor" element={<CreateDoctor data={data} />} />    
+                                <Route path="feedback" element={<Feedback data={data} />}/>
+                                <Route path="profile" element={<Profile data={data} />} />
                             </>
                         ) : (
                             <>

@@ -38,16 +38,20 @@ const Login = () => {
            
             const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/auth/login`, options);
             const res = await request.json();
+
             if (!await res.success) {
+                console.log(res);
                 setErrorMessage(res.message[cookies?.language ? cookies.language : "en"]);
                 return;
             }
+
             if (await res.objectId && await res.hashedPassword) {
                 setCookie('user-id', await res.objectId);
                 setCookie('pwd', await res.hashedPassword);
                 setCookie('language', 'ro');
                 window.location.reload();
             } 
+
             console.log(await res.type);
         
 

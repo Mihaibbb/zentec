@@ -85,6 +85,7 @@ input[type=date] {
   --over-difference-color: rgba(255, 255, 255, .2);
   --over-difference-color-2: rgba(255, 255, 255, .075);
   --error-color: crimson;
+  --success-color: #589858;
   --selected-color: rgba(95, 61, 128, 0.973);
 }
 

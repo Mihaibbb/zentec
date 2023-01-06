@@ -387,5 +387,31 @@
     }
 }
 
+@media only screen and (max-width: 500px) 
+{
+    .dashboard .filter-container 
+    {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(200px, 1fr));
+        grid-gap: 1rem;
+        border: none;
+    }
 
+    .dashboard .filter-container .filter 
+    {
+        border-radius: 20px;
+    }
+
+    .dashboard .filter-container .filter:first-child 
+    {
+        border-bottom-left-radius: inherit;
+        border-top-left-radius: inherit;
+    }
+
+    .dashboard .filter-container .filter:last-child 
+    {
+        border-bottom-right-radius: inherit;
+        border-top-right-radius: inherit;
+    }
+}
 
