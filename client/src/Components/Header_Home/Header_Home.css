@@ -1,12 +1,16 @@
 header 
 {
-    background: rgba(0, 0, 0, .9);
-    backdrop-filter: blur(30px);
+    background: linear-gradient(90deg, black, rgba(0, 0, 0, .8));
+    backdrop-filter: blur(4px);
     display: flex;
 
     align-items: center;
     min-height: 65px;
-    padding: 0 1rem 0 1rem;
+    padding: .5rem 1rem .5rem 1rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    
 
 }
 
@@ -61,7 +65,9 @@ header .right-container
 header .right-container .button
 {
     width: 100%;
-    max-width: 100px;
+    min-width: 100px;
+    width: auto;
+    padding-inline: 1rem;
     max-height: 35px;
     display: flex;
     justify-content: center;
@@ -74,7 +80,19 @@ header .right-container .button
 
 header .right-container .button p 
 {
-    color: var(--contrast-color-highlight);
+    color: var(--text-color);
     font-family: "Inter";
-    font-weight: bold;
+    font-weight: 600;
+    transition: all 400ms ease-in-out;
+}
+
+header .right-container .button:hover 
+{
+    background: var(--contrast-color);
+}
+
+header .right-container .button:hover p
+{
+    color: var(--text-color);
+
 }

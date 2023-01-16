@@ -22,7 +22,8 @@ const {
     removeDoctorSchedule,
     getDoctorInfo,
     getSchedulesForDay,
-    sendFeedback
+    sendFeedback,
+    responseSMS
 } = require("../controllers/user");
 
 router.post("/create-appointment", createAppointment);
@@ -48,6 +49,7 @@ router.put("/edit-doctor-schedule", editDoctorSchedule);
 router.delete("/remove-doctor-schedule", removeDoctorSchedule);
 router.post("/get-schedules-day", getSchedulesForDay);
 router.post("/send-feedback", sendFeedback);
+router.post("/response-sms", responseSMS);
 
 
 module.exports = router;

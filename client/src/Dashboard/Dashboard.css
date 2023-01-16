@@ -51,8 +51,9 @@
     margin: 0rem auto 5rem;
     max-height: 80vh;
     overflow-y: scroll;
-    box-shadow: 0 0 10px var(--over-difference-color);
-    border: 1px solid var(--contrast-color-highlight);
+    overflow-x: hidden;
+    border: 1px solid var(--over-difference-color-3);
+    box-shadow: 0 0 10px var(--over-difference-color-3);
 }
 
 .dashboard .left-container .new-appointments .message h2
@@ -80,7 +81,7 @@
 {
     display: flex;
     width: 90%;
-    background: var(--contrast-color);
+    background: var(--over-difference-color-3);
     justify-content: space-between;
     align-items: center;
     margin: 1rem auto;
@@ -205,32 +206,29 @@
 {
     display: flex;
     align-items: center;
-    
     border-radius: 10px;
-    box-shadow: 0 0 10px var(--over-difference-color);
-    background: var(--dark-color);
     border: 1px solid var(--contrast-color-highlight);
     width: 100%;
-    
+    background: var(--over-difference-color-3);
+    box-shadow: 0 0 5px var(--over-difference-color-2);
     cursor: pointer;
     padding: .5rem 1.5rem;
 }
 
 
-
 .dashboard .data .data-container .image
 {
-    background: linear-gradient(var(--contrast-color-2), var(--contrast-color));
-    border-radius: 16px;
+    background: linear-gradient(45deg, var(--contrast-color), var(--contrast-color-highlight));
+    border-radius: 18px;
     
 }
 
 .dashboard .data .data-container .image .data-icon
 {
-    width: 35px;
-    height: 35px;
-    color: #fff;
-    padding: 1rem;
+    width: 40px;
+    height: 40px;
+    color: var(--text-color);
+    padding: 1.15rem;
   
 }
 
@@ -392,7 +390,7 @@
     .dashboard .filter-container 
     {
         display: grid;
-        grid-template-columns: repeat(2, minmax(200px, 1fr));
+        grid-template-columns: repeat(2, minmax(150px, 1fr));
         grid-gap: 1rem;
         border: none;
     }
@@ -404,14 +402,14 @@
 
     .dashboard .filter-container .filter:first-child 
     {
-        border-bottom-left-radius: inherit;
-        border-top-left-radius: inherit;
+        border-bottom-left-radius: 20px;
+        border-top-left-radius: 20px;
     }
 
     .dashboard .filter-container .filter:last-child 
     {
-        border-bottom-right-radius: inherit;
-        border-top-right-radius: inherit;
+        border-bottom-right-radius: 20px;
+        border-top-right-radius: 20px;
     }
 }
 

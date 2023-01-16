@@ -18,6 +18,7 @@ const Users = ({ data }) => {
     const [warning, setWarning] = useState(false);
     const [doctorId, setDoctorId] = useState();
     const [message, setMessage] = useState();
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
     const navigation = useNavigate();
  
 
@@ -109,6 +110,12 @@ const Users = ({ data }) => {
     };
 
     const location = useLocation();
+
+    useEffect(() => {
+        window.addEventListener("resize", () => {
+            setWindowWidth(window.innerWidth);
+        });
+    }, [location]);
 
     useEffect(() => {
        
@@ -208,9 +215,9 @@ const Users = ({ data }) => {
 
                     {doctors.length > 0 && <div className="first-row">
 
-                        <div className="column">
+                        {windowWidth >= 500 ? <div className="column">
                             <p>{cookies.langauge === "en" ? "No.": "Nr."}</p>
-                        </div>
+                        </div> : null}
 
                         <div className="column">
                             <p>{cookies.language === "en" ? "Surname" : "Nume"}</p>
@@ -220,9 +227,9 @@ const Users = ({ data }) => {
                             <p>{cookies.language === "en" ? "Name" : "Prenume"}</p>
                         </div>
 
-                        <div className="column">
+                        {windowWidth >= 800 ? <div className="column">
                             <p>{cookies.language === "en" ? "Phone" : "Telefon"}</p>
-                        </div>
+                        </div> : null}
 
                         <div className="column">
                             <p>{cookies.langauge === "en" ? "Color" : "Culoare"}</p>
@@ -237,9 +244,9 @@ const Users = ({ data }) => {
                     {doctors.length > 0 ? doctors.map((doctor, idx) => (
                         <div className="row" key={idx}>
                             
-                            <div className="column">
+                            {windowWidth >= 500 ? <div className="column">
                                 <p>{idx + 1}</p>
-                            </div>
+                            </div> : null}
 
                             <div className="column">
                                 <p>{doctor.firstname}</p>
@@ -249,9 +256,9 @@ const Users = ({ data }) => {
                                 <p>{doctor.lastname}</p>
                             </div>
 
-                            <div className="column">
+                            {windowWidth >= 800 ? <div className="column">
                                 <p>{doctor.phone}</p>
-                            </div>
+                            </div> : null}
 
                             <div className="column">
                                 <div className="square" style={{ width: 50, height: 20, borderRadius: 10, backgroundColor: doctor.color }} />

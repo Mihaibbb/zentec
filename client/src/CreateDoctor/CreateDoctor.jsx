@@ -104,7 +104,7 @@ const CreateDoctor = ({ data }) => {
 
                     </div>
 
-                    <div className="input">
+                    <div className="input input-start">
                         <div className="option">
                             <div className={`box ${multipleSchedules ? "active" : ""}`} onClick={() => setMultipleSchedules(curr => !curr)}>
                                 {multipleSchedules && 
@@ -115,10 +115,13 @@ const CreateDoctor = ({ data }) => {
                         </div>
                     </div>
 
-                    <div className="input">
+                    <div className="input input-start input-color">
                         <div className="option">
                             <p>{cookies.language === "en" ? "Highlight Color: " : "Culoare: "}</p>
-                            <InputColor initialValue="#fff" onChange={setColor} />
+                            <InputColor initialValue="#fff" onChange={setColor} onClick={() => {
+                                const elem = document.querySelector(".input-color .option > div");
+                                elem.style.left='-50px';
+                            }} />
                             
                         </div>
                     </div>

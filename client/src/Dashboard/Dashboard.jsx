@@ -204,19 +204,19 @@ const Dashboard = ({ data }) => {
                             <h2 className="title">{cookies.language === "en" ? "Appointment Patients List" : "Lista programari pacienti"}</h2>
                             
                             <div className="first-row">
-                                <p>{cookies.language === "en" ? "No." : "Nr."}</p>
+                                {window.innerWidth >= 800 ? <p>{cookies.language === "en" ? "No." : "Nr."}</p> : null}
                                 <p>{cookies.language === "en" ? "Doctor" : "Medic"}</p>
                                 <p>{cookies.language === "en" ? "Patient" : "Pacient"}</p>
                                 <p>{cookies.language === "en" ? "Date of admit" : "Ora"}</p>
                                 <p>{cookies.language === "en" ? "Icome" : "Venit"}</p>
-                                <p>{cookies.language === "en" ? "Action" : "Optiuni"}</p>
+                                {window.innerWidth >= 800 ? <p>{cookies.language === "en" ? "Action" : "Optiuni"}</p> : null}
                             </div>
 
                             {nextAppointments && nextAppointments.length > 0 ? nextAppointments.map((patient, idx) => (
                                 <div className="row" key={idx}>
-                                    <div className="number-patient">
+                                    {window.innerWidth >= 800 ? <div className="number-patient">
                                         <p>{idx + 1 < 10 ? `0${idx + 1}` : idx + 1}</p>
-                                    </div>
+                                    </div> : null}
 
                                     <div className="doctor-name">
                                         <p>{patient.doctorName}</p>
@@ -234,9 +234,9 @@ const Dashboard = ({ data }) => {
                                         <p>{patient.income} </p>
                                     </div>
 
-                                    <div className="patient-actions">
+                                    { window.innerWidth >= 800  ? <div className="patient-actions">
                                         <FontAwesomeIcon icon={faEllipsis}/>
-                                    </div>
+                                    </div> : null}
                                 </div>
                             )) : (
                                 <div className="message">

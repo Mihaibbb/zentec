@@ -275,3 +275,42 @@
         transform: rotateZ(initial);
     }
 }
+
+@media only screen and (max-width: 800px)
+{
+    .patient-account-details .inputs-container
+    {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .patient-account-details .inputs-container
+    {
+        width: 100%;
+    }
+
+    .feedback-container button.send, 
+    .patient-account-details button.update
+    {
+        position: relative;
+        width: 90%;
+        margin: 1rem auto;
+        filter: brightness(50%);
+        cursor: initial;
+        opacity: 1;
+        transition: all 350ms ease-in-out;
+        animation: none;
+    }
+
+    .feedback-container button.send.active, 
+    .patient-account-details button.update.active 
+    {
+        filter: brightness(100%);
+        cursor: pointer;
+    }
+
+    .content .title
+    {
+        margin-top: initial;
+    }
+}

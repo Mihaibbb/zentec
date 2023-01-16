@@ -148,3 +148,50 @@
     opacity: 1;
     cursor: pointer;
 }
+
+
+@media only screen and (max-width: 1000px)
+{
+    .patients .content .patients-container .row .column .options-container
+    {
+        right: -25px;
+        gap: 0.5rem;
+        width: auto;
+        padding-inline: 1rem;
+    }
+
+    .patients .content .patients-container .row .column .options-container .option
+    {
+        justify-content: initial;
+    }
+
+    .patients .content .patients-container .row .column .options-container .option p
+    {
+        width: 100%;
+
+    }
+
+    .content h2.center 
+    {
+        font-size: 30px;
+    }
+}
+
+@media only screen and (max-width: 500px)
+{
+
+    .patients .content .patients-container
+    {
+        padding: 1rem 0.75rem;
+    }
+
+    .patients .content .patients-container .first-row div p
+    {
+        font-size: 14px;
+    }
+
+    .content h2.center 
+    {
+        font-size: 25px;
+    }
+}

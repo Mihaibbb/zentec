@@ -16,6 +16,7 @@ const Patients = ({ data }) => {
     const [query, setQuery] = useState("");
     const [arrowElements, setArrowElements] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
     const patientsPerPage = 10;
     const [pages, setPages] = useState();
@@ -132,7 +133,9 @@ const Patients = ({ data }) => {
 
     useEffect(() => {
         if (!patients || !patients?.length) return;
-        setPatientsExportData(patients.map((currPatient, idx) => {
+        if (!totalPatients || !totalPatients?.length) return;
+
+        setPatientsExportData(totalPatients.map((currPatient, idx) => {
             if (cookies.language === "en") {
                 return {
                     FirstName: currPatient.firstname,
@@ -178,11 +181,19 @@ const Patients = ({ data }) => {
       
         const navigationElement = document.querySelector(".navigation");
         if (!navigationElement || !navigationElement?.classList?.contains("active")) return;
+        setWindowWidth(window.innerWidth);
         if (window.innerWidth >= 1200) return;
         navigationElement.classList.remove("active");
         document.querySelector(".header").classList.add("no-navigation");
         document.querySelector(".content").classList.add("no-navigation");
         
+    }, [location]);
+
+
+    useEffect(() => {
+        window.addEventListener("resize", () => {
+            setWindowWidth(window.innerWidth);
+        });
     }, [location]);
 
     useEffect(() => {
@@ -261,7 +272,7 @@ const Patients = ({ data }) => {
                 
                 <div className="patients-container">
                     {patients.length > 0 && <div className="first-row">
-                        <div className="column">
+                        {windowWidth >= 600 ? <div className="column">
                             <p>{cookies.language === "en" ? "File Nr." : "Nr. fisa"}</p>
                             <FontAwesomeIcon 
                                 icon={faSortDown} 
@@ -269,7 +280,7 @@ const Patients = ({ data }) => {
                                 className="sort-icon"
                                 onClick={() => changeActiveArrow(fileNumberArrow?.current, "fileNumber")}
                             />
-                        </div>
+                        </div> : null}
                         <div className="column">
                             <p>{cookies.language === "en" ? "First Name" : "Nume"}</p>
                             <FontAwesomeIcon 
@@ -288,10 +299,12 @@ const Patients = ({ data }) => {
                                 onClick={() => changeActiveArrow(lastNameArrow?.current, "lastname")}
                             />
                         </div>
-                        <div className="column">
+
+                        {windowWidth >= 800 ? <div className="column">
                             <p>{cookies.language === "en" ? "Phone" : "Telefon"}</p>
                             
-                        </div>
+                        </div> : null}
+
                         <div className="column">
                             <p>{cookies.language === "en" ? "Options" : "Optiuni"}</p>
                         </div>
@@ -300,9 +313,9 @@ const Patients = ({ data }) => {
                     {patients.length > 0 ? patients.map((patient, idx) => (
                         <div className="row" key={idx}>
 
-                            <div className="column">
+                            {windowWidth >= 600 ? <div clqassName="column">
                                 <p>{patient.fileNumber}</p>
-                            </div>
+                            </div> : null}
 
                             <div className="column">
                                 <p>{patient.firstname}</p>
@@ -312,9 +325,9 @@ const Patients = ({ data }) => {
                                 <p>{patient.lastname}</p>
                             </div>
 
-                            <div className="column">
+                            {windowWidth >= 800 ? <div className="column">
                                 <p>{patient.phone}</p>
-                            </div>
+                            </div>  : null}
 
                             <div className="column pressable">
                                 <FontAwesomeIcon className="column-icon" icon={faEllipsis} onClick={() => triggerOptions(idx)}/>

@@ -4,7 +4,7 @@ const bcrypt = require("bcryptjs");
 const db = require("../db");
 
 exports.createOrganisation = async (req, res, next) => {
-    const { name, adminId, orgId, smsLimit, smsMessage, apiKey } = req.body;
+    const { name, adminId, orgId, smsLimit, smsMessage, modemId } = req.body;
     
     try {
         
@@ -20,10 +20,10 @@ exports.createOrganisation = async (req, res, next) => {
         createTableSql += 'name varchar(128) not null, ';
         createTableSql += 'date date not null, ';
         createTableSql += 'sms_limit int(10), ';
-        createTableSql += 'sms_message text not null, ';
-        createTableSql += 'api_key varchar(128) not null, ';
+        createTableSql += 'sms_message json not null, ';
+        createTableSql += 'sms_modem_id varchar(64) not null, ';
         createTableSql += '_id varchar(25) not null )';
-
+        
         await db.query(createTableSql, ["details"]);
         
         // Patients Table
@@ -33,7 +33,7 @@ exports.createOrganisation = async (req, res, next) => {
         createTableSql += 'firstname varchar(256) not null, ';
         createTableSql += 'lastname varchar(256) not null, ';
         createTableSql += 'phone varchar(16) unique not null, ';
-        createTableSql += 'birthdate date not null, ';
+        createTableSql += 'birthdate date, ';
         createTableSql += 'fileNumber int(11) unique not null, ';
         createTableSql += 'username varchar(64) unique, ';
         createTableSql += 'email varchar(256) unique, ';
@@ -102,8 +102,8 @@ exports.createOrganisation = async (req, res, next) => {
 
         // Insert into details a row of organisation's details
 
-        let sql = 'INSERT INTO ?? (name, date, sms_limit, sms_message, api_key, _id) VALUES (?, ?, ?, ?, ?, ?)';
-        const result = await db.query(sql, ['details', name, new Date(), smsLimit, smsMessage, apiKey, orgId]);
+        let sql = 'INSERT INTO ?? (name, date, sms_limit, sms_message, sms_modem_id, _id) VALUES (?, ?, ?, ?, ?, ?)';
+        const result = await db.query(sql, ['details', name, new Date(), smsLimit, JSON.stringify(smsMessage), modemId , orgId]);
         if (await result) res.status(201).json({ message: { en: "Organisation created successfully!", ro: "Organizatia a fost creata cu succes!" }, success: true });
     } catch (e) {
         console.log(e);
@@ -177,7 +177,7 @@ exports.getOrganisationsData = async (req, res, next) => {
             };
         }));
 
-        res.status(200).json({ success: true, organisations: await organisations });
+        res.status(200).json({ success: true, organisations: organisations });
     } catch (e) {
         console.log(e);
         res.status(404).json({ success: false, message: "An error occured." });

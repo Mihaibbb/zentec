@@ -32,9 +32,10 @@
     min-width: 200px;
     align-items: center;
     justify-content: space-around;
-    border: 1.5px solid var(--contrast-color);
+    /* border: 1.5px solid var(--contrast-color); */
     border-radius: 12px;
     padding-inline: 1rem;
+    background: var(--over-difference-color-3);
 }
 
  .filter-container .filter-doctor p

@@ -27,7 +27,7 @@
 .navigation .close-icon 
 {
     display: none;
-    background: var(--contrast-color);
+    background: var(--over-difference-color-3);
     color: var(--text-color);
     width: 30px;
     height: 30px;

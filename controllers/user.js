@@ -2,7 +2,9 @@ const ErrorResponse = require("../handlers/error");
 const axios = require("axios");
 const db = require("../db");
 const generateId = require("../functions/generateId");
-const { basename } = require("path");
+const logger = require("../logger");
+
+let currentResponse;
 
 exports.createAppointment = async (req, res, next) => {
     const { _id, startDate, endDate, users, patients, title, income, typeIncome, notes, date, language } = req.body;
@@ -21,46 +23,50 @@ exports.createAppointment = async (req, res, next) => {
         sql = "SELECT * FROM ??";
         const detailsOrganisationRows = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.details`]);
         const detailsOrganisation = detailsOrganisationRows[0];
-        const smsMessageRaw = detailsOrganisation["sms_message"];
-        const apiKey = detailsOrganisation["api_key"];
-        let smsMessage = smsMessageRaw.replaceAll("{NUME_ORGANIZATIE}", detailsOrganisation.name);
-        smsMessage = smsMessage.replaceAll("{DATA_PROGRAMARE}", `${new Date(startDate).getDate()} ${new Date(startDate).getMonth() + 1} ${new Date(startDate).getFullYear()}`);
-        smsMessage = smsMessage.replaceAll("{ORA_PROGRAMARE}", `${new Date(startDate).getHours()}:${new Date(startDate).getMinutes()}`);
-        smsMessage = smsMessage.replaceAll("{LINK_CONFIRMARE}", `${process.env.BACKEND_URL}/api/patient/confirm-appointment?organisationId=${_id}&doctorId=${users[0]}&appointmentId=${appointmentId}`);
+        //const smsMessageRaw = detailsOrganisation["sms_message"];
+        const organisationSMS = JSON.parse(detailsOrganisation["sms_message"]);
+        //const apiKey = detailsOrganisation["api_key"];
+        // let smsMessage = smsMessageRaw.replaceAll("{NUME_ORGANIZATIE}", detailsOrganisation.name);
+        // smsMessage = smsMessage.replaceAll("{DATA_PROGRAMARE}", `${new Date(startDate).getDate()} ${new Date(startDate).getMonth() + 1} ${new Date(startDate).getFullYear()}`);
+        // smsMessage = smsMessage.replaceAll("{ORA_PROGRAMARE}", `${new Date(startDate).getHours()}:${new Date(startDate).getMinutes()}`);
+        // smsMessage = smsMessage.replaceAll("{LINK_CONFIRMARE}", `${process.env.BACKEND_URL}/api/patient/confirm-appointment?organisationId=${_id}&doctorId=${users[0]}&appointmentId=${appointmentId}`);
         
         // 1 day earlier message
 
-        let patientsPhones = "";
-        console.log(patients);
-        patients.forEach((currPatient, idx) => idx !== patients.length - 1 ? patientsPhones += `${currPatient.phone},` : patientsPhones += currPatient.phone);
-        const smsStartDate =  new Date(startDate).getTime() - (1000 * 60 * 60 * 24) < new Date().getTime() ? new Date().getTime() + 1000 : new Date(startDate).getTime() - (1000 * 60 * 60 * 24);
+        let currentSmsModemId = detailsOrganisation["sms_modem_id"];
+
+        await Promise.all(organisationSMS.map(async sms => {
+
+            const currentSmsSchedule = sms.scheduledAt;
+            logger.debug(sms);
+            let smsMessage = sms.message.replaceAll("{NUME_ORGANIZATIE}", detailsOrganisation.name);
+            smsMessage = smsMessage.replaceAll("{DATA_PROGRAMARE}", `${new Date(startDate).getDate() < 10 ? `0${new Date(startDate).getDate()}` : new Date(startDate).getDate()}.${new Date(startDate).getMonth() + 1 < 10 ? `0${new Date(startDate).getMonth() + 1}` : new Date(startDate).getMonth() + 1}.${new Date(startDate).getFullYear()}`);
+            smsMessage = smsMessage.replaceAll("{ORA_PROGRAMARE}", `${new Date(startDate).getHours()}:${new Date(startDate).getMinutes()}`);
+            smsMessage = smsMessage.replaceAll("{LINK_CONFIRMARE}", `${process.env.BACKEND_URL}/api/patient/confirm-appointment?organisationId=${_id}&doctorId=${users[0]}&appointmentId=${appointmentId}`);
+            
+            let patientsPhones = "";
+
+            patients.forEach((currPatient, idx) => idx !== patients.length - 1 ? patientsPhones += `${currPatient.phone},` : patientsPhones += currPatient.phone);
+            const smsStartDate =  new Date(startDate).getTime() - (1000 * 60 * 60 * currentSmsSchedule) < new Date().getTime() ? new Date().getTime() + 1000 : new Date(startDate).getTime() - (1000 * 60 * 60 * currentSmsSchedule);
 
 
-        let data = JSON.stringify({
-            phone: patientsPhones,
-            shortTextMessage: smsMessage,
-            startDate: smsStartDate,
-            endDate: smsStartDate + (1000 * 60 * 3)
-        });
+            let config = {
+                method: 'POST',
+                url: `${process.env.SMS_URL}/schedule?username=${process.env.SMS_USERNAME}&apiKey=${process.env.SMS_API}&tel=${patientsPhones}&message=${smsMessage}&schedule=${smsStartDate.getFullYear()}-${smsStartDate.getMonth() + 1 < 10 ? `0${smsStartDate.getMonth() + 1}` : smsStartDate.getMonth() + 1}-${smsStartDate.getDate() < 10 ? `0${smsStartDate.getDate()}` : smsStartDate.getDate()} ${smsStartDate.getHours() < 10 ? `0${smsStartDate.getHours()}` : smsStartDate.getHours()}:${smsStartDate.getMinutes() < 10 ? `0${smsStartDate.getMinutes()}` : smsStartDate.getMinutes()}:00&modemId=${currentSmsModemId}`,
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            };
+            
+            try {
+                const response = await axios(config);
+                if (response?.status !== "scheduled" && response?.status !== "pending") console.log("Error sending scheduled SMS.");
+                else console.log("SEND!", response);
+            } catch (e) {
+                console.log("Error: ", e);
+            }
 
-        let config = {
-            method: 'post',
-            url: process.env.SMS_URL,
-            headers: {
-                Authorization: await apiKey,
-                'Content-Type': 'application/json',
-            },
-            data: data
-        };
-        
-        try {
-            const response = await axios(config);
-            if (!response) console.log("Error sending scheduled SMS.");
-            else console.log("SEND!", response);
-        } catch (e) {
-            console.log("Error: ", e);
-        }
-
+        }));
        
         if (req.body?.saved) return res.status(200).json({ success: true, message: { en: "Appointment added successfully!", ro: "Programare adaugata cu succes!" } });
         
@@ -92,6 +98,7 @@ exports.createAppointment = async (req, res, next) => {
         
     } catch (e) {
         console.log(e);
+        logger.debug(e);
         
         res.status(404).json({ success: false, message: "An error occured!", error: e });
     }
@@ -145,6 +152,7 @@ exports.nextAppointments = async (req, res, next) => {
 exports.analytics = async (req, res, next) => {
     const { filter, _id } = req.body;
     console.log(filter);
+    logger.debug("Filter: ", filter);
     try {
         
         sql = "SELECT * FROM ??";
@@ -847,11 +855,61 @@ exports.sendFeedback = async (req, res, next) => {
     }
 };
 
+exports.responseSMS = async (req, res, next) => {
+    const { phone, date, message } = req.body;
+
+    try {
+        const currentDatabases = await db.query("SHOW DATABASES;");
+        const organisationsUnfiltered = currentDatabases.map(database => {
+            if (Object.values(database)[0].includes(`${process.env.DB_PREFIX}_org_`)) return Object.values(database)[0];
+            return null;
+        });
+        const organisations = organisationsUnfiltered.filter(organisation => organisation !== null);
+        organisations.forEach(async organisation => {
+            const futureSchedules = await db.query('SELECT * FROM ?? WHERE startDate > ?', [`${organisation}.schedules`, new Date(date)]);
+            const patientSchedules = futureSchedules.filter(async futureSchedule => {
+                const patients = JSON.parse(futureSchedule.patients);
+                return patients.some(patient => {
+                    return patient.phone === phone;
+                });
+            });
+
+            patientSchedules.sort((patientSchedule1, patientSchedule2) => {
+                return new Date(patientSchedule1.startDate).getTime() - new Date(patientSchedule2.startDate).getTime(); 
+            });
+            const currentDate = new Date(patientSchedules[0])
+            const confirmingSchedules = patientSchedules.filter(patientSchedule => sameDate(new Date(patientSchedule.startDate), currentDate));
+            confirmingSchedules.forEach(async confirmingSchedule => {
+                await db.query("UPDATE ?? SET confirmed = ? WHERE _id = ?", [`${organisation}.schedules`, message.toLowerCase().includes("da"), confirmingSchedule._id]);
+            });
+
+        });
+    } catch (e) {
+        console.log(e);
+        res.status(404).json({ success: false, message: 'An error occured!' });
+    }
+};
+
+exports.sendSMS = async (req, res, next) => {
+    //const { phone, date, message }  = req.body;
+    try {
+        logger.debug(req.body);
+    } catch (e) {
+        console.log(e);
+        logger.debug(e);
+        res.status(404).json({ success: false, message: 'An error occured!' });
+    }
+
+};
 
 exports.getStatisticsData = async (req, res, next) => {
     const { _id } = req.body; 
     
 };
+
+exports.getResponseSMS = async (req, res, next) => {
+    
+}
 
 const encryptData = (data) => {
 

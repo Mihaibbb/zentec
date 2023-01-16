@@ -147,10 +147,11 @@ const PatientAccount = ({ data }) => {
             gender !== initialGender ||
             fileNumber !== initialFileNumber || 
             PIC !== initialPIC ||
-            notes !== initialNotes
+            notes !== initialNotes ||
+            (birthDate && birthDate !== "" && new Date(birthDate)?.getTime() !== new Date(initialBirthdate)?.getTime())
         ) setShowUpdate(true);
         else setShowUpdate(false);
-    }, [firstName, lastName, phoneNumber, username, email, city, county, address, gender, fileNumber, PIC, notes]);
+    }, [firstName, lastName, phoneNumber, username, email, city, county, address, gender, fileNumber, PIC, notes, birthDate]);
 
     useEffect(() => {
       
@@ -186,7 +187,7 @@ const PatientAccount = ({ data }) => {
         const inputMin = `${year - 100}-${month}-${day}`;
         birthRef.current.setAttribute("max", inputMax);
         birthRef.current.setAttribute("min", inputMin);
-
+        
     }, [birthRef]);
 
     const handleChangeDate = (newBirthdate) => setBirthDate(newBirthdate);
@@ -229,7 +230,7 @@ const PatientAccount = ({ data }) => {
                                 <FontAwesomeIcon className="icon" icon={faCalendar} />
                                 <p>{cookies.language === "en" ? "Date of birth" : "Data de nastere"}</p>
                             </div>
-                            <DateCustomInput initialDate={initialBirthdate} changeDate={handleChangeDate} future={false} past={true} />
+                            <DateCustomInput initialDate={new Date(birthDate)} changeDate={handleChangeDate} future={false} past={true} label={cookies.language === "en" ? "Date of birth" : "Data de nastere"} />
                         </div>
 
                         <div className="input">

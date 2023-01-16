@@ -7,9 +7,10 @@ import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { useEffect, useState } from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 
-const DateCustomInput = ({ changeDate, initialDate, future, past }) => {
+const DateCustomInput = ({ changeDate, initialDate, future, past, label }) => {
 
-    const [value, setValue] = useState(new Date(initialDate));
+    const [value, setValue] = useState(initialDate);
+    const [cookies, setCookie] = useState();
     const darkTheme = createTheme({
       palette: {
         mode: 'dark',
@@ -76,7 +77,7 @@ const DateCustomInput = ({ changeDate, initialDate, future, past }) => {
         
           <DatePicker
               inputFormat="DD/MM/YYYY"
-
+              label={label}
               disableFuture={!future}
               disablePast={!past}
               openTo="year"

@@ -16,12 +16,19 @@ const cors = require("cors");
 const path = require("path");
 const errorHandler = require("./middleware/error");
 const crypto = require("crypto");
+const logger = require("./logger");
+
 
 const app = express();
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
 
 const removeOldSchedules = require("./functions/removingOldSchedules");
+const db = require("./db");
+
+(async () => {
+    logger.debug(await db.query("SHOW DATABASES"));
+})();
 
 removeOldSchedules();
 

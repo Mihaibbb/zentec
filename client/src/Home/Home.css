@@ -6,7 +6,315 @@
     
 }
 
-.home-container .content
+.home-container .content 
 {
+    width: 100%;
+    margin-left: initial;
+    margin-inline: auto;
+    max-width: 100%;
     
+}
+
+.home-container .content h2.title
+{
+    font-size: 80px;
+    font-weight: 800;
+    color: var(--home-text-color);
+    margin-bottom: 0;
+    margin-top: 15vh;
+    font-family: "Inter";
+}
+
+.home-container .content h2.title.sm-title 
+{
+    font-size: 60px;
+}
+
+.home-container .content h2.title span 
+{
+    background: -webkit-linear-gradient(0deg, var(--home-contrast-color), var(--home-contrast-color-2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.home-container .content p.description 
+{
+    font-size: 22px;
+    line-height: 29px;
+    font-weight: 500;
+    max-width: 75%;
+    font-family: "Inter";
+    color: var(--home-text-color-2);
+    text-align: center;
+    margin-inline: auto;
+
+}
+
+.home-container .content .final-block
+{
+    background: var(--home-opposite-background-color);
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 50vh;
+}
+
+.home-container .content .final-block h2
+{
+    color: var(--home-opposite-text-color);
+    font-size: 80px;
+    margin-top: 0;
+    
+}
+
+.home-container .content .block-1
+{
+    display: flex;
+    flex-direction: column;
+    /* min-height: 100vh; */
+}
+
+.home-container .content .block-1 button 
+{
+    margin: 2.5rem auto;
+    background: var(--contrast-color);
+    border: none;
+    outline: none;
+    color: var(--home-opposite-text-color);
+    padding: .5rem 2rem;
+    border-radius: 36px;
+    cursor: pointer;
+    font-family: "Inter";
+    font-weight: 600;
+    font-size:16px;
+
+    transition: all 350ms ease-in-out;
+}
+
+.home-container .content .block-1 button:hover 
+{
+    padding: .5rem 2.25rem; 
+    box-shadow: 0 0 10px var(--contrast-color);
+}
+
+.home-container .content .block-2 
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: -5vw;
+}
+
+.home-container .content .final-block{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    padding-block: 1rem 0;
+
+}
+
+.home-container .content .final-block img 
+{
+    width: 100%;
+    max-width: 75px;
+}
+
+.home-container .content img.mockup 
+{
+    width: 100vw;
+
+}
+
+.home-container .content .advantages 
+{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    grid-template-rows: 1fr 1fr;
+    grid-gap: 2rem;
+    max-width: 85%;
+    margin: 5rem auto;
+}
+
+.home-container .content .advantages .advantage 
+{
+    background: var(--home-background-container);
+    padding: 1rem;
+    border-radius: 1.5rem;
+    position:relative;
+}
+
+.home-container .content .advantages .advantage p.enumerate 
+{
+    display: list-item;
+    margin: 1rem;
+}
+
+.home-container .content .advantages .advantage .advantage-icon 
+{
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    padding: 1rem;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    border-radius: 50%;
+    color: var(--contrast-color);
+    transition: all 350ms ease-in-out;
+
+
+}
+
+.home-container .content .advantages .advantage .advantage-icon:hover
+{
+    color: var(--home-opposite-text-color);
+    background: linear-gradient(-90deg, var(--home-contrast-color), var(--home-contrast-color-2));
+}
+
+.home-container .content .advantages .advantage h2 
+{
+    font-size: 30px;
+}
+
+.home-container .content .block-6,
+.home-container .content .block-4
+{
+    width: 100%;
+    max-width: 85%;
+    background: linear-gradient(-90deg, var(--home-contrast-color), var(--home-contrast-color-2));
+    display: flex;
+    margin: 15rem auto;
+    align-items: center;
+    max-height: 50vh;
+    border-radius: 25px;
+
+}
+
+.home-container .content .block-4
+{
+    margin-block: 5rem;
+
+}
+
+.home-container .content .block-4 .block-container 
+{
+    flex: 0.8;
+    margin-inline: 1.5rem;
+    display: flex;
+    flex-direction: column;
+   
+}
+
+.home-container .content .block-4 .block-container:nth-child(2)
+{
+    flex: 0.8;
+    align-items: flex-end;
+    margin-inline: 0;
+  
+    border-top-right-radius: 25px;
+    border-bottom-right-radius: 25px;
+}
+
+.home-container .content .block-4 .block-container img 
+{
+    width: 100%;
+    border-bottom-right-radius: 25px;
+    border-top-right-radius: 25px;
+    align-self: flex-end;
+    max-width: 100%;
+    
+    
+}
+
+.home-container .content .block-4 .block-container h2 
+{
+    font-size: 40px;
+    color: var(--home-opposite-text-color);
+    margin-bottom: 2rem;
+}
+
+
+.home-container .content .block-4 .block-container p 
+{
+    color: var(--home-text-color-transparent);
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.home-container .content .block-6 .block-container img 
+{
+    width: 100%;
+    max-width: 345px;
+    border-inline: 5px solid #fff;;
+}   
+
+.home-container .content .block-6 .block-container h2 
+{
+    font-size: 60px;
+    text-align: center;
+    color: var(--home-opposite-text-color)
+}
+
+
+.home-container .content .block-6 .block-container 
+{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    padding-inline: 1rem;
+}
+
+.home-container .content .block-6 .block-container:nth-child(2)
+{
+    padding-inline: 0;
+    max-width: 345px;
+}
+
+.home-container .content .block-6 .block-container:last-child
+{
+    display: inline;
+}
+
+.home-container .content .block-6 .block-container p 
+{
+    display: inline;
+ 
+}
+
+.home-container .content .block-6 .block-container p
+{
+    color: var(--home-text-color-transparent);
+    font-size: 20px;
+}
+
+.home-container .content .block-6 .block-container p.highlight
+{
+    color: var(--home-opposite-text-color);
+    font-weight: 700;
+}
+
+
+
+.home-container .content .block-6 .block-container p:nth-child(n + 2)
+{
+    margin-inline: .25rem;
+}
+
+@media only screen and (max-width: 1100px)
+{
+    .block-4 
+    {
+        flex-direction: column;
+    }
+
+    .block-4 .block-container h2 
+    {
+        text-align: center;
+    }
+
+  
 }

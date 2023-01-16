@@ -112,8 +112,9 @@
     justify-content: center;
     align-items: center;
     width: 100%;
-    background: var(--contrast-color);
+    background: var(--over-difference-color-3);
     border-radius: 30px;
+    
 }
 
 
@@ -142,6 +143,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .patients .content .patients-container .first-row .column 
@@ -292,7 +295,7 @@
     color: rgba(255, 255, 255, .75);
 }
 
-.patients .content .patients-container h2.center 
+.content h2.center 
 {
     color: rgba(255, 255, 255, .65);
     font-size: 45px;
@@ -352,5 +355,41 @@
 .patients .content .patients-container .row .column .options-container.show 
 {
     opacity: 1;
-    z-index: 1;
+    z-index: 100;
+}
+
+@media only screen and (max-width: 800px)
+{
+    .patients .content .search-container 
+    {
+        max-width: calc(100% - 5rem);
+        padding: 0.25rem 1rem;
+        margin: 1rem;
+    }
+
+    .patients .content .excel-container
+    {
+        margin: 1rem;
+    }
+}
+
+@media only screen and (max-width: 600px)
+{
+    .patients .content .excel-container
+    {
+        flex-direction: column;
+    }
+
+    .patients .content .excel-container .button
+    {
+        justify-content: initial;
+    }
+
+    .patients .content .patients-container .row div p
+    {
+        text-align: center;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+    }
 }

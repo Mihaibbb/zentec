@@ -247,7 +247,7 @@ const CreatePatient = ({ data, fromAppointments, patientSaved }) => {
                     <div className="input">
                         <p>{cookies.language === "en" ? "Date of birth" : "Data de nastere"}</p>
                         {/* <input type="date" placeholder={cookies.language === "en" ? "Birthdate" : "Data de nastere"} ref={birthRef} value={birthDate} onChange={e => setBirthDate(e.target.value)} required /> */}
-                        <DateCustomInput initialDate={new Date()} changeDate={handleChangeDate} future={false} past={true} />
+                        <DateCustomInput initialDate={null} changeDate={handleChangeDate} future={false} past={true} label={cookies.language === "en" ? "Date of birth" : "Data de nastere"} />
                     </div>
 
                     {/* <div className="input">

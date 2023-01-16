@@ -13,8 +13,12 @@ const CreateOrganisation = () => {
     const [errorMessage, setErrorMessage] = useState("");
     const [cookies, setCookie] = useCookies();
     const [orgId, setOrgId] = useState();
+    const [numberOfHours, setNumberOfHours] = useState(24);
+    const [smsLimit, setSmsLimit] = useState(null);
+    const [modemId, setModemId] = useState("");
     const textVariables = ["Nume Organizatie", "Data Programare", "Ora Programare", "Link Confirmare"];
     const navigate = useNavigate();
+    
 
     const generateId = (length) => {
         let result = '';
@@ -28,7 +32,7 @@ const CreateOrganisation = () => {
     }
     
     const createCurrentOrganisation = async () => {
-        if (organisationName.length === 0 || smsApiKey.length === 0 || smsMessage.length === 0) {
+        if (organisationName.length === 0 || smsMessage.length === 0) {
             setErrorMessage(cookies.language === "en" ? "Please fill each field." : "Compleateaza fiecare camp.");
             return;
         } else if (organisationName.length < 4) {
@@ -45,8 +49,12 @@ const CreateOrganisation = () => {
                 name: organisationName,
                 adminId: cookies['user-id'],
                 orgId,
-                apiKey: smsApiKey,
-                smsMessage
+                smsMessage: [{
+                    message: smsMessage,
+                    scheduledAt: Number(numberOfHours)
+                }],
+                smsLimit,
+                modemId
             })
         };
 
@@ -90,10 +98,10 @@ const CreateOrganisation = () => {
                         <input type="text" placeholder={cookies.language === "en" ? "Organisation Name" : "Numele organizatiei"} value={organisationName} onChange={e => setOrganisationName(e.target.value)} />
                     </div>
 
-                    <div className="input">
+                    {/* <div className="input">
                         <p>{cookies.language === "en" ? "SMS API Key" : "SMS Cheie API"}</p>
                         <input type="text" placeholder={cookies.language === "en" ? "Key" : "Cheie"} value={smsApiKey} onChange={e => setSmsApiKey(e.target.value)} />
-                    </div>
+                    </div> */}
 
                     <div className="input">
                         <p>{cookies.language === "en" ? "SMS General Message" : "SMS Mesaj General"}</p>
@@ -108,6 +116,16 @@ const CreateOrganisation = () => {
                                 ))}
                             </div>
                         </div>
+                    </div>
+
+                    <div className="input">
+                        <p>{cookies.language === "en" ? "Select the number of hours before the appointment when the SMS will be sent" : "Numarul de ore inaintea programarii ca pacientul sa primeasca SMS: "}</p>
+                        <input type="number" value={numberOfHours} onChange={e => setNumberOfHours(e.target.value)} />
+                    </div>
+
+                    <div className="input">
+                        <p>{cookies.language === "en" ? "Device Id" : "Id telefon"}</p>
+                        <input type="text" value={modemId} onChange={e => setModemId(e.target.value)} />
                     </div>
 
                     <button type="text" onClick={async () => await createCurrentOrganisation()}>

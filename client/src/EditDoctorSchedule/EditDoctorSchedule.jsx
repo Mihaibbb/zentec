@@ -203,8 +203,8 @@ const EditDoctorSchedule = ({ data }) => {
             });
         });
         
-        currSchedules.forEach((schedule, idx) => {
-            (async () => {
+        await Promise.all(currSchedules.map(async (schedule, idx) => {
+            
                 console.log(schedule);
                 const options = {
                     method: schedule?.scheduleId ? "PUT" : "POST",
@@ -220,10 +220,9 @@ const EditDoctorSchedule = ({ data }) => {
                 } catch(e) {
                     console.log(e);
                 }
+        }));
 
-            })();
-        });
-
+        //window.history.replaceState({ fromSchedules: true }, '');
         window.location.replace("/doctors-schedule");
 
     };
@@ -659,7 +658,7 @@ const EditDoctorSchedule = ({ data }) => {
                             </div>
                         </div>
 
-                        <div className="input">
+                        <div className="input remove">
                             {idx === 0 && <p className="title">{cookies.language === "en" ? "Remove" : "Sterge"}</p> }
 
                             <FontAwesomeIcon className="remove-button" icon={faTimes} onClick={async () => await removeSchedule(schedule?.scheduleId, doctorValue[idx] || null, idx)} />
@@ -667,12 +666,16 @@ const EditDoctorSchedule = ({ data }) => {
                     </div>
                 ))}
 
-                <div className="add-button">
-                    <FontAwesomeIcon icon={faPlus} className="add-icon" onClick={() => {
-                        setSchedules(currSchedules => [...currSchedules, {}]);
-                    }} />
+                <div className="add-button" onClick={() => {
+                    setSchedules(currSchedules => [...currSchedules, {}]);
+                    window.scrollTo({
+                        top: document.body.scrollHeight,
+                        left: 0,
+                        behavior: 'smooth'
+                    });
+                }}>
+                    <FontAwesomeIcon icon={faPlus} className="add-icon" />
                 </div>
-
 
                 <button type="button" className={`save-button show`} onClick={async () => await saveChanges()}>
                     <p>{cookies.language === "en" ? "Save changes" : "Salveaza modificarile"}</p>

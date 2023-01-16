@@ -98,3 +98,23 @@ p.error
     font-size: 24px;
     color: var(--text-color);
 }
+
+@media only screen and (max-width: 600px) 
+{
+
+    .go-back 
+    {
+        display: none;
+    }
+
+    .input-color .option > div 
+    {
+        left: -50px;
+    }
+
+    .input-start 
+    {
+        align-self: flex-start;
+        margin-left: 2rem;
+    }
+}

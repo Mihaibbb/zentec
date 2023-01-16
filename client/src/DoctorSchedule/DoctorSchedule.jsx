@@ -40,7 +40,9 @@ const DoctorSchedule = ({ data }) => {
     }, []);
 
     useEffect(() => {
-
+        const monthDays = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+        daysRef.current = Array(filterActiveIdx === 0 ? 5 : filterActiveIdx === 1 ? 7 : monthDays);
+        
         if (filterActiveIdx === 0) setDays(getWorkingWeek(date));
         else if (filterActiveIdx === 1) setDays(getWeek(date));
         else setDays(getMonth(date));
@@ -48,7 +50,7 @@ const DoctorSchedule = ({ data }) => {
     }, [filterActiveIdx, date]);
 
     useEffect(() => {
-
+        console.log(daysRef?.current);
         if (!daysRef?.current) return;
 
          // For scrolling effects
@@ -65,6 +67,25 @@ const DoctorSchedule = ({ data }) => {
         });
 
     }, [daysRef]);
+
+    useEffect(() => {
+        console.log(daysRef?.current);
+        if (!daysRef?.current || !daysRef?.current?.length) return;
+        console.log(daysRef.current.length);
+        daysRef?.current.forEach(dayRef => {
+            if (!dayRef) return;
+            console.log(dayRef);
+            dayRef.addEventListener("mouseover", () => {
+                dayRef.classList.add("active-scroll");
+            });
+
+            dayRef.addEventListener("mouseout", () => {
+                dayRef.classList.remove("active-scroll");
+            });
+        });
+     
+
+    }, [daysRef?.current]);
     
 
     const getWorkingWeek = (currDate) => {
@@ -266,7 +287,7 @@ const DoctorSchedule = ({ data }) => {
                         {filterActiveIdx === 2 && addInvisibleDays()}
 
                         {days && days.length && days.map((day, idx) => (
-                            <div className={`day-container ${idx === 0 ? "first-active" : ""}`} key={idx} ref={ref => daysRef.current[idx] = ref}>
+                            <div className={`day-container ${idx === 0 ? "first-active" : ""}`} key={idx} idx={idx} ref={ref => daysRef.current[idx] = ref}>
                                 <div className="first-row">
                                     <div className="edit" onClick={() => navigate(`/doctors-schedule/${day.getFullYear()}-${day.getMonth() + 1}-${day.getDate()}`)}>
                                         <FontAwesomeIcon icon={faPencil} className="edit-icon" />
@@ -297,7 +318,7 @@ const DoctorSchedule = ({ data }) => {
 
 
                                 {getSchedulesForDate(day).map((schedule, scheduleIdx) => (
-                                    <div className="schedule-card" key={scheduleIdx} style={{ backgroundColor: schedule.color }}>
+                                    <div className="schedule-card" key={scheduleIdx} style={{ backgroundColor: schedule.color }} onClick={() => navigate(`/doctors-schedule/${day.getFullYear()}-${day.getMonth() + 1}-${day.getDate()}`)}>
                                         <p className="name">{schedule.name}</p>
                                         <p>{schedule.startHour < 10 ? `0${schedule.startHour}` : schedule.startHour}:{schedule.startMinutes < 10 ? `0${schedule.startMinutes}` : schedule.startMinutes} - {schedule.endHour < 10 ? `0${schedule.endHour}` : schedule.endHour}:{schedule.endMinutes < 10 ? `0${schedule.endMinutes}` : schedule.endMinutes}</p>
                                     </div>

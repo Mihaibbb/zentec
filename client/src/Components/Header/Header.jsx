@@ -36,7 +36,7 @@ const Header = ({ data }) => {
                     <FontAwesomeIcon icon={faUser} className="account-icon" />
                 </div> */}
 
-                <div className="account-name-container" onClick={() => navigate("/account")}>
+                <div className="account-name-container" onClick={() => navigate("/profile")}>
                     <p className="account-name">{data.user.name.split(" ")[0][0].toUpperCase()}{data.user.name.split(" ")[1][0].toUpperCase()}</p>
                 </div>
 

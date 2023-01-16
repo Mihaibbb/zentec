@@ -7,6 +7,7 @@ import settingsIcon from "../../imgs/icons/settings-icon.svg";
 import { useNavigate } from "react-router-dom";
 import { useCookies } from 'react-cookie';
 import patientIcon from "../../imgs/icons/patient.svg";
+import patientIconActive from "../../imgs/icons/patientIconActive.svg";
 import { useState, useRef, useEffect } from 'react';
 
 const Navigation = ({ show, page }) => {
@@ -63,7 +64,7 @@ const Navigation = ({ show, page }) => {
 
             <div className={`item ${page === "patients" ? "active" : ""}`} onClick={() => navigation("/patients")}>
                 {/* <FontAwesomeIcon icon={faBedPulse} className="item-icon" /> */}
-                <img src={patientIcon} className="patient-icon" />
+                <img src={page === "patients" ? patientIconActive : patientIcon} className="patient-icon" />
                 <h3>{cookies.language === "en" ? "Patients" : "Pacienti"}</h3>
             </div>
 
