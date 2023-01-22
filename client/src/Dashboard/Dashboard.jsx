@@ -166,7 +166,7 @@ const Dashboard = ({ data }) => {
                         </div>
                     </div>
 
-                    <div className="data-container">
+                    <div className="data-container data-margins">
                         <div className="image">
                             <FontAwesomeIcon icon={faUsers} className="data-icon"/>
                         </div>

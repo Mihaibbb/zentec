@@ -3,20 +3,20 @@ const axios = require("axios");
 const db = require("../db");
 const generateId = require("../functions/generateId");
 const logger = require("../logger");
+const e = require("cors");
 
 let currentResponse;
 
 exports.createAppointment = async (req, res, next) => {
-    const { _id, startDate, endDate, users, patients, title, income, typeIncome, notes, date, language } = req.body;
+    const { _id, startDate, endDate, users, patients, title, income, typeIncome, notes, date, language, incomePaid } = req.body;
     console.log( new Date(startDate).getMonth(), new Date(startDate).getDate(), new Date(startDate).getHours(), new Date(startDate).getMinutes());
     console.log(users);
     try {
         const appointmentId = generateId(25);
-        sql = "INSERT INTO ?? (_id, startDate, endDate, users, patients, title, income, typeIncome, notes, finished, confirmed, date, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        const insertedAppointment = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.schedules`, appointmentId, new Date(startDate), new Date(endDate), JSON.stringify(users), JSON.stringify(patients), title, income, typeIncome, notes, false, false, new Date(date), new Date()]);
+        sql = "INSERT INTO ?? (_id, startDate, endDate, users, patients, title, income, incomePaid, typeIncome, notes, finished, confirmed, date, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        const insertedAppointment = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.schedules`, appointmentId, new Date(startDate), new Date(endDate), JSON.stringify(users), JSON.stringify(patients), title, income, incomePaid, typeIncome, notes, false, false, new Date(date), new Date()]);
         if (!insertedAppointment) return new ErrorResponse("An error occured!", 404);
         
-
         // --- Sms Api for patient ---
         // Get api key
 
@@ -37,22 +37,28 @@ exports.createAppointment = async (req, res, next) => {
 
         await Promise.all(organisationSMS.map(async sms => {
 
-            const currentSmsSchedule = sms.scheduledAt;
-            logger.debug(sms);
+            const currentSmsSchedule = sms.scheduledAt - 2;
+            logger.debug("Number of hours before: ", currentSmsSchedule, new Date(startDate).getHours(), new Date(startDate).getMinutes());
+          
+            let patientsPhones = "";
+            logger.debug("Patients: ", patients);
+            logger.debug("Start Date: ", startDate);
+            patients.forEach((currPatient, idx) => idx !== patients.length - 1 ? patientsPhones += `${currPatient.phone.toString().slice(0, 2) === "+4" ? currPatient.phone.toString() : `+4${currPatient.phone}`},` : patientsPhones += `${currPatient.phone.slice(0, 2) === "+4" ? currPatient.phone : `+4${currPatient.phone}`}`);
+            const smsStartDate =  new Date(startDate).getTime() - (1000 * 60 * 60 * Number(currentSmsSchedule)) < new Date().getTime() ? new Date().getTime() + 1000 * 15 : new Date(startDate).getTime() - (1000 * 60 * 60 * Number(currentSmsSchedule));
+            
             let smsMessage = sms.message.replaceAll("{NUME_ORGANIZATIE}", detailsOrganisation.name);
-            smsMessage = smsMessage.replaceAll("{DATA_PROGRAMARE}", `${new Date(startDate).getDate() < 10 ? `0${new Date(startDate).getDate()}` : new Date(startDate).getDate()}.${new Date(startDate).getMonth() + 1 < 10 ? `0${new Date(startDate).getMonth() + 1}` : new Date(startDate).getMonth() + 1}.${new Date(startDate).getFullYear()}`);
-            smsMessage = smsMessage.replaceAll("{ORA_PROGRAMARE}", `${new Date(startDate).getHours()}:${new Date(startDate).getMinutes()}`);
+            smsMessage = smsMessage.replaceAll("{DATA_PROGRAMARE}", `${new Date(startDate).getDate() < 10 ? `0${new Date(startDate).getDate()}` : new Date(startDate).getDate()}/${new Date(startDate).getMonth() + 1 < 10 ? `0${new Date(startDate).getMonth() + 1}` : new Date(startDate).getMonth() + 1}/${new Date(startDate).getFullYear()}`);
+            smsMessage = smsMessage.replaceAll("{ORA_PROGRAMARE}", `${new Date(startDate).getHours() + 2 < 10 ? `0${new Date(startDate).getHours() + 2}` : new Date(startDate).getHours() + 2}:${new Date(startDate).getMinutes() < 10 ? `0${new Date(startDate).getMinutes()}` : new Date(startDate).getMinutes()}`);
+            smsMessage = smsMessage.replaceAll("{ORA_PROGRAMRE}", `${new Date(startDate).getHours() + 2 < 10 ? `0${new Date(startDate).getHours() + 2}` : new Date(startDate).getHours() + 2}:${new Date(startDate).getMinutes() < 10 ? `0${new Date(startDate).getMinutes()}` : new Date(startDate).getMinutes()}`);
+
             smsMessage = smsMessage.replaceAll("{LINK_CONFIRMARE}", `${process.env.BACKEND_URL}/api/patient/confirm-appointment?organisationId=${_id}&doctorId=${users[0]}&appointmentId=${appointmentId}`);
             
-            let patientsPhones = "";
-
-            patients.forEach((currPatient, idx) => idx !== patients.length - 1 ? patientsPhones += `${currPatient.phone},` : patientsPhones += currPatient.phone);
-            const smsStartDate =  new Date(startDate).getTime() - (1000 * 60 * 60 * currentSmsSchedule) < new Date().getTime() ? new Date().getTime() + 1000 : new Date(startDate).getTime() - (1000 * 60 * 60 * currentSmsSchedule);
-
-
+            
+            logger.debug(`${process.env.SMS_URL}schedule?username=${process.env.SMS_USERNAME}&apiKey=${process.env.SMS_API}&tel=${patientsPhones}&message=${smsMessage}&modemId=${currentSmsModemId}&schedule=${new Date(smsStartDate).getFullYear()}-${new Date(smsStartDate).getMonth() + 1 < 10 ? `0${new Date(smsStartDate).getMonth() + 1}` : new Date(smsStartDate).getMonth() + 1}-${new Date(smsStartDate).getDate() < 10 ? `0${new Date(smsStartDate).getDate()}` : new Date(smsStartDate).getDate()} ${new Date(smsStartDate).getHours() < 10 ? `0${new Date(smsStartDate).getHours()}` : new Date(smsStartDate).getHours()}:${new Date(smsStartDate).getMinutes() < 10 ? `0${new Date(smsStartDate).getMinutes()}` : new Date(smsStartDate).getMinutes()}:00`,)
+            logger.debug(new Date(smsStartDate).getHours(), new Date(smsStartDate).getMinutes());
             let config = {
                 method: 'POST',
-                url: `${process.env.SMS_URL}/schedule?username=${process.env.SMS_USERNAME}&apiKey=${process.env.SMS_API}&tel=${patientsPhones}&message=${smsMessage}&schedule=${smsStartDate.getFullYear()}-${smsStartDate.getMonth() + 1 < 10 ? `0${smsStartDate.getMonth() + 1}` : smsStartDate.getMonth() + 1}-${smsStartDate.getDate() < 10 ? `0${smsStartDate.getDate()}` : smsStartDate.getDate()} ${smsStartDate.getHours() < 10 ? `0${smsStartDate.getHours()}` : smsStartDate.getHours()}:${smsStartDate.getMinutes() < 10 ? `0${smsStartDate.getMinutes()}` : smsStartDate.getMinutes()}:00&modemId=${currentSmsModemId}`,
+                url: `${process.env.SMS_URL}schedule?username=${process.env.SMS_USERNAME}&apiKey=${process.env.SMS_API}&tel=${patientsPhones}&message=${smsMessage}&modemId=${currentSmsModemId}&schedule=${new Date(smsStartDate).getFullYear()}-${new Date(smsStartDate).getMonth() + 1 < 10 ? `0${new Date(smsStartDate).getMonth() + 1}` : new Date(smsStartDate).getMonth() + 1}-${new Date(smsStartDate).getDate() < 10 ? `0${new Date(smsStartDate).getDate()}` : new Date(smsStartDate).getDate()} ${new Date(smsStartDate).getHours() < 10 ? `0${new Date(smsStartDate).getHours()}` : new Date(smsStartDate).getHours()}:${new Date(smsStartDate).getMinutes() < 10 ? `0${new Date(smsStartDate).getMinutes()}` : new Date(smsStartDate).getMinutes()}:00`,
                 headers: {
                     'Content-Type': 'application/json',
                 }
@@ -60,12 +66,12 @@ exports.createAppointment = async (req, res, next) => {
             
             try {
                 const response = await axios(config);
-                if (response?.status !== "scheduled" && response?.status !== "pending") console.log("Error sending scheduled SMS.");
-                else console.log("SEND!", response);
+                logger.debug(response);
+                if (response?.status !== "scheduled" && response?.status !== "pending") logger.debug("Error sending scheduled SMS.");
+          
             } catch (e) {
-                console.log("Error: ", e);
+                logger.debug("Error: ", e);
             }
-
         }));
        
         if (req.body?.saved) return res.status(200).json({ success: true, message: { en: "Appointment added successfully!", ro: "Programare adaugata cu succes!" } });
@@ -106,13 +112,12 @@ exports.createAppointment = async (req, res, next) => {
 };
 
 exports.updateAppointment = async (req, res, next) => {
-    const { appointmentId, _id, startDate, endDate, users, patients, title, income, typeIncome, notes, date, finished, confirmed } = req.body;
+    const { appointmentId, _id, startDate, endDate, users, patients, title, income, incomePaid, typeIncome, notes, date, finished, confirmed } = req.body;
     
     try {
         console.log(_id);
-        let sql = 'UPDATE ?? SET startDate = ?, endDate = ?, users = ?, patients = ?, title = ?, income = ?, typeIncome = ?, notes = ?, date = ?, finished = ?, confirmed = ? WHERE _id = ?';
-        const updatedAppointment = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.schedules`, new Date(startDate), new Date(endDate), JSON.stringify(users), JSON.stringify(patients), title, income, typeIncome, notes, new Date(date), finished, confirmed, appointmentId]);
-       
+        let sql = 'UPDATE ?? SET startDate = ?, endDate = ?, users = ?, patients = ?, title = ?, income = ?, incomePaid = ?, typeIncome = ?, notes = ?, date = ?, finished = ?, confirmed = ? WHERE _id = ?';
+        const updatedAppointment = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.schedules`, new Date(startDate), new Date(endDate), JSON.stringify(users), JSON.stringify(patients), title, income, incomePaid, typeIncome, notes, new Date(date), finished, confirmed, appointmentId]);
         if (!updatedAppointment) return res.status(200).json({ success: false, message: { en: "Appointment could not be updated!", ro: "Programarea nu a putut fi modificata!" } })
         
         res.status(200).json({ success: true, message: { en: "Appointment updated successfully!", ro: "Programare modificata cu succes!"}})
@@ -543,9 +548,9 @@ exports.createDoctor = async (req, res, next) => {
     if (await sameColor.length) return res.status(200).json({ success: false, message: { en: "Color is already taken!", ro: "Culoarea este deja folosita!" } })
 
     try {
-        sql = "INSERT INTO ?? (_id, firstname, lastname, email, phone, color, schedules, multiple_schedules, active, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        sql = "INSERT INTO ?? (_id, firstname, lastname, email, phone, color, schedules, multiple_schedules, services, smsSent, active, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         const _id = generateId(25);
-        const result = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.doctors`, _id, firstname, lastname, email, phone, color, JSON.stringify([]), multipleSchedules, activeDoctor, new Date()]);
+        const result = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.doctors`, _id, firstname, lastname, email, phone, color, JSON.stringify([]), multipleSchedules, JSON.stringify([]), 0, activeDoctor, new Date()]);
         if (await result) return res.status(201).json({ success: true, message: { en: "Doctor created successfully!", ro: "Doctor a fost adaugat cu succes!" } });
     } catch (e) {
         console.log(e);
@@ -890,17 +895,261 @@ exports.responseSMS = async (req, res, next) => {
     }
 };
 
-exports.sendSMS = async (req, res, next) => {
-    //const { phone, date, message }  = req.body;
+
+exports.addSMS = async (req, res, next) => {
+    const { organisationId, scheduledAt, sms } = req.body;
     try {
-        logger.debug(req.body);
+        const detailsRow = await db.query("SELECT * FROM ??", [`${process.env.DB_PREFIX}org_${organisationId}.details`]);
+        const details = await detailsRow[0];
+        const currentSmsMessage = JSON.parse(details["sms_message"]);
+        
+        let newId = generateId(25);
+        while (currentSmsMessage.some(smsMessage => smsMessage.id === newId)) newId = generateId(25);
+
+        currentSmsMessage.push({
+            scheduledAt,
+            sms,
+            id: newId
+        });
+
+        await db.query("UPDATE ?? SET sms_message = ? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.details`, JSON.stringify(currentSmsMessage), organisationId]);
+
+        res.status(200).json({
+            success: true,
+            message: { en: 'SMS added successfuly!', ro: 'SMS adaugat cu succes!' }
+        });
+
     } catch (e) {
-        console.log(e);
         logger.debug(e);
-        res.status(404).json({ success: false, message: 'An error occured!' });
+        res.status(404).json({
+            success: false,
+            message: "An error occured!"
+        });
     }
+};
+
+exports.removeSMS = async (req, res, next) => {
+    const { organisationId, smsId } = req.body;
+
+    try {
+        const detailsRow = await db.query("SELECT * FROM ??", [`${process.env.DB_PREFIX}org_${organisationId}.details`]);
+        const details = await detailsRow[0];
+        const currentSmsMessage = JSON.parse(details["sms_message"]);
+
+        const newSmsMessage = currentSmsMessage.filter(smsMessage => smsMessage.id === smsId);
+
+        await db.query("UPDATE ?? SET sms_message = ? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.details`, JSON.stringify(newSmsMessage), organisationId]);
+        
+        res.status(200).json({ 
+            success: true,
+            message: { en: "SMS removed successfully!", ro: "SMS-ul a fost sters cu succes!" }
+         });
+
+    } catch (e) {
+        logger.debug(e);
+        res.status(404).json({
+            message: "An error occured!",
+            success: false
+        });
+    }
+};
+
+exports.editSMS = async (req, res, next) => {
+    const { scheduledAt, sms, organisationId, smsId } = req.body;
+    try {
+        const detailsRow = await db.query("SELECT * FROM ??", [`${process.env.DB_PREFIX}org_${organisationId}.details`]);
+        const details = await detailsRow[0];
+        const currentSmsMessage = JSON.parse(details["sms_message"]);
+
+        const newSmsMessage = currentSmsMessage.map(smsMessage => {
+            if (smsMessage.id === smsId) return {
+                id: smsMessage.id,
+                sms: sms,
+                scheduledAt: scheduledAt
+            };
+
+            return smsMessage;
+        });
+
+        await db.query("UPDATE ?? SET sms_message = ? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.details`, JSON.stringify(newSmsMessage), organisationId]);
+        
+        res.status(200).json({ 
+            success: true,
+            message: { en: "SMS removed successfully!", ro: "SMS-ul a fost sters cu succes!" }
+         });
+
+    } catch (e) {
+        logger.debug(e);
+        res.status(404).json({
+            message: "An error occured!",
+            success: false
+        });
+    }
+};
+
+exports.createService = async (req, res, next) => {
+    const { organisationId, doctorId, serviceName, serviceColor, servicePrice } = req.body;
+    
+    try {
+        let sql = "SELECT * FROM ?? WHERE _id = ?";
+        const currentDoctors = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.doctors`, doctorId]);
+        logger.debug(currentDoctors);
+        const currentDoctor = await currentDoctors[0];
+        const currentServices = JSON.parse(await currentDoctor.services);
+           
+        let serviceId = generateId(25);
+        while (currentSmsMessage.some(smsMessage => smsMessage.id === serviceId)) serviceId = generateId(25);
+
+        currentServices.push({
+            id: serviceId,
+            color: serviceColor,
+            name: serviceName,
+            price: servicePrice
+        });
+
+        sql = "UPDATE ?? SET services = ? WHERE _id = ?";
+        await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.doctors`, JSON.stringify(currentServices), doctorId]);
+
+        res.status(200).json({
+            success: true,
+            message: {
+                en: "Service created successfully!",
+                ro: "Serviciul a fost creat cu succes!"
+            }
+        });
+
+    } catch (e) {
+        logger.debug(e);
+        res.status(404).json({ 
+            message: {
+                en: "Service couldn't be created!",
+                ro: "Serviciul nu a putut fi creat!"
+            },
+            success: false,
+            error: e
+        });
+    }
+};
+
+exports.removeService = async (req, res, next) => {
+    const { doctorId, serviceId } = req.body;
+
+    try {
+        let sql = "SELECT * FROM ?? WHERE _id = ?";
+        const currentDoctors = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.doctors`, doctorId]);
+        const currentDoctor = await currentDoctors[0];
+        const currentServices = JSON.parse(await currentDoctor.services);
+
+        const newServices = currentServices.filter(service => service.id !== serviceId);
+
+        sql = "UPDATE ?? SET services = ? WHERE _id = ?";
+        await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.doctors`, JSON.stringify(newServices), doctorId]);
+
+        res.status(200).json({
+            success: true,
+            message: {
+                en: "Service removed successfully!",
+                ro: "Serviciul a fost sters cu succes!"
+            }
+        });
+
+    } catch (e) {
+        logger.debug(e);
+        res.status(404).json({ 
+            message: {
+                en: "Service couldn't be removed!",
+                ro: "Serviciul nu a putut fi sters!"
+            },
+            success: false,
+            error: e
+        });
+    }
+};
+
+exports.editService = async (req, res, next) => {
+    const { doctorId, serviceName, serviceColor, servicePrice, serviceId } = req.body;
+    
+    try {
+        let sql = "SELECT * FROM ?? WHERE _id = ?";
+        const currentDoctors = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.doctors`, doctorId]);
+        if (!currentDoctors || !currentDoctors.length) return res.status(404).json({ success: false, message: { en: "Doctor couldn't be found!", ro: "Doctorul nu a putut fi gasit!" } });
+        const currentDoctor = await currentDoctors[0];
+        const currentServices = JSON.parse(await currentDoctor.services);
+        
+        const modifiedServices = currentServices.map(service => {
+            if (service.id === serviceId) return {...service,
+                name: serviceName,
+                color: serviceColor,
+                price: servicePrice,
+            };
+
+            return service;
+        });
+
+        
+        sql = "UPDATE ?? SET services = ? WHERE _id = ?";
+        await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.doctors`, JSON.stringify(modifiedServices), doctorId]);
+
+        res.status(200).json({
+            success: true,
+            message: {
+                en: "Service edited successfully!",
+                ro: "Serviciul a fost modificat cu succes!"
+            }
+        });
+
+    } catch (e) {
+        logger.debug(e);
+        res.status(404).json({
+            message: {
+                en: "Service couldn't be modified!",
+                ro: "Serviciul nu a putut fi modificat!"
+            },
+            success: false,
+            error: e
+        });
+    }
+};
+
+exports.pushMessageInbox = async (req, res) => {
+    const { organisationId, doctorId, message } = req.body;
+    try {
+        let sql = "SELECT * FROM ??";
+        const details = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.details`, organisationId]);
+        
+    } catch (e) {
+        logger.debug(e);
+        res.status(404).json({ 
+            success: false,
+            message: {
+                en: "Message couldn't be send!",
+                ro: 'Mesajul nu a putut fi trimis!'
+            }
+        });
+    }
+};
+
+exports.removeMessageInbox = async (req, res) => {
+    const { inboxMessageId, organisationId } = req.body;
+
+    try {
+        let sql = '';
+    } catch (e) {
+        logger.debug(e);
+        res.status(404).json({ 
+            success: false,
+            message: {
+                en: "Inbox message couldn't be removed!",
+                ro: "Mesajul nu a putut fi sters!"
+            }
+        });
+    }
+};
+
+exports.clearInbox = async (req, res) => {
 
 };
+
 
 exports.getStatisticsData = async (req, res, next) => {
     const { _id } = req.body; 

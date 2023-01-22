@@ -1,12 +1,12 @@
 import { useCookies } from 'react-cookie';
 import HeaderHome from '../Components/Header_Home/Header_Home';
 import './Home.css';
-import mockup from "../imgs/Mockup Zentec.png";
+import mockup from "../imgs/Mockup-Zentec.webp";
 import ZenLogo from "../imgs/logo_zen.svg";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChartSimple, faComments, faDatabase, faHandPointUp, faHeadset } from '@fortawesome/free-solid-svg-icons';
-import iphoneMockup from "../imgs/iphone_mockup.png";
-import macbookMockup from "../imgs/mockup_macbook_test.png";
+import iphoneMockup from "../imgs/iphone_mockup.webp";
+//import macbookMockup from "../imgs/mockup_macbook_test.png";
 
 const Home = ({ data }) => {
 
@@ -37,7 +37,7 @@ const Home = ({ data }) => {
                 <div className="block-2">
                     {/* Videoclip cu prezentare Zentec / 3 ecrane laptop, mobil, tableta cu screenshot din aplicatie */}
 
-                    <img src={mockup} className="mockup" />
+                    <img src={mockup} className="mockup" alt="zentec on all devices" width={100} height="auto" />
                 </div>
 
                 <div className="block-3">
@@ -62,7 +62,7 @@ const Home = ({ data }) => {
                     {/* Avantajele noastre ca la bookr */}
 
                     <div className="block-container">
-                        <img src={mockup} className="mockup" />
+                        <img src={mockup} className="mockup" alt="zentec on all devices"  width={100} height="auto" />
                     </div>
                 </div>
 
@@ -122,12 +122,25 @@ const Home = ({ data }) => {
                   
 
                     {/* Cadranul cu mobil de la invideo.io */}
-                    <div className="block-container">
-                        <h2>Gestionează <br /> din mers</h2>
-                    </div>
-                    <div className="block-container">
-                        <img src={iphoneMockup} className="mockup-img" />
-                    </div>
+                    {window.innerWidth >= 1100 ? 
+                        <>
+                            <div className="block-container">
+                                <h2>Gestionează <br /> din mers</h2>
+                            </div>
+                            <div className="block-container">
+                                <img src={iphoneMockup} className="mockup-img" alt="zentec on mobile" width={100} height="auto" />
+                            </div>
+                        </> : 
+                        <>
+                            <div className="block-container">
+                                <img src={iphoneMockup} className="mockup-img" alt="zentec on mobile" width={100} height="auto" />
+                            </div>
+                            <div className="block-container">
+                                <h2>Gestionează din mers</h2>
+                            </div>
+                        </>
+                    }
+                    
                     <div className="block-container">
                         <p className="highlight">{cookies.language === "en" ? "The easiest way to manage your business is on your phone.  " : "Cel mai usor mod de a-ti gestiona afacerea este pe telefon."}</p>
                         <p>{cookies.language === "en" ? "We know how important it is for you to manage your business whenever you want, wherever you want, so we made our platform compatible for mobile access." : "Stim cat de important este pentru tine sa iti manager-iezi afacerea de oriunde te-ai afla, asa ca am conceput platforma noastra sa poata fi accesata de pe orice dispozitiv. De acum, poti programa de oriunde!"}</p>
@@ -140,7 +153,7 @@ const Home = ({ data }) => {
                     </div>
                     <h2 className="title"><span>Simplifică-ți afacerea.</span> <br /> Nu este nevoie de experiență. </h2>
 
-                    <img src={ZenLogo} alt="" className="logo-icon" />
+                    <img src={ZenLogo} alt="logo-image" className="logo-icon" width={100} height="auto" />
                 </div>
 
 

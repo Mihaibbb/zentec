@@ -1,16 +1,26 @@
 import { faAngleDown, faBars, faBell, faSearch, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import accountImage from "../../imgs/account-image.jpeg";
 import './Header.css';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useRef } from 'react';
 
 const Header = ({ data }) => {
 
     const navigate = useNavigate();
+    const headerRef = useRef();
+    
 
-    console.log(data);
+    useEffect(() => {
+        if (!headerRef?.current) return;
+        window.addEventListener("scroll", () => {
+            if (window.scrollY > 0) headerRef?.current?.classList?.add("scrolled");
+            else headerRef?.current?.classList?.remove("scrolled");
+        });
+    }, [headerRef?.current]);
+
     return (
-        <div className="header">
+        <div className="header" ref={headerRef}>
             <div className="searchbar-container">
                 <div className="searchbar">
                     

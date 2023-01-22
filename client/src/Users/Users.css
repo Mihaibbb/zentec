@@ -1,3 +1,8 @@
+.patients .content 
+{
+    overflow: hidden;
+}
+
 .column 
 {
     display: flex;

@@ -13,7 +13,7 @@
     max-width: 17.5%;
     min-width: 225px;
     border-right: 1px solid var(--over-difference-color);
-    transition: all 500ms ease-in-out;
+    transition: all 350ms ease-in-out;
 }
 
 .navigation .patient-icon 

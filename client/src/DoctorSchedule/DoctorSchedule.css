@@ -342,3 +342,128 @@
         margin: 0 .5rem;
     }
 }
+
+@media only screen and (max-width: 800px)
+{
+
+    .doctor-schedule .schedule-container
+    {
+        width: 100%;
+    
+        padding-block: .5rem;
+    }
+
+    .doctor-schedule .schedule-container .schedule-filter
+    {
+        flex-direction: column;
+        width: 100%;
+        gap: 1.25rem;
+      
+        border-radius: 20px;
+        margin-top:  2rem;
+        margin-bottom: 2rem;
+    }
+
+
+    .doctor-schedule .schedule-container .schedule-filter .filter
+    {
+        border-radius: 30px;
+        width: 80%;
+    }
+
+    .doctor-schedule .schedule-container .schedule-filter .filter:first-child
+    {
+        border-top-left-radius: 30px;
+        border-bottom-left-radius: 30px;
+        border-right: none;
+    }
+
+    .doctor-schedule .schedule-container .schedule-filter .filter:last-child
+    {
+        border-bottom-right-radius: 30px;
+        border-left: none;
+        border-top-right-radius: 30px;
+    }
+
+    .doctor-schedule .schedule-container  .doctors-schedule-container
+    {
+        width: auto;
+        overflow-x: scroll;
+    }
+
+    .doctor-schedule .schedule-container .doctors-schedule-container .schedules
+    {
+        width: auto;
+        justify-content: flex-start;
+        margin: 1rem 2rem;
+        height: auto;
+    }
+
+    .doctor-schedule .schedule-container .doctors-schedule-container .schedules .day-container
+    {
+        width: 40vw;
+        height: 30vh;
+    }
+    
+    .doctor-schedule .schedule-container .doctors-schedule-container 
+    {
+
+    }
+
+    .doctor-schedule .schedule-container .doctors-schedule-container  .days-name
+    {
+        padding-block: .5rem;
+        height: auto;
+        margin: 1rem 2rem;
+        width: max-content;
+    }
+
+    .doctor-schedule .schedule-container .doctors-schedule-container  .days-name .day-name
+    {
+        width: 40vw;
+    }
+
+    .doctor-schedule .schedule-container .first-row .date-title-container h2
+    {
+        text-align: center;
+    }
+
+    .doctor-schedule .schedule-container .first-row
+    {
+        flex-direction: column-reverse;
+    }
+
+    .doctor-schedule .schedule-container .schedules .day-container > .first-row
+    {
+        flex-direction: row;
+    }
+
+    .doctor-schedule .schedule-container .first-row
+    {
+        padding: 0 .5rem;
+    }
+    
+}
+
+@media only screen and (max-width: 450px)
+{
+    .doctor-schedule .schedule-container .doctors-schedule-container  .days-name .day-name
+    {
+        width: 60vw;
+    }
+
+    .doctor-schedule .schedule-container .doctors-schedule-container .schedules .day-container
+    {
+        width: 60vw;
+    }
+
+    
+    .doctor-schedule .schedule-container .first-row .date-title-container h2
+    {
+        max-width: 200px;
+        width: 100%;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+}

@@ -23,7 +23,13 @@ const {
     getDoctorInfo,
     getSchedulesForDay,
     sendFeedback,
-    responseSMS
+    responseSMS,
+    addSMS,
+    removeSMS,
+    editSMS,
+    addService,
+    removeService,
+    editService
 } = require("../controllers/user");
 
 router.post("/create-appointment", createAppointment);
@@ -50,6 +56,11 @@ router.delete("/remove-doctor-schedule", removeDoctorSchedule);
 router.post("/get-schedules-day", getSchedulesForDay);
 router.post("/send-feedback", sendFeedback);
 router.post("/response-sms", responseSMS);
-
+router.post("/add-sms", addSMS);
+router.post("/remove-sms", removeSMS);
+router.post("/edit-sms", editSMS);
+router.post("/add-service", addService);
+router.post("/remove-service", removeService);
+router.post("/edit-service", editService);
 
 module.exports = router;

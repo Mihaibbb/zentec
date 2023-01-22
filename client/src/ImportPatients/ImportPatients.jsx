@@ -84,8 +84,10 @@ const ImportPatients = ({ data }) => {
             setErrorMessage(null);
             setErrorList([]);
             setExcelFile(evt.target.result);
+            console.log("handle submit");
             handleSubmit();
         };
+        
         reader.readAsArrayBuffer(selectedFile);
     };
 

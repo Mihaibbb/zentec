@@ -52,3 +52,4 @@ adminSchema.methods.getSignedToken = function () {
 
 const Admin = mongoose.model("admin", adminSchema);
 module.exports = Admin;
+

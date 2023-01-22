@@ -85,14 +85,16 @@
 
 .list-of-doctors
 {
-    width: calc(90% - 2rem);
-    margin: 1rem auto;
+    width: 90%;
+    margin: 0 auto 1rem auto;
     display: flex;
     flex-direction: column;
     
     gap: 1rem;
-    padding: .5rem 1rem;
-    border: 1px solid var(--over-difference-color);
+    padding: 1rem;
+    background: var(--over-color-2);
+    border-radius: 20px;
+
 }
 
 .list-of-doctors .doctor-color
@@ -109,15 +111,14 @@
     align-items: center;
     gap: .75rem;
     cursor: pointer;
-    background: var(--dark-color);
-    box-shadow: 0 0 10px var(--selector-color);
+    background: var(--over-difference-color);
     border-radius: 20px;
     
 }
 
 .list-of-doctors .doctor.active 
 {
-    background: var(--selected-color);
+    background: var(--over-difference-color-3);
 }
 
 .list-of-doctors .doctor p 

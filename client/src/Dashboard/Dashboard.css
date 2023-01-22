@@ -198,21 +198,27 @@
     width: 100%;
     max-width: 90%;
     justify-content: center;
-    gap: 1rem;
+
     margin: 0rem auto;
 }
+
 
 .dashboard .data .data-container 
 {
     display: flex;
     align-items: center;
     border-radius: 10px;
-    border: 1px solid var(--contrast-color-highlight);
     width: 100%;
     background: var(--over-difference-color-3);
-    box-shadow: 0 0 5px var(--over-difference-color-2);
+    box-shadow: 0 0 5px var(--over-color-2);
     cursor: pointer;
     padding: .5rem 1.5rem;
+}
+
+.dashboard .data .data-container.data-margins
+{
+    margin-left: 16px;
+    margin-right: 16px;   
 }
 
 
@@ -338,6 +344,12 @@
         max-width: 80%;
     }
 
+    .data .data-container.data-margins 
+    {
+        margin-top: 16px;
+        margin-bottom: 16px;
+    }
+
     .sm-content 
     {
         flex-direction: column;
@@ -368,6 +380,24 @@
 }
 
 @media only screen and (max-width: 650px) {
+
+
+    .dashboard .left-container .new-appointments .row div
+    {
+        width: 25%;
+
+    }
+
+
+    .dashboard .left-container .new-appointments .row div p
+    {
+        text-align: center;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        width: 80%;
+    }
+
     .data .data-container {
         width: 100%;
         
@@ -411,5 +441,7 @@
         border-bottom-right-radius: 20px;
         border-top-right-radius: 20px;
     }
+
+
 }
 

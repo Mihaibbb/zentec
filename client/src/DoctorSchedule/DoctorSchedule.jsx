@@ -246,6 +246,7 @@ const DoctorSchedule = ({ data }) => {
                 
                 <div className="schedule-container">
                     <div className="schedule-filter">
+                        
                         {filters.map((filter, idx) => (
                             <div className={`filter ${filterActiveIdx === idx ? "active" : ""}`} key={idx} onClick={() => setFilterActiveIdx(idx)}>
                                 <p>{filter}</p>
@@ -258,7 +259,7 @@ const DoctorSchedule = ({ data }) => {
                         <div className="date-title-container">
                             <FontAwesomeIcon icon={faAngleLeft} className="angle-icon" onClick={() => getPrevSchedules()} />
                             <h2 className="date-title">{
-                                filterActiveIdx === 0 || filterActiveIdx === 1 ? `${days[0].getDate()} ${months[days[0].getMonth()]} - ${days[days.length - 1].getDate()} ${months[days[days.length - 1].getMonth()]} ${days[days.length - 1].getFullYear()}` :
+                                filterActiveIdx === 0 || filterActiveIdx === 1 ? `${days[0].getDate()}${days[0].getMonth() !== days[days.length - 1].getMonth() ? ` ${months[days[0].getMonth()]}` : ""}${days[0].getFullYear() !== days[days.length - 1].getFullYear() ? ` ${days[0].getFullYear()}` : ""} - ${days[days.length - 1].getDate()} ${months[days[days.length - 1].getMonth()]} ${days[days.length - 1].getFullYear()}` :
                                 filterActiveIdx === 2 ? `${months[days[0].getMonth()]} ${days[0].getFullYear()}` : 
                                 null
                             }</h2>
@@ -270,62 +271,127 @@ const DoctorSchedule = ({ data }) => {
                         </div>
                     </div>
 
-                    {filterActiveIdx !== null && <div className="days-name">
-                        {filterActiveIdx === 0 ? workingWeekDays.map((workingWeekDay, idx) => (
-                            <div className="day-name" key={idx}>
-                                <p>{workingWeekDay}</p>
-                            </div>
-                        )) : weekDays.map((weekDay, idx) => (
-                            <div className="day-name" key={idx}>
-                                <p>{weekDay}</p>
-                            </div>
-                        ))}
-                    </div>}
-
-                    <div className={`schedules ${filterActiveIdx === 0 ? "grid-5" : ""}`}>
-                        
-                        {filterActiveIdx === 2 && addInvisibleDays()}
-
-                        {days && days.length && days.map((day, idx) => (
-                            <div className={`day-container ${idx === 0 ? "first-active" : ""}`} key={idx} idx={idx} ref={ref => daysRef.current[idx] = ref}>
-                                <div className="first-row">
-                                    <div className="edit" onClick={() => navigate(`/doctors-schedule/${day.getFullYear()}-${day.getMonth() + 1}-${day.getDate()}`)}>
-                                        <FontAwesomeIcon icon={faPencil} className="edit-icon" />
+                    {window.innerWidth < 800 ? 
+                        <div className="doctors-schedule-container">
+                            {filterActiveIdx !== null && <div className="days-name">
+                                {filterActiveIdx === 0 ? workingWeekDays.map((workingWeekDay, idx) => (
+                                    <div className="day-name" key={idx}>
+                                        <p>{workingWeekDay}</p>
                                     </div>
-                                    <p className="day">{day.getDate()}</p>
+                                )) : weekDays.map((weekDay, idx) => (
+                                    <div className="day-name" key={idx}>
+                                        <p>{weekDay}</p>
+                                    </div>
+                                ))}
                                 </div>
-
-                                {/* <div className="schedule-card" style={{ backgroundColor: "royalblue" }}>
-                                    <p className="name">Barbu Mihai</p>
-                                    <p>10:25 - 11:25</p>
-                                </div>
-
-                                <div className="schedule-card" style={{ backgroundColor: "coral" }}>
-                                    <p className="name">Barbu Mihai</p>
-                                    <p>10:25 - 11:25</p>
-                                </div>
-
-                                <div className="schedule-card" style={{ backgroundColor: "royalblue" }}>
-                                    <p className="name">Barbu Mihai</p>
-                                    <p>10:25 - 11:25</p>
-                                </div>
-
-                                <div className="schedule-card" style={{ backgroundColor: "coral" }}>
-                                    <p className="name">Barbu Mihai</p>
-                                    <p>10:25 - 11:25</p>
-                                </div> */}
+                            }
+ 
+                            <div className={`schedules ${filterActiveIdx === 0 ? "grid-5" : ""}`}>
                                 
-
-
-                                {getSchedulesForDate(day).map((schedule, scheduleIdx) => (
-                                    <div className="schedule-card" key={scheduleIdx} style={{ backgroundColor: schedule.color }} onClick={() => navigate(`/doctors-schedule/${day.getFullYear()}-${day.getMonth() + 1}-${day.getDate()}`)}>
-                                        <p className="name">{schedule.name}</p>
-                                        <p>{schedule.startHour < 10 ? `0${schedule.startHour}` : schedule.startHour}:{schedule.startMinutes < 10 ? `0${schedule.startMinutes}` : schedule.startMinutes} - {schedule.endHour < 10 ? `0${schedule.endHour}` : schedule.endHour}:{schedule.endMinutes < 10 ? `0${schedule.endMinutes}` : schedule.endMinutes}</p>
+                                {filterActiveIdx === 2 && addInvisibleDays()}
+        
+                                {days && days.length && days.map((day, idx) => (
+                                    <div className={`day-container ${idx === 0 ? "first-active" : ""}`} key={idx} idx={idx} ref={ref => daysRef.current[idx] = ref}>
+                                        <div className="first-row">
+                                            <div className="edit" onClick={() => navigate(`/doctors-schedule/${day.getFullYear()}-${day.getMonth() + 1}-${day.getDate()}`)}>
+                                                <FontAwesomeIcon icon={faPencil} className="edit-icon" />
+                                            </div>
+                                            <p className="day">{day.getDate()}</p>
+                                        </div>
+        
+                                        {/* <div className="schedule-card" style={{ backgroundColor: "royalblue" }}>
+                                            <p className="name">Barbu Mihai</p>
+                                            <p>10:25 - 11:25</p>
+                                        </div>
+        
+                                        <div className="schedule-card" style={{ backgroundColor: "coral" }}>
+                                            <p className="name">Barbu Mihai</p>
+                                            <p>10:25 - 11:25</p>
+                                        </div>
+        
+                                        <div className="schedule-card" style={{ backgroundColor: "royalblue" }}>
+                                            <p className="name">Barbu Mihai</p>
+                                            <p>10:25 - 11:25</p>
+                                        </div>
+        
+                                        <div className="schedule-card" style={{ backgroundColor: "coral" }}>
+                                            <p className="name">Barbu Mihai</p>
+                                            <p>10:25 - 11:25</p>
+                                        </div> */}
+                                        
+        
+        
+                                        {getSchedulesForDate(day).map((schedule, scheduleIdx) => (
+                                            <div className="schedule-card" key={scheduleIdx} style={{ backgroundColor: schedule.color }} onClick={() => navigate(`/doctors-schedule/${day.getFullYear()}-${day.getMonth() + 1}-${day.getDate()}`)}>
+                                                <p className="name">{schedule.name}</p>
+                                                <p>{schedule.startHour < 10 ? `0${schedule.startHour}` : schedule.startHour}:{schedule.startMinutes < 10 ? `0${schedule.startMinutes}` : schedule.startMinutes} - {schedule.endHour < 10 ? `0${schedule.endHour}` : schedule.endHour}:{schedule.endMinutes < 10 ? `0${schedule.endMinutes}` : schedule.endMinutes}</p>
+                                            </div>
+                                        ))}
                                     </div>
                                 ))}
                             </div>
-                        ))}
-                    </div>
+                        </div> : 
+                        <>
+                            {filterActiveIdx !== null && <div className="days-name">
+                                {filterActiveIdx === 0 ? workingWeekDays.map((workingWeekDay, idx) => (
+                                    <div className="day-name" key={idx}>
+                                        <p>{workingWeekDay}</p>
+                                    </div>
+                                )) : weekDays.map((weekDay, idx) => (
+                                    <div className="day-name" key={idx}>
+                                        <p>{weekDay}</p>
+                                    </div>
+                                ))}
+                            </div>}
+
+                            <div className={`schedules ${filterActiveIdx === 0 ? "grid-5" : ""}`}>
+                                
+                                {filterActiveIdx === 2 && addInvisibleDays()}
+
+                                {days && days.length && days.map((day, idx) => (
+                                    <div className={`day-container ${idx === 0 ? "first-active" : ""}`} key={idx} idx={idx} ref={ref => daysRef.current[idx] = ref}>
+                                        <div className="first-row">
+                                            <div className="edit" onClick={() => navigate(`/doctors-schedule/${day.getFullYear()}-${day.getMonth() + 1}-${day.getDate()}`)}>
+                                                <FontAwesomeIcon icon={faPencil} className="edit-icon" />
+                                            </div>
+                                            <p className="day">{day.getDate()}</p>
+                                        </div>
+
+                                        {/* <div className="schedule-card" style={{ backgroundColor: "royalblue" }}>
+                                            <p className="name">Barbu Mihai</p>
+                                            <p>10:25 - 11:25</p>
+                                        </div>
+
+                                        <div className="schedule-card" style={{ backgroundColor: "coral" }}>
+                                            <p className="name">Barbu Mihai</p>
+                                            <p>10:25 - 11:25</p>
+                                        </div>
+
+                                        <div className="schedule-card" style={{ backgroundColor: "royalblue" }}>
+                                            <p className="name">Barbu Mihai</p>
+                                            <p>10:25 - 11:25</p>
+                                        </div>
+
+                                        <div className="schedule-card" style={{ backgroundColor: "coral" }}>
+                                            <p className="name">Barbu Mihai</p>
+                                            <p>10:25 - 11:25</p>
+                                        </div> */}
+                                        
+
+
+                                        {getSchedulesForDate(day).map((schedule, scheduleIdx) => (
+                                            <div className="schedule-card" key={scheduleIdx} style={{ backgroundColor: schedule.color }} onClick={() => navigate(`/doctors-schedule/${day.getFullYear()}-${day.getMonth() + 1}-${day.getDate()}`)}>
+                                                <p className="name">{schedule.name}</p>
+                                                <p>{schedule.startHour < 10 ? `0${schedule.startHour}` : schedule.startHour}:{schedule.startMinutes < 10 ? `0${schedule.startMinutes}` : schedule.startMinutes} - {schedule.endHour < 10 ? `0${schedule.endHour}` : schedule.endHour}:{schedule.endMinutes < 10 ? `0${schedule.endMinutes}` : schedule.endMinutes}</p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                ))}
+                            </div>
+                        </>
+                    }
+
+                   
                 </div>
             </div>
         </div>

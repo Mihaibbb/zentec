@@ -7,17 +7,27 @@
     display: flex;
     align-items: center;
     background: transparent;
-    position: absolute;
-    z-index: 1000;
+    z-index: 10000;
     justify-content: space-between;
     /* border-left: 1px solid rgba(255, 255, 255, .25); */
     max-width: 100%;
+    padding-block: 8px;
+    position: fixed;
+    top: 0px;
+    transition: all 350ms ease-in-out;
 
 }
 
 .header.no-navigation 
 {
     max-width: 100%;
+}
+
+.header.scrolled 
+{
+    background: var(--over-color-2);
+    backdrop-filter: blur(4px);
+  
 }
 
 .header .navigation-icon
@@ -76,7 +86,7 @@
     display: flex;
     align-items: center;
     gap: 1rem;
-    margin-right: 1.5rem;
+    margin-right: 20px;
    
 }
 
@@ -175,6 +185,13 @@
     {
         display: block;
     }
+
+    .header:not(.no-navigation)
+    {
+        max-width: calc(82.5% - 2rem);
+    }
+
+    
 }
 
 @media only screen and (max-width: 1200px) {

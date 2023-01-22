@@ -6,10 +6,11 @@ import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { useEffect, useState } from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import dayjs from "dayjs";
 
 const DateCustomInput = ({ changeDate, initialDate, future, past, label }) => {
 
-    const [value, setValue] = useState(initialDate);
+    const [value, setValue] = useState(dayjs(new Date(initialDate).toISOString()));
     const [cookies, setCookie] = useState();
     const darkTheme = createTheme({
       palette: {
@@ -17,10 +18,14 @@ const DateCustomInput = ({ changeDate, initialDate, future, past, label }) => {
       },
     });
 
+
     useEffect(() => {
+        //if (value?.getTime() === new Date(initialDate).getTime()) return;
         const valueParsed = {...value};
+        console.log(value, valueParsed, initialDate);
+        if (!valueParsed?.$d) return;
         changeDate(valueParsed.$d);
-        console.log(valueParsed);
+     
     }, [value]);
 
     // CSS for mui calendar

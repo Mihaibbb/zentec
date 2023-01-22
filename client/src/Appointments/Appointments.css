@@ -67,10 +67,15 @@ input[type=number] {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: var(--contrast-color);
+    background-color: var(--over-difference-color-3);
     padding: 0.5rem;
     border-radius: 50%;
     cursor: pointer;
+}
+
+.appointments .content .day-title .title-btn .title-icon 
+{
+    color: var(--contrast-color);
 }
 
 .appointments .content .scheduler 

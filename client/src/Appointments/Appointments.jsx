@@ -269,6 +269,10 @@ const Appointments = ({ data }) => {
         });
     };
 
+    useEffect(() => {
+        console.log(appointmentDateValue);
+    }, [appointmentDateValue]);
+
     const initiateAppointment = (e, currHour, gap, doctorObject, editing = false) => {
         console.log("from first event", editing);
         if (isTouchDevice()) return;
@@ -293,8 +297,8 @@ const Appointments = ({ data }) => {
         if (!target.classList.contains("resizeable-down") && target.classList.contains("created")) return initiateDragAppointment(target.getBoundingClientRect().y, target.getAttribute("starthour"), target.getAttribute("startminutes"), target.getAttribute("endhour"), target.getAttribute("endminutes"), target.getAttribute("day"));
         if (target.classList.contains('highlight') && !editing) return;
         if (target.classList.contains("inactive")) return;
-        console.log(new Date(date.getFullYear(), date.getMonth(), e.target.getAttribute('day')));
-        setAppointmentDateValue(filterActive === 0 ? date : new Date(e.target.getAttribute('day')));
+        console.log(date, new Date(e.target.getAttribute('day')));
+        setAppointmentDateValue(filterActive === 0 ? new Date(date) : new Date(e.target.getAttribute('day')));
         setStartEvent(true);
         setStartPosition(e.clientY);
         
@@ -731,6 +735,8 @@ const Appointments = ({ data }) => {
             date: new Date(appointmentDateValue) || date,
             saved: !patientSaved
         };
+
+        console.log(appointmentStartDate);
 
         const options = {
             method: "POST",
@@ -1628,16 +1634,16 @@ const Appointments = ({ data }) => {
                     <div className="schedules" style={{ marginTop: hourContainerHeight }}>
                         {filterActive !== 3 && filterActive !== 4 ? doctors && doctors.length > 0 && doctors.map((doctor, idx) => (
                             
-                            <div className="schedule-parent-container" key={idx}>
+                            <div className="schedule-parent-container" key={idx} style={{ minHeight: `${window.innerHeight * 1.75}px` }}>
                                 <h2 className="doctors-title">{doctor.firstname} {doctor.lastname} 1</h2>
-                                <div className={`schedule-container ${activeGaps ? "active-gaps" : ""}`} key={idx} ref={ref => doctorRef.current[idx] = ref}>
+                                <div className={`schedule-container ${activeGaps ? "active-gaps" : ""}`} key={idx} ref={ref => doctorRef.current[idx] = ref} style={{ minHeight: `${window.innerHeight * 1.75}px` }}>
                                     {days && days.length > 0 && days.map((day, dayIdx) => (
                                         filterActive === 0 ? (
-                                            <div className={"day-container"} key={dayIdx}>
+                                            <div className={"day-container"} key={dayIdx} style={{ minHeight: `${window.innerHeight * 1.75}px` }}>
                                                 {getSchedule(new Date(day), doctor.color, doctor)}
                                             </div>
                                         ) : filterActive === 1 || filterActive === 2 ? (
-                                            <div key={dayIdx} className="day-of-week-container">
+                                            <div key={dayIdx} className="day-of-week-container" style={{ minHeight: `${window.innerHeight * 1.75}px` }}>
                                                 <h2>{`${daysOfWeek[day.getDay()]} ${day.getDate()}`}</h2>
                                                 <div className="day-container" >
                                                     {getSchedule(new Date(day), doctor.color, doctor)}
@@ -1752,7 +1758,6 @@ const Appointments = ({ data }) => {
                             <div className="label">
                                 <p>{cookies.language === "en" ? "Patient" : "Pacient"}</p>
                                 <input type="text" value={appointmentPatient} onChange={e => setAppointmentPatient(e.target.value)} placeholder={cookies.language === "en" ? "Patient" : "Pacient"} />
-                    
                             </div>
 
                             {window.innerWidth <= 800 ? <div className={`patient-list-container ${appointmentPatient.length > 0 ? "active" : ""}`}>
@@ -1764,7 +1769,7 @@ const Appointments = ({ data }) => {
                                                     setAppointmentPatient(`${patient.firstname} ${patient.lastname}`);
                                                     setAppointmentPatientsList([]);
                                                     setAppointmentPatientData(patient);
-                                                    setAppointmentPatientPhoneNumber(Number(patient.phone));
+                                                    setAppointmentPatientPhoneNumber(patient.phone);
                                                 }}>
                                                     <FontAwesomeIcon icon={faUser} className="user-icon" />
                                                     <p>{patient.firstname} {patient.lastname}</p>
@@ -1797,7 +1802,7 @@ const Appointments = ({ data }) => {
                                                     setAppointmentPatient(`${patient.firstname} ${patient.lastname}`);
                                                     setAppointmentPatientsList([]);
                                                     setAppointmentPatientData(patient);
-                                                    setAppointmentPatientPhoneNumber(Number(patient.phone));
+                                                    setAppointmentPatientPhoneNumber(patient.phone);
                                                 }}>
                                                     <FontAwesomeIcon icon={faUser} className="user-icon" />
                                                     <p>{patient.firstname} {patient.lastname}</p>
@@ -1822,7 +1827,7 @@ const Appointments = ({ data }) => {
                                 <p>{cookies.language === "en" ? "Start Hour" : "Ora inceput"}</p>
                                 <div className="label-row hour-label">
                                     <div className="input">
-                                        <input type="number" onChange={e => setAppointmentStartHour(e.target.value)} placeholder={cookies.language === "en" ? "Hour" : "Ora"} value={appointmentStartHour === 0 || appointmentStartHour === "" ? "" : appointmentStartHour < 10 ? `0${appointmentStartHour}` : appointmentStartHour} />
+                                        <input type="number" onChange={e => setAppointmentStartHour(e.target.value)} placeholder={cookies.language === "en" ? "Hour" : "Ora"} value={Number(appointmentStartHour) < 10 && appointmentStartHour !== "" ? `0${appointmentStartHour}` : appointmentStartHour} />
                                         <div className="scale">
                                             <FontAwesomeIcon icon={faAngleUp} className="scale-icon" onClick={() => (Number(appointmentStartHour) + 1 <= endHour) && setAppointmentStartHour(value => Number(value) + 1)} />
                                             <FontAwesomeIcon icon={faAngleDown} className="scale-icon" onClick={() => (Number(appointmentStartHour) - 1 >= startHour) && setAppointmentStartHour(value => Number(value) - 1)} />
@@ -1830,7 +1835,7 @@ const Appointments = ({ data }) => {
 
                                     </div>
                                     <div className="input">
-                                        <input type="number" value={appointmentStartMinutes === 0 || appointmentStartMinutes === "" ? "" : appointmentStartMinutes < 10 ? `0${appointmentStartMinutes}` : appointmentStartMinutes} onChange={e => setAppointmentStartMinutes(e.target.value)} placeholder={cookies.language === "en" ? "Minutes" : "Minute"}  />
+                                        <input type="number" value={Number(appointmentStartMinutes) < 10 && appointmentStartMinutes !== "" ? `0${appointmentStartMinutes}` : appointmentStartMinutes} onChange={e => setAppointmentStartMinutes(e.target.value)} placeholder={cookies.language === "en" ? "Minutes" : "Minute"}  />
                                         <div className="scale">
                                             <FontAwesomeIcon icon={faAngleUp} className="scale-icon" onClick={() => {
                                                 if (Number(appointmentStartMinutes) + minutesPerGap < 60) setAppointmentStartMinutes(value => Number(value) + minutesPerGap) 
@@ -1909,7 +1914,7 @@ const Appointments = ({ data }) => {
 
                             {appointmentDateValue && <div className="label">
                                 <p>{cookies.language === "en" ? "Date" : "Data"}</p>
-                                <DateCustomInput changeDate={changeAppointmentDateValue} initialDate={new Date(appointmentDateValue)} future={true} past={false} label={cookies.language === "en" ? "Appointment date" : "Data programare"} />
+                                <DateCustomInput key={new Date(appointmentDateValue).toISOString()} changeDate={changeAppointmentDateValue} initialDate={new Date(appointmentDateValue)} future={true} past={false} label={cookies.language === "en" ? "Appointment date" : "Data programare"} />
                             </div>}
 
                             <div className="label one-row">
@@ -2043,7 +2048,7 @@ const Appointments = ({ data }) => {
 
                             {appointmentDateValue && <div className="label">
                                 <p>{cookies.language === "en" ? "Date" : "Data"}</p>
-                                <DateCustomInput changeDate={changeAppointmentDateValue} initialDate={new Date(appointmentDateValue)} future={true} past={false} label={cookies.language === "en" ? "Appointment date" : "Data programare"} />
+                                <DateCustomInput key={new Date(appointmentDateValue).toISOString()}changeDate={changeAppointmentDateValue} initialDate={new Date(appointmentDateValue)} future={true} past={false} label={cookies.language === "en" ? "Appointment date" : "Data programare"} />
                             </div>}
 
                             <div className="label one-row">

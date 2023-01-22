@@ -122,7 +122,7 @@
 
 .home-container .content img.mockup 
 {
-    width: 100vw;
+    width: 80vw;
 
 }
 
@@ -309,6 +309,36 @@
     .block-4 
     {
         flex-direction: column;
+ 
+    }
+
+    .home-container .content .block-6 .block-container:first-child
+    {
+        position: relative;
+        margin-top: -200px;
+    }
+
+    .home-container .content .block-6 .block-container img
+    {
+        border-inline: none;
+    }
+
+    .home-container .content .block-6
+    {
+        flex-direction: column;
+        padding-bottom: 5rem;
+        background: linear-gradient(180deg, var(--home-contrast-color) 60%, var(--home-contrast-color-2));
+        margin: 15rem auto 5rem auto;
+    }
+
+    .home-container .content .block-6 .block-container:last-child
+    {
+        width: 90%;
+    }
+
+    .home-container .content .block-6 .block-container p 
+    {
+        font-size: 24px;
     }
 
     .block-4 .block-container h2 
@@ -316,5 +346,130 @@
         text-align: center;
     }
 
+    .home-container .content .block-6, .home-container .content .block-4
+    {
+        max-height: max-content;
+    }
+
+    .home-container .content .block-4 .block-container p
+    {
+        max-width: 90%;
+        margin: 1rem auto;
+        font-size: 23px;
+    }
+
+    .home-container .content .block-4
+    {
+        background: linear-gradient(0deg, var(--home-contrast-color) 30%, var(--home-contrast-color-2))
+    }
+
+    .home-container .content .block-4 .block-container img
+    {
+        max-width: 90%;
+        margin: 0 auto;
+    }
+
+    .home-container .content .block-4 .block-container h2
+    {
+        max-width: 70%;
+        margin: 2rem auto;
+        font-size: 50px;
+    }
+
+    .home-container .content .final-block h2
+    {
+        font-size: min(7vw, 60px);
+        width: 80%;
+    }
+
+    .home-container .content .block-6 .block-container:nth-child(2)
+    {
+        max-width: 100%;
+    }
   
+}
+
+@media only screen and (max-width: 800px)
+{
+    .home-container .content h2.title 
+    {
+        font-size: max(12vw, 40px);
+    }
+}
+
+
+
+@media only screen and (max-width: 600px)
+{
+    .home-container .content .final-block h2
+    {
+        font-size: 40px;
+        width: 90%;
+    }
+
+    .home-container .content .advantages
+    {
+        grid-template-columns: repeat(auto-fit, minmax(325px, 1fr));
+        max-width: 90%;
+        margin: 3rem auto;
+    
+    }
+
+    .home-container .content .block-4 .block-container p
+    {
+        font-size: min(23px, 10vw);
+        max-width: 100%;
+    }
+
+    .home-container .content .block-4 .block-container img
+    {
+        max-width: 110%;
+    }
+
+    .home-container .content .block-2 
+    {
+        display: none;
+    }
+
+    .home-container .content h2.title.sm-title {
+        font-size: min(40px, 10vw);
+    }
+
+    .home-container .content .block-4 .block-container h2
+    {
+        font-size: min(50px, 8vw);
+    }
+
+    .home-container .content .block-6 .block-container h2
+    {
+        font-size: min(60px, 8vw);
+    }
+
+    .home-container .content .block-6, .home-container .content .block-4
+    {
+        max-width: 95%;
+    }
+    
+    .home-container .content .block-6 .block-container p {
+        font-size: min(24px, 5.5vw);
+    }
+
+    .home-container .content p.description
+    {
+        max-width: 85%;
+    }
+
+    .home-container .content p.description
+    {
+        font-size: min(22px, 4.5vw);
+    }
+}
+
+@media only screen and (max-width: 500px)
+{
+    .home-container .content .final-block h2
+    {
+        font-size: 8vw;
+        width: 95%;
+    }
 }
