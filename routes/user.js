@@ -29,7 +29,12 @@ const {
     editSMS,
     addService,
     removeService,
-    editService
+    editService,
+    pushMessageInbox,
+    removeMessageInbox,
+    clearInbox,
+    getBackups,
+    restoreBackup
 } = require("../controllers/user");
 
 router.post("/create-appointment", createAppointment);
@@ -57,10 +62,15 @@ router.post("/get-schedules-day", getSchedulesForDay);
 router.post("/send-feedback", sendFeedback);
 router.post("/response-sms", responseSMS);
 router.post("/add-sms", addSMS);
-router.post("/remove-sms", removeSMS);
-router.post("/edit-sms", editSMS);
+router.delete("/remove-sms", removeSMS);
+router.put("/edit-sms", editSMS);
 router.post("/add-service", addService);
-router.post("/remove-service", removeService);
-router.post("/edit-service", editService);
+router.delete("/remove-service", removeService);
+router.put("/edit-service", editService);
+router.post("/push-message-inbox", pushMessageInbox);
+router.delete("/remove-message-inbox", removeMessageInbox);
+router.delete("/clear-inbox", clearInbox);
+router.get("/get-backups", getBackups);
+router.put("/restore-backup", restoreBackup);
 
 module.exports = router;

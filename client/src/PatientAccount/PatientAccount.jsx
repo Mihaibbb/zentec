@@ -19,8 +19,9 @@ const PatientAccount = ({ data }) => {
 
     console.log(location?.state, data);
     
-        
-    if (!param?.id) navigation(-1);
+    if (!param?.id || !param?.historicPage) navigation(-1);
+    console.log(param);
+    const historicPage = Number(param?.historicPage);
    
     const patient = location?.state?.patient;
 
@@ -200,13 +201,13 @@ const PatientAccount = ({ data }) => {
                 <Header data={data} />
 
                 <div className="patient-account-details">
-                    <h2 className="title">{cookies.language === "en" ? "Patient's account details " : "Detalii cont pacient"}</h2>
+                    {!historicPage ? <h2 className="title">{cookies.language === "en" ? "Patient's account details " : "Detalii cont pacient"}</h2> : null}
 
                     <div className="go-back" onClick={() => navigation(-1)}>
                         <FontAwesomeIcon icon={faAngleLeft} />
                     </div>
 
-                    <div className="inputs-container">
+                    {!historicPage ? <div className="inputs-container">
                         <div className="input">
                             <div className="input-title">
                                 <FontAwesomeIcon className="icon" icon={faUser} />
@@ -343,11 +344,11 @@ const PatientAccount = ({ data }) => {
                         </button>    
                      
                         {errorMessage && <p className="error-message">{errorMessage}</p>}
-                    </div> 
+                    </div> : null} 
                         
                 </div>
 
-                <div className="patient-historic">
+                {historicPage ? <div className="patient-historic">
                     <h2 className="title">{cookies.language === "en" ? "Patient's historic" : "Istoric Pacient"}</h2>
                     
                     <div className="historic-container">
@@ -366,7 +367,7 @@ const PatientAccount = ({ data }) => {
                             </div>
                         ))}
                     </div>
-                </div>
+                </div> : null}
             </div>
         </div>
     );

@@ -13,6 +13,7 @@ const DoctorAccount = ({ data }) => {
 
     const [cookies, setCookie] = useCookies();
     const { id } = useParams();
+    const historicPage = Number(useParams().historicPage);
     const [firstname, setFirstname] = useState("");
     const [lastname, setLastname] = useState("");
     const [email, setEmail] = useState("");
@@ -125,13 +126,13 @@ const DoctorAccount = ({ data }) => {
             <div className="content">
                 <Header data={data} />
 
-                <h2 className="title">{cookies.language === "en" ? "Edit doctor" : "Editare medic"}</h2>
+                {!historicPage ? <h2 className="title">{cookies.language === "en" ? "Edit doctor" : "Editare medic"}</h2> : null}
                 
                 <div className="go-back" onClick={() => navigate(-1)}>
                     <FontAwesomeIcon icon={faAngleLeft} />
                 </div>
 
-                <div className="form">
+                {!historicPage ? <div className="form">
                     <div className="input">
                         <p>{cookies.langauge === "en" ? "Surname" : "Nume"}</p>
                         <input type="text" value={firstname} onChange={e => setFirstname(e.target.value)} />
@@ -174,9 +175,9 @@ const DoctorAccount = ({ data }) => {
 
                     <button type="submit" className="confirm-button" onClick={async () => await submitEditDoctor()}>{cookies.language === "en" ? "Save changes": "Salveaza modificarile"}</button>
                     <p className="error">{errorMessage}</p>
-                </div>
+                </div> : null}
 
-                <div className="patient-historic">
+                {historicPage ? <div className="patient-historic">
                     <h2 className="title">{cookies.language === "en" ? "Doctor's historic" : "Istoric Medic"}</h2>
                     
                     <div className="historic-container">
@@ -197,7 +198,7 @@ const DoctorAccount = ({ data }) => {
                             </div>
                         ))}
                     </div>
-                </div>
+                </div> : null}
             </div>
         </div>
     );

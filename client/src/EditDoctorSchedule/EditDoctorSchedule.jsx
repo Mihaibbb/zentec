@@ -227,6 +227,8 @@ const EditDoctorSchedule = ({ data }) => {
 
     };
 
+
+
     useEffect(() => {
         setSchedules(getSchedulesForDay());
     }, []);
@@ -266,12 +268,12 @@ const EditDoctorSchedule = ({ data }) => {
         console.log(doctorValue);
     }, [doctorValue]);
 
-    const focusActiveMenu = (method1, method2, idx) => {
+    const focusActiveMenu = (method1, method2, idx, statement) => {
         console.log("focus");
         method1(currMenus => {
             console.log(currMenus);
             return currMenus.map((activeMenu, menuIdx) => {
-                if (menuIdx !== idx) return activeMenu;
+                if (menuIdx !== idx) return false;
                 return !activeMenu;
             })
         });
@@ -318,6 +320,22 @@ const EditDoctorSchedule = ({ data }) => {
         document.querySelector(".content").classList.add("no-navigation");
         
     }, [location]);
+
+    useEffect(() => {
+        window.addEventListener("click", e => {
+            if (e.target.classList.contains("time-input")) return;
+            if (startHourActiveMenu.any(menu => !menu) && endHourActiveMenu.any(menu => menu)) return;
+
+            setStartHourActiveMenu(currMenus => {
+                return [...currMenus].map(() => false);
+            });
+
+            setEndHourActiveMenu(currMenus => {
+                return [...currMenus].map(() => false);
+            });
+            
+        });
+    }, []);
 
     return (
         <div className="edit-doctors-schedule">

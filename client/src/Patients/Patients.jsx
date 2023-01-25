@@ -1,4 +1,4 @@
-import { faEllipsis, faFileArrowDown, faFileArrowUp, faMinus, faPlus, faSearch, faSortDown, faSortUp, faTimes, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faClockRotateLeft, faEllipsis, faFileArrowDown, faFileArrowUp, faHistory, faMinus, faPlus, faSearch, faSortDown, faSortUp, faTimes, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState, useEffect, useRef } from "react";
 import { useCookies } from "react-cookie";
@@ -337,12 +337,19 @@ const Patients = ({ data }) => {
                                         <p>{cookies.language === "en" ? "Remove" : "Sterge"}</p>
                                     </div>
 
-                                    <div className="option" onClick={() => navigation(`/patient/${patient._id}`, { state: { patient: patient } })}>
+                                    <div className="option" onClick={() => navigation(`/patient/${patient._id}/0`, { state: { patient: patient } })}>
                                         <FontAwesomeIcon icon={faUser} className="option-icon" />
-                                        <p>{cookies.language === "en" ? "View profile" : "Vezi profil"}</p>
+                                        <p>{cookies.language === "en" ? "Edit" : "Editeaza"}</p>
+                                    </div>
+
+                                    <div className="option">
+                                        <FontAwesomeIcon icon={faClockRotateLeft} onClick={() => navigation(`/patient/${patient._id}/1`)}/>
+                                        <p>{cookies.language === "en" ? "Historic" : "Istoric"}</p>
                                     </div>
                                 </div>
                             </div>
+
+
                         </div>
                     )) : (
                         <h2 className="center">{cookies.language === "en" ? "No patient found." : "Niciun pacient gasit."}</h2>

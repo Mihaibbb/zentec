@@ -108,11 +108,11 @@ const App = () => {
                         {!isAdmin ? (
                             <>
                                 <Route path="patients" element={<Patients data={data} />} />
-                                <Route path="patient/:id" element={<PatientAccount data={data} />} />
+                                <Route path="patient/:id/:historicPage" element={<PatientAccount data={data} />} />
                                 <Route path="doctors" element={<Users data={data} />} />
                                 <Route path="doctors-schedule" element={<DoctorSchedule data={data} />} />
                                 <Route path="doctors-schedule/:date" element={<EditDoctorSchedule data={data} />} />
-                                <Route path="doctor/:id" element={<DoctorAccount data={data} />} />
+                                <Route path="doctor/:id/:historicPage" element={<DoctorAccount data={data} />} />
                                 <Route path="appointments" element={<Appointments data={data} />} />
                                 <Route path="import-patients" element={<ImportPatients data={data} />}/>
                                 <Route path="create-patient" element={<CreatePatient data={data} />} />

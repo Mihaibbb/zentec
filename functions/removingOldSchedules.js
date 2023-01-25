@@ -1,6 +1,7 @@
 const REPEATING_TIME = 1000 * 60 * 60 * 24;
 const PERIOD_SCHEDULES = 1000 * 60 * 60 * 24 * 365;
 const db = require("../db");
+const logger = require("../logger");
 
 const removingDoctorsSchedules = async () => {
     
@@ -33,12 +34,12 @@ const removingOldSchedules = () => {
     setInterval(async () => {
         const databases = await db.query("SHOW DATABASES");
         const organisations = await databases.filter(database => Object.values(database)[0].includes(`${process.env.DB_PREFIX}org_`));
-        console.log(organisations)
+        logger.debug(organisations)
         await organisations.forEach(async organisation => {
             const currentOrg = Object.values(organisation)[0];
             const schedulesDeadlineISO = new Date(new Date().getTime() - PERIOD_SCHEDULES);
-            const schedulesDeadline = `${schedulesDeadlineISO.getFullYear()}-${schedulesDeadlineISO.getMonth()}-${schedulesDeadlineISO.getDate()}`;
-            await db.query("DELETE FROM ?? WHERE date > ?", [`${currentOrg}.schedules`, schedulesDeadlineISO]);
+            const schedulesDeadline = `${schedulesDeadlineISO.getFullYear()}-${schedulesDeadlineISO.getMonth() + 1}-${schedulesDeadlineISO.getDate()}`;
+            await db.query("DELETE FROM ?? WHERE date < ?", [`${currentOrg}.schedules`, schedulesDeadline]);
         });
     }, 1000 * 30);
 };

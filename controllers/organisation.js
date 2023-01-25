@@ -25,6 +25,11 @@ exports.createOrganisation = async (req, res, next) => {
         createTableSql += 'sms_message json not null, ';
         createTableSql += 'sms_modem_id varchar(64) not null, ';
         createTableSql += 'inbox json not null, ';
+        createTableSql += 'country varchar(128) not null, ';
+        createTableSql += 'county varchar(64) not null, ';
+        createTableSql += 'city varchar(128) not null, ';
+        createTableSql += 'address varchar(128) not null, ';
+        createTableSql += 'business_address varchar(128) not null, ';
         createTableSql += '_id varchar(25) not null )';
         
         await db.query(createTableSql, ["details"]);

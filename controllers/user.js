@@ -994,11 +994,11 @@ exports.createService = async (req, res, next) => {
         let sql = "SELECT * FROM ?? WHERE _id = ?";
         const currentDoctors = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.doctors`, doctorId]);
         logger.debug(currentDoctors);
-        const currentDoctor = await currentDoctors[0];
-        const currentServices = JSON.parse(await currentDoctor.services);
+        const currentDoctor = currentDoctors[0];
+        const currentServices = JSON.parse(currentDoctor.services);
            
         let serviceId = generateId(25);
-        while (currentSmsMessage.some(smsMessage => smsMessage.id === serviceId)) serviceId = generateId(25);
+        while (currentServices.some(service => service.id === serviceId)) serviceId = generateId(25);
 
         currentServices.push({
             id: serviceId,
@@ -1037,8 +1037,8 @@ exports.removeService = async (req, res, next) => {
     try {
         let sql = "SELECT * FROM ?? WHERE _id = ?";
         const currentDoctors = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.doctors`, doctorId]);
-        const currentDoctor = await currentDoctors[0];
-        const currentServices = JSON.parse(await currentDoctor.services);
+        const currentDoctor = currentDoctors[0];
+        const currentServices = JSON.parse(currentDoctor.services);
 
         const newServices = currentServices.filter(service => service.id !== serviceId);
 
@@ -1073,9 +1073,9 @@ exports.editService = async (req, res, next) => {
         let sql = "SELECT * FROM ?? WHERE _id = ?";
         const currentDoctors = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.doctors`, doctorId]);
         if (!currentDoctors || !currentDoctors.length) return res.status(404).json({ success: false, message: { en: "Doctor couldn't be found!", ro: "Doctorul nu a putut fi gasit!" } });
-        const currentDoctor = await currentDoctors[0];
-        const currentServices = JSON.parse(await currentDoctor.services);
-        
+        const currentDoctor = currentDoctors[0];
+        const currentServices = JSON.parse(currentDoctor.services);
+
         const modifiedServices = currentServices.map(service => {
             if (service.id === serviceId) return {...service,
                 name: serviceName,
@@ -1114,8 +1114,37 @@ exports.editService = async (req, res, next) => {
 exports.pushMessageInbox = async (req, res) => {
     const { organisationId, doctorId, message } = req.body;
     try {
-        let sql = "SELECT * FROM ??";
-        const details = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.details`, organisationId]);
+
+        let sql = "SELECT * FROM ?? WHERE _id = ?";
+        const doctorsFound = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.doctors`, doctorId]);
+        const doctor = doctorsFound[0];
+        const doctorName = `${doctor.firstname} ${doctor.lastname}`;
+
+        sql = "SELECT * FROM ??";
+        const detailsRows = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.details`]);
+        const detailsRow = detailsRows[0];
+        const inbox = JSON.parse(detailsRow.inbox);
+
+        let messageId = generateId(25);
+        while (inbox.some(inboxMessage => inboxMessage.id === messageId)) messageId = generateId(25);
+
+        inbox.push({
+            doctorId,
+            doctorName,
+            message,
+            createdAt: new Date(),
+            id: messageId
+        });
+
+        sql = "UPDATE ?? set inbox = ? WHERE _id = ?";
+        await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.details`, JSON.stringify(inbox), organisationId]);
+        res.status(200).json({
+            success: true,
+            message: {
+                en: "Inbox message sent successfully!",
+                ro: "Mesajul a fost trimis cu succes!"
+            }
+        });
         
     } catch (e) {
         logger.debug(e);
@@ -1133,7 +1162,23 @@ exports.removeMessageInbox = async (req, res) => {
     const { inboxMessageId, organisationId } = req.body;
 
     try {
-        let sql = '';
+        let sql = "SELECT * FROM ??";
+        const detailsRows = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.details`]);
+        const detailsRow = await detailsRows[0];
+        const inbox = JSON.parse(detailsRow.inbox);
+        const newInbox = inbox.filter(message => message.id !== inboxMessageId);
+        
+        sql = "UPDATE ?? SET inbox = ? WHERE _id = ?";
+        await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.details`, JSON.stringify(newInbox), organisationId]);
+
+        res.status(200).json({
+            success: true,
+            message: {
+                en: "Inbox message was removed successfully!",
+                ro: "Mesajul a fost sters cu succes!"
+            }
+        });
+
     } catch (e) {
         logger.debug(e);
         res.status(404).json({ 
@@ -1147,21 +1192,97 @@ exports.removeMessageInbox = async (req, res) => {
 };
 
 exports.clearInbox = async (req, res) => {
+    const { organisationId } = req.query;
+    
+    try {
+        let sql = "SELECT * FROM ??";
+        const detailsRows = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.details`]);
+        const detailsRow = await detailsRows[0];
+        const inbox = JSON.parse(detailsRow.inbox);
+        let newInbox;
+        if (req.body?.doctorId) newInbox = inbox.filter(message => message.doctorId !== req.body?.doctorId);
+        else newInbox = [];
 
+        sql = "UPDATE ?? SET inbox = ? WHERE _id = ?";
+        await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.details`, JSON.stringify(newInbox), organisationId]);
+
+        res.status(200).json({
+            success: true,
+            message: {
+                en: "Inbox was cleared successfully!",
+                ro: "Mesajele au fost sterse cu succes!"
+            }
+        });
+
+    } catch (e) {
+        logger.debug(e);
+        res.status(404).json({ 
+            success: false,
+            message: {
+                en: "Inbox messages couldn't be removed!",
+                ro: "Mesajele nu au putut fi sters!"
+            }
+        });
+    }
 };
 
+// Backups
+
+exports.getBackups = async (req, res, next) => {
+    const { category, organisationId } = req.query;
+    try {
+        // Show the database with the backup
+        await db.query("USE ??", [`${process.env.DB_PREFIX}org_${organisationId}_backup`]);
+        const tablesUnmapped = await db.query("SHOW TABLES");
+        const tablesUnfiltered = tablesUnmapped.map(table => Object.values(table)[0]);
+        const tables = tablesUnfiltered.filter(table => table.includes(category));
+        
+        res.status(200).json({ 
+            success: true,
+            tables: tables
+        });
+
+    } catch (e) {
+        logger.debug("Backup couldn't be restored!", e);
+        res.status(404).json({  
+            success: false,
+            message: {
+                en: "Backups couldn't be fetched!",
+                ro: 'Backup-urile nu au putut fi gasite!'
+            },
+            error: e
+        });
+    }
+};
+
+exports.restoreBackup = async (req, res, next) => {
+    const { category, organisationId, date } = req.body;
+    try {
+        await db.query("TRUNCATE TABLE ??", [`${process.env.DB_PREFIX}org_${organisationId}.${category}`]);
+        await db.query("INSERT INTO ?? SELECT * FROM ??", [`${process.env.DB_PREFIX}org_${organisationId}.${category}`, `${process.env.DB_PREFIX}org_${organisationId}_backup.${category}_${new Date(date)}`]);
+        res.status(200).json({
+            success: true,
+            message: {
+                en: "Backup made successfully!",
+                ro: "Backup-ul a fost facut cu succes!"
+            }
+        });
+    } catch (e) {
+        logger.debug("Backup couldn't be restored!", e);
+        res.status(404).json({  
+            success: false,
+            message: {
+                en: "Backup couldn't be restored!",
+                ro: 'Backup-ul nu a putut fi facut!'
+            },
+            error: e
+        });
+    }
+};
 
 exports.getStatisticsData = async (req, res, next) => {
     const { _id } = req.body; 
     
-};
-
-exports.getResponseSMS = async (req, res, next) => {
-    
-}
-
-const encryptData = (data) => {
-
 };
 
 const sameDate = (date1, date2) => {

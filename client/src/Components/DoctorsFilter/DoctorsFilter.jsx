@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import "./DoctorsFilter.css";
 
-const DoctorsFilter = ({ data, changeValue, initialValue }) => {
+const DoctorsFilter = ({ data, changeValue, initialValue, scrollToDoctor=null }) => {
 
     const [activeDoctors, setActiveDoctors] = useState(initialValue || data.organisation.doctors);
     const [doctorsList, setDoctorsList] = useState([]);
@@ -65,7 +65,7 @@ const DoctorsFilter = ({ data, changeValue, initialValue }) => {
         })();
     }, [doctorQuery]);
 
-    document.addEventListener('click', async e => {
+    window.addEventListener('click', async e => {
         if (doctorsList.length === 0) return;
         const selectionInput = document.querySelector("input.selection-input");
         let target = e.target, sameParent = false;
@@ -87,7 +87,7 @@ const DoctorsFilter = ({ data, changeValue, initialValue }) => {
             <h3 className="element-title">{cookies.language === "en" ? "Doctors" : "Medici"}</h3>
                 <div className="filter-container">
                     {activeDoctors && activeDoctors.length > 0 && activeDoctors.map((activeDoctor, idx) => (
-                        <div className="filter-doctor" key={idx}>
+                        <div className="filter-doctor" key={idx} onClick={e => e.target.tagName.toLowerCase() !== "svg" && e.target.tagName.toLowerCase() !== "path"  && scrollToDoctor && scrollToDoctor(activeDoctor._id)}>
                             <div className="color" style={{ backgroundColor: activeDoctor.color }}/>
                             <p>{activeDoctor.firstname} {activeDoctor.lastname}</p>
                             <FontAwesomeIcon icon={faTimes} className="close-icon" onClick={() => removeActiveDoctor(activeDoctor._id)} />

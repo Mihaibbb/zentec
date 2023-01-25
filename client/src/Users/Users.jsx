@@ -3,7 +3,7 @@ import "./Users.css";
 import Navigation from "../Components/Navigation/Navigation";
 import Header from "../Components/Header/Header";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faEllipsis, faSearch, faCheck, faEdit, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faEllipsis, faSearch, faCheck, faEdit, faTimes, faHistory, faClockRotateLeft } from "@fortawesome/free-solid-svg-icons";
 import { faSquare } from "@fortawesome/free-regular-svg-icons"
 import { useState, useEffect } from "react"; 
 import { useCookies } from "react-cookie";
@@ -267,14 +267,17 @@ const Users = ({ data }) => {
                             <div className="column pressable">
                                 <FontAwesomeIcon icon={faEllipsis} className="column-icon" onClick={() => triggerOptions(idx)} />
                                 <div className="options-container" ref={ref => optionsRef.current[idx] = ref}>
+                                    
                                     <div className="option" onClick={async () => optionsRef.current[idx].classList.contains("show") && await toggleActiveDoctor(doctor)}>
                                         <FontAwesomeIcon icon={doctor.active ? faCheck : faSquare} className="option-icon" />
                                         <p>{doctor.active ? (cookies.language === "en" ? "Disable" : "Dezactiveaza") : (cookies.language === "en" ? "Enable" : "Activeaza")}</p>
                                     </div>
-                                    <div className="option" onClick={() => optionsRef.current[idx].classList.contains("show") && navigation(`/doctor/${doctor._id}`)}>
+
+                                    <div className="option" onClick={() => optionsRef.current[idx].classList.contains("show") && navigation(`/doctor/${doctor._id}/0`)}>
                                         <FontAwesomeIcon icon={faEdit} className="option-icon" />
                                         <p>{cookies.language === "en" ? "Edit" : "Editeaza"}</p>
                                     </div>
+
                                     <div className="option" onClick={async () => {
                                         if (!optionsRef.current[idx].classList.contains("show")) return;
                                         setWarning(cookies.language === "en" ? "Are you sure that you want to remove this doctor?" : "Sunteti sigur ca doriti sa stergeti acest doctor?");
@@ -282,7 +285,13 @@ const Users = ({ data }) => {
                                     }}>
                                         <FontAwesomeIcon icon={faTimes} className="option-icon" />
                                         <p>{cookies.language === "en" ? "Remove" : "Sterge"}</p>
-                                    </div>                 
+                                    </div>  
+
+                                    <div className="option" onClick={() => optionsRef.current[idx].classList.contains("show") && navigation(`/doctor/${doctor._id}/1`)}>
+                                        <FontAwesomeIcon icon={faClockRotateLeft} className="option-icon" />
+                                        <p>{cookies.language === "en" ? "Historic" : "Istoric"}</p>
+                                    </div>  
+                                                
                                 </div>
                             </div>
                         </div>

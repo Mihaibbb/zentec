@@ -146,6 +146,8 @@ const Appointments = ({ data }) => {
     const editAppointmentRef = useRef();
     const createAppointmentRef = useRef();
     const scheduleContentRef = useRef([]);
+    const scheduleContentContainerRef = useRef([]);
+
 
     // const { startHour, endHour, gaps, doctors } = location?.state;
     const startHour = 8;
@@ -1077,27 +1079,31 @@ const Appointments = ({ data }) => {
             }
 
             const appointmentLength = (new Date(appointment.endDate).getTime() - new Date(appointment.startDate).getTime()) / (1000 * 60 * minutesPerGap);
+
+            const textElement2 = document.createElement('p');
+            textElement2.classList.add('appointment-interval');
+            const currentPatient = isJSON(appointment.patients) ? JSON.parse(appointment.patients)[0] : appointment.patients[0];
+            textElement2.innerText = `${currentPatient.firstname} ${currentPatient.lastname}`;
+            textElement2.innerText += cookies.langauge === "en" ? ` / File No.: ${currentPatient.fileNumber}` : ` / Nr. fisa: ${currentPatient.fileNumber}`;
+            textElement2.style.top = `calc(-100% + ${gapsRef.current[0].clientHeight * (appointmentLength <= 2 ? 2 : 3)}px)`;
+            
+            if (appointmentLength < 2) textElement2.style.display = 'none';
+            else textElement2.style.top = `calc(-100% + ${(appointmentLength / 3) * gapsRef.current[0].clientHeight}px + 12px)`;
+            textElement2.style.color = getContrastForText(doctorColor);
+            currentGaps[startIdx].appendChild(textElement2);
             
             const textElement = document.createElement('p');
             textElement.classList.add('appointment-interval');
             textElement.innerText = `${appointment.title}`;
-            if (appointmentLength < 2) textElement.style.display = 'none';
-            else  textElement.style.top = `calc(-100% + ${(appointmentLength / 3) * gapsRef.current[0].clientHeight}px + 10px)`;
+            if (appointmentLength < 3) textElement.style.display = 'none';
+            else  textElement.style.top = `calc(-100% + ${(appointmentLength / 3 + 1) * gapsRef.current[0].clientHeight}px + 12px)`;
 
             textElement.style.color = getContrastForText(doctorColor);
             currentGaps[startIdx].appendChild(textElement);
             currentGaps[startIdx].classList.add("resizeable");
             currentGaps[startIdx].classList.add("resizeable-up");
 
-            const textElement2 = document.createElement('p');
-            textElement2.classList.add('appointment-interval');
-            textElement2.innerText = `${isJSON(appointment.patients) ? JSON.parse(appointment.patients)[0].firstname : appointment.patients[0].firstname} ${isJSON(appointment.patients) ? JSON.parse(appointment.patients)[0].lastname : appointment.patients[0].lastname}`;
-            textElement2.style.top = `calc(-100% + ${gapsRef.current[0].clientHeight * (appointmentLength <= 3 ? 2 : 3)}px)`;
             
-            if (appointmentLength < 3) textElement2.style.display = 'none';
-            else textElement2.style.top = `calc(-100% + ${(appointmentLength / 3 + 1) * gapsRef.current[0].clientHeight}px + 10px)`;
-            textElement2.style.color = getContrastForText(doctorColor);
-            currentGaps[startIdx].appendChild(textElement2);
             // currentGaps.forEach(gap => {
 
             //     gap.addEventListener("mousedown", e => {
@@ -1152,7 +1158,7 @@ const Appointments = ({ data }) => {
             titleAppointmentElement.style.top = `calc(-100% - 20px + ${gapsRef.current[0].clientHeight}px)`;
             if (appointmentLength > 3) {
                 titleAppointmentElement.style.fontSize = '20px';
-                titleAppointmentElement.style.height = `${gapsRef.current[0].clientHeight * (appointmentLength / 3)}px`;
+                titleAppointmentElement.style.height = `${gapsRef.current[0].clientHeight}px`;
             }
             currentGaps[startIdx].appendChild(titleAppointmentElement);
 
@@ -1260,15 +1266,15 @@ const Appointments = ({ data }) => {
             else setAppointmentPatientsList([]);
 
         })();
-    }, [appointmentPatient]);
+    }, [appointmentPatient, activeCreatePatient]);
 
     useEffect(() => {
-        if (!scheduleContentRef || !scheduleContentRef?.current) return;
-        scheduleContentRef.current.forEach(scheduleContentElement => {
+        if (!scheduleContentContainerRef || !scheduleContentContainerRef?.current) return;
+        scheduleContentContainerRef.current.forEach(scheduleContentElement => {
             scheduleContentElement.style.minHeight = `${1.75 * window.innerHeight}px`;
         });
 
-    }, [scheduleContentRef]);
+    }, [scheduleContentContainerRef]);
 
     const setWorkingWeek = () => {
         let currDate = date;
@@ -1404,7 +1410,7 @@ const Appointments = ({ data }) => {
                                     setAppointmentDateValue(new Date(appointment.date));
                                 }
                             }>
-                                <p>{appointment.title.substring(0, 10)}{appointment.title.length <= 10 ? "" : ".."}</p>
+                                <p className="patient-text" style={{ color: getContrastForText( currDoctorColor || doctorColor ) === "#000" ? "#000" : "var(--text-color)" }}>{JSON.parse(appointment.patients)[0].firstname} {JSON.parse(appointment.patients)[0].lastname}</p>
                                 <p>{new Date(appointment.startDate).getHours() < 10 ? `0${new Date(appointment.startDate).getHours()}` : new Date(appointment.startDate).getHours()}:{new Date(appointment.startDate).getMinutes() < 10 ? `0${new Date(appointment.startDate).getMinutes()}` : new Date(appointment.startDate).getMinutes()}</p>
                             </div>);
                         })}
@@ -1496,6 +1502,21 @@ const Appointments = ({ data }) => {
 
     const changeAppointmentDateValue = newDateValue => setAppointmentDateValue(new Date(newDateValue));
     const handlePatientSaved = () => setActiveCreatePatient(false);
+
+    // When pressed doctor container inside doctor filter it will scroll to the doctor's appointments
+
+    const scrollToDoctor = (doctorId) => {
+        const doctorContainer = [...scheduleContentRef.current].find(scheduleContent => {
+            return scheduleContent.getAttribute("id").toString() === doctorId.toString();
+        });
+
+        console.log(doctorContainer, doctorContainer.getBoundingClientRect());
+        if (doctorContainer) window.scrollTo({ 
+            left: 0, 
+            top: window.scrollY + doctorContainer.getBoundingClientRect().y - (0.125 * window.innerHeight), 
+            behavior: 'smooth'
+        });
+    };
         
     return !activeCreatePatient ? (
         <div className="appointments">
@@ -1609,7 +1630,7 @@ const Appointments = ({ data }) => {
                     </div>
                 </div>
                     
-                <DoctorsFilter data={data} changeValue={changeActiveDoctors} initialValue={ window.history?.state?.activeDoctors || data.organisation.doctors } />
+                <DoctorsFilter data={data} changeValue={changeActiveDoctors} initialValue={ window.history?.state?.activeDoctors || data.organisation.doctors } scrollToDoctor={scrollToDoctor} />
 
                 <div className="options-appointments">
                     <div className="option">
@@ -1634,8 +1655,11 @@ const Appointments = ({ data }) => {
                     <div className="schedules" style={{ marginTop: hourContainerHeight }}>
                         {filterActive !== 3 && filterActive !== 4 ? doctors && doctors.length > 0 && doctors.map((doctor, idx) => (
                             
-                            <div className="schedule-parent-container" key={idx} style={{ minHeight: `${window.innerHeight * 1.75}px` }}>
-                                <h2 className="doctors-title">{doctor.firstname} {doctor.lastname} 1</h2>
+                            <div className="schedule-parent-container" key={idx} style={{ minHeight: `${window.innerHeight * 1.75}px` }} ref={ref => scheduleContentContainerRef.current[idx] = ref}>
+                                <div className="doctors-title-container">
+                                    <div className="doctor-color" style={{ backgroundColor: doctor.color }} />
+                                    <h2 className="doctors-title" id={doctor._id} ref={ref => scheduleContentRef.current[idx] = ref}>{doctor.firstname} {doctor.lastname}</h2>
+                                </div>
                                 <div className={`schedule-container ${activeGaps ? "active-gaps" : ""}`} key={idx} ref={ref => doctorRef.current[idx] = ref} style={{ minHeight: `${window.innerHeight * 1.75}px` }}>
                                     {days && days.length > 0 && days.map((day, dayIdx) => (
                                         filterActive === 0 ? (
@@ -1672,11 +1696,10 @@ const Appointments = ({ data }) => {
                 {doctors && (doctors.length > 3 || window.innerWidth <= 800) && 
                      <div className="scheduler flex-column">
                     
-
                      <div className="schedules flex-column" style={{ marginTop: hourContainerHeight }}>
                          {doctors && doctors.length > 0 && doctors.map((doctor, idx) => (
                              filterActive !== 3 && filterActive !== 4 ?
-                             <div className="schedule-content" key={idx} style={{ minHeight: `${window.innerHeight * 1.75}px` }}>
+                             <div className="schedule-content" key={idx} id={doctor._id} style={{ minHeight: `${window.innerHeight * 1.75}px` }} ref={ref => scheduleContentContainerRef.current[idx] = ref}>
                                  <div className="hours">
                                      {hours.map((hour, hourIdx) => (
                                          <div className="hour" key={hourIdx}>
@@ -1686,7 +1709,10 @@ const Appointments = ({ data }) => {
                                  </div>
  
                                  <div className="schedule-parent-container flex-column">
-                                     <h2 className="doctors-title">{doctor.firstname} {doctor.lastname}</h2>
+                                    <div className="doctors-title-container">
+                                        <div className="doctor-color" style={{ backgroundColor: doctor.color }} />
+                                        <h2 className="doctors-title" id={doctor._id} ref={ref => scheduleContentRef.current[idx] = ref}>{doctor.firstname} {doctor.lastname}</h2>
+                                    </div>
                                      <div className={`schedule-container ${activeGaps ? "active-gaps" : ""}`} key={idx} style={{ minHeight: `${window.innerHeight * 1.75}px` }} ref={ref => doctorRef.current[idx] = ref}>
                                          {days && days.length > 0 && days.map((day, dayIdx) => (
                                              filterActive === 0 ? (
@@ -1746,6 +1772,7 @@ const Appointments = ({ data }) => {
                                             setDoctorNameValue(e.label);
                                             setAppointmentDoctorId(e.value);
                                         }} 
+                                        readOnly={isTouchDevice()}
                                     />
                                 </div>
                             : null}
@@ -1827,20 +1854,20 @@ const Appointments = ({ data }) => {
                                 <p>{cookies.language === "en" ? "Start Hour" : "Ora inceput"}</p>
                                 <div className="label-row hour-label">
                                     <div className="input">
-                                        <input type="number" onChange={e => setAppointmentStartHour(e.target.value)} placeholder={cookies.language === "en" ? "Hour" : "Ora"} value={Number(appointmentStartHour) < 10 && appointmentStartHour !== "" ? `0${appointmentStartHour}` : appointmentStartHour} />
+                                        <input type="number" onChange={e => setAppointmentStartHour(e.target.value)} placeholder={cookies.language === "en" ? "Hour" : "Ora"} value={appointmentStartHour} />
                                         <div className="scale">
-                                            <FontAwesomeIcon icon={faAngleUp} className="scale-icon" onClick={() => (Number(appointmentStartHour) + 1 <= endHour) && setAppointmentStartHour(value => Number(value) + 1)} />
-                                            <FontAwesomeIcon icon={faAngleDown} className="scale-icon" onClick={() => (Number(appointmentStartHour) - 1 >= startHour) && setAppointmentStartHour(value => Number(value) - 1)} />
+                                            <FontAwesomeIcon icon={faAngleUp} className="scale-icon" onClick={() => (Number(appointmentStartHour) + 1 <= endHour) && setAppointmentStartHour(value => Number(value) + 1 < 10 ? `0${Number(value) + 1}` : Number(value) + 1)} />
+                                            <FontAwesomeIcon icon={faAngleDown} className="scale-icon" onClick={() => (Number(appointmentStartHour) - 1 >= startHour) && setAppointmentStartHour(value => Number(value) - 1 < 10 ? `0${Number(value) - 1}` : Number(value) - 1)} />
                                         </div>
 
                                     </div>
                                     <div className="input">
-                                        <input type="number" value={Number(appointmentStartMinutes) < 10 && appointmentStartMinutes !== "" ? `0${appointmentStartMinutes}` : appointmentStartMinutes} onChange={e => setAppointmentStartMinutes(e.target.value)} placeholder={cookies.language === "en" ? "Minutes" : "Minute"}  />
+                                        <input type="number" value={appointmentStartMinutes} onChange={e => setAppointmentStartMinutes(e.target.value)} placeholder={cookies.language === "en" ? "Minutes" : "Minute"}  />
                                         <div className="scale">
                                             <FontAwesomeIcon icon={faAngleUp} className="scale-icon" onClick={() => {
-                                                if (Number(appointmentStartMinutes) + minutesPerGap < 60) setAppointmentStartMinutes(value => Number(value) + minutesPerGap) 
+                                                if (Number(appointmentStartMinutes) + minutesPerGap < 60) setAppointmentStartMinutes(value => Number(value) + minutesPerGap < 10 ? `0${Number(value) + minutesPerGap}` : Number(value) + minutesPerGap) 
                                                 else if (Number(appointmentStartHour) < endHour) {
-                                                    setAppointmentStartHour(currHour => Number(currHour) + 1);
+                                                    setAppointmentStartHour(currHour => Number(currHour) + 1 < 10 ? `0${Number(currHour) + 1}` : Number(currHour) + 1);
                                                     setAppointmentStartMinutes(0);
                                                 }
                                             }} />
@@ -2133,7 +2160,7 @@ const Appointments = ({ data }) => {
 
                 {activePlusButton ? <div className="add-button" onClick={() => {
                     
-                    setActiveCreateAppointment(true)
+                    setActiveCreateAppointment(true);
                 }}>
                     <FontAwesomeIcon icon={faPlus} className="add-icon" />
                 </div> : null}

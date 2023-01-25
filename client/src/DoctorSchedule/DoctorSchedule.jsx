@@ -7,6 +7,7 @@ import DoctorsFilter from "../Components/DoctorsFilter/DoctorsFilter";
 import Header from "../Components/Header/Header";
 import Navigation from "../Components/Navigation/Navigation";
 import "./DoctorSchedule.css";
+import getContrastForText from "../Functions/Contrast";
 
 const DoctorSchedule = ({ data }) => {
     
@@ -293,38 +294,16 @@ const DoctorSchedule = ({ data }) => {
                                 {days && days.length && days.map((day, idx) => (
                                     <div className={`day-container ${idx === 0 ? "first-active" : ""}`} key={idx} idx={idx} ref={ref => daysRef.current[idx] = ref}>
                                         <div className="first-row">
-                                            <div className="edit" onClick={() => navigate(`/doctors-schedule/${day.getFullYear()}-${day.getMonth() + 1}-${day.getDate()}`)}>
+                                            <div className="edit" style={{ opacity: 0 }}>
                                                 <FontAwesomeIcon icon={faPencil} className="edit-icon" />
                                             </div>
                                             <p className="day">{day.getDate()}</p>
                                         </div>
         
-                                        {/* <div className="schedule-card" style={{ backgroundColor: "royalblue" }}>
-                                            <p className="name">Barbu Mihai</p>
-                                            <p>10:25 - 11:25</p>
-                                        </div>
-        
-                                        <div className="schedule-card" style={{ backgroundColor: "coral" }}>
-                                            <p className="name">Barbu Mihai</p>
-                                            <p>10:25 - 11:25</p>
-                                        </div>
-        
-                                        <div className="schedule-card" style={{ backgroundColor: "royalblue" }}>
-                                            <p className="name">Barbu Mihai</p>
-                                            <p>10:25 - 11:25</p>
-                                        </div>
-        
-                                        <div className="schedule-card" style={{ backgroundColor: "coral" }}>
-                                            <p className="name">Barbu Mihai</p>
-                                            <p>10:25 - 11:25</p>
-                                        </div> */}
-                                        
-        
-        
                                         {getSchedulesForDate(day).map((schedule, scheduleIdx) => (
                                             <div className="schedule-card" key={scheduleIdx} style={{ backgroundColor: schedule.color }} onClick={() => navigate(`/doctors-schedule/${day.getFullYear()}-${day.getMonth() + 1}-${day.getDate()}`)}>
-                                                <p className="name">{schedule.name}</p>
-                                                <p>{schedule.startHour < 10 ? `0${schedule.startHour}` : schedule.startHour}:{schedule.startMinutes < 10 ? `0${schedule.startMinutes}` : schedule.startMinutes} - {schedule.endHour < 10 ? `0${schedule.endHour}` : schedule.endHour}:{schedule.endMinutes < 10 ? `0${schedule.endMinutes}` : schedule.endMinutes}</p>
+                                                <p className="name" style={{ color: getContrastForText(schedule.color) }}>{schedule.name}</p>
+                                                <p style={{ color: getContrastForText(schedule.color) }}>{schedule.startHour < 10 ? `0${schedule.startHour}` : schedule.startHour}:{schedule.startMinutes < 10 ? `0${schedule.startMinutes}` : schedule.startMinutes} - {schedule.endHour < 10 ? `0${schedule.endHour}` : schedule.endHour}:{schedule.endMinutes < 10 ? `0${schedule.endMinutes}` : schedule.endMinutes}</p>
                                             </div>
                                         ))}
                                     </div>
@@ -351,38 +330,17 @@ const DoctorSchedule = ({ data }) => {
                                 {days && days.length && days.map((day, idx) => (
                                     <div className={`day-container ${idx === 0 ? "first-active" : ""}`} key={idx} idx={idx} ref={ref => daysRef.current[idx] = ref}>
                                         <div className="first-row">
-                                            <div className="edit" onClick={() => navigate(`/doctors-schedule/${day.getFullYear()}-${day.getMonth() + 1}-${day.getDate()}`)}>
+                                            <div className="edit" onClick={() => window.innerWidth >= 1000 && navigate(`/doctors-schedule/${day.getFullYear()}-${day.getMonth() + 1}-${day.getDate()}`)}>
                                                 <FontAwesomeIcon icon={faPencil} className="edit-icon" />
                                             </div>
                                             <p className="day">{day.getDate()}</p>
                                         </div>
 
-                                        {/* <div className="schedule-card" style={{ backgroundColor: "royalblue" }}>
-                                            <p className="name">Barbu Mihai</p>
-                                            <p>10:25 - 11:25</p>
-                                        </div>
-
-                                        <div className="schedule-card" style={{ backgroundColor: "coral" }}>
-                                            <p className="name">Barbu Mihai</p>
-                                            <p>10:25 - 11:25</p>
-                                        </div>
-
-                                        <div className="schedule-card" style={{ backgroundColor: "royalblue" }}>
-                                            <p className="name">Barbu Mihai</p>
-                                            <p>10:25 - 11:25</p>
-                                        </div>
-
-                                        <div className="schedule-card" style={{ backgroundColor: "coral" }}>
-                                            <p className="name">Barbu Mihai</p>
-                                            <p>10:25 - 11:25</p>
-                                        </div> */}
-                                        
-
 
                                         {getSchedulesForDate(day).map((schedule, scheduleIdx) => (
-                                            <div className="schedule-card" key={scheduleIdx} style={{ backgroundColor: schedule.color }} onClick={() => navigate(`/doctors-schedule/${day.getFullYear()}-${day.getMonth() + 1}-${day.getDate()}`)}>
-                                                <p className="name">{schedule.name}</p>
-                                                <p>{schedule.startHour < 10 ? `0${schedule.startHour}` : schedule.startHour}:{schedule.startMinutes < 10 ? `0${schedule.startMinutes}` : schedule.startMinutes} - {schedule.endHour < 10 ? `0${schedule.endHour}` : schedule.endHour}:{schedule.endMinutes < 10 ? `0${schedule.endMinutes}` : schedule.endMinutes}</p>
+                                            <div className="schedule-card" key={scheduleIdx} style={{ backgroundColor: schedule.color }} onClick={() => window.innerWidth >= 1000 && navigate(`/doctors-schedule/${day.getFullYear()}-${day.getMonth() + 1}-${day.getDate()}`)}>
+                                                <p className="name" style={{ color: getContrastForText(schedule.color) }}>{schedule.name}</p>
+                                                <p style={{ color: getContrastForText(schedule.color) }}>{schedule.startHour < 10 ? `0${schedule.startHour}` : schedule.startHour}:{schedule.startMinutes < 10 ? `0${schedule.startMinutes}` : schedule.startMinutes} - {schedule.endHour < 10 ? `0${schedule.endHour}` : schedule.endHour}:{schedule.endMinutes < 10 ? `0${schedule.endMinutes}` : schedule.endMinutes}</p>
                                             </div>
                                         ))}
                                     </div>

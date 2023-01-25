@@ -32,6 +32,7 @@
     "nodemon": "^2.0.19",
     "path": "^0.12.7",
     "read-excel-file": "^5.4.4",
+    "setinterval": "^0.2.4",
     "socket.io": "^4.5.1"
   }
 }

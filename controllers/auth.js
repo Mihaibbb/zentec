@@ -8,7 +8,7 @@ exports.login = async (req, res, next) => {
     try {
         const dbs = await db.query("SHOW DATABASES");
         const organisationsUnfiltered = await dbs.map(currDb => {
-            if (currDb.Database.search(`${process.env.DB_PREFIX}org_`) !== -1) return currDb.Database;
+            if (currDb.Database.search(`${process.env.DB_PREFIX}org_`) === 0 && currDb.Database.search("_backup") === -1) return currDb.Database;
             return null;
         });
 
@@ -77,7 +77,7 @@ exports.loginRemember = async (req, res, next) => {
     try {
         const dbs = await db.query("SHOW DATABASES");
         const organisationsUnfiltered = await dbs.map(currDb => {
-            if (currDb.Database.search(`${process.env.DB_PREFIX}org_`) !== -1) return currDb.Database;
+            if (currDb.Database.search(`${process.env.DB_PREFIX}org_`) === 0 && currDb.Database.search("_backup") === -1) return currDb.Database;
             else return null;
         });
         
