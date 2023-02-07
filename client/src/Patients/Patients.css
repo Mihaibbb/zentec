@@ -10,7 +10,7 @@
     font-size: 40px;
     margin: 20vh 5rem 2rem;
     text-align: center;
-    color: rgba(255, 255, 255, .8);
+    color: var(--text-color);
   
 }
 
@@ -27,6 +27,11 @@
     border-radius: 45px;
     padding: .25rem 1rem;
 
+}
+
+body.light .patients .content .search-container 
+{
+    border: 2px solid var(--contrast-color);
 }
 
 .patients .content .search-container input 
@@ -92,6 +97,11 @@
     margin: 0;
 }
 
+.patients .content .excel-container .button:hover p 
+{
+    color: var(--text-color);
+}
+
 
 .patients .content .patients-container 
 {
@@ -104,6 +114,11 @@
     margin: 0 5rem 0;
     border-radius: 20px;
     padding: 2rem;
+}
+
+body.light .patients .content .patients-container 
+{
+    background: var(--over-difference-color-3);
 }
 
 .patients .content .patients-container .first-row 
@@ -127,11 +142,17 @@
     border-bottom: 1px solid rgba(255, 255, 255, .1);
     margin: .75rem auto;
     position: relative;
+
+}
+
+body.light .patients .content .patients-container .row 
+{
+    border-bottom: 1px solid var(--over-difference-color);
 }
 
 .patients .content .patients-container .first-row div p 
 {
-    color: #fff;
+    color: var(--text-color);
     font-family: "Inter";
     font-weight: 600;
 }
@@ -172,7 +193,7 @@
 .patients .content .patients-container .row div p
 {
 
-    color: rgba(255, 255, 255, .75);
+    color: var(--text-color);
     font-size: 20px;
     font-family: "Inter";
     font-weight: 400;
@@ -278,8 +299,6 @@
     position: fixed;
     right: 10px;
     bottom: 15px;
-    width: 65px;
-    height: 65px;
     background: var(--contrast-color);
     display: flex;
     justify-content: center;
@@ -291,19 +310,19 @@
 
 .content .add-button .add-icon 
 {
-    font-size: 40px;
+    width: 40px;
+    height: 40px;
     color: rgba(255, 255, 255, .75);
+    padding: 9.6px;
 }
 
 .content h2.center 
 {
-    color: rgba(255, 255, 255, .65);
+    color: var(--text-color-3);
     font-size: 45px;
 }
 
-.patients .content .patients-container .row .column
-{
-}
+
 
 .patients .content .patients-container .row .column .options-container 
 {
@@ -320,6 +339,12 @@
     z-index: -1;
     background: var(--dark-color);
     border-radius: 14px;
+}
+
+body.light .patients .content .patients-container .row .column .options-container 
+{
+    background: var(--over-difference-color-3);
+    backdrop-filter: blur(8px);
 }
 
 .patients .content .patients-container .row .column .options-container .option 

@@ -268,7 +268,7 @@ const DoctorSchedule = ({ data }) => {
                         </div>
                     
                         <div className="today" onClick={() => setDate(new Date())}>
-                            <p>{cookies.langauge === "en" ? "Today" : "Astazi"}</p>
+                            <p>{cookies.langauge === "en" ? "Return to curent day" : "Intoarce-te la ziua curenta"}</p>
                         </div>
                     </div>
 

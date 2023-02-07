@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import dayjs from "dayjs";
 
-const DateCustomInput = ({ changeDate, initialDate, future, past, label }) => {
+const DateCustomInput = ({ changeDate, initialDate, future, past, label, opening, inputHidden, headerOpen, changeOpenStatus }) => {
 
     const [value, setValue] = useState(dayjs(new Date(initialDate).toISOString()));
     const [cookies, setCookie] = useState();
@@ -18,20 +18,27 @@ const DateCustomInput = ({ changeDate, initialDate, future, past, label }) => {
       },
     });
 
+    const [openStatus, setOpen] = useState(opening);
 
     useEffect(() => {
         //if (value?.getTime() === new Date(initialDate).getTime()) return;
         const valueParsed = {...value};
         console.log(value, valueParsed, initialDate);
         if (!valueParsed?.$d) return;
+          
         changeDate(valueParsed.$d);
      
     }, [value]);
 
     // CSS for mui calendar
     const popperSx = {
+
+
         "& .MuiPaper-root": {
-            background: "var(--dark-color)"
+            background: "var(--dark-color)",
+            top: headerOpen === "desktop_active" ? '250px' : '180px',
+            left: headerOpen === "desktop_active" ? `${0.175 * window.innerWidth + 32}px` : headerOpen === "desktop_inactive" ? "32px" : `${(window.innerWidth - document?.querySelectorAll(".MuiPaper-root")[0]?.clientWidth) / 2}px`,
+            position: inputHidden ? 'absolute' : 'initial'
         },
 
         "& button.PrivatePickersYear-yearButton,  button.PrivatePickersMonth-root,  button.MuiPickersDay-root": {
@@ -81,17 +88,26 @@ const DateCustomInput = ({ changeDate, initialDate, future, past, label }) => {
           /> */}
         
           <DatePicker
+              open={openStatus}
+              onOpen={() => {
+                setOpen(true);
+                changeOpenStatus && changeOpenStatus(true);
+              }}
+              onClose={() => {
+                setOpen(false);
+                changeOpenStatus && changeOpenStatus(false);
+              }}
               inputFormat="DD/MM/YYYY"
               label={label}
               disableFuture={!future}
               disablePast={!past}
-              openTo="year"
+              openTo='day'
               views={['year', 'month', 'day']}
               value={value}
               onChange={(newValue) => {
                   setValue(newValue);
               }}
-              renderInput={(params) => <TextField {...params} />}
+              renderInput={(params) => <TextField style={{ display: inputHidden ? "none": "block" }} {...params} />}
               PopperProps={{
                 sx: popperSx
               }}

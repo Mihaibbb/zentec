@@ -5,13 +5,14 @@ import Header from '../Components/Header/Header';
 import { useLocation } from 'react-router-dom';
 import { useState, useRef, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faAngleDown, faAngleLeft, faAngleRight, faAngleUp, faBan, faMinus, faPlus, faTimes, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faAngleDown, faAngleLeft, faAngleRight, faAngleUp, faBan, faMinus, faPlus, faTimes, faUser, faTicket } from '@fortawesome/free-solid-svg-icons';
 import { useCookies } from 'react-cookie';
 import CreatePatient from '../CreatePatient/CreatePatient';
 import DoctorsFilter from '../Components/DoctorsFilter/DoctorsFilter';
 import getContrastForText from '../Functions/Contrast';
 import Select from "react-select";
 import DateCustomInput from "../Components/DatePicker/DatePicker";
+import ReactDOM from "react-dom";
 
 const Appointments = ({ data }) => {
 
@@ -64,6 +65,11 @@ const Appointments = ({ data }) => {
     const [appointmentIntervalWarning, setAppointmentIntervalWarning] = useState(false);
     const [activePlusButton, setActivePlusButton] = useState(false);
 
+    // State for date picker calendars are open
+    const [openDatePicker, setOpenDatePicker] = useState(false);
+    const [openDatePickerCreateApp, setOpenDatePickerCreateApp] = useState(false);
+    const [openDatePickerEditApp, setOpenDatePickerEditApp] = useState(false);
+
     // Dragging variables
     const [dragAppointment, setDragAppointment] = useState(false);
     const [dragPosition, setDragPosition] = useState(0);
@@ -94,6 +100,9 @@ const Appointments = ({ data }) => {
     const [activeGaps, setActiveGaps] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const [activeErrorMessage, setActiveErrorMessage] = useState();
+    const weekdayLabelsText = { ro: ['Dum', 'Lun', 'Mar', 'Mie', 'Joi', 'Vin', 'Sam'], en: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']};
+
+    const [headerElement, setHeaderElement] = useState(null);
 
     const doctorOptions = data.organisation.doctors.map(doctor => {
         return {
@@ -214,12 +223,36 @@ const Appointments = ({ data }) => {
 
    
     useEffect(() => {
+
         if (window.history?.state?.filterActive == null) return;
         if (filterActive === 1) setDays(setWorkingWeek());
         else if (filterActive === 2) setDays(setWeek());
         window.scrollTo(0, window.history?.state?.scrollY);
         window.history.replaceState(null, "");
+
     }, []);
+
+    useEffect(() => {
+        const sleep = setTimeout(() => {
+            if (!openDatePicker && !openDatePickerCreateApp && !openDatePickerEditApp) return;
+            const datepickerHeaderElements = document.querySelectorAll('.MuiDayPicker-header');
+            console.log(datepickerHeaderElements);
+            datepickerHeaderElements && datepickerHeaderElements.forEach(datepickerHeaderElement => {
+                const weekdayLabels = datepickerHeaderElement.querySelectorAll(".MuiDayPicker-weekDayLabel");
+                weekdayLabels && weekdayLabels.forEach((weekdayLabel, idx) => {
+                    console.log(weekdayLabel, cookies.language);
+                    weekdayLabel.innerText = weekdayLabelsText[cookies.language][idx];
+                });
+            });
+        }, 500);
+
+        return () => clearTimeout(sleep);
+
+    }, [openDatePicker, openDatePickerCreateApp, openDatePickerEditApp]);
+
+    useEffect(() => {
+        setHeaderElement(document?.querySelector(".navigation"));
+    }, [document?.querySelector(".navigation")]);
 
 
     const getSchedule = (dayFormat, doctorColor, doctorObject) => {
@@ -276,7 +309,7 @@ const Appointments = ({ data }) => {
     }, [appointmentDateValue]);
 
     const initiateAppointment = (e, currHour, gap, doctorObject, editing = false) => {
-        console.log("from first event", editing);
+
         if (isTouchDevice()) return;
         const target = e.target?.classList.contains("gap") ? e.target : e.target.parentElement;
         const initAppointmentStartHour = currHour + startHour;
@@ -552,6 +585,7 @@ const Appointments = ({ data }) => {
     };
     
     const createAppointment = async (e, doctorSchedules) => {
+        
         if (dragAppointment || activeResizing) return await finishDragAppointment();
         console.log('here', firstElement, lastElement);
         const startId = Number(firstElement.getAttribute('id'));
@@ -716,6 +750,11 @@ const Appointments = ({ data }) => {
             return;
         }
 
+        if (Number(appointmentEndHour) > endHour || (Number(appointmentEndHour) === endHour && Number(appointmentEndMinutes) > 0)) return setErrorMessage(cookies.language === "en" ? "End hour's appointment is not in the schedule!" : "Ora de sfarsit a programarii nu este in program!");
+        if (Number(appointmentStartHour) > endHour || (Number(appointmentStartHour) === endHour && Number(appointmentStartMinutes) > 0)) return setErrorMessage(cookies.language === "en" ? "Start hour's appointment is not in the schedule!" : "Ora de inceput a programarii nu este in program!");
+        if (Number(appointmentEndHour) < startHour) return setErrorMessage(cookies.language === "en" ? "End hour's appointment is not in the schedule!" : "Ora de sfarsit a programarii nu este in program!");
+        if (Number(appointmentStartHour) < startHour) return setErrorMessage(cookies.language === "en" ? "Start hour's appointment is not in the schedule!" : "Ora de inceput a programarii nu este in program!");
+
         const appointmentStartDate = new Date(new Date(appointmentDateValue).getFullYear(), new Date(appointmentDateValue).getMonth(), new Date(appointmentDateValue).getDate(), appointmentStartHour, appointmentStartMinutes);
         const appointmentEndDate = new Date(new Date(appointmentDateValue).getFullYear(), new Date(appointmentDateValue).getMonth(), new Date(appointmentDateValue).getDate(), appointmentEndHour, appointmentEndMinutes);
         
@@ -735,7 +774,8 @@ const Appointments = ({ data }) => {
             typeIncome: appointmentTypeIncome || null,
             notes: appointmentNotes,
             date: new Date(appointmentDateValue) || date,
-            saved: !patientSaved
+            saved: !patientSaved,
+            language: cookies.language
         };
 
         console.log(appointmentStartDate);
@@ -839,6 +879,11 @@ const Appointments = ({ data }) => {
 
     const editAppointment = async (currentAppointmentId) => {
 
+        if (Number(appointmentEndHour) > endHour || (Number(appointmentEndHour) === endHour && Number(appointmentEndMinutes) > 0)) return setErrorMessage(cookies.language === "en" ? "End hour's appointment is not in the schedule!" : "Ora de sfarsit a programarii nu este in program!");
+        if (Number(appointmentStartHour) > endHour || (Number(appointmentStartHour) === endHour && Number(appointmentStartMinutes) > 0)) return setErrorMessage(cookies.language === "en" ? "Start hour's appointment is not in the schedule!" : "Ora de inceput a programarii nu este in program!");
+        if (Number(appointmentEndHour) < startHour || (Number(appointmentEndHour) === startHour && Number(appointmentEndMinutes) > 0)) return setErrorMessage(cookies.language === "en" ? "End hour's appointment is not in the schedule!" : "Ora de sfarsit a programarii nu este in program!");
+        if (Number(appointmentStartHour) < startHour || (Number(appointmentStartHour) === startHour && Number(appointmentStartMinutes) > 0)) return setErrorMessage(cookies.language === "en" ? "Start hour's appointment is not in the schedule!" : "Ora de inceput a programarii nu este in program!");
+
         const appointmentStartDate = new Date(new Date(appointmentDateValue).getFullYear(), new Date(appointmentDateValue).getMonth(), new Date(appointmentDateValue).getDate(), appointmentStartHour, appointmentStartMinutes);
         const appointmentEndDate = new Date(new Date(appointmentDateValue).getFullYear(), new Date(appointmentDateValue).getMonth(), new Date(appointmentDateValue).getDate(), appointmentEndHour, appointmentEndMinutes);
 
@@ -861,6 +906,7 @@ const Appointments = ({ data }) => {
             appointmentId: currentAppointmentId,
             finished: appointmentFinished ? true : false,
             confirmed: appointmentConfirmed,
+            language: cookies.language
         };
 
         const options = {
@@ -1149,18 +1195,25 @@ const Appointments = ({ data }) => {
             //     });
             // });    
 
-            const titleAppointmentElement = document.createElement('p');
-            titleAppointmentElement.classList.add("appointment-interval");
-            titleAppointmentElement.classList.add("appointment-interval-title");
-            titleAppointmentElement.innerText = `${startHourAppointment < 10 ? `0${startHourAppointment}` : startHourAppointment}:${startMinutesAppointment < 10 ? `0${startMinutesAppointment}` : startMinutesAppointment} - ${endHourAppointment < 10 ? `0${endHourAppointment}` : endHourAppointment}:${endMinutesAppointment < 10 ? `0${endMinutesAppointment}` : endMinutesAppointment}`;
-            // titleAppointmentElement.innerText = `${isJSON(appointment.patients) ? JSON.parse(appointment.patients)[0].firstname : appointment.patients[0].firstname} ${isJSON(appointment.patients) ? JSON.parse(appointment.patients)[0].lastname : appointment.patients[0].lastname} -> ${appointment.title}`;
-            titleAppointmentElement.style.color = getContrastForText(doctorColor);
-            titleAppointmentElement.style.top = `calc(-100% - 20px + ${gapsRef.current[0].clientHeight}px)`;
-            if (appointmentLength > 3) {
-                titleAppointmentElement.style.fontSize = '20px';
-                titleAppointmentElement.style.height = `${gapsRef.current[0].clientHeight}px`;
-            }
-            currentGaps[startIdx].appendChild(titleAppointmentElement);
+            const titleAppointmentDivElement = document.createElement('div');
+            titleAppointmentDivElement.classList.add("appointment-interval-container");
+            currentGaps[startIdx].appendChild(titleAppointmentDivElement);
+
+            ReactDOM.render(
+            <>
+                <p className="appointment-interval appointment-interval-title" style={appointmentLength <= 3 ? { 
+                    color: getContrastForText(doctorColor), 
+                    top: `calc(-100% - 20px + ${gapsRef.current[0].clientHeight}px)`
+                } : {
+                    color: getContrastForText(doctorColor), 
+                    top: `calc(-100% - 20px + ${gapsRef.current[0].clientHeight}px)`, 
+                    fontSize: '20px',
+                    height: `${gapsRef.current[0].clientHeight}px`
+                }}>
+                    {startHourAppointment < 10 ? `0${startHourAppointment}` : startHourAppointment}:{startMinutesAppointment < 10 ? `0${startMinutesAppointment}` : startMinutesAppointment} - {endHourAppointment < 10 ? `0${endHourAppointment}` : endHourAppointment}:{endMinutesAppointment < 10 ? `0${endMinutesAppointment}` : endMinutesAppointment}
+                    {appointment.confirmed ? <FontAwesomeIcon icon={faCheck} className="check-appointment-icon" style={{ marginLeft: '10px', marginRight: '10px' }}/> : null}
+                </p>
+            </>, titleAppointmentDivElement);
 
             
             // const patientNameElement = document.createElement('p');
@@ -1502,6 +1555,13 @@ const Appointments = ({ data }) => {
 
     const changeAppointmentDateValue = newDateValue => setAppointmentDateValue(new Date(newDateValue));
     const handlePatientSaved = () => setActiveCreatePatient(false);
+    const changeDate = (currDate) => {
+        setDate(new Date(currDate));
+        // setOpenDatePicker(currValue => !currValue);
+    }
+
+    const handleOpenChangeCreate = (status) => setOpenDatePickerCreateApp(status);
+    const handleOpenChangeEdit = (status) => setOpenDatePickerEditApp(status);
 
     // When pressed doctor container inside doctor filter it will scroll to the doctor's appointments
 
@@ -1524,6 +1584,10 @@ const Appointments = ({ data }) => {
 
             <div className="content">
                 <Header data={data} />
+
+                <h2 className="title">{cookies.language === "en" ? "Appointments" : "Programari"}</h2>
+
+
                 <div className="filter" ref={filterRef}>
                     {filterRef && filterRef.current && filters.map((filter, idx) => (
                         <div key={idx} className={idx === filterActive ? "active" : ""} onClick={e => {
@@ -1576,7 +1640,11 @@ const Appointments = ({ data }) => {
                         }}>
                             <FontAwesomeIcon icon={faAngleLeft} className="title-icon" />
                         </div>
-                        <p>
+                        <p onClick={e => {
+                            setOpenDatePicker(currValue => !currValue);
+                            e.target.classList.add("clicked");
+                            setTimeout(() => e.target.classList.remove("clicked"), 500);
+                        }}>
                             {
                                 filterActive === 0 ? `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}` :
                                 filterActive === 1 || filterActive === 2 ? `${days[0].getDate()} - ${days[days.length - 1].getDate()} ${months[month]} ${year}` :
@@ -1585,6 +1653,19 @@ const Appointments = ({ data }) => {
                                 null
                             }
                         </p>
+                        {filterActive === 0 ? 
+                            <DateCustomInput
+                                key={new Date(date).toISOString() + (openDatePicker ? "1" : "0")} 
+                                changeDate={changeDate} 
+                                initialDate={new Date(date)} 
+                                future={true} 
+                                past={true} 
+                                label={cookies.language === "en" ? "Appointment date" : "Data programare"} 
+                                inputHidden={true}
+                                opening={openDatePicker} 
+                                headerOpen={window.innerWidth >= 1200 ? (headerElement?.classList?.contains("active") ? 'desktop_active' : 'desktop_inactive') : 'mobile_active'}
+                            /> 
+                        : null}
                         <div className="title-btn" onClick={() => {
                             if (filterActive === 0) {
                                 setDate(currDate => {
@@ -1626,7 +1707,7 @@ const Appointments = ({ data }) => {
                             setFilterActive(0);
                             setDate(new Date());
                             setDays([new Date()]);
-                        }}>{cookies.langauge === "en" ? "Today" : "Astazi"}</p>
+                        }}>{cookies.langauge === "en" ? "Return to curent day" : "Intoarce-te la ziua curenta"}</p>
                     </div>
                 </div>
                     
@@ -1850,7 +1931,7 @@ const Appointments = ({ data }) => {
            
                             <div className={`non-visible ${appointmentPatient.length > 0 ? "active" : ""}`} />
 
-                            <div className="label">
+                            {window.innerWidth >= 800 ? <div className="label">
                                 <p>{cookies.language === "en" ? "Start Hour" : "Ora inceput"}</p>
                                 <div className="label-row hour-label">
                                     <div className="input">
@@ -1874,22 +1955,64 @@ const Appointments = ({ data }) => {
                                             <FontAwesomeIcon icon={faAngleDown} className="scale-icon" onClick={() => {
                                                 if (Number(appointmentStartMinutes) - minutesPerGap >= 0) setAppointmentStartMinutes(value => value - minutesPerGap);
                                                 else if (Number(appointmentStartHour) > startHour) {
-                                                    setAppointmentStartHour(currHour => Number(currHour) - 1);
+                                                    setAppointmentStartHour(currHour => Number(currHour) - 1 < 10 ? `0${Number(currHour) - 1}` : Number(currHour) - 1);
                                                     setAppointmentStartMinutes(60 - minutesPerGap);
                                                 }
                                             }} />
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> : 
+                            
+                            <div className="label-row label">
+                                <div className="label-column">
+                                    <p>{cookies.language === "en" ? "Start Hour" : "Ora inceput"}</p>
+                                    <div className="appointment-input">
+                                        <div className="scale scale-left" onClick={() => (Number(appointmentStartHour) - 1 >= startHour) && setAppointmentStartHour(value => Number(value) - 1 < 10 ? `0${Number(value) - 1}` : Number(value) - 1)}>
+                                            <FontAwesomeIcon icon={faMinus} className="scale-icon" />
+                                        </div>
+                                        <input type="number" className="number-input" value={appointmentStartHour} onChange={e => setAppointmentStartHour(e.target.value)} placeholder={cookies.language === "en" ? "Hour" : "Ora"} />
+                                        <div className="scale scale-right" onClick={() => (Number(appointmentStartHour) + 1 <= endHour) && setAppointmentStartHour(value => Number(value) + 1 < 10 ? `0${Number(value) + 1}` : Number(value) + 1)}>
+                                            <FontAwesomeIcon icon={faPlus} className="scale-icon" />
+                                        </div>
+                                    </div>
+                                </div>
 
-                            <div className="label">
+                                <div className="label-column">
+                                    <div className="appointment-input">
+                                        <div className="scale scale-left" onClick={() => {
+                                            if (Number(appointmentStartMinutes) - minutesPerGap >= 0) setAppointmentStartMinutes(value => value - minutesPerGap);
+                                            else if (Number(appointmentStartHour) > startHour) {
+                                                setAppointmentStartHour(currHour => Number(currHour) - 1 < 10 ? `0${Number(currHour) - 1}` : Number(currHour) - 1);
+                                                setAppointmentStartMinutes(60 - minutesPerGap);
+                                            }
+                                        }}>
+                                            <FontAwesomeIcon icon={faMinus} className="scale-icon" />
+                                        </div>
+                                        <input type="number" className="number-input" value={appointmentStartMinutes} onChange={e => setAppointmentStartMinutes(e.target.value)} placeholder={cookies.language === "en" ? "Minutes" : "Minute"} />
+                                        <div className="scale scale-right" onClick={() => {
+                                            
+                                            if (Number(appointmentStartMinutes) + minutesPerGap < 60) setAppointmentStartMinutes(value => Number(value) + minutesPerGap < 10 ? `0${Number(value) + minutesPerGap}` : Number(value) + minutesPerGap) 
+                                            else if (Number(appointmentStartHour) < endHour) {
+                                                setAppointmentStartHour(currHour => Number(currHour) + 1 < 10 ? `0${Number(currHour) + 1}` : Number(currHour) + 1);
+                                                setAppointmentStartMinutes('00');
+                                            }
+                                            
+                                        }}>
+                                            <FontAwesomeIcon icon={faPlus} className="scale-icon" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            }
+
+                            {window.innerWidth >= 800 ? <div className="label">
                                 <p>{cookies.language === "en" ? "End Hour" : "Ora sfarsit"}</p>
 
                                 <div className="label-row hour-label">
 
                                     <div className="input">
-                                        <input type="number" placeholder={cookies.language === "en" ? "Hour" : "Ora"} value={appointmentEndHour === 0 || appointmentEndHour === "" ? "" : Number(appointmentEndHour) < 10 ? `0${Number(appointmentEndHour)}` : Number(appointmentEndHour)} onChange={e => setAppointmentEndHour(Number(e.target.value))} />
+                                        <input type="number" placeholder={cookies.language === "en" ? "Hour" : "Ora"} value={appointmentEndHour} onChange={e => setAppointmentEndHour(e.target.value)} />
                                         <div className="scale">
                                             <FontAwesomeIcon icon={faAngleUp} className="scale-icon" onClick={() => Number(appointmentEndHour) + 1 <= Number(endHour) && setAppointmentEndHour(value => Number(value) + 1)} />
                                             <FontAwesomeIcon icon={faAngleDown} className="scale-icon" onClick={() => Number(appointmentEndHour) - 1 >= Number(startHour) && setAppointmentEndHour(value => Number(value) - 1)} />
@@ -1897,13 +2020,13 @@ const Appointments = ({ data }) => {
                                     </div>
 
                                     <div className="input">
-                                        <input type="number" placeholder={cookies.language === "en" ? "Minutes" : "Minute"} value={appointmentEndMinutes === 0 || appointmentEndMinutes === "" ? "" : appointmentEndMinutes < 10 ? `0${appointmentEndMinutes}` : appointmentEndMinutes} onChange={e => setAppointmentEndMinutes(e.target.value)} />
+                                        <input type="number" placeholder={cookies.language === "en" ? "Minutes" : "Minute"} value={appointmentEndMinutes} onChange={e => setAppointmentEndMinutes(e.target.value)} />
                                         <div className="scale">
                                             <FontAwesomeIcon icon={faAngleUp} className="scale-icon" onClick={() => {
                                                 if (Number(appointmentEndMinutes) + minutesPerGap < 60) setAppointmentEndMinutes(value => Number(value) + minutesPerGap);
                                                 else if (Number(appointmentEndHour) < endHour) {
                                                     setAppointmentEndHour(currHour => Number(currHour) + 1);
-                                                    setAppointmentEndMinutes(0);
+                                                    setAppointmentEndMinutes('00');
                                                 }
                                             }} />
                                             <FontAwesomeIcon icon={faAngleDown} className="scale-icon" onClick={() => {
@@ -1917,7 +2040,48 @@ const Appointments = ({ data }) => {
                                     </div>
                                     
                                 </div>
-                            </div>
+                            </div> : 
+                            
+                            <div className="label-row label">
+                                <div className="label-column">
+                                    <p>{cookies.language === "en" ? "End Hour" : "Ora sfarsit"}</p>
+                                    <div className="appointment-input">
+                                        <div className="scale scale-left" onClick={() => (Number(appointmentEndHour) - 1 >= startHour) && setAppointmentEndHour(value => Number(value) - 1 < 10 ? `0${Number(value) - 1}` : Number(value) - 1)}>
+                                            <FontAwesomeIcon icon={faMinus} className="scale-icon" />
+                                        </div>
+                                        <input type="number" className="number-input" value={appointmentEndHour} onChange={e => setAppointmentEndHour(e.target.value)} placeholder={cookies.language === "en" ? "Hour" : "Ora"} />
+                                        <div className="scale scale-right" onClick={() => (Number(appointmentEndHour) + 1 <= endHour) && setAppointmentEndHour(value => Number(value) + 1 < 10 ? `0${Number(value) + 1}` : Number(value) + 1)}>
+                                            <FontAwesomeIcon icon={faPlus} className="scale-icon" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="label-column">
+                                    <div className="appointment-input">
+                                        <div className="scale scale-left" onClick={() => {
+                                            if (Number(appointmentEndMinutes) - minutesPerGap >= 0) setAppointmentEndMinutes(value => value - minutesPerGap);
+                                            else if (Number(appointmentEndHour) > startHour) {
+                                                setAppointmentEndHour(currHour => Number(currHour) - 1 < 10 ? `0${Number(currHour) - 1}` : Number(currHour) - 1);
+                                                setAppointmentEndMinutes(60 - minutesPerGap);
+                                            }
+                                        }}>
+                                            <FontAwesomeIcon icon={faMinus} className="scale-icon" />
+                                        </div>
+                                        <input type="number" className="number-input" value={appointmentEndMinutes} onChange={e => setAppointmentEndMinutes(e.target.value)} placeholder={cookies.language === "en" ? "Minutes" : "Minute"} />
+                                        <div className="scale scale-right" onClick={() => {
+                                            
+                                            if (Number(appointmentEndMinutes) + minutesPerGap < 60) setAppointmentEndMinutes(value => Number(value) + minutesPerGap < 10 ? `0${Number(value) + minutesPerGap}` : Number(value) + minutesPerGap) 
+                                            else if (Number(appointmentEndHour) < endHour) {
+                                                setAppointmentEndHour(currHour => Number(currHour) + 1 < 10 ? `0${Number(currHour) + 1}` : Number(currHour) + 1);
+                                                setAppointmentEndMinutes('00');
+                                            }
+                                            
+                                        }}>
+                                            <FontAwesomeIcon icon={faPlus} className="scale-icon" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>}
 
                             <div className="label">
                                 <p>{cookies.language === "en" ? "Cost" : "Cost"}</p>
@@ -1941,7 +2105,7 @@ const Appointments = ({ data }) => {
 
                             {appointmentDateValue && <div className="label">
                                 <p>{cookies.language === "en" ? "Date" : "Data"}</p>
-                                <DateCustomInput key={new Date(appointmentDateValue).toISOString()} changeDate={changeAppointmentDateValue} initialDate={new Date(appointmentDateValue)} future={true} past={false} label={cookies.language === "en" ? "Appointment date" : "Data programare"} />
+                                <DateCustomInput opening={openDatePickerCreateApp} changeOpenStatus={handleOpenChangeCreate} key={new Date(appointmentDateValue).toISOString()} changeDate={changeAppointmentDateValue} initialDate={new Date(appointmentDateValue)} future={true} past={false} label={cookies.language === "en" ? "Appointment date" : "Data programare"} />
                             </div>}
 
                             <div className="label one-row">
@@ -1994,72 +2158,157 @@ const Appointments = ({ data }) => {
                                 }
                             </div>
 
-                            <div className="label">
+                            {window.innerWidth >= 800 ? <div className="label">
                                 <p>{cookies.language === "en" ? "Start Hour" : "Ora inceput"}</p>
                                 <div className="label-row hour-label">
                                     <div className="input">
-                                        <input type="number" onChange={e => setAppointmentStartHour(Number(e.target.value))} placeholder={cookies.language === "en" ? "Hour" : "Ora"} value={Number(appointmentStartHour) < 10 ? `0${Number(appointmentStartHour)}` : Number(appointmentStartHour)} />
+                                        <input type="number" onChange={e => setAppointmentStartHour(e.target.value)} placeholder={cookies.language === "en" ? "Hour" : "Ora"} value={appointmentStartHour} />
                                         <div className="scale">
-                                            <FontAwesomeIcon icon={faAngleUp} className="scale-icon" onClick={() => Number(appointmentStartHour) + 1 <= endHour && setAppointmentStartHour(value => Number(value) + 1)} />
-                                            <FontAwesomeIcon icon={faAngleDown} className="scale-icon" onClick={() => Number(appointmentStartHour) - 1 >= startHour && setAppointmentStartHour(value => Number(value) - 1)} />
+                                            <FontAwesomeIcon icon={faAngleUp} className="scale-icon" onClick={() => (Number(appointmentStartHour) + 1 <= endHour) && setAppointmentStartHour(value => Number(value) + 1 < 10 ? `0${Number(value) + 1}` : Number(value) + 1)} />
+                                            <FontAwesomeIcon icon={faAngleDown} className="scale-icon" onClick={() => (Number(appointmentStartHour) - 1 >= startHour) && setAppointmentStartHour(value => Number(value) - 1 < 10 ? `0${Number(value) - 1}` : Number(value) - 1)} />
                                         </div>
 
                                     </div>
                                     <div className="input">
-                                        <input type="number" value={Number(appointmentStartMinutes) < 10 ? `0${Number(appointmentStartMinutes)}` : Number(appointmentStartMinutes)} onChange={e => setAppointmentStartMinutes(Number(e.target.value))} placeholder={cookies.language === "en" ? "Minutes" : "Minute"}  />
+                                        <input type="number" value={appointmentStartMinutes} onChange={e => setAppointmentStartMinutes(e.target.value)} placeholder={cookies.language === "en" ? "Minutes" : "Minute"}  />
                                         <div className="scale">
                                             <FontAwesomeIcon icon={faAngleUp} className="scale-icon" onClick={() => {
-                                                if (Number(appointmentStartMinutes) + Number(minutesPerGap) < 60) setAppointmentStartMinutes(value => Number(value) + minutesPerGap);
-                                                else if (Number(appointmentStartHour) < Number(endHour)) {
+                                                if (Number(appointmentStartMinutes) + minutesPerGap < 60) setAppointmentStartMinutes(value => Number(value) + minutesPerGap < 10 ? `0${Number(value) + minutesPerGap}` : Number(value) + minutesPerGap) 
+                                                else if (Number(appointmentStartHour) < endHour) {
+                                                    setAppointmentStartHour(currHour => Number(currHour) + 1 < 10 ? `0${Number(currHour) + 1}` : Number(currHour) + 1);
                                                     setAppointmentStartMinutes(0);
-                                                    setAppointmentStartHour(currHour => Number(currHour) + 1)
                                                 }
                                             }} />
                                             <FontAwesomeIcon icon={faAngleDown} className="scale-icon" onClick={() => {
-                                                if (Number(appointmentStartMinutes) - Number(minutesPerGap) >= 0) setAppointmentStartMinutes(value => Number(value) - minutesPerGap);
-                                                else if (Number(appointmentStartHour) > Number(startHour)) {
+                                                if (Number(appointmentStartMinutes) - minutesPerGap >= 0) setAppointmentStartMinutes(value => value - minutesPerGap);
+                                                else if (Number(appointmentStartHour) > startHour) {
+                                                    setAppointmentStartHour(currHour => Number(currHour) - 1 < 10 ? `0${Number(currHour) - 1}` : Number(currHour) - 1);
                                                     setAppointmentStartMinutes(60 - minutesPerGap);
-                                                    setAppointmentStartHour(currHour => Number(currHour) - 1);
                                                 }
                                             }} />
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> : 
+                            
+                            <div className="label-row label">
+                                <div className="label-column">
+                                    <p>{cookies.language === "en" ? "Start Hour" : "Ora inceput"}</p>
+                                    <div className="appointment-input">
+                                        <div className="scale scale-left" onClick={() => (Number(appointmentStartHour) - 1 >= startHour) && setAppointmentStartHour(value => Number(value) - 1 < 10 ? `0${Number(value) - 1}` : Number(value) - 1)}>
+                                            <FontAwesomeIcon icon={faMinus} className="scale-icon" />
+                                        </div>
+                                        <input type="number" className="number-input" value={appointmentStartHour} onChange={e => setAppointmentStartHour(e.target.value)} placeholder={cookies.language === "en" ? "Hour" : "Ora"} />
+                                        <div className="scale scale-right" onClick={() => (Number(appointmentStartHour) + 1 <= endHour) && setAppointmentStartHour(value => Number(value) + 1 < 10 ? `0${Number(value) + 1}` : Number(value) + 1)}>
+                                            <FontAwesomeIcon icon={faPlus} className="scale-icon" />
+                                        </div>
+                                    </div>
+                                </div>
 
-                            <div className="label">
+                                <div className="label-column">
+                                    <div className="appointment-input">
+                                        <div className="scale scale-left" onClick={() => {
+                                            if (Number(appointmentStartMinutes) - minutesPerGap >= 0) setAppointmentStartMinutes(value => value - minutesPerGap);
+                                            else if (Number(appointmentStartHour) > startHour) {
+                                                setAppointmentStartHour(currHour => Number(currHour) - 1 < 10 ? `0${Number(currHour) - 1}` : Number(currHour) - 1);
+                                                setAppointmentStartMinutes(60 - minutesPerGap);
+                                            }
+                                        }}>
+                                            <FontAwesomeIcon icon={faMinus} className="scale-icon" />
+                                        </div>
+                                        <input type="number" className="number-input" value={appointmentStartMinutes} onChange={e => setAppointmentStartMinutes(e.target.value)} placeholder={cookies.language === "en" ? "Minutes" : "Minute"} />
+                                        <div className="scale scale-right" onClick={() => {
+                                            
+                                            if (Number(appointmentStartMinutes) + minutesPerGap < 60) setAppointmentStartMinutes(value => Number(value) + minutesPerGap < 10 ? `0${Number(value) + minutesPerGap}` : Number(value) + minutesPerGap) 
+                                            else if (Number(appointmentStartHour) < endHour) {
+                                                setAppointmentStartHour(currHour => Number(currHour) + 1 < 10 ? `0${Number(currHour) + 1}` : Number(currHour) + 1);
+                                                setAppointmentStartMinutes('00');
+                                            }
+                                            
+                                        }}>
+                                            <FontAwesomeIcon icon={faPlus} className="scale-icon" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            }
+
+                            {window.innerWidth >= 800 ? <div className="label">
                                 <p>{cookies.language === "en" ? "End Hour" : "Ora sfarsit"}</p>
+
                                 <div className="label-row hour-label">
+
                                     <div className="input">
-                                        <input type="number" placeholder={cookies.language === "en" ? "Hour" : "Ora"} value={Number(appointmentEndHour) < 10 ? `0${Number(appointmentEndHour)}` : Number(appointmentEndHour)} onChange={e => setAppointmentEndHour(Number(e.target.value))} />
+                                        <input type="number" placeholder={cookies.language === "en" ? "Hour" : "Ora"} value={appointmentEndHour} onChange={e => setAppointmentEndHour(e.target.value)} />
                                         <div className="scale">
                                             <FontAwesomeIcon icon={faAngleUp} className="scale-icon" onClick={() => Number(appointmentEndHour) + 1 <= Number(endHour) && setAppointmentEndHour(value => Number(value) + 1)} />
                                             <FontAwesomeIcon icon={faAngleDown} className="scale-icon" onClick={() => Number(appointmentEndHour) - 1 >= Number(startHour) && setAppointmentEndHour(value => Number(value) - 1)} />
                                         </div>
                                     </div>
+
                                     <div className="input">
-                                        <input type="number" placeholder={cookies.language === "en" ? "Minutes" : "Minute"} value={Number(appointmentEndMinutes) < 10 ? `0${Number(appointmentEndMinutes)}` : Number(appointmentEndMinutes)} onChange={e => setAppointmentEndMinutes(Number(e.target.value))} />
+                                        <input type="number" placeholder={cookies.language === "en" ? "Minutes" : "Minute"} value={appointmentEndMinutes} onChange={e => setAppointmentEndMinutes(e.target.value)} />
                                         <div className="scale">
                                             <FontAwesomeIcon icon={faAngleUp} className="scale-icon" onClick={() => {
                                                 if (Number(appointmentEndMinutes) + minutesPerGap < 60) setAppointmentEndMinutes(value => Number(value) + minutesPerGap);
                                                 else if (Number(appointmentEndHour) < endHour) {
-                                                    setAppointmentEndHour(value => Number(value) + 1);
-                                                    setAppointmentEndMinutes(0);
+                                                    setAppointmentEndHour(currHour => Number(currHour) + 1);
+                                                    setAppointmentEndMinutes('00');
                                                 }
                                             }} />
                                             <FontAwesomeIcon icon={faAngleDown} className="scale-icon" onClick={() => {
                                                 if (Number(appointmentEndMinutes) - minutesPerGap >= 0) setAppointmentEndMinutes(value => Number(value) - minutesPerGap);
                                                 else if (Number(appointmentEndHour) > startHour) {
-                                                    setAppointmentEndHour(value => Number(value) - 1);
+                                                    setAppointmentEndHour(currHour => Number(currHour) - 1);
                                                     setAppointmentEndMinutes(60 - minutesPerGap);
                                                 }
-                                            }}/>
+                                            }} />
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div> : 
+                            
+                            <div className="label-row label">
+                                <div className="label-column">
+                                    <p>{cookies.language === "en" ? "End Hour" : "Ora sfarsit"}</p>
+                                    <div className="appointment-input">
+                                        <div className="scale scale-left" onClick={() => (Number(appointmentEndHour) - 1 >= startHour) && setAppointmentEndHour(value => Number(value) - 1 < 10 ? `0${Number(value) - 1}` : Number(value) - 1)}>
+                                            <FontAwesomeIcon icon={faMinus} className="scale-icon" />
+                                        </div>
+                                        <input type="number" className="number-input" value={appointmentEndHour} onChange={e => setAppointmentEndHour(e.target.value)} placeholder={cookies.language === "en" ? "Hour" : "Ora"} />
+                                        <div className="scale scale-right" onClick={() => (Number(appointmentEndHour) + 1 <= endHour) && setAppointmentEndHour(value => Number(value) + 1 < 10 ? `0${Number(value) + 1}` : Number(value) + 1)}>
+                                            <FontAwesomeIcon icon={faPlus} className="scale-icon" />
                                         </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div className="label">
+                                <div className="label-column">
+                                    <div className="appointment-input">
+                                        <div className="scale scale-left" onClick={() => {
+                                            if (Number(appointmentEndMinutes) - minutesPerGap >= 0) setAppointmentEndMinutes(value => value - minutesPerGap);
+                                            else if (Number(appointmentEndHour) > startHour) {
+                                                setAppointmentEndHour(currHour => Number(currHour) - 1 < 10 ? `0${Number(currHour) - 1}` : Number(currHour) - 1);
+                                                setAppointmentEndMinutes(60 - minutesPerGap);
+                                            }
+                                        }}>
+                                            <FontAwesomeIcon icon={faMinus} className="scale-icon" />
+                                        </div>
+                                        <input type="number" className="number-input" value={appointmentEndMinutes} onChange={e => setAppointmentEndMinutes(e.target.value)} placeholder={cookies.language === "en" ? "Minutes" : "Minute"} />
+                                        <div className="scale scale-right" onClick={() => {
+                                            
+                                            if (Number(appointmentEndMinutes) + minutesPerGap < 60) setAppointmentEndMinutes(value => Number(value) + minutesPerGap < 10 ? `0${Number(value) + minutesPerGap}` : Number(value) + minutesPerGap) 
+                                            else if (Number(appointmentEndHour) < endHour) {
+                                                setAppointmentEndHour(currHour => Number(currHour) + 1 < 10 ? `0${Number(currHour) + 1}` : Number(currHour) + 1);
+                                                setAppointmentEndMinutes('00');
+                                            }
+                                            
+                                        }}>
+                                            <FontAwesomeIcon icon={faPlus} className="scale-icon" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>}                            <div className="label">
                                 <p>{cookies.language === "en" ? "Cost" : "Cost"}</p>
                                 
                                 <div className="appointment-input">
@@ -2075,7 +2324,7 @@ const Appointments = ({ data }) => {
 
                             {appointmentDateValue && <div className="label">
                                 <p>{cookies.language === "en" ? "Date" : "Data"}</p>
-                                <DateCustomInput key={new Date(appointmentDateValue).toISOString()}changeDate={changeAppointmentDateValue} initialDate={new Date(appointmentDateValue)} future={true} past={false} label={cookies.language === "en" ? "Appointment date" : "Data programare"} />
+                                <DateCustomInput opening={openDatePickerEditApp} changeOpenStatus={handleOpenChangeEdit} key={new Date(appointmentDateValue).toISOString()}changeDate={changeAppointmentDateValue} initialDate={new Date(appointmentDateValue)} future={true} past={false} label={cookies.language === "en" ? "Appointment date" : "Data programare"} />
                             </div>}
 
                             <div className="label one-row">
@@ -2159,12 +2408,11 @@ const Appointments = ({ data }) => {
                 }
 
                 {activePlusButton ? <div className="add-button" onClick={() => {
-                    
+                    setAppointmentDateValue(filterActive === 0 ? new Date(date) : new Date(days[0]));
                     setActiveCreateAppointment(true);
                 }}>
                     <FontAwesomeIcon icon={faPlus} className="add-icon" />
                 </div> : null}
-
            
                 <div className={`error-message-button ${activeErrorMessage ? "active" : ""}`}>
                     <p>{cookies?.language === "en" ? "You can't create / edit an appointment in the past!" : "Nu puteti crea / edita o programare in trecut!"}</p>

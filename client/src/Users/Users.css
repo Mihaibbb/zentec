@@ -1,6 +1,5 @@
 .patients .content 
 {
-    overflow: hidden;
 }
 
 .column 
@@ -101,6 +100,7 @@
 
 
 
+
 .patients .content .patients-container .row .column .options-container .option
 {
     cursor: initial;
@@ -154,6 +154,11 @@
     cursor: pointer;
 }
 
+.patients .content .patients-container .first-row
+{
+    margin: 1rem auto;
+}
+
 
 @media only screen and (max-width: 1000px)
 {
@@ -188,6 +193,7 @@
     .patients .content .patients-container
     {
         padding: 1rem 0.75rem;
+        margin: 1rem .5rem 5rem;
     }
 
     .patients .content .patients-container .first-row div p

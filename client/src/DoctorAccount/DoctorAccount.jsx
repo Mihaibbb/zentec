@@ -154,7 +154,7 @@ const DoctorAccount = ({ data }) => {
 
                     </div>
 
-                    <div className="input">
+                    {/* <div className="input">
                         <div className="option">
                             <div className={`box ${multipleSchedules ? "active" : ""}`} onClick={() => setMultipleSchedules(curr => !curr)}>
                                 {multipleSchedules && 
@@ -163,7 +163,7 @@ const DoctorAccount = ({ data }) => {
                             </div>
                             <p>{cookies.language === "en" ? "Allow multiple schedules" : "Permite programari multiple"}</p>
                         </div>
-                    </div>
+                    </div> */}
 
                     <div className="input">
                         <div className="option">

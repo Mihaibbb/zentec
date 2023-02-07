@@ -27,6 +27,20 @@
     font-weight: bold;
     color: var(--text-color);
     cursor: pointer;
+    background: var(--over-difference-color-3);
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 50px;
+    border: 1px solid var(--contrast-color);
+
+}
+
+.doctor-schedule .schedule-container .first-row .today p 
+{
+    font-size: 20px;
+    margin-top: 14px;
+    margin-bottom: 14px;
+    text-align: center;
 }
 
 .doctor-schedule .schedule-container .first-row .date-title-container
@@ -139,6 +153,11 @@
 {
     color: var(--text-color);
     text-align: center;
+}
+
+.doctor-schedule .schedule-container .schedule-filter .filter.active p
+{
+    color: var(--home-opposite-text-color);
 }
 
 .doctor-schedule .schedule-container .schedules 
@@ -345,6 +364,15 @@
 
 @media only screen and (max-width: 800px)
 {
+
+    .doctor-schedule .schedule-container .first-row .today 
+    {
+        width: 85%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    
 
     .doctor-schedule .schedule-container
     {

@@ -1,13 +1,17 @@
 import './Navigation.css';
 import logo from "../../imgs/logo_zentec3.svg";
+import logoBlack from "../../imgs/logo_zentec3_black.svg";
 import dashboardIcon from "../../imgs/icons/dashboard-icon.svg";
+import dashboardIconBlack from "../../imgs/icons/dashboard-icon_black.svg";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleDown, faBedPulse, faCalendarDays, faClose, faCoffee, faDashboard, faHandHoldingDollar, faHeart, faUserDoctor } from "@fortawesome/free-solid-svg-icons"
 import settingsIcon from "../../imgs/icons/settings-icon.svg";
 import { useNavigate } from "react-router-dom";
 import { useCookies } from 'react-cookie';
 import patientIcon from "../../imgs/icons/patient.svg";
+import patientIconBlack from "../../imgs/icons/patient_black.svg";
 import patientIconActive from "../../imgs/icons/patientIconActive.svg";
+
 import { useState, useRef, useEffect } from 'react';
 
 const Navigation = ({ show, page }) => {
@@ -16,6 +20,7 @@ const Navigation = ({ show, page }) => {
     const [cookies, setCookie] = useCookies();
     const [closed, setClosed] = useState(false);
     const [doctorsSubmenuActive, setDoctorsSubmenuActive] = useState(false);
+    const [theme, setTheme] = useState(cookies?.theme);
 
     const navigationElement = useRef();
     const settingsRef = useRef();
@@ -24,6 +29,10 @@ const Navigation = ({ show, page }) => {
         if (!settingsRef?.current) return;
         settingsRef.current.style.marginBottom = `${settingsRef.current.clientHeight}px`;
     }, [settingsRef]);
+
+    useEffect(() => {
+        setTheme(cookies?.theme);
+    }, [document.cookie]);
 
     return (
         <div className="navigation active" ref={navigationElement}>
@@ -36,11 +45,11 @@ const Navigation = ({ show, page }) => {
             }} />
 
             <div className="logo">
-                <img src={logo} className="logo-img" />
+                <img src={theme === "light" ? logoBlack : logo} className="logo-img" />
             </div>
 
             <div className={`item ${page === "dashboard" ? "active" : ""}`} onClick={() => navigation("/dashboard")}>
-                <img src={dashboardIcon} className="item-img" />
+                <img src={theme === "light" && page !== "dashboard" ? dashboardIconBlack : dashboardIcon} className="item-img" />
                 <h3>{cookies.language === "en" ? "Dashboard" : "Panou de control"}</h3>
             </div>
 
@@ -64,7 +73,7 @@ const Navigation = ({ show, page }) => {
 
             <div className={`item ${page === "patients" ? "active" : ""}`} onClick={() => navigation("/patients")}>
                 {/* <FontAwesomeIcon icon={faBedPulse} className="item-icon" /> */}
-                <img src={page === "patients" ? patientIconActive : patientIcon} className="patient-icon" />
+                <img src={page === "patients" ? patientIconActive : theme === "light" ? patientIconBlack : patientIcon} className="patient-icon" />
                 <h3>{cookies.language === "en" ? "Patients" : "Pacienti"}</h3>
             </div>
 

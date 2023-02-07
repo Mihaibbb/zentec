@@ -64,8 +64,17 @@ const CreateOrganisation = () => {
         else setErrorMessage(cookies.language === "en" ? "An error occured!" : "A aparut o eroare!");
     };
 
+    const isUsedId = async (currId) => {
+        
+    };
+
     useEffect(() => {
-        setOrgId(generateId(25));
+        // (async () => {
+        //     let newId = generateId(4);
+        //     while (await isIdUsed(newId)) newId = generateId(4);
+        //     setOrgId(generateId(4));
+        // })();
+        setOrgId(25);
     }, []);
 
     const location = useLocation();

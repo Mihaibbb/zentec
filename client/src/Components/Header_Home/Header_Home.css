@@ -41,7 +41,7 @@ header .logo
 header .logo p
 {
     font-weight: bolder;
-    color: var(--text-color);
+    color: var(--home-opposite-text-color);
     display: none;
 }
 
@@ -50,17 +50,19 @@ header .items
 {
     display: flex;
     justify-content: flex-start;
-    gap: 1rem;
+ 
 
 }
 
 header .items .item 
 {
-    color: var(--text-color);
+    color: var(--home-opposite-text-color);
     cursor: pointer;
     font-size: 16gpx;
     font-family: "Inter";
     font-weight: 600;
+    margin-left: 16px;
+    margin-right: 16px;
 }
 
 header .right-container,
@@ -96,7 +98,7 @@ header .right-container .button
 
 header .right-container .button p 
 {
-    color: var(--text-color);
+    color: var(--home-opposite-text-color);
     font-family: "Inter";
     font-weight: 600;
     transition: all 400ms ease-in-out;
@@ -109,8 +111,7 @@ header .right-container .button:hover
 
 header .right-container .button:hover p
 {
-    color: var(--text-color);
-
+    color: var(--home-opposite-text-color);
 }
 
 @media only screen and (max-width: 800px)

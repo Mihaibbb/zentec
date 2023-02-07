@@ -107,28 +107,39 @@ input[type=date] {
 
 /* :root 
 {
-  --background: #f7f7f7;
+  --background: #080f23;
   --contrast-color: #8146ff;
   --contrast-color-highlight: #6f36e9;
   --contrast-color-2: #579AFF;
   --contrast-color-3: #FF447C;
-  --background-color: #f5f5f5;
-  --background-contrast: #e5e5e5;
-  --dark-color: #666;
+  --background-color: #192846;
+  --background-contrast: rgba(0, 0, 0, .6);
+  --dark-color: #000;
   --light-color: #fff;
-  --text-color: #222;
-  --text-color-2: #000;
-  --text-color-3: #666;
-  --text-color-4: #999;
-  --selector-color: rgba(34, 184, 207, 0.5);
-  --over-color: rgba(255, 255, 255, .2);
-  --over-color-2:  rgba(255, 255, 255, .6);
-  --over-difference-color:  rgba(0, 0, 0, .2);
-  --over-difference-color-2:  rgba(0, 0, 0, .075);
+  --text-color: rgba(255, 255, 255, .8);
+  --text-color-2: #fff;
+  --text-color-3: rgba(255, 255, 255, .6);
+  --text-color-4: rgba(255, 255, 255, .5);
+  --selector-color: rgba(10, 110, 114, 0.5);
+  --over-color: rgba(0, 0, 0, .2);
+  --over-color-2: rgba(0, 0, 0, .6);
+  --over-difference-color: rgba(255, 255, 255, .2);
+  --over-difference-color-2: rgba(255, 255, 255, .075);
   --over-difference-color-3: rgba(125, 125, 255, .18);
   --error-color: crimson;
   --success-color: #589858;
   --selected-color: rgba(95, 61, 128, 0.973);
+
+  --home-text-color: rgba(0, 0, 0, 1);
+  --home-contrast-color: rgb(101,55,217);
+  --home-contrast-color-2: rgb(231,54,118);
+  --home-text-color-2: #7F7F7F;
+  --home-text-color-transparent: rgba(255, 255, 255, .8);
+  --home-opposite-text-color-transparent: rgba(0, 0, 0, .8);
+  --home-opposite-background-color: #000;
+  --home-opposite-text-color: #fff;
+
+  --home-background-container: rgb(245,245,245);
 } */
 
 body {

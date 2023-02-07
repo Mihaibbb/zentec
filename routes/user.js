@@ -34,7 +34,8 @@ const {
     removeMessageInbox,
     clearInbox,
     getBackups,
-    restoreBackup
+    restoreBackup,
+    responseSMSDecline
 } = require("../controllers/user");
 
 router.post("/create-appointment", createAppointment);
@@ -61,6 +62,7 @@ router.delete("/remove-doctor-schedule", removeDoctorSchedule);
 router.post("/get-schedules-day", getSchedulesForDay);
 router.post("/send-feedback", sendFeedback);
 router.post("/response-sms", responseSMS);
+router.post("/response-sms-decline", responseSMSDecline);
 router.post("/add-sms", addSMS);
 router.delete("/remove-sms", removeSMS);
 router.put("/edit-sms", editSMS);

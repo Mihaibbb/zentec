@@ -25,7 +25,7 @@ import Feedback from "./Feedback/Feedback";
 import Profile from "./Profile/Profile";
 
 const App = () => {
-    const [cookies, setCookie, removeCookie] = useCookies([]);
+    const [cookies, setCookie, removeCookie] = useCookies();
     const [language, setLanguage] = useState("en");
     const [data, setData] = useState(null);
     const [isAdmin, setIsAdmin] = useState(null);
@@ -74,6 +74,7 @@ const App = () => {
             if (!await result.success) {
                 removeCookie('user-id');
                 removeCookie('pwd');
+                removeCookie('theme');
                 setData(false);
                 return;
             }
@@ -81,7 +82,31 @@ const App = () => {
             console.log(await result);
             setData(await result);
             setIsAdmin(await result.admin);
+            if (cookies?.theme === 'light') {
 
+                document.documentElement.style.setProperty("--background", "#f7f7f7");
+                document.documentElement.style.setProperty("--contrast-color", "#4659ff");
+                document.documentElement.style.setProperty("--contrast-color-2", "#579AFF");
+                document.documentElement.style.setProperty("--contrast-color-3", "#FF447C");
+                document.documentElement.style.setProperty("--background-color", "#f5f5f5");
+                document.documentElement.style.setProperty("--background-contrast", "#e5e5e5");
+                document.documentElement.style.setProperty("--dark-color", "#666");
+                document.documentElement.style.setProperty("--light-color", "#fff");
+                document.documentElement.style.setProperty("--text-color", "#222");
+                document.documentElement.style.setProperty("--text-color-2", "#000");
+                document.documentElement.style.setProperty("--text-color-3", "#666");
+                document.documentElement.style.setProperty("--text-color-4", "#999");
+                document.documentElement.style.setProperty("--selector-color", "rgba(34, 184, 207, 0.5)");
+                document.documentElement.style.setProperty("--over-color", "rgba(255, 255, 255, .2)");
+                document.documentElement.style.setProperty("--over-color-2", "rgba(255, 255, 255, .6)");
+                document.documentElement.style.setProperty("--over-difference-color", "rgba(0, 0, 0, .2)");
+                document.documentElement.style.setProperty("--over-difference-color-2", "rgba(0, 0, 0, .075)");
+                document.documentElement.style.setProperty("--over-difference-color-3", "rgba(125, 125, 255, .18)");
+                document.documentElement.style.setProperty("--error-color", "crimson");
+                document.documentElement.style.setProperty("--success-color", "#589858");
+                document.documentElement.style.setProperty("--selected-color", "rgba(96, 61, 128, .973)");
+                document.body.classList.add("light");
+            }
         })();
 
     }, []);

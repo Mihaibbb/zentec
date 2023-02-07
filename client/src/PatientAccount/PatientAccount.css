@@ -302,6 +302,12 @@
         animation: none;
     }
 
+    .feedback-container button.send.feedback-button:not(.not-send)
+    {
+        cursor: pointer;
+        filter: brightness(100%);
+    }
+
     .feedback-container button.send.active, 
     .patient-account-details button.update.active 
     {

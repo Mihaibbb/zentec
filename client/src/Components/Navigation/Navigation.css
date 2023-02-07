@@ -13,7 +13,8 @@
     max-width: 17.5%;
     min-width: 225px;
     border-right: 1px solid var(--over-difference-color);
-    transition: all 350ms ease-in-out;
+    overflow-y: auto;
+    transition: all 350ms ease-out;
 }
 
 .navigation .patient-icon 
@@ -56,7 +57,7 @@
 
 .navigation .logo img 
 {
-    width: 90%;
+    width: 65%;
     height: auto;
     user-select: none;
 }
@@ -99,7 +100,7 @@
     margin-bottom: 1rem;
     border-radius: 8px;
     cursor: pointer;
-    padding: 0 1rem;
+    padding-left: 16px;
 
 }
 
@@ -113,6 +114,8 @@
     background: var(--contrast-color);
 }
 
+
+
 .navigation .sub-list .item .dot 
 {
     width: 10px;
@@ -120,17 +123,33 @@
     border-radius: 50%;
     background: var(--text-color-3);
 }
+
+body.light .navigation .sub-list .item.highlight .dot
+{
+    background: var(--home-opposite-text-color);
+}
+
+body.light .navigation .sub-lsit .item.highlight p 
+{
+    color: var(--home-opposite-text-color);
+}
+
 .navigation .sub-list .item p 
 {
     color: var(--text-color);
     font-size: 20px;
 }
 
+body.light .navigation .sub-list .item.highlight p
+{
+    color: var(--home-opposite-text-color);
+}
+
 
 .navigation .item:hover h3,
 .navigation .item:hover .item-icon
 {
-    color: #fff;
+    color: var(--text-color);
 }
 
 .navigation .item:not(.bottom).active 
@@ -147,6 +166,16 @@
 
 }
 
+body.light .navigation .item .item-icon 
+{
+    color: #565759;
+}
+
+.navigation .item.active 
+{
+    background: var(--contrast-color);
+}
+
 .navigation .item.active .item-icon 
 {
     color: var(--text-color);
@@ -159,12 +188,22 @@
     font-weight: 600;
     margin-left: 7px;
     transition: all 350ms ease-in-out;
+}
 
+body.light .navigation .item h3 
+{
+    color: #565759;
 }
 
 .navigation .item.active h3 
 {
     color: var(--text-color);
+}
+
+body.light .navigation .item.active h3,
+body.light .navigation .item.active .item-icon
+{
+    color: var(--home-opposite-text-color);
 }
 
 .navigation .settings 

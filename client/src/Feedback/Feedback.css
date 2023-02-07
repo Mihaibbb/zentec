@@ -29,6 +29,11 @@
     
 }
 
+body.light .feedback-container textarea 
+{
+    background: var(--over-difference-color-3);
+}
+
 .feedback-container .question
 {
     margin-block: 4rem;
@@ -78,9 +83,30 @@
     transition: all 350ms ease-in-out;
 }
 
+
+body.light .feedback-container .categories .category .category-icon 
+{
+    color: var(--home-opposite-text-color);
+}
+
 .feedback-container .categories .category.active 
 {
     background: var(--contrast-color);
+    
+}
+
+
+body.light .feedback-container .categories .category:not(.active)
+{
+    background: var(--over-difference-color-3);
+
+}
+
+
+body.light .feedback-container .categories .category.active .category-icon,
+body.light .feedback-container .categories .category.active p
+{
+    color: var(--home-opposite-text-color);
 }
 
 .feedback-container .categories .category.active .category-icon
@@ -92,7 +118,7 @@
 {
     position: absolute;
     top: -150px;
-    right: -100%;
+    right: -200%;
     background: var(--dark-color);
     color: var(--text-color);
     border-radius: 20px;
@@ -163,5 +189,23 @@
     .feedback-container .categories 
     {
         grid-template-columns: minmax(200px, 1fr);
+    }
+
+    .feedback-container 
+    {
+        margin: 0 5%;
+        
+    }
+
+    .feedback-container .message-response
+    {
+        width: 90%;
+        right: -200%;
+    }
+
+    .feedback-container .message-response.active
+    {
+        
+        right: -5%;
     }
 }

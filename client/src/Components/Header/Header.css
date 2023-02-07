@@ -90,6 +90,23 @@
    
 }
 
+.header .account-details .theme 
+{
+    background: rgba(0, 0, 0, .3);
+    border-radius: 50%;
+    position: relative;
+    cursor: pointer;
+    
+}
+
+.header .account-details .theme .theme-icon 
+{
+    color: var(--text-color-3);
+    font-size: 22px;
+    padding: 0.7rem 0.8rem;
+    
+}
+
 .header .account-details .notifications
 {
     background: rgba(0, 0, 0, .3);
@@ -97,6 +114,8 @@
     position: relative;
     cursor: pointer;
 }
+
+
 
 .header .account-details .notifications .notification-signal
 {
@@ -134,6 +153,18 @@
     border-radius: 50%;
     color: var(--contrast-color);
     cursor: pointer;    
+}
+
+body.light .header .account-details .notifications,
+body.light .header .account-details .account-name-container,
+body.light .header .account-details .theme 
+{
+    background: rgba(0, 0, 0, .1);
+}
+
+body.light .header .account-details .account-name-container .account-name
+{
+    color: var(--contrast-color);
 }
 
 .header .account-details .account-photo img 

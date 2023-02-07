@@ -85,6 +85,12 @@
    padding-left: 1rem;
 }
 
+body.light .form .input:not(.no-bg) input
+{
+    border: 1px solid var(--text-color-3);
+    background: var(--over-difference-color-3);
+}
+
 .form .input > p
 {
     color: var(--text-color);
@@ -125,6 +131,11 @@
     color: var(--text-color);
     font-weight: 600;
     font-family: "Source Sans Pro";
+}
+
+body.light .form button.confirm-button
+{
+    color: var(--home-opposite-text-color);
 }
 
 .form .options 

@@ -73,7 +73,7 @@ const HeaderHome = ({ data }) => {
                         {!foundUser ? 
                             <p>{cookies.language === "en" ? "Login" : "Login"}</p> :
                             <>
-                                <p>{cookies.language === "en" ? "To dashboard" : "Spre dashboard"}</p>
+                                <p>{cookies.language === "en" ? "To dashboard" : "Aplicatie"}</p>
                             </>
                         }
                     </div>

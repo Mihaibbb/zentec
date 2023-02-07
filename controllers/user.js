@@ -3,7 +3,7 @@ const axios = require("axios");
 const db = require("../db");
 const generateId = require("../functions/generateId");
 const logger = require("../logger");
-const e = require("cors");
+const schedule = require("node-schedule")
 
 let currentResponse;
 
@@ -12,50 +12,35 @@ exports.createAppointment = async (req, res, next) => {
     console.log( new Date(startDate).getMonth(), new Date(startDate).getDate(), new Date(startDate).getHours(), new Date(startDate).getMinutes());
     console.log(users);
     try {
-        const appointmentId = generateId(25);
-        sql = "INSERT INTO ?? (_id, startDate, endDate, users, patients, title, income, incomePaid, typeIncome, notes, finished, confirmed, date, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        const insertedAppointment = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.schedules`, appointmentId, new Date(startDate), new Date(endDate), JSON.stringify(users), JSON.stringify(patients), title, income, incomePaid, typeIncome, notes, false, false, new Date(date), new Date()]);
-        if (!insertedAppointment) return new ErrorResponse("An error occured!", 404);
-        
         // --- Sms Api for patient ---
         // Get api key
-
+        
         sql = "SELECT * FROM ??";
         const detailsOrganisationRows = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.details`]);
         const detailsOrganisation = detailsOrganisationRows[0];
         //const smsMessageRaw = detailsOrganisation["sms_message"];
         const organisationSMS = JSON.parse(detailsOrganisation["sms_message"]);
-        //const apiKey = detailsOrganisation["api_key"];
-        // let smsMessage = smsMessageRaw.replaceAll("{NUME_ORGANIZATIE}", detailsOrganisation.name);
-        // smsMessage = smsMessage.replaceAll("{DATA_PROGRAMARE}", `${new Date(startDate).getDate()} ${new Date(startDate).getMonth() + 1} ${new Date(startDate).getFullYear()}`);
-        // smsMessage = smsMessage.replaceAll("{ORA_PROGRAMARE}", `${new Date(startDate).getHours()}:${new Date(startDate).getMinutes()}`);
-        // smsMessage = smsMessage.replaceAll("{LINK_CONFIRMARE}", `${process.env.BACKEND_URL}/api/patient/confirm-appointment?organisationId=${_id}&doctorId=${users[0]}&appointmentId=${appointmentId}`);
-        
+        const apiKey = detailsOrganisation["api_key"];
+    
         // 1 day earlier message
 
-        let currentSmsModemId = detailsOrganisation["sms_modem_id"];
+        let currentSmsModemId = detailsOrganisation["sms_modem_id"], totalSMS = 0;
 
         await Promise.all(organisationSMS.map(async sms => {
 
             const currentSmsSchedule = sms.scheduledAt - 2;
-            logger.debug("Number of hours before: ", currentSmsSchedule, new Date(startDate).getHours(), new Date(startDate).getMinutes());
-          
+            
             let patientsPhones = "";
-            logger.debug("Patients: ", patients);
-            logger.debug("Start Date: ", startDate);
+            
             patients.forEach((currPatient, idx) => idx !== patients.length - 1 ? patientsPhones += `${currPatient.phone.toString().slice(0, 2) === "+4" ? currPatient.phone.toString() : `+4${currPatient.phone}`},` : patientsPhones += `${currPatient.phone.slice(0, 2) === "+4" ? currPatient.phone : `+4${currPatient.phone}`}`);
             const smsStartDate =  new Date(startDate).getTime() - (1000 * 60 * 60 * Number(currentSmsSchedule)) < new Date().getTime() ? new Date().getTime() + 1000 * 15 : new Date(startDate).getTime() - (1000 * 60 * 60 * Number(currentSmsSchedule));
             
-            let smsMessage = sms.message.replaceAll("{NUME_ORGANIZATIE}", detailsOrganisation.name);
-            smsMessage = smsMessage.replaceAll("{DATA_PROGRAMARE}", `${new Date(startDate).getDate() < 10 ? `0${new Date(startDate).getDate()}` : new Date(startDate).getDate()}/${new Date(startDate).getMonth() + 1 < 10 ? `0${new Date(startDate).getMonth() + 1}` : new Date(startDate).getMonth() + 1}/${new Date(startDate).getFullYear()}`);
-            smsMessage = smsMessage.replaceAll("{ORA_PROGRAMARE}", `${new Date(startDate).getHours() + 2 < 10 ? `0${new Date(startDate).getHours() + 2}` : new Date(startDate).getHours() + 2}:${new Date(startDate).getMinutes() < 10 ? `0${new Date(startDate).getMinutes()}` : new Date(startDate).getMinutes()}`);
-            smsMessage = smsMessage.replaceAll("{ORA_PROGRAMRE}", `${new Date(startDate).getHours() + 2 < 10 ? `0${new Date(startDate).getHours() + 2}` : new Date(startDate).getHours() + 2}:${new Date(startDate).getMinutes() < 10 ? `0${new Date(startDate).getMinutes()}` : new Date(startDate).getMinutes()}`);
+            let smsMessage = sms.message.replaceAll("NUME_ORGANIZATIE", detailsOrganisation.name);
+            smsMessage = smsMessage.replaceAll("DATA_PROGRAMARE", `${new Date(startDate).getDate() < 10 ? `0${new Date(startDate).getDate()}` : new Date(startDate).getDate()}/${new Date(startDate).getMonth() + 1 < 10 ? `0${new Date(startDate).getMonth() + 1}` : new Date(startDate).getMonth() + 1}/${new Date(startDate).getFullYear()}`);
+            smsMessage = smsMessage.replaceAll("ORA_PROGRAMARE", `${new Date(startDate).getHours() + 2 < 10 ? `0${new Date(startDate).getHours() + 2}` : new Date(startDate).getHours() + 2}:${new Date(startDate).getMinutes() < 10 ? `0${new Date(startDate).getMinutes()}` : new Date(startDate).getMinutes()}`);
 
-            smsMessage = smsMessage.replaceAll("{LINK_CONFIRMARE}", `${process.env.BACKEND_URL}/api/patient/confirm-appointment?organisationId=${_id}&doctorId=${users[0]}&appointmentId=${appointmentId}`);
+            smsMessage = smsMessage.replaceAll("LINK_CONFIRMARE", `${process.env.BACKEND_URL}/api/patient/confirm-appointment?organisationId=${_id}&doctorId=${users[0]}&appointmentId=${appointmentId}`);
             
-            
-            logger.debug(`${process.env.SMS_URL}schedule?username=${process.env.SMS_USERNAME}&apiKey=${process.env.SMS_API}&tel=${patientsPhones}&message=${smsMessage}&modemId=${currentSmsModemId}&schedule=${new Date(smsStartDate).getFullYear()}-${new Date(smsStartDate).getMonth() + 1 < 10 ? `0${new Date(smsStartDate).getMonth() + 1}` : new Date(smsStartDate).getMonth() + 1}-${new Date(smsStartDate).getDate() < 10 ? `0${new Date(smsStartDate).getDate()}` : new Date(smsStartDate).getDate()} ${new Date(smsStartDate).getHours() < 10 ? `0${new Date(smsStartDate).getHours()}` : new Date(smsStartDate).getHours()}:${new Date(smsStartDate).getMinutes() < 10 ? `0${new Date(smsStartDate).getMinutes()}` : new Date(smsStartDate).getMinutes()}:00`,)
-            logger.debug(new Date(smsStartDate).getHours(), new Date(smsStartDate).getMinutes());
             let config = {
                 method: 'POST',
                 url: `${process.env.SMS_URL}schedule?username=${process.env.SMS_USERNAME}&apiKey=${process.env.SMS_API}&tel=${patientsPhones}&message=${smsMessage}&modemId=${currentSmsModemId}&schedule=${new Date(smsStartDate).getFullYear()}-${new Date(smsStartDate).getMonth() + 1 < 10 ? `0${new Date(smsStartDate).getMonth() + 1}` : new Date(smsStartDate).getMonth() + 1}-${new Date(smsStartDate).getDate() < 10 ? `0${new Date(smsStartDate).getDate()}` : new Date(smsStartDate).getDate()} ${new Date(smsStartDate).getHours() < 10 ? `0${new Date(smsStartDate).getHours()}` : new Date(smsStartDate).getHours()}:${new Date(smsStartDate).getMinutes() < 10 ? `0${new Date(smsStartDate).getMinutes()}` : new Date(smsStartDate).getMinutes()}:00`,
@@ -68,11 +53,50 @@ exports.createAppointment = async (req, res, next) => {
                 const response = await axios(config);
                 logger.debug(response);
                 if (response?.status !== "scheduled" && response?.status !== "pending") logger.debug("Error sending scheduled SMS.");
-          
+                else totalSMS++;
             } catch (e) {
                 logger.debug("Error: ", e);
             }
         }));
+
+        const appointmentId = generateId(25);
+        let sql = "INSERT INTO ?? (_id, startDate, endDate, users, patients, title, income, incomePaid, typeIncome, notes, finished, confirmed, date, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        const insertedAppointment = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.schedules`, appointmentId, new Date(startDate), new Date(endDate), JSON.stringify(users), JSON.stringify(patients), title, income, incomePaid, typeIncome, notes, false, false, new Date(date), new Date()]);
+        if (!insertedAppointment) return new ErrorResponse("An error occured!", 404);
+
+        // Push message to inbox if patient didn't confirm his appointment
+        const hourBeforeSend = 3; // The number of hours before the appointment, so that message can be sent to the doctor
+        const dateScheduleMessageInbox = new Date(new Date(startDate).getTime() - 1000 * 60 * 60 * hourBeforeSend); // The time when the message must be sent
+        const scheduleMessageInbox = schedule.scheduleJob(dateScheduleMessageInbox, async () => {
+            logger.debug("Scheduling appointment...");
+
+            try {
+
+                const appointments = await db.query('SELECT * FROM ?? WHERE _id = ?', [`${process.env.DB_PREFIX}org_${_id}.schedules`, appointmentId]);
+                const appointment = appointments[0];
+                if (new Date(appointment.startDate).getTime() !== new Date(startDate).getTime() || new Date(appointment.date).getTime() !== new Date(date).getTime()) return; 
+                if (appointment.confirmed) return;
+    
+                let config = {
+                    method: 'POST',
+                    url: `${process.env.BACKEND_URL}/api/user/push-message-inbox`,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    data: {
+                        organisationId: _id,
+                        doctorId: users[0],
+                        message: language === "en" ? `The patient ${patients[0]} didn't confirm his appointment on ${new Date(date).getMonth() + 1}/${new Date(date).getDate()}/${new Date(date).getFullYear()} at ${new Date(startDate).getHours}:${new Date(startDate).getMinutes()}. We recommand you to contact him as soon as possible!`
+                                                   :  `Pacientul ${patients[0]} inca nu a confirmat programarea sa din data de ${new Date(date).getDate()}/${new Date(date).getMonth() + 1}/${new Date(date).getFullYear()} la ora ${new Date(startDate).getHours}:${new Date(startDate).getMinutes()}. Va recomandam sa il contactati cat mai curand posibil!`
+                    }
+                };
+
+                await axios(config);
+            } catch (e) {
+                logger.debug(e);
+            }
+            
+        }); 
        
         if (req.body?.saved) return res.status(200).json({ success: true, message: { en: "Appointment added successfully!", ro: "Programare adaugata cu succes!" } });
         
@@ -112,14 +136,50 @@ exports.createAppointment = async (req, res, next) => {
 };
 
 exports.updateAppointment = async (req, res, next) => {
-    const { appointmentId, _id, startDate, endDate, users, patients, title, income, incomePaid, typeIncome, notes, date, finished, confirmed } = req.body;
+    const { appointmentId, _id, startDate, endDate, users, patients, title, income, incomePaid, typeIncome, notes, date, finished, confirmed, language } = req.body;
     
     try {
         console.log(_id);
         let sql = 'UPDATE ?? SET startDate = ?, endDate = ?, users = ?, patients = ?, title = ?, income = ?, incomePaid = ?, typeIncome = ?, notes = ?, date = ?, finished = ?, confirmed = ? WHERE _id = ?';
         const updatedAppointment = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.schedules`, new Date(startDate), new Date(endDate), JSON.stringify(users), JSON.stringify(patients), title, income, incomePaid, typeIncome, notes, new Date(date), finished, confirmed, appointmentId]);
         if (!updatedAppointment) return res.status(200).json({ success: false, message: { en: "Appointment could not be updated!", ro: "Programarea nu a putut fi modificata!" } })
+        if (confirmed) return res.status(200).json({ success: true, message: { en: "Appointment updated successfully!", ro: "Programare modificata cu succes!"}});
         
+        // Push message to inbox if patient didn't confirm his appointment
+        const hourBeforeSend = 3; // The number of hours before the appointment, so that message can be sent to the doctor
+        const dateScheduleMessageInbox = new Date(new Date(startDate).getTime() - 1000 * 60 * 60 * hourBeforeSend); // The time when the message must be sent
+
+        const scheduleMessageInbox = schedule.scheduleJob(dateScheduleMessageInbox, async () => {
+            logger.debug("Scheduling appointment...");
+
+            try {
+
+                const appointments = await db.query('SELECT * FROM ?? WHERE _id = ?', [`${process.env.DB_PREFIX}org_${_id}.schedules`, appointmentId]);
+                const appointment = appointments[0];
+                if (new Date(appointment.startDate).getTime() !== new Date(startDate).getTime() || new Date(appointment.date).getTime() !== new Date(date).getTime()) return; 
+                if (appointment.confirmed) return;
+    
+                let config = {
+                    method: 'POST',
+                    url: `${process.env.BACKEND_URL}/api/user/push-message-inbox`,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    data: {
+                        organisationId: _id,
+                        doctorId: users[0],
+                        message: language === "en" ? `The patient ${patients[0]} didn't confirm his appointment on ${new Date(date).getMonth() + 1}/${new Date(date).getDate()}/${new Date(date).getFullYear()} at ${new Date(startDate).getHours}:${new Date(startDate).getMinutes()}. We recommand you to contact him as soon as possible!`
+                                                   :  `Pacientul ${patients[0]} inca nu a confirmat programarea sa din data de ${new Date(date).getDate()}/${new Date(date).getMonth() + 1}/${new Date(date).getFullYear()} la ora ${new Date(startDate).getHours}:${new Date(startDate).getMinutes()}. Va recomandam sa il contactati cat mai curand posibil!`
+                    }
+                };
+
+                await axios(config);
+            } catch (e) {
+                logger.debug(e);
+            }
+            
+        }); 
+
         res.status(200).json({ success: true, message: { en: "Appointment updated successfully!", ro: "Programare modificata cu succes!"}})
     } catch (e) {
         console.log(e);
@@ -866,11 +926,17 @@ exports.responseSMS = async (req, res, next) => {
     try {
         const currentDatabases = await db.query("SHOW DATABASES;");
         const organisationsUnfiltered = currentDatabases.map(database => {
-            if (Object.values(database)[0].includes(`${process.env.DB_PREFIX}_org_`)) return Object.values(database)[0];
+            if (Object.values(database)[0].includes(`${process.env.DB_PREFIX}_org_`) && Object.values(database)[0].search("_backup") === -1) return Object.values(database)[0];
             return null;
         });
+
         const organisations = organisationsUnfiltered.filter(organisation => organisation !== null);
         organisations.forEach(async organisation => {
+            let orgId = "", currIdx = organisation.length - 1;
+            while (organisation[currIdx] !== "_") {
+                orgId = organisation[currIdx] + orgId;
+                currIdx--;
+            }
             const futureSchedules = await db.query('SELECT * FROM ?? WHERE startDate > ?', [`${organisation}.schedules`, new Date(date)]);
             const patientSchedules = futureSchedules.filter(async futureSchedule => {
                 const patients = JSON.parse(futureSchedule.patients);
@@ -882,13 +948,50 @@ exports.responseSMS = async (req, res, next) => {
             patientSchedules.sort((patientSchedule1, patientSchedule2) => {
                 return new Date(patientSchedule1.startDate).getTime() - new Date(patientSchedule2.startDate).getTime(); 
             });
+
             const currentDate = new Date(patientSchedules[0])
             const confirmingSchedules = patientSchedules.filter(patientSchedule => sameDate(new Date(patientSchedule.startDate), currentDate));
             confirmingSchedules.forEach(async confirmingSchedule => {
                 await db.query("UPDATE ?? SET confirmed = ? WHERE _id = ?", [`${organisation}.schedules`, message.toLowerCase().includes("da"), confirmingSchedule._id]);
+                const organisationDetailsRows = await db.query("SELECT * FROM ??", [`${organisation}.details`]);
+                const organisationDetails = organisationDetailsRows[0];
+                const currentInbox = JSON.parse(organisationDetails.inbox);
+                let messageId = generateId(25);
+                while (inbox.some(inboxMessage => inboxMessage.id === messageId)) messageId = generateId(25);
+                const scheduleDate = `${new Date(confirmingSchedule.date).getDate() < 10 ? `0${new Date(confirmingSchedule.date).getDate()}` : new Date(confirmingSchedule.date).getDate()}/${new Date(confirmingSchedule.date).getMonth() + 1 < 10 ? `0${new Date(confirmingSchedule.date).getMonth() + 1}` : new Date(confirmingSchedule.date).getMonth() + 1}/${new Date(confirmingSchedule.date).getFullYear()}`;
+                const scheduleStartHour = new Date(confirmingSchedule.startDate).getHours() < 10 ? `0${new Date(confirmingSchedule.startDate).getHours()}` : new Date(confirmingSchedule.startDate).getHours();
+                const scheduleStartMinutes = new Date(confirmingSchedule.startDate).getMinutes() < 10 ? `0${new Date(confirmingSchedule.startDate).getMinutes()}` : new Date(confirmingSchedule.startDate).getMinutes();
+                const scheduleEndHour = new Date(confirmingSchedule.endDate).getHours() < 10 ? `0${new Date(confirmingSchedule.endDate).getHours()}` : new Date(confirmingSchedule.endDate).getHours();
+                const scheduleEndMinutes = new Date(confirmingSchedule.endDate).getMinutes() < 10 ? `0${new Date(confirmingSchedule.endDate).getMinutes()}` : new Date(confirmingSchedule.endDate).getMinutes();
+
+                currentInbox.push({
+                    doctorId,
+                    doctorName,
+                    message: `Pacientul ${JSON.parse(confirmingSchedule.patients)[0].firstname} ${JSON.parse(confirmingSchedule.patients)[0].lastname} a confirmat programarea din data ${scheduleDate} de la ora ${scheduleStartHour}:${scheduleStartMinutes} la ora ${scheduleEndHour}:${scheduleEndMinutes}`,
+                    createdAt: new Date(),
+                    id: messageId
+                });
+
+                await db.query("UPDATE ?? SET inbox = ? WHERE _id = ?", [`${organisation}.details`, JSON.stringify(currentInbox), orgId]);
+                
             });
 
         });
+
+        res.status(200).json({ success: true });
+
+
+    } catch (e) {
+        console.log(e);
+        res.status(404).json({ success: false, message: 'An error occured!' });
+    }
+};
+
+exports.responseSMSDecline = async (req, res, next) => {
+    const { phone, date, message } = req.body;
+
+    try {
+
     } catch (e) {
         console.log(e);
         res.status(404).json({ success: false, message: 'An error occured!' });

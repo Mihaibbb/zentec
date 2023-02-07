@@ -56,6 +56,13 @@
     box-shadow: 0 0 10px var(--over-difference-color-3);
 }
 
+body.light .dashboard .left-container .new-appointments
+{
+    background: var(--over-difference-color-3);
+    border: 2px solid var(--contrast-color);
+}
+
+
 .dashboard .left-container .new-appointments .message h2
 {
     color: var(--text-color);
@@ -87,6 +94,12 @@
     margin: 1rem auto;
     border-radius: 28px;
 
+}
+
+body.light .dashboard .left-container .new-appointments .first-row,
+body.light .dashboard .right-container .doctors .first-row
+{
+    background: var(--contrast-color);
 }
 
 .dashboard .left-container .new-appointments .first-row
@@ -179,6 +192,12 @@
     background: var(--contrast-color);
 }
 
+body.light .dashboard .filter-container .filter.active
+{
+    color: var(--home-opposite-text-color);
+}
+
+
 .dashboard .filter-container .filter:first-child 
 {
     border-top-left-radius: 10px;
@@ -215,6 +234,11 @@
     padding: .5rem 1.5rem;
 }
 
+body.light .dashboard .data .data-container 
+{
+    border: 1px solid var(--contrast-color);
+}
+
 .dashboard .data .data-container.data-margins
 {
     margin-left: 16px;
@@ -236,6 +260,11 @@
     color: var(--text-color);
     padding: 1.15rem;
   
+}
+
+body.light .dashboard .data .data-container .image .data-icon
+{
+    color: var(--home-opposite-text-color);
 }
 
 .dashboard .data .data-container .data-text 
@@ -440,6 +469,16 @@
     {
         border-bottom-right-radius: 20px;
         border-top-right-radius: 20px;
+    }
+
+    .dashboard .data .data-container
+    {
+        width: 90%;
+    }
+
+    .sm-content
+    {
+        max-width: 95%;
     }
 
 

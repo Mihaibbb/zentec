@@ -81,7 +81,7 @@ const CreatePatient = ({ data, fromAppointments, patientSaved }) => {
 
     const createNewPatient = async () => {
         setErrorMessage(null);
-        if (firstName === "" || lastName === "" || phoneNumber === "") {
+        if (firstName === "" || lastName === "" || (phoneNumber === "" && data.organisation._id !== "mGiEVgbtLezVXv9WM9k2Rc4kG")) {
             setErrorMessage(cookies.language === "en" ? "Fill every required field!" : "Completeaza fiecare camp!");
             return;
         }

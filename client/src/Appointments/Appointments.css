@@ -19,6 +19,11 @@ input[type=number] {
     position: relative;
 }
 
+.appointments  .content .title
+{
+    margin-top: 80px;
+    margin-bottom: 0;
+}
 
 
 .appointments .content .day-title
@@ -41,12 +46,29 @@ input[type=number] {
     justify-content: center;
     align-items: center;
     /* gap: 1rem; */
+    position: relative;
+}
+
+.appointments .content .day-title .half:last-child 
+{
+    background: var(--over-difference-color-3);
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 50px;
+    border: 1px solid var(--contrast-color);
+
 }
 
 .appointments .content .day-title .half p 
 {
     margin-left: 8px;
     margin-right: 8px;
+    cursor: pointer;
+}
+
+.appointments .content .day-title .half p.clicked 
+{
+    animation: clicked 300ms ease-in-out;
 }
 
 .appointments .content .day-title .half .normal-text
@@ -58,6 +80,13 @@ input[type=number] {
     -webkit-text-fill-color: transparent; */
     cursor: pointer;
     
+}
+
+.appointments .content .day-title .half:last-child .normal-text 
+{
+    font-size: 20px;
+    margin-top: 14px;
+    margin-bottom: 14px;
 }
 
 .appointments .content .day-title .title-btn
@@ -90,13 +119,14 @@ input[type=number] {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: -webkit-calc(10vh + 24px);
+    margin-top: 7.5%;
     width: 100%;
     max-width: 700px;
     margin-inline: auto;
     background: var(--over-color);
     height: 35px;
     align-self: center;
+ 
     
 }
 
@@ -119,6 +149,16 @@ input[type=number] {
     transition: all 350ms ease-in-out;
 }
 
+body.light .appointments .filter, body.light .appointments .filter div
+{
+    border: 1px solid var(--over-difference-color);
+}
+
+body.light .appointments .filter
+{
+    border-radius: 8px;
+}
+
 .appointments .filter div.active 
 {
     background: var(--contrast-color);
@@ -133,6 +173,11 @@ input[type=number] {
     padding-left: 14px;
     padding-right: 14px;
     
+}
+
+body.light .appointments .filter div.active p
+{
+    color: var(--home-opposite-text-color);
 }
 
 .appointments .filter div:first-child 
@@ -163,8 +208,8 @@ input[type=number] {
     min-height: 100%;
     flex: 1;
     justify-content: center;
-    margin-left: 24px;
-    margin-right: 24px;
+    margin-right: -16px;
+    margin-left: 32px;
 }
 
 .appointments .scheduler .hours .hour p 
@@ -180,6 +225,9 @@ input[type=number] {
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-left: auto;
+    margin-right: 20px;
+    margin-top: 24px;
 
 }
 
@@ -192,7 +240,7 @@ input[type=number] {
 {
     width: 100%;
     height: 100%;
-    margin: 0 2rem 0 1rem;
+    margin: 0 1rem 0 1rem;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -767,7 +815,7 @@ input[type=number] {
     right: 0;
     bottom: 0;
     background: var(--background-contrast);
-    z-index: 1001;
+    z-index: 10000;
     display: flex;
     justify-content: center;
 
@@ -940,12 +988,29 @@ input[type=number] {
     gap: 1rem;
 }
 
+.label-row.label {
+    display: flex;
+    gap: 2rem;
+}
+
+.label-row.label .label-column
+{
+    margin-top: auto;
+}
+
+.label-row.label .label-column .appointment-input input.number-input 
+{
+    max-width: 100%;
+    width: 100%;
+}
+
 .appointments .appointment-details.active .appointment-details-card .appointment-details .label .label-row .input 
 {
     position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
+    width: 100%;
 }
 
 .appointments .appointment-details.active .appointment-details-card .appointment-details .label .label-row .scale 
@@ -1232,6 +1297,12 @@ input[type=number] {
 @media only screen and (max-width: 800px)
 {
 
+
+    body.light .appointments .filter, body.light .appointments .filter div
+    {
+        border: none;
+    }
+
     html 
     {
         overflow-x: hidden;
@@ -1318,17 +1389,44 @@ input[type=number] {
 
     .appointments .scheduler .hours
     {
-        margin-inline: 1rem;
+        margin-left: 16px;
     }
    
-    .appointments .appointment-details.active .appointment-details-card .appointment-details .label .label-row
-
+    .appointments .appointment-details.active .appointment-details-card .appointment-details .label .label-row,
+    .label.label-row
     {
         flex-direction: column;
+        gap: 1rem;
+
     }
 
     .appointments .filter .active
     {
         display: none;
     }
+
+    .appointments .content .day-title .half:last-child 
+    {
+        max-width: 85%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .appointments .content .title
+    {
+        margin-top: 120px;
+    }
+
+    
+}
+
+@keyframes clicked {
+    0% {
+        filter: brightness(100%);
+    } 50% {
+        filter: brightness(50%);
+    } 100% {
+        filter: brightness(100%);
+    }
+
 }

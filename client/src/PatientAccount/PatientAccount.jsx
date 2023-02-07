@@ -334,7 +334,6 @@ const PatientAccount = ({ data }) => {
                                 <FontAwesomeIcon className="icon" icon={faNoteSticky} />
                                 <p>{cookies.language === "en" ? "Notes" : "Observatii"}</p>
                             </div>
-                            /
                             <textarea value={notes} onChange={e => setNotes(e.target.value)} />
                         </div> 
 

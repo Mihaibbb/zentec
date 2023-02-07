@@ -8,6 +8,7 @@ import { faCheck, faCircleExclamation, faComment, faEllipsis, faTimes } from "@f
 import { faFaceSmile } from "@fortawesome/free-regular-svg-icons";
 import { useState } from "react";
 import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
 const Feedback = ({ data }) => {
 
@@ -18,6 +19,8 @@ const Feedback = ({ data }) => {
     const [feedbackOptionActive, setFeedbackOptionActive] = useState(0);
     const [activeSending, setActiveSending] = useState(false);
     const [message, setMessage] = useState(false);
+
+    const location = useLocation();
 
     const feedbackCategories = [
         {
@@ -54,7 +57,7 @@ const Feedback = ({ data }) => {
             },
             body: JSON.stringify({
                 organisationId: data.organisation._id,
-                applicationMessage: applicationOpinion,
+                applicationMessage: applicationOpinion || "",
                 feedbackMessage: feedbackValue,
                 type: feedbackCategories[feedbackOptionActive].type,
                 from: data.user.name 
@@ -70,6 +73,11 @@ const Feedback = ({ data }) => {
                 setFeedbackValue("");
                 setFeedbackOptionActive(0);
                 setActiveSending(false);
+                window.scrollTo({
+                    left: 0,
+                    top: 0,
+                    behavior: 'smooth'
+                });
             } else console.log(response);
 
         } catch (e) {
@@ -78,9 +86,20 @@ const Feedback = ({ data }) => {
     };
 
     useEffect(() => {
-        if (!feedbackValue || !feedbackValue.length) return;
+        if (!feedbackValue || !feedbackValue.length) return setActiveSending(false);
         setActiveSending(true);
     }, [feedbackValue]);
+
+    useEffect(() => {
+      
+        const navigationElement = document.querySelector(".navigation");
+        if (!navigationElement || !navigationElement?.classList?.contains("active")) return;
+        if (window.innerWidth >= 1200) return;
+        navigationElement.classList.remove("active");
+        document.querySelector(".header").classList.add("no-navigation");
+        document.querySelector(".content").classList.add("no-navigation");
+        
+    }, [location]);
 
     return (
         <div className="feedback">
@@ -92,10 +111,10 @@ const Feedback = ({ data }) => {
 
                 <div className="feedback-container">
 
-                    <div className="question">
+                    {/* <div className="question">
                         <h2>{cookies.language === "en" ? "What's your opinion about Zentec application?" : "Ce parere aveti despre aplicatia Zentec?"}</h2>
                         <textarea value={applicationOpinion} onChange={e => setApplicationOpinion(e.target.value)} />
-                    </div>
+                    </div> */}
 
                     <div className="question">
                         <h2>{cookies.language === "en" ? "Choose feedback's category" : "Alegeti categoria de feedback"}</h2>
@@ -137,7 +156,7 @@ const Feedback = ({ data }) => {
                  
                     </div>
 
-                    <button type="button" className={`send ${activeSending ? "" : "not-send"}`} onClick={async () => activeSending && await sendFeedback()}>
+                    <button type="button" className={`send ${activeSending ? "" : "not-send"} feedback-button`} onClick={async () => activeSending && await sendFeedback()}>
                         <p>{cookies.language === "en" ? "Send" : "Trimite"}</p>
                     </button>
                 </div>

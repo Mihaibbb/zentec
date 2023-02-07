@@ -23,6 +23,7 @@ const Users = ({ data }) => {
  
 
     const optionsRef = useRef([]);
+    const contentRef = useRef();
 
     const getDoctors = async () => {
         const options = {
@@ -197,6 +198,7 @@ const Users = ({ data }) => {
         optionsRef?.current?.length && optionsRef?.current[idx]?.classList?.toggle("show");
         optionsRef?.current?.length && optionsRef?.current.forEach((option, currIdx) => currIdx !== idx && option?.classList?.remove("show"));
     };
+
 
     return (
         <div className="patients">

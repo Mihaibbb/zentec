@@ -1,4 +1,4 @@
-import { faClockRotateLeft, faEllipsis, faFileArrowDown, faFileArrowUp, faHistory, faMinus, faPlus, faSearch, faSortDown, faSortUp, faTimes, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faClockRotateLeft, faEllipsis, faFileArrowDown, faFileArrowUp, faMinus, faPlus, faSearch, faSortDown, faSortUp, faTimes, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState, useEffect, useRef } from "react";
 import { useCookies } from "react-cookie";
@@ -343,7 +343,7 @@ const Patients = ({ data }) => {
                                     </div>
 
                                     <div className="option">
-                                        <FontAwesomeIcon icon={faClockRotateLeft} onClick={() => navigation(`/patient/${patient._id}/1`)}/>
+                                        <FontAwesomeIcon icon={faClockRotateLeft} className="option-icon" onClick={() => navigation(`/patient/${patient._id}/1`)}/>
                                         <p>{cookies.language === "en" ? "Historic" : "Istoric"}</p>
                                     </div>
                                 </div>
