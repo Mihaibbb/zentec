@@ -342,8 +342,8 @@ const Patients = ({ data }) => {
                                         <p>{cookies.language === "en" ? "Edit" : "Editeaza"}</p>
                                     </div>
 
-                                    <div className="option">
-                                        <FontAwesomeIcon icon={faClockRotateLeft} className="option-icon" onClick={() => navigation(`/patient/${patient._id}/1`)}/>
+                                    <div className="option" onClick={() => navigation(`/patient/${patient._id}/1`, { state: { patient: patient } })}>
+                                        <FontAwesomeIcon icon={faClockRotateLeft} className="option-icon" />
                                         <p>{cookies.language === "en" ? "Historic" : "Istoric"}</p>
                                     </div>
                                 </div>

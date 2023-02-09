@@ -410,7 +410,7 @@ const EditDoctorSchedule = ({ data }) => {
                                 className="time-input" 
                                 value={`${Number(startHourValue[idx]) < 10 ? `0${startHourValue[idx]}` : startHourValue[idx]}:${startMinutesValue[idx] < 10 ? `0${startMinutesValue[idx]}` : startMinutesValue[idx]}`} 
                                 onClick={() => focusActiveMenu(setStartHourActiveMenu, setEndHourActiveMenu, idx)}  
-
+                                
                                 // onBlur={() => blurActiveMenu()}
                                 readOnly
                             />
@@ -474,17 +474,17 @@ const EditDoctorSchedule = ({ data }) => {
                                     <p>:</p>
                                 </div>
                                 <div className="minutes-interval">
-                                    <FontAwesomeIcon 
+                                <FontAwesomeIcon 
                                         icon={faAngleDown} 
                                         className="angle-icon"
-                                        onClick={() => {
+                                        onClick={(e) => {
                                             setStartMinutesValue(currValues => {
                                                 return currValues.map((currValue, valueIdx) => {
                                                     if (valueIdx !== idx) return Number(currValue);
                                                     if (Number(currValue) - minutesPerGap < 0) {
                                                         setStartHourValue(currHourValues => {
                                                             return currHourValues.map((hourValue, hourValueIdx) => {
-                                                                if (hourValueIdx !== idx) return Number(hourValue);
+                                                                if (hourValueIdx !== idx) return hourValue;
                                                                 if (Number(hourValue) === START_SCHEDULE_HOUR) return END_SCHEDULE_HOUR;
                                                                 return Number(hourValue) - 1;
                                                             });
@@ -494,9 +494,10 @@ const EditDoctorSchedule = ({ data }) => {
                                                     return Number(currValue) - minutesPerGap;
                                                 });
                                             });
+
                                         }} 
                                     />
-                                    <p className="number">{Number(startMinutesValue[idx]) < 10 ? `0${startMinutesValue[idx]}` : startMinutesValue}</p>
+                                    <p className="number">{Number(startMinutesValue[idx]) < 10 ? `0${startMinutesValue[idx]}` : startMinutesValue[idx]}</p>
                                     <FontAwesomeIcon 
                                         icon={faAngleUp} 
                                         className="angle-icon" 

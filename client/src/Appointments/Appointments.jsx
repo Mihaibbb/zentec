@@ -956,7 +956,7 @@ const Appointments = ({ data }) => {
         }
     };
 
-    const removeAppointment = async (appointmentId1) => {
+    const removeAppointment = async (appointmentId1, patientId) => {
 
         const options = {
             method: 'POST',
@@ -965,7 +965,8 @@ const Appointments = ({ data }) => {
             },
             body: JSON.stringify({
                 _id: data.organisation._id,
-                appointmentId: appointmentId1
+                appointmentId: appointmentId1,
+                patientId: patientId
             })
         };
 
@@ -992,6 +993,42 @@ const Appointments = ({ data }) => {
         }
     };
 
+    const cancelAppointment = async (appointmentId1, patientId) => {
+
+        const options = {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                _id: data.organisation._id,
+                appointmentId: appointmentId1,
+                patientId: patientId
+            })
+        };
+
+        const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/cancel-appointment`, options);
+        const response = await request.json();
+        if (response.success) {
+            setStatusMessage(response.message[cookies.language]);
+            setActiveEditAppointment(false);
+            
+            setAppointments(currAppointments => {
+                return currAppointments.filter(currAppointment => {
+                    return currAppointment._id !== appointmentId;
+                });
+            });
+
+            resetAppointmentData();
+            window.history.replaceState({
+                scrollY: window.scrollY,
+                filterActive,
+                date,
+                activeDoctors: doctors
+            }, "");
+            window.location.reload();
+        }
+    };
     const sameDay = (date1, date2) => {
         return date1.getDate() === date2.getDate() && date1.getMonth() === date2.getMonth() && date1.getFullYear() === date2.getFullYear();
     };
@@ -1013,12 +1050,8 @@ const Appointments = ({ data }) => {
         setDate(new Date(year, month, 1));
     }, [year, month]);
 
-    useEffect(() => {
-        console.log(days);
-    }, [days]);
 
     useEffect(() => {
-        console.log(appointments);
         const currentGaps = document.querySelectorAll('.gap');
 
         currentGaps.forEach(gap => {
@@ -1040,10 +1073,6 @@ const Appointments = ({ data }) => {
         if (filterActive === 3 || filterActive === 4) return;
 
         // Appointments must be filtered for each doctor -> 
-
-        doctors.forEach(doctor => {
-            
-        });
        
         const currentAppointments = filterActive === 0 ? appointments.filter((appointment) => {
             console.log(appointment);
@@ -1052,19 +1081,18 @@ const Appointments = ({ data }) => {
             const id = data.user?.userId;
             
             console.log(sameDoctor);
-            return sameDay(new Date(appointment.date), date);
+            return sameDay(new Date(appointment.date), date) && !appointment.canceled;
         }) : appointments.filter((appointment) => {
             console.log(appointment);
             return (
                 days[0].getTime() <= new Date(appointment.date).getTime() && 
-                new Date(appointment.date).getTime() <= days[days.length - 1].getTime()
+                new Date(appointment.date).getTime() <= days[days.length - 1].getTime() &&
+                !appointment.canceled
             );
         });
 
-        console.log(currentAppointments);
         
         currentAppointments.forEach((appointment) => {
-            console.log(appointment);
             const appointmentDate = new Date(appointment.startDate);
             const startHourAppointment = appointmentDate.getHours();
             const startMinutesAppointment = appointmentDate.getMinutes();
@@ -1074,7 +1102,6 @@ const Appointments = ({ data }) => {
             let startIdx, endIdx;
             const appointmentDoctor = doctors.find(doctor => doctor._id === (isJSON(appointment.users) ? JSON.parse(appointment.users)[0] : appointment.users[0]));
             const doctorColor = appointmentDoctor?.color;
-            console.log(doctorColor)
             currentGaps.forEach((gap, gapIdx) => {
                 if (Number(gap.getAttribute('starthour')) === startHourAppointment &&
                     Number(gap.getAttribute('startminutes')) === startMinutesAppointment && 
@@ -1094,7 +1121,6 @@ const Appointments = ({ data }) => {
                 }
             });
 
-            console.log(startIdx, endIdx);
            
             for (let i = startIdx; i <= endIdx; i++) {
                 currentGaps[i].classList.add('highlight');
@@ -1248,7 +1274,6 @@ const Appointments = ({ data }) => {
             const activeGaps = [...currentGaps].filter(currentGap => currentGap.classList.contains("highlight") && currentGap.classList.contains("created"));
 
             // Hover appointment event
-            console.log(activeGaps);
             activeGaps.forEach((currentGap, idx) => {
                 // currentGap.addEventListener("mouseover", e => {
                 //     let firstIdx = idx, lastIdx = idx;
@@ -2355,14 +2380,14 @@ const Appointments = ({ data }) => {
                             </div>
 
                             <div className="label">
-                                <button className="option-btn" onClick={async () => await removeAppointment(appointmentId)}>
+                                <button className="option-btn" onClick={async () => await removeAppointment(appointmentId, appointmentPatientData._id)}>
                                     <FontAwesomeIcon icon={faTimes} className="option-icon" />
                                     <p>{cookies.language === "en" ? "Remove appointment" : "Sterge"}</p>
                                 </button>
                             </div>
 
                             <div className="label">
-                                <button className="option-btn">
+                                <button className="option-btn" onClick={async () => await cancelAppointment(appointmentId, appointmentPatientData._id)}>
                                     <FontAwesomeIcon icon={faBan} className="option-icon" />
                                     <p>{cookies.language === "en" ? "Cancel appointment" : "Anuleaza"}</p>
                                 </button>

@@ -20,10 +20,11 @@ const PatientAccount = ({ data }) => {
     console.log(location?.state, data);
     
     if (!param?.id || !param?.historicPage) navigation(-1);
-    console.log(param);
+    console.log(param);                      
     const historicPage = Number(param?.historicPage);
    
     const patient = location?.state?.patient;
+    console.log(patient);
 
     const initialFirstName = patient.firstname;
     const initialLastName = patient.lastname;
@@ -351,12 +352,14 @@ const PatientAccount = ({ data }) => {
                     <h2 className="title">{cookies.language === "en" ? "Patient's historic" : "Istoric Pacient"}</h2>
                     
                     <div className="historic-container">
+                        
                         <div className="first-row">
                             <div className="col">{cookies.language === "en" ? "Title" : "Titlu"}</div>
                             <div className="col">{cookies.language === "en" ? "Date" : "Data"}</div>
                             <div className="col">{cookies.language === "en" ? "Interval": "Interval"}</div>
                             <div className="col">{cookies.language === "en" ? "Price": "Cost"}</div>
                         </div>
+
                         {historic && historic.length > 0 && historic.map(historicItem => (
                             <div className="historic-item">
                                 <div className="col">{historicItem.title}</div>

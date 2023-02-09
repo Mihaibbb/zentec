@@ -1033,7 +1033,7 @@ body.light .appointments .filter div.active p
 .appointments .appointment-details.active .appointment-details-card .appointment-details .label select
 {
     width: calc(100% - 1rem);
-    height: 40px;
+    height: 36px;
     background: rgba(0, 0, 0, .2);
     border: none;
     outline: none;

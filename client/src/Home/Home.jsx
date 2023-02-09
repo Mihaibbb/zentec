@@ -59,12 +59,12 @@ const Home = ({ data }) => {
                 <div className="block-1">
                     <h2 className="title">
                         <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "32px" }}>
-                            Digitalizea-ți 
+                            Digitalizează-ți 
                             <div className="curly-container">
                                 <img src={braketLeft} style={{ marginRight: "-250px" }}/>
                                 <div>
                                     <p>cabinetul</p>
-                                    <p>programarile</p>
+                                    <p>programările</p>
                                     <p>personalul</p>
                                 </div>
                             
