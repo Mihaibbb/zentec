@@ -98,7 +98,7 @@ const Dashboard = ({ data }) => {
             body: JSON.stringify({
                 _id: data.organisation._id,
                 filter: filter
-            })
+            }),
         };
         
         try {

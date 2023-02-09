@@ -117,6 +117,7 @@ const PatientAccount = ({ data }) => {
 
         try {
             const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/update-patient`, options);
+            console.log(request);
             const response = await request.json();
             console.log(response.message);
             if (!response.success) setErrorMessage(response.message[cookies.language]);

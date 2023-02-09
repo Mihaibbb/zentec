@@ -1007,27 +1007,33 @@ const Appointments = ({ data }) => {
             })
         };
 
-        const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/cancel-appointment`, options);
-        const response = await request.json();
-        if (response.success) {
-            setStatusMessage(response.message[cookies.language]);
-            setActiveEditAppointment(false);
-            
-            setAppointments(currAppointments => {
-                return currAppointments.filter(currAppointment => {
-                    return currAppointment._id !== appointmentId;
+        try {
+            const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/cancel-appointment`, options);
+            const response = await request.json();
+            if (response.success) {
+                setStatusMessage(response.message[cookies.language]);
+                setActiveEditAppointment(false);
+                
+                setAppointments(currAppointments => {
+                    return currAppointments.filter(currAppointment => {
+                        return currAppointment._id !== appointmentId;
+                    });
                 });
-            });
-
-            resetAppointmentData();
-            window.history.replaceState({
-                scrollY: window.scrollY,
-                filterActive,
-                date,
-                activeDoctors: doctors
-            }, "");
-            window.location.reload();
+    
+                resetAppointmentData();
+                window.history.replaceState({
+                    scrollY: window.scrollY,
+                    filterActive,
+                    date,
+                    activeDoctors: doctors
+                }, "");
+                window.location.reload();
+            }
+        } catch (e) {
+            console.log(e);
         }
+
+       
     };
     const sameDay = (date1, date2) => {
         return date1.getDate() === date2.getDate() && date1.getMonth() === date2.getMonth() && date1.getFullYear() === date2.getFullYear();

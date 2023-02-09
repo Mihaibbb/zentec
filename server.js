@@ -30,7 +30,9 @@ const db = require("./db");
 removeOldSchedules();
 backupData();
 
-app.use(cors());
+app.use(cors({
+    origin: process.env.URL
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 

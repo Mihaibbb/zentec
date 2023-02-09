@@ -35,11 +35,13 @@ const {
     clearInbox,
     getBackups,
     restoreBackup,
-    responseSMSDecline
+    responseSMSDecline,
+    cancelAppointment
 } = require("../controllers/user");
 
 router.post("/create-appointment", createAppointment);
 router.post("/remove-appointment", removeAppointment);
+router.post("/cancel-appointment", cancelAppointment);
 router.post("/next-appointments", nextAppointments);
 router.post("/update-appointment", updateAppointment);
 router.post("/create-patient", createPatient);

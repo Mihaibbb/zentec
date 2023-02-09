@@ -36,16 +36,16 @@ exports.createOrganisation = async (req, res, next) => {
         
         // Patients Table
 
-        createTableSql = 'CREATE TABLE ?? ( ';
+         createTableSql = 'CREATE TABLE ?? ( ';
         createTableSql += '_id varchar(25) primary key not null, ';
         createTableSql += 'firstname varchar(256) not null, ';
         createTableSql += 'lastname varchar(256) not null, ';
         createTableSql += 'phone varchar(16) unique not null, ';
         createTableSql += 'birthdate date, ';
         createTableSql += 'fileNumber int(11) unique not null, ';
-        createTableSql += 'username varchar(64) unique, ';
-        createTableSql += 'email varchar(256) unique, ';
-        createTableSql += 'cnp varchar(32) unique, ';
+        createTableSql += 'username varchar(64), ';
+        createTableSql += 'email varchar(256), ';
+        createTableSql += 'cnp varchar(32), ';
         createTableSql += 'gender varchar(32), ';
         createTableSql += 'profileImage json, ';
         createTableSql += 'address text, ';
@@ -74,6 +74,7 @@ exports.createOrganisation = async (req, res, next) => {
         createTableSql += 'users json not null, ';
         createTableSql += 'finished boolean not null, ';
         createTableSql += 'confirmed boolean not null, ';
+        createTableSql += 'canceled boolean not null, ';
         createTableSql += 'date date not null, ';
         createTableSql += 'createdAt date not null )';
 

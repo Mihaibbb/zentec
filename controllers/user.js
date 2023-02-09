@@ -60,8 +60,8 @@ exports.createAppointment = async (req, res, next) => {
         }));
 
         const appointmentId = generateId(25);
-        let sql = "INSERT INTO ?? (_id, startDate, endDate, users, patients, title, income, incomePaid, typeIncome, notes, finished, confirmed, date, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        const insertedAppointment = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.schedules`, appointmentId, new Date(startDate), new Date(endDate), JSON.stringify(users), JSON.stringify(patients), title, income, incomePaid, typeIncome, notes, false, false, new Date(date), new Date()]);
+        let sql = "INSERT INTO ?? (_id, startDate, endDate, users, patients, title, income, incomePaid, typeIncome, notes, finished, confirmed, canceled, date, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        const insertedAppointment = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.schedules`, appointmentId, new Date(startDate), new Date(endDate), JSON.stringify(users), JSON.stringify(patients), title, income, incomePaid, typeIncome, notes, false, false, false, new Date(date), new Date()]);
         if (!insertedAppointment) return new ErrorResponse("An error occured!", 404);
 
         // Push message to inbox if patient didn't confirm his appointment
@@ -188,16 +188,58 @@ exports.updateAppointment = async (req, res, next) => {
 };
 
 exports.removeAppointment = async (req, res, next) => {
-    const { _id, appointmentId } = req.body;
+    const { _id, appointmentId, patientId } = req.body;
     try {
-        let sql = "DELETE FROM ?? WHERE _id = ?";
+        let sql = "SELECT * FROM ?? WHERE _id = ?";
+
+        const currentAppointment = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.schedules`, appointmentId]);
+        if (!currentAppointment) return new ErrorResponse("An error occured!", 404);
+
+
+        sql = "DELETE FROM ?? WHERE _id = ?";
         const deletedAppointment = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.schedules`, appointmentId]);
-        if (!deletedAppointment) return new ErrorResponse("An error occured!", 404);
+
+        sql = "SELECT * FROM ?? WHERE _id = ?";
+        const currentPatient = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.patients`, patientId]);
+        const historic = JSON.parse(currentPatient.historic);
+        const newHistoric = historic.filter(appointment => {
+            return new Date(currentAppointment.startDate).getTime() !== new Date(new Date(appointment.date).getFullYear(), new Date(appointment.date).getMonth(), new Date(appointment.date).getDate(), Number(appointment.startHour), Number(appointment.startMinutes())).getTime();
+        });
+
+        await db.query("UPDATE ?? SET historic = ? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${_id}.patients`, JSON.stringify(newHistoric), patientId]);
+        
         
         res.status(200).json({ success: true, message: { en: "Appointment removed successfully!", ro: "Programare stearsa cu succes!"}});
         
     } catch (e) {
         res.status(404).json({ success: false, message: "An error occured." });
+    }
+};
+
+exports.cancelAppointment = async (req, res, next) => {
+
+    const { organisationId, scheduleId, patientId } = req.body;
+
+    try {
+        const appointmentUpdated = await db.query("UPDATE * FROM ?? SET canceled = ? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.schedules`, true, scheduleId]);
+        if (!appointmentUpdated) return res.status(404).json({ success: false, message: { en: "Appointment couldn't be canceled!", ro: "Programarea nu a putut fi anulata!" } });
+
+        sql = "SELECT * FROM ?? WHERE _id = ?";
+        const currentPatient = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.patients`, patientId]);
+        const historic = JSON.parse(currentPatient.historic);
+        const newHistoric = historic.map(appointment => {
+            if (new Date(currentAppointment.startDate).getTime() !== new Date(new Date(appointment.date).getFullYear(), new Date(appointment.date).getMonth(), new Date(appointment.date).getDate(), Number(appointment.startHour), Number(appointment.startMinutes())).getTime()) return {...appointment, 
+                cancel: true
+            }
+
+            return appointment;
+        });
+
+        await db.query("UPDATE ?? SET historic = ? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${_id}.patients`, JSON.stringify(newHistoric), patientId]);
+        res.status(200).json({ success: true, message: { en: "Appointment was successfully canceled!", ro: "Programarea a fost anulata cu succes!" } });
+    } catch (e) {
+        logger.debug("Error cancel appointment: ", e);
+        res.status(404).json({ success: false, message: "An error occured!", error: e });
     }
 };
 
@@ -926,7 +968,7 @@ exports.responseSMS = async (req, res, next) => {
     try {
         const currentDatabases = await db.query("SHOW DATABASES;");
         const organisationsUnfiltered = currentDatabases.map(database => {
-            if (Object.values(database)[0].includes(`${process.env.DB_PREFIX}_org_`) && Object.values(database)[0].search("_backup") === -1) return Object.values(database)[0];
+            if (Object.values(database)[0].includes(`${process.env.DB_PREFIX}org_`) && Object.values(database)[0].search("_backup") === -1) return Object.values(database)[0];
             return null;
         });
 
