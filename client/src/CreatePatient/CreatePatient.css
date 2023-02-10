@@ -99,6 +99,11 @@ body.light .form .input:not(.no-bg) input
     margin-left: 5px;
 }
 
+.form .input > p .star 
+{
+    color: var(--error-color);
+}
+
 .form .input textarea 
 {
     resize: vertical;

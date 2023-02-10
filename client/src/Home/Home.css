@@ -17,11 +17,11 @@
 
 .home-container .content h2.title
 {
-    font-size: 65px;
+    font-size: 80px;
     font-weight: 800;
     color: var(--home-text-color);
     margin-bottom: 0;
-    margin-top: 5vh;
+    margin-top: 15vh;
     font-family: "Inter";
 }
 
@@ -72,27 +72,6 @@
     display: flex;
     flex-direction: column;
     /* min-height: 100vh; */
-}
-
-.home-container .content .block-1 .curly-container
-{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 3rem;
-    background: -webkit-linear-gradient(0deg, var(--home-contrast-color), var(--home-contrast-color-2));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.home-container .content .block-1 .curly-container span 
-{
-    font-size: 300px;
-}
-
-.home-container .content .block-1 .curly-container p 
-{
-    font-size: 50px;
 }
 
 .home-container .content .block-1 button 
@@ -150,7 +129,7 @@
 .home-container .content .advantages 
 {
     display: grid;
-    grid-template-columns: repeat(2, minmax(350px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
     grid-template-rows: 1fr 1fr;
     grid-gap: 2rem;
     max-width: 85%;

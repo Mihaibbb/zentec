@@ -37,7 +37,7 @@ const Appointments = ({ data }) => {
     const [lastElement, setLastElement] = useState();
     const [firstElement, setFirstElement] = useState();
     const [newDay, setNewDay] = useState();
-    const [filterActive, setFilterActive] = useState(window.history?.state?.filterActive || 0);
+    const [filterActive, setFilterActive] = useState(window.history?.state?.filterActive || 1);
     const [doctors, setDoctors] = useState(data.organisation.doctors);
     const [doctorNameValue, setDoctorNameValue] = useState();
     const [doctorValue, setDoctorValue] = useState();
@@ -236,7 +236,6 @@ const Appointments = ({ data }) => {
         const sleep = setTimeout(() => {
             if (!openDatePicker && !openDatePickerCreateApp && !openDatePickerEditApp) return;
             const datepickerHeaderElements = document.querySelectorAll('.MuiDayPicker-header');
-            console.log(datepickerHeaderElements);
             datepickerHeaderElements && datepickerHeaderElements.forEach(datepickerHeaderElement => {
                 const weekdayLabels = datepickerHeaderElement.querySelectorAll(".MuiDayPicker-weekDayLabel");
                 weekdayLabels && weekdayLabels.forEach((weekdayLabel, idx) => {
@@ -1067,26 +1066,19 @@ const Appointments = ({ data }) => {
             gap.classList.remove("resizeable");
             gap.classList.remove("resizeable-up");
             gap.classList.remove("resizeable-down");
-            while (gap?.firstChild) {
-                console.log(gap.firstChild);
-                gap.removeChild(gap.firstChild);
-                console.log('here2');
-            }
+            gap.innerHTML = "";
+          
         });
 
-        console.log(days);
-        console.log(appointments);
         if (filterActive === 3 || filterActive === 4) return;
 
         // Appointments must be filtered for each doctor -> 
        
         const currentAppointments = filterActive === 0 ? appointments.filter((appointment) => {
-            console.log(appointment);
             let sameDoctor = false;
             
             const id = data.user?.userId;
             
-            console.log(sameDoctor);
             return sameDay(new Date(appointment.date), date) && !appointment.canceled;
         }) : appointments.filter((appointment) => {
             console.log(appointment);
@@ -2438,12 +2430,12 @@ const Appointments = ({ data }) => {
                     </div>
                 }
 
-                {activePlusButton ? <div className="add-button" onClick={() => {
+                {<div className="add-button" onClick={() => {
                     setAppointmentDateValue(filterActive === 0 ? new Date(date) : new Date(days[0]));
                     setActiveCreateAppointment(true);
                 }}>
                     <FontAwesomeIcon icon={faPlus} className="add-icon" />
-                </div> : null}
+                </div>}
            
                 <div className={`error-message-button ${activeErrorMessage ? "active" : ""}`}>
                     <p>{cookies?.language === "en" ? "You can't create / edit an appointment in the past!" : "Nu puteti crea / edita o programare in trecut!"}</p>

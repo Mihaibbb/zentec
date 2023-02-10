@@ -230,17 +230,17 @@ const CreatePatient = ({ data, fromAppointments, patientSaved }) => {
 
                 <div className="form">
                     <div className="input">
-                        <p>{cookies.language === "en" ? "First Name *" : "Nume *"}</p>
+                        <p>{cookies.language === "en" ? "First Name " : "Nume "}<span className="star">*</span></p>
                         <input type="text" placeholder={cookies.language === "en" ? "First Name" : "Nume"} value={firstName} onChange={e => setFirstName(e.target.value)} required />
                     </div>
 
                     <div className="input">
-                        <p>{cookies.language === "en" ? "Last Name *" : "Prenume *"}</p>
+                        <p>{cookies.language === "en" ? "Last Name " : "Prenume "}<span className="star">*</span></p>
                         <input type="text" placeholder={cookies.language === "en" ? "Last Name" : "Prenume"} value={lastName} onChange={e => setLastName(e.target.value)} required />
                     </div>
 
                     <div className="input">
-                        <p>{cookies.language === "en" ? "Phone number *" : "Numar de telefon *"}</p>
+                        <p>{cookies.language === "en" ? "Phone number " : "Numar de telefon "}<span className="star">*</span></p>
                         <input type="number" placeholder={cookies.language === "en" ? "Phone number" : "Numar de telefon"} value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)} required />
                     </div>
 
@@ -256,7 +256,7 @@ const CreatePatient = ({ data, fromAppointments, patientSaved }) => {
                     </div> */}
 
                     <div className="input">
-                        <p>{cookies.language === "en" ? "File Number" : "Nr. fisa"}</p>
+                        <p>{cookies.language === "en" ? "File Number " : "Nr. fisa "}<span className="star">*</span></p>
                         <input type="number" placeholder={cookies.language === "en" ? "File Number" : "Nr. fisa"} value={fileNumber || ""} onChange={e => setFileNumber(e.target.value)}/>
                     </div>
 

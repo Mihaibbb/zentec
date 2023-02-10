@@ -6,48 +6,11 @@ import ZenLogo from "../imgs/logo_zen.svg";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChartSimple, faComments, faDatabase, faHandPointUp, faHeadset } from '@fortawesome/free-solid-svg-icons';
 import iphoneMockup from "../imgs/iphone_mockup.webp";
-import Footer from '../Components/Footer_Home/Footer';
-import { useState } from 'react';
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import braketLeft from "../imgs/braket_left.svg";
-import braketRight from "../imgs/braket_right.svg";
 //import macbookMockup from "../imgs/mockup_macbook_test.png";
 
 const Home = ({ data }) => {
 
     const [cookies, setCookies] = useCookies();
-    const [foundUser, setFoundUser] = useState();
-    const navigate = useNavigate();
-
-    const userConnected = async () => {
-        if (!cookies["user-id"] || !cookies["pwd"]) return;
-        const options = {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                hashedPassword: cookies["pwd"],
-                userId: cookies["user-id"]
-            })
-        };
-
-        try {
-            const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/auth/login-remember`, options);
-            const response = await request.json();
-            if (!response.success) return;
-            setFoundUser(response.admin ? "admin" : "user");
-        } catch(e) {
-            console.log(e);
-        }
-    };
-
-    useEffect(() => {
-        (async () => {
-            await userConnected();
-        })();
-    }, []);
     
     return (
         <div className="home-container">
@@ -58,31 +21,14 @@ const Home = ({ data }) => {
                 
                 <div className="block-1">
                     <h2 className="title">
-                        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "32px" }}>
-                            Digitalizează-ți 
-                            <div className="curly-container">
-                                <img src={braketLeft} style={{ marginRight: "-250px" }}/>
-                                <div>
-                                    <p>cabinetul</p>
-                                    <p>programările</p>
-                                    <p>personalul</p>
-                                </div>
-                            
-                                
-                                <img src={braketRight} style={{ marginLeft: "-250px" }}/>
-
-                            </div> 
-                            cu ZenTec.
-                        </div>
-                        
-                     
-               
+                        Manageriază-<span>ți programarile</span> <br />  
+                        cu ZenTec.
                     </h2>
 
                     <p className="description">{cookies.language === "en" ? "ZenTec is a software designed for medical cabients, easy to use, which simplifies handling with appointments." : "ZenTec este o platformă destinată cabinetelor medicale, ce este intuitivă și ușor de folosit, simplificând gestionarea pacienților, cât și a programarilor."}</p>
 
-                    <button type="button" onClick={() => navigate(!foundUser ? "/contact-us" : "/dashboard")}>
-                        {!foundUser ? <p>{cookies?.language === "en" ? "Contact us" : "Contactează-ne"}</p> : <p>{cookies?.language === "en" ? "To dashboard" : "Spre aplicație"}</p>}
+                    <button type="button">
+                        <p>{cookies?.language === "en" ? "Contact us" : "Contactează-ne"}</p>
                     </button>
 
                     {/* <p className="sm-text">{cookies?.language === "en" ? "No credit card required" : "Fără card de credit"}</p> */}
@@ -137,7 +83,7 @@ const Home = ({ data }) => {
                             <p>
                                 {cookies.language === "en" ?
                                 "Because we know how important it is for you to keep in touch with your patients, we offer you the possibility of sending personalized messages to them. from now on your patients don't forget their appointments." : 
-                                "Pentru că știm cât este de important pentru tine să păstrezi legătura cu pacienții, îți oferim posibilitatea transmiterii de mesaje personalizate către aceștia.  De acum pacientii tai nu mai uita de programari."
+                                "Pentru că știm cât este de important pentru tine să păstrezi legătura cu pacienții, îți oferim posibilitatea transmiterii de mesaje personalizate către aceștia.  De acum pacientii tai nu mai uita de programari."
                                 }
                             </p>
                         </div>
@@ -146,10 +92,10 @@ const Home = ({ data }) => {
                         <div className="advantage">
                             <FontAwesomeIcon icon={faHandPointUp} className="advantage-icon" />
                             <h2>{cookies.language === "en" ? "Easy to use" : "Simplu de utilizat"}</h2>
-                            <p className="enumerate">{cookies.language === "en" ? "" : "Poti crea rapid programari simple sau recurente si poti reprograma la fel de usor dincateva clickuri"}</p>
-                            <p className="enumerate">{cookies.langauge === "en" ? "" : "Ai vizibilitate a calendarului pe zile, saptamani si luni"}</p>
-                            <p className="enumerate">{cookies.langauge === "en" ? "" : "Poti defini programul de lucru al doctorului si poti bloca perioade de timp din timpul zilei in care doctorul nu este disponibil"}</p>
-                            <p className="enumerate">{cookies.language === "en" ? "" : "Poti asocia un pret fiecarei programari sau il poti lasa nedefinit"}</p>
+                            <p className="enumerate">{cookies.language === "en" ? "" : "Poti crea rapid programari simple sau recurente si poti reprograma la fel de usor dincateva clickuri"}</p>
+                            <p className="enumerate">{cookies.langauge === "en" ? "" : "Ai vizibilitate a calendarului pe zile, saptamani si luni"}</p>
+                            <p className="enumerate">{cookies.langauge === "en" ? "" : "Poti defini programul de lucru al doctorului si poti bloca perioade de timp din timpul zilei in care doctorul nu este disponibil"}</p>
+                            <p className="enumerate">{cookies.language === "en" ? "" : "Poti asocia un pret fiecarei programari sau il poti lasa nedefinit"}</p>
                         </div>
 
 
@@ -209,9 +155,9 @@ const Home = ({ data }) => {
 
                     <img src={ZenLogo} alt="logo-image" className="logo-icon" width={100} height="auto" />
                 </div>
-            </div>
 
-            <Footer />
+
+            </div>
         </div>
     );
 };

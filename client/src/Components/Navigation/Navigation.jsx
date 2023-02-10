@@ -53,7 +53,7 @@ const Navigation = ({ show, page }) => {
                 <h3>{cookies.language === "en" ? "Dashboard" : "Panou de control"}</h3>
             </div>
 
-            <div className={`item ${page === "appointments" ? "active" : ""}`} onClick={() => navigation("/appointments")}>
+            <div className={`item ${page === "appointments" ? "active" : ""}`} onClick={() => page === "appointments" ? window.scrollTo({ left: 0, top: 0, behavior: 'smooth' }) : navigation("/appointments")}>
                 <FontAwesomeIcon icon={faCalendarDays} className="item-icon"/>
                 <h3>{cookies.language === "en" ? "Appointments" : "Programari"}</h3>
             </div>

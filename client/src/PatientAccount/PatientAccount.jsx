@@ -55,6 +55,7 @@ const PatientAccount = ({ data }) => {
     const [notes, setNotes] = useState(initialNotes);
     const [showUpdate, setShowUpdate] = useState(false);
     const [historic, setHistoric] = useState(JSON.parse(patient.historic));
+    const [historicOption, setHistoricOption] = useState(0);
     const [errorMessage, setErrorMessage] = useState();
 
     const currGenders = cookies.language === "en" ? ['Male', 'Female', 'Not mentioned'] : ['Masculin', 'Feminin', 'Nespecificat'];
@@ -193,7 +194,30 @@ const PatientAccount = ({ data }) => {
         
     }, [birthRef]);
 
-    const handleChangeDate = (newBirthdate) => setBirthDate(newBirthdate);
+    useEffect(() => {
+        if (historicOption === 0) {
+            
+            setHistoric(currHistoric => currHistoric.filter(appointment => false));
+            JSON.parse(patient.historic).forEach(appointment => {
+                const appointmentStartDate = new Date(new Date(appointment.date).getFullYear(), new Date(appointment.date).getMonth(), new Date(appointment.date).getDate(), Number(appointment.startHour), Number(appointment.startMinutes));
+                if (appointmentStartDate.getTime() <= new Date().getTime() && !appointment.cancel) setHistoric(currHistoric => [...currHistoric, appointment]);
+            });
+
+        } else if (historicOption === 1) {
+            setHistoric(currHistoric => currHistoric.filter(appointment => false));
+            JSON.parse(patient.historic).forEach(appointment => {
+                const appointmentStartDate = new Date(new Date(appointment.date).getFullYear(), new Date(appointment.date).getMonth(), new Date(appointment.date).getDate(), Number(appointment.startHour), Number(appointment.startMinutes));
+                if (appointmentStartDate.getTime() > new Date().getTime() && !appointment.cancel) setHistoric(currHistoric => [...currHistoric, appointment]);
+            });
+        } else {
+            setHistoric(currHistoric => currHistoric.filter(appointment => false));
+            JSON.parse(patient.historic).forEach(appointment => {
+                if (appointment.cancel) setHistoric(currHistoric => [...currHistoric, appointment]);
+            });
+        }
+    }, [historicOption]);
+
+    const handleChangeDate = (newBirthdate) => setBirthDate(new Date(newBirthdate));
     
     return (
         <div className="account-container"> 
@@ -233,7 +257,7 @@ const PatientAccount = ({ data }) => {
                                 <FontAwesomeIcon className="icon" icon={faCalendar} />
                                 <p>{cookies.language === "en" ? "Date of birth" : "Data de nastere"}</p>
                             </div>
-                            <DateCustomInput initialDate={new Date(birthDate)} changeDate={handleChangeDate} future={false} past={true} label={cookies.language === "en" ? "Date of birth" : "Data de nastere"} />
+                            <DateCustomInput initialDate={initialBirthdate} changeDate={handleChangeDate} future={false} past={true} label={cookies.language === "en" ? "Date of birth" : "Data de nastere"} />
                         </div>
 
                         <div className="input">
@@ -351,6 +375,22 @@ const PatientAccount = ({ data }) => {
 
                 {historicPage ? <div className="patient-historic">
                     <h2 className="title">{cookies.language === "en" ? "Patient's historic" : "Istoric Pacient"}</h2>
+
+                    <div className="historic-options">
+
+                        <div className={`historic-option ${historicOption === 0 ? "active" : ""}`} onClick={() => setHistoricOption(0)}>
+                            <p>{cookies.language === "en" ? "Past appointments" : "Programari trecute"}</p>
+                        </div>
+
+                        <div className={`historic-option ${historicOption === 1 ? "active" : ""}`} onClick={() => setHistoricOption(1)}>
+                            <p>{cookies.language === "en" ? "Future appointments" : "Programari viitoare"}</p>
+                        </div>
+
+                        <div className={`historic-option ${historicOption === 2 ? "active" : ""}`} onClick={() => setHistoricOption(2)}>
+                            <p>{cookies.language === "en" ? "Canceled appointments" : "Programari anulate"}</p>
+                        </div>
+
+                    </div>
                     
                     <div className="historic-container">
                         

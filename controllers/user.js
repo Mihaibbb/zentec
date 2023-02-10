@@ -234,7 +234,6 @@ exports.cancelAppointment = async (req, res, next) => {
 
             return appointment;
         });
-
         await db.query("UPDATE ?? SET historic = ? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${_id}.patients`, JSON.stringify(newHistoric), patientId]);
         res.status(200).json({ success: true, message: { en: "Appointment was successfully canceled!", ro: "Programarea a fost anulata cu succes!" } });
     } catch (e) {

@@ -23,7 +23,11 @@ const DoctorAccount = ({ data }) => {
     const [multipleSchedules, setMultipleSchedules] = useState();
     const [activeDoctor, setActiveDoctor] = useState();
     const [errorMessage, setErrorMessage] = useState();
-    const [historic, setHistoric] = useState([]);
+    const initialHistoric = data.organisation.schedules.filter(schedule => JSON.parse(schedule.users).includes(id));
+    const [historic, setHistoric] = useState(initialHistoric);
+    const [historicOption, setHistoricOption] = useState(0);
+   
+
     
     const navigate = useNavigate();
 
@@ -52,9 +56,7 @@ const DoctorAccount = ({ data }) => {
             setMultipleSchedules(await fetchedData.multiple_schedules);
             setActiveDoctor(await fetchedData.active);
             
-            const currentSchedules = data.organisation.schedules;
-            const doctorsSchedules = currentSchedules.filter(schedule => JSON.parse(schedule.users).includes(id));
-            setHistoric(doctorsSchedules);
+           
         } catch (e) {
             console.log(e);
             setErrorMessage(cookies.langauge === "en" ? "An error occured!" : "A aparut o eroare!");
@@ -118,6 +120,28 @@ const DoctorAccount = ({ data }) => {
         document.querySelector(".content").classList.add("no-navigation");
         
     }, [location]);
+
+    useEffect(() => {
+        if (historicOption === 0) {
+            setHistoric(currHistoric => currHistoric.filter(appointment => false));
+            initialHistoric.forEach(appointment => {
+                console.log(appointment);
+                if (!appointment.canceled && new Date(appointment.startDate).getTime() <= new Date().getTime()) setHistoric(currHistoric => [...currHistoric, appointment]);
+            });
+            
+        } else if (historicOption === 1) {
+            setHistoric(currHistoric => currHistoric.filter(appointment => false));
+            initialHistoric.forEach(appointment => {
+                if (!appointment.canceled && new Date(appointment.startDate).getTime() > new Date().getTime()) setHistoric(currHistoric => [...currHistoric, appointment]);
+            });
+        } else if (historicOption === 2) {
+            setHistoric(currHistoric => currHistoric.filter(appointment => false));
+            initialHistoric.forEach(appointment => {
+                if (appointment.canceled) setHistoric(currHistoric => [...currHistoric, appointment]);
+            });
+        }
+    
+    }, [historicOption]);
     
     return initialColor && (
         <div className="doctor-account-container">
@@ -180,6 +204,22 @@ const DoctorAccount = ({ data }) => {
                 {historicPage ? <div className="patient-historic">
                     <h2 className="title">{cookies.language === "en" ? "Doctor's historic" : "Istoric Medic"}</h2>
                     
+                    <div className="historic-options">
+
+                        <div className={`historic-option ${historicOption === 0 ? "active" : ""}`} onClick={() => setHistoricOption(0)}>
+                            {cookies.language === "en" ? "Past appointments" : "Programari trecute"}
+                        </div>
+
+                        <div className={`historic-option ${historicOption === 1 ? "active" : ""}`} onClick={() => setHistoricOption(1)}>
+                            {cookies.language === "en" ? "Future appointments" : "Programari viitoare"}
+                        </div>
+
+                        <div className={`historic-option ${historicOption === 2 ? "active" : ""}`} onClick={() => setHistoricOption(2)}>
+                            {cookies.language === "en" ? "Canceled appointments" : "Programari anulate"}
+                        </div>
+                        
+                    </div>
+
                     <div className="historic-container">
                         <div className="first-row">
                             <div className="col">{cookies.language === "en" ? "Title" : "Titlu"}</div>

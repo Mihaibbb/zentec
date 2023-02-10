@@ -262,6 +262,57 @@
     
 }
 
+.patient-historic .historic-options 
+{
+    margin-top: 3.5rem;
+    margin-bottom: 2rem;
+    margin-left: auto;
+    margin-right: auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    background: var(--over-color);
+    border: 1px solid var(--over-difference-color-2);
+    border-radius: 10px;
+    width: fit-content;
+}
+
+.patient-historic .historic-options .historic-option 
+{
+ 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 35px;
+    border: 1px solid var(--over-difference-color-2);
+    color: var(--text-color);
+    cursor: pointer;
+    padding: 0 1rem;
+    transition: all 350ms ease-in;
+}
+
+.patient-historic .historic-options .historic-option.active 
+{
+    background: var(--contrast-color);
+}
+
+
+body.light .patient-historic .historic-options .historic-option.active
+{
+    color: var(--home-opposite-text-color);
+}
+
+.patient-historic .historic-options .historic-option:first-child 
+{
+    border-bottom-left-radius: 10px;
+    border-top-left-radius: 10px;
+}
+
+.patient-historic .historic-options .historic-option:last-child 
+{
+    border-bottom-right-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
 @keyframes update_btn {
     33% {
         transform: rotateZ(-2deg);
