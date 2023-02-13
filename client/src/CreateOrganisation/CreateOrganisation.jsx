@@ -69,12 +69,11 @@ const CreateOrganisation = () => {
     };
 
     useEffect(() => {
-        // (async () => {
-        //     let newId = generateId(4);
-        //     while (await isIdUsed(newId)) newId = generateId(4);
-        //     setOrgId(generateId(4));
-        // })();
-        setOrgId(25);
+        (async () => {
+            
+            setOrgId(generateId(10));
+        })();
+        // setOrgId(25);
     }, []);
 
     const location = useLocation();

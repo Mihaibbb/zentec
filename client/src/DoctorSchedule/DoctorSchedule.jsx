@@ -23,7 +23,7 @@ const DoctorSchedule = ({ data }) => {
 
     const daysRef = useRef([]);
     
-    const filters = cookies.language === "en" ? ["Working Week", "Week", "Month"] : ["Saptamana Lucratoare", "Saptamana", "Luna"];
+    const filters = window.innerWidth > 800 ? (cookies.language === "en" ? ["Working Week", "Week", "Month"] : ["Saptamana Lucratoare", "Saptamana", "Luna"]) : (cookies.language === "en" ? ["Working Week", "Week"] : ["Saptamana Lucratoare", "Saptamana"]);
     const months = cookies.language === "en" ? 
     ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"] :
     ["Ianuarie", "Februarie", "Martie", "Aprilie", "Mai", "Iunie", "Iulie", "August", "Septembrie", "Octombrie", "Noiembrie", "Decembrie"];

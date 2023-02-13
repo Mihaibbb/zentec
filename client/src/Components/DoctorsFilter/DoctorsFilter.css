@@ -5,7 +5,7 @@
     max-width: 90%;
     margin: 0 auto;
     border-radius: 12px;
-    background: var(--dark-color);
+    background: var(--over-difference-color-3);
     padding: 1rem;
     display: grid;
     align-items: center;
@@ -44,10 +44,6 @@ body.light .doctors-filter .filter-container
     cursor: pointer;
 }
 
-body.light .doctors-filter .filter-container .filter-doctor
-{
-    background: var(--background);
-}
 
  .filter-container .filter-doctor p
 {
@@ -68,7 +64,7 @@ body.light .doctors-filter .filter-container .filter-doctor
 
 .filter-container .filter-doctor .close-icon
 {
-    color: var(--error-color);
+    color: rgba(255, 255, 255, .8);
     cursor: pointer;
     width: 18px;
     height: 18px;

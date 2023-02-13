@@ -56,10 +56,9 @@
     box-shadow: 0 0 10px var(--over-difference-color-3);
 }
 
-body.light .dashboard .left-container .new-appointments
+.dashboard .left-container .new-appointments
 {
     background: var(--over-difference-color-3);
-    border: 2px solid var(--contrast-color);
 }
 
 
@@ -78,7 +77,7 @@ body.light .dashboard .left-container .new-appointments
 .dashboard .right-container .doctors .title
 {
     font-size: 20px;
-    color: #fff;
+    color: var(--text-color);
     font-weight: 600;
     margin-top: 0;
 }
@@ -143,12 +142,22 @@ body.light .dashboard .right-container .doctors .first-row
     justify-content: center;
 }
 
+.dashboard .left-container .new-appointments .row div.patient-actions
+{
+    cursor: pointer;
+}
+
 
 .dashboard .left-container .new-appointments .row div p
 {
     color: #c0d0ed;
     font-weight: normal;
     font-family: 'Inter';
+}
+
+body.light .dashboard .left-container .new-appointments .row div p
+{
+    color: #3f3f4d;
 }
 
 .dashboard .left-container .new-appointments .row div.number-patient p
@@ -234,10 +243,6 @@ body.light .dashboard .filter-container .filter.active
     padding: .5rem 1.5rem;
 }
 
-body.light .dashboard .data .data-container 
-{
-    border: 1px solid var(--contrast-color);
-}
 
 .dashboard .data .data-container.data-margins
 {

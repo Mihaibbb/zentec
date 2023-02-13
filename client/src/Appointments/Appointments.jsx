@@ -37,7 +37,7 @@ const Appointments = ({ data }) => {
     const [lastElement, setLastElement] = useState();
     const [firstElement, setFirstElement] = useState();
     const [newDay, setNewDay] = useState();
-    const [filterActive, setFilterActive] = useState(window.history?.state?.filterActive || 1);
+    const [filterActive, setFilterActive] = useState(window.history?.state?.filterActive || (window.innerWidth >= 800 ? 1 : 0));
     const [doctors, setDoctors] = useState(data.organisation.doctors);
     const [doctorNameValue, setDoctorNameValue] = useState();
     const [doctorValue, setDoctorValue] = useState();
@@ -63,7 +63,7 @@ const Appointments = ({ data }) => {
     const [appointmentFinished, setAppointmentFinished] = useState();
     const [appointmentConfirmed, setAppointmentConfirmed] = useState();
     const [appointmentIntervalWarning, setAppointmentIntervalWarning] = useState(false);
-    const [activePlusButton, setActivePlusButton] = useState(false);
+    const [activePlusButton, setActivePlusButton] = useState(true);
 
     // State for date picker calendars are open
     const [openDatePicker, setOpenDatePicker] = useState(false);
@@ -195,12 +195,7 @@ const Appointments = ({ data }) => {
             setFilters(cookies.language === "en" ? ['Day', 'Working Week', 'Week', 'Month', 'Year'] : ['Zi', 'Saptamana Lucratoare', 'Saptamana', 'Luna', 'An']);
         }
         
-        if (document.documentElement.clientWidth <= 800 || isTouchDevice()) {
-            setActivePlusButton(true);
-        }
-        else {
-            setActivePlusButton(false);
-        }
+      
 
         window.addEventListener("resize", () => {
             if (document.documentElement.clientWidth <= 500) {
@@ -211,22 +206,18 @@ const Appointments = ({ data }) => {
                 setFilters(cookies.language === "en" ? ['Day', 'Working Week', 'Week', 'Month', 'Year'] : ['Zi', 'Saptamana Lucratoare', 'Saptamana', 'Luna', 'An']);
             }
             
-            if (document.documentElement.clientWidth <= 800 || isTouchDevice()) {
-                setActivePlusButton(true);
-            }
-            else {
-                setActivePlusButton(false);
-            }
+           
+           
         });
     }, [location]);
 
 
    
     useEffect(() => {
-
-        if (window.history?.state?.filterActive == null) return;
         if (filterActive === 1) setDays(setWorkingWeek());
         else if (filterActive === 2) setDays(setWeek());
+        if (window.history?.state?.filterActive == null) return;
+     
         window.scrollTo(0, window.history?.state?.scrollY);
         window.history.replaceState(null, "");
 
@@ -591,9 +582,10 @@ const Appointments = ({ data }) => {
         const endId = Number(lastElement.getAttribute('id'));
         // Array for each gap in the appointment
         const appointmentGapElements = [];
+        console.log(appointmentDateValue);
 
         for (let id = startId; id <= endId; id++) {
-            appointmentGapElements.push(document.querySelector(`.gap[id="${id}"]`));
+            appointmentGapElements.push(document.querySelector(`.gap[id="${id}"][day="${appointmentDateValue}"]`));
         }
         
         const appointmentInInterval = appointmentGapElements.every(gap => {
@@ -1099,222 +1091,224 @@ const Appointments = ({ data }) => {
             const endMinutesAppointment = new Date(appointment.endDate).getMinutes();
             let startIdx, endIdx;
             const appointmentDoctor = doctors.find(doctor => doctor._id === (isJSON(appointment.users) ? JSON.parse(appointment.users)[0] : appointment.users[0]));
-            const doctorColor = appointmentDoctor?.color;
-            currentGaps.forEach((gap, gapIdx) => {
-                if (Number(gap.getAttribute('starthour')) === startHourAppointment &&
-                    Number(gap.getAttribute('startminutes')) === startMinutesAppointment && 
-                    (filterActive !== 0 ? sameDay(new Date(gap.getAttribute('day')), appointmentDate) : true) &&
-                    gap.getAttribute("doctorid") === doctorIdAppointment
-                ) {
-                    startIdx = gapIdx;
-                }
+            if (appointmentDoctor) {
+                const doctorColor = appointmentDoctor?.color;
+                currentGaps.forEach((gap, gapIdx) => {
+                    if (Number(gap.getAttribute('starthour')) === startHourAppointment &&
+                        Number(gap.getAttribute('startminutes')) === startMinutesAppointment && 
+                        (filterActive !== 0 ? sameDay(new Date(gap.getAttribute('day')), appointmentDate) : true) &&
+                        gap.getAttribute("doctorid") === doctorIdAppointment
+                    ) {
+                        startIdx = gapIdx;
+                    }
 
-                if (Number(gap.getAttribute('endhour')) === endHourAppointment && 
-                    Number(gap.getAttribute('endminutes')) === endMinutesAppointment && 
-                    (filterActive !== 0 ? sameDay(new Date(gap.getAttribute('day')), appointmentDate) : true) &&
-                    gap.getAttribute("doctorid") === doctorIdAppointment
-                ) {
-                    console.log(gapIdx, endHourAppointment, endMinutesAppointment);
-                    endIdx = gapIdx;
-                }
-            });
-
-           
-            for (let i = startIdx; i <= endIdx; i++) {
-                currentGaps[i].classList.add('highlight');
-                currentGaps[i].classList.add('created');
-                if (appointment.finished) currentGaps[i].classList.add("finished");
-                currentGaps[i].addEventListener('click', () => {
-                    console.log(appointment);
-                    if (!sameDay( new Date(currentGaps[i].getAttribute("day")), new Date(appointment.date) )) return;
-                    if (new Date(appointment.startDate).getTime() < new Date().getTime()) return;
-                    setActiveEditAppointment(true);
-                    setAppointmentTitle(appointment.title);
-                    setAppointmentPatient(`${isJSON(appointment.patients) ? JSON.parse(appointment.patients)[0].firstname : appointment.patients[0].firstname} ${isJSON(appointment.patients) ? JSON.parse(appointment.patients)[0].lastname : appointment.patients[0].lastname}`);
-                    setAppointmentPatientsList([]);
-                    setAppointmentPatientData(JSON.parse(appointment.patients)[0]);
-                    setAppointmentStartHour(new Date(appointment.startDate).getHours() < 10 ? `0${new Date(appointment.startDate).getHours()}` : new Date(appointment.startDate).getHours());
-                    setAppointmentStartMinutes(new Date(appointment.startDate).getMinutes() < 10 ? `0${new Date(appointment.startDate).getMinutes()}` : new Date(appointment.startDate).getMinutes());
-                    setAppointmentEndHour(new Date(appointment.endDate).getHours() < 10 ? `0${new Date(appointment.endDate).getHours()}` : new Date(appointment.endDate).getHours());
-                    setAppointmentEndMinutes(new Date(appointment.endDate).getMinutes() < 10 ? `0${new Date(appointment.endDate).getMinutes()}` : new Date(appointment.endDate).getMinutes());
-                    setAppointmentCost(appointment.income);
-                    setAppointmentId(appointment._id);
-                    setAppointmentNotes(appointment.notes);
-                    setAppointmentDoctorId(JSON.parse(appointment.users)[0]);
-                    setAppointmentFinished(appointment.finished);
-                    setAppointmentConfirmed(appointment.confirmed);
-                    setAppointmentDateValue(new Date(appointment.date));
-
+                    if (Number(gap.getAttribute('endhour')) === endHourAppointment && 
+                        Number(gap.getAttribute('endminutes')) === endMinutesAppointment && 
+                        (filterActive !== 0 ? sameDay(new Date(gap.getAttribute('day')), appointmentDate) : true) &&
+                        gap.getAttribute("doctorid") === doctorIdAppointment
+                    ) {
+                        console.log(gapIdx, endHourAppointment, endMinutesAppointment);
+                        endIdx = gapIdx;
+                    }
                 });
+
+            
+                for (let i = startIdx; i <= endIdx; i++) {
+                    currentGaps[i].classList.add('highlight');
+                    currentGaps[i].classList.add('created');
+                    if (appointment.finished) currentGaps[i].classList.add("finished");
+                    currentGaps[i].addEventListener('click', () => {
+                        console.log(appointment);
+                        if (!sameDay( new Date(currentGaps[i].getAttribute("day")), new Date(appointment.date) )) return;
+                        if (new Date(appointment.startDate).getTime() < new Date().getTime()) return;
+                        setActiveEditAppointment(true);
+                        setAppointmentTitle(appointment.title);
+                        setAppointmentPatient(`${isJSON(appointment.patients) ? JSON.parse(appointment.patients)[0].firstname : appointment.patients[0].firstname} ${isJSON(appointment.patients) ? JSON.parse(appointment.patients)[0].lastname : appointment.patients[0].lastname}`);
+                        setAppointmentPatientsList([]);
+                        setAppointmentPatientData(JSON.parse(appointment.patients)[0]);
+                        setAppointmentStartHour(new Date(appointment.startDate).getHours() < 10 ? `0${new Date(appointment.startDate).getHours()}` : new Date(appointment.startDate).getHours());
+                        setAppointmentStartMinutes(new Date(appointment.startDate).getMinutes() < 10 ? `0${new Date(appointment.startDate).getMinutes()}` : new Date(appointment.startDate).getMinutes());
+                        setAppointmentEndHour(new Date(appointment.endDate).getHours() < 10 ? `0${new Date(appointment.endDate).getHours()}` : new Date(appointment.endDate).getHours());
+                        setAppointmentEndMinutes(new Date(appointment.endDate).getMinutes() < 10 ? `0${new Date(appointment.endDate).getMinutes()}` : new Date(appointment.endDate).getMinutes());
+                        setAppointmentCost(appointment.income);
+                        setAppointmentId(appointment._id);
+                        setAppointmentNotes(appointment.notes);
+                        setAppointmentDoctorId(JSON.parse(appointment.users)[0]);
+                        setAppointmentFinished(appointment.finished);
+                        setAppointmentConfirmed(appointment.confirmed);
+                        setAppointmentDateValue(new Date(appointment.date));
+
+                    });
+                }
+
+                const appointmentLength = (new Date(appointment.endDate).getTime() - new Date(appointment.startDate).getTime()) / (1000 * 60 * minutesPerGap);
+
+                const textElement2 = document.createElement('p');
+                textElement2.classList.add('appointment-interval');
+                const currentPatient = isJSON(appointment.patients) ? JSON.parse(appointment.patients)[0] : appointment.patients[0];
+                textElement2.innerText = `${currentPatient.firstname} ${currentPatient.lastname}`;
+                textElement2.innerText += cookies.langauge === "en" ? ` / File No.: ${currentPatient.fileNumber}` : ` / Nr. fisa: ${currentPatient.fileNumber}`;
+                textElement2.style.top = `calc(-100% + ${gapsRef.current[0].clientHeight * (appointmentLength <= 2 ? 2 : 3)}px)`;
+                
+                if (appointmentLength < 2) textElement2.style.display = 'none';
+                else textElement2.style.top = `calc(-100% + ${(appointmentLength / 3) * gapsRef.current[0].clientHeight}px + 12px)`;
+                textElement2.style.color = getContrastForText(doctorColor);
+                currentGaps[startIdx].appendChild(textElement2);
+                
+                const textElement = document.createElement('p');
+                textElement.classList.add('appointment-interval');
+                textElement.innerText = `${appointment.title}`;
+                if (appointmentLength < 3) textElement.style.display = 'none';
+                else  textElement.style.top = `calc(-100% + ${(appointmentLength / 3 + 1) * gapsRef.current[0].clientHeight}px + 12px)`;
+
+                textElement.style.color = getContrastForText(doctorColor);
+                currentGaps[startIdx].appendChild(textElement);
+                currentGaps[startIdx].classList.add("resizeable");
+                currentGaps[startIdx].classList.add("resizeable-up");
+
+                
+                // currentGaps.forEach(gap => {
+
+                //     gap.addEventListener("mousedown", e => {
+                //         console.log(e.target);
+                //         if (!e.target.classList.contains("resizeable") || !e.target.classList.contains("resizeable-up")) return;
+                //         setStartEvent(true);
+                //         setLastElement(e.target);
+                //         setStartPosition(e.clientY);
+                //         setModifyEvent(true);
+                //     });
+
+                //     gap.addEventListener("mousemove", e => {
+                //         console.log(startEvent, lastElement);
+                //         if (!startEvent || !lastElement) return;
+                //         console.log(e.target);
+                //         while (e.target && !e.target.classList.contains("gap")) {
+                //             e.target = e.target?.parentElement;
+                //         }
+                //         console.log(e.target !== lastElement);
+
+                //         if (e.target === lastElement) return;
+
+                //         if (e.clientY < startPosition) {
+                //             e.target.classList.add("highlight");
+                //             console.log("ADD");
+                //         } else {
+                //             e.target.classList.remove("highlight");
+                //         }
+                    
+                //         setStartPosition(e.target);
+                //         setLastElement(e.target);
+                        
+                        
+                    
+                //     });
+
+                //     gap.addEventListener("mouseup", e => {
+                //         setStartEvent(false);
+                //         setModifyEvent(false);
+                //         setLastElement();
+                        
+
+                //     });
+                // });    
+
+                const titleAppointmentDivElement = document.createElement('div');
+                titleAppointmentDivElement.classList.add("appointment-interval-container");
+                currentGaps[startIdx].appendChild(titleAppointmentDivElement);
+
+                ReactDOM.render(
+                <>
+                    <p className="appointment-interval appointment-interval-title" style={appointmentLength <= 3 ? { 
+                        color: getContrastForText(doctorColor), 
+                        top: `calc(-100% - 20px + ${gapsRef.current[0].clientHeight}px)`
+                    } : {
+                        color: getContrastForText(doctorColor), 
+                        top: `calc(-100% - 20px + ${gapsRef.current[0].clientHeight}px)`, 
+                        fontSize: '20px',
+                        height: `${gapsRef.current[0].clientHeight}px`
+                    }}>
+                        {startHourAppointment < 10 ? `0${startHourAppointment}` : startHourAppointment}:{startMinutesAppointment < 10 ? `0${startMinutesAppointment}` : startMinutesAppointment} - {endHourAppointment < 10 ? `0${endHourAppointment}` : endHourAppointment}:{endMinutesAppointment < 10 ? `0${endMinutesAppointment}` : endMinutesAppointment}
+                        {appointment.confirmed ? <FontAwesomeIcon icon={faCheck} className="check-appointment-icon" style={{ marginLeft: '10px', marginRight: '10px' }}/> : null}
+                    </p>
+                </>, titleAppointmentDivElement);
+
+                
+                // const patientNameElement = document.createElement('p');
+                // patientNameElement.classList.add("appointment-interval");
+                // console.log(appointment.patients);
+                // patientNameElement.innerText = `${isJSON(appointment.patients) ? JSON.parse(appointment.patients)[0].firstname : appointment.patients[0].firstname} ${isJSON(appointment.patients) ? JSON.parse(appointment.patients)[0].lastname : appointment.patients[0].lastname}`;
+                // patientNameElement.style.top = 'calc(-100% + 60px)';
+                // patientNameElement.style.fontSize = '20px';
+                // patientNameElement.style.color = getContrastForText(doctorColor);
+                // currentGaps[startIdx].appendChild(patientNameElement);
+
+                currentGaps[endIdx].classList.add("resizeable");
+                currentGaps[endIdx].classList.add("resizeable-down");
+                console.log(currentGaps[startIdx]);
+                const appointmentHourIdx = Number(currentGaps[startIdx].getAttribute("starthour")) - startHour;
+                const appointmentGapIdx = Number(currentGaps[startIdx].getAttribute("key"));
+        
+                currentGaps[endIdx].addEventListener("mousedown", e => {
+                    initiateAppointment(e, appointmentHourIdx, appointmentGapIdx, appointmentDoctor, true);
+                });
+
+                // currentGaps[startIdx].addEventListener("mousedown", e => {
+                //     initiateAppointment(e, appointmentHourIdx, appointmentGapIdx, appointmentDoctor, true);
+                // });
+
+                // currentGaps[endIdx].addEventListener("mousemove", e => {
+                //     moveAppointment(e, true, currentGaps[startIdx]);
+                // });
+
+                //currentGaps[endIdx].addEventListener("mouseup", e => resizeAppointment(e));
+
+                const activeGaps = [...currentGaps].filter(currentGap => currentGap.classList.contains("highlight") && currentGap.classList.contains("created"));
+
+                // Hover appointment event
+                activeGaps.forEach((currentGap, idx) => {
+                    // currentGap.addEventListener("mouseover", e => {
+                    //     let firstIdx = idx, lastIdx = idx;
+                    //     while (!activeGaps[firstIdx].classList.contains("resizeable-up")) {
+                    //         activeGaps[firstIdx].classList.add("mouse-over-gap");
+                    //         if (firstIdx === 0) break;
+                    //         firstIdx--;
+                    //     }
+                        
+                    //     if (firstIdx >= 0) activeGaps[firstIdx].classList.add("mouse-over-gap");
+                        
+                    //     while (!activeGaps[lastIdx].classList.contains("resizeable-down")) {
+                    //         activeGaps[lastIdx].classList.add("mouse-over-gap")
+                    //         if (lastIdx === activeGaps.length - 1) break;
+                    //         lastIdx++;
+                    //     }
+
+                    //     if (lastIdx <= activeGaps.length - 1) activeGaps[lastIdx].classList.add("mouse-over-gap")
+
+                    // });
+
+                    // currentGap.addEventListener("mouseout", e => {
+                        
+                    //     let firstIdx = idx, lastIdx = idx;
+                    //     while (!activeGaps[firstIdx].classList.contains("resizeable-up")) {
+                    //         activeGaps[firstIdx].classList.remove("mouse-over-gap")
+                    //         if (firstIdx === 0) break;
+                    //         firstIdx--;
+                    //     }
+
+                    //     if (firstIdx >= 0) activeGaps[firstIdx].classList.remove("mouse-over-gap");
+                        
+                    //     while (!activeGaps[lastIdx].classList.contains("resizeable-down")) {
+                    //         activeGaps[lastIdx].classList.remove("mouse-over-gap")
+                    //         if (lastIdx === activeGaps.length - 1) break;
+                    //         lastIdx++;
+                    //     }
+
+                    //     if (lastIdx <= activeGaps.length - 1) activeGaps[lastIdx].classList.remove("mouse-over-gap")
+                    // });
+                });
+                // currentGaps[startIdx].innerHTML = `<p class='appointment-interval'>${startHourAppointment < 10 ? `0${startHourAppointment}` : startHourAppointment}:${startMinutesAppointment < 10 ? `0${startMinutesAppointment}` : startMinutesAppointment}-${endHourAppointment < 10 ? `0${endHourAppointment}` : endHourAppointment}-${endMinutesAppointment < 10 ? `0${endMinutesAppointment}` : endMinutesAppointment}<br /> ${appointment.title}</p>`;
+                
             }
-
-            const appointmentLength = (new Date(appointment.endDate).getTime() - new Date(appointment.startDate).getTime()) / (1000 * 60 * minutesPerGap);
-
-            const textElement2 = document.createElement('p');
-            textElement2.classList.add('appointment-interval');
-            const currentPatient = isJSON(appointment.patients) ? JSON.parse(appointment.patients)[0] : appointment.patients[0];
-            textElement2.innerText = `${currentPatient.firstname} ${currentPatient.lastname}`;
-            textElement2.innerText += cookies.langauge === "en" ? ` / File No.: ${currentPatient.fileNumber}` : ` / Nr. fisa: ${currentPatient.fileNumber}`;
-            textElement2.style.top = `calc(-100% + ${gapsRef.current[0].clientHeight * (appointmentLength <= 2 ? 2 : 3)}px)`;
-            
-            if (appointmentLength < 2) textElement2.style.display = 'none';
-            else textElement2.style.top = `calc(-100% + ${(appointmentLength / 3) * gapsRef.current[0].clientHeight}px + 12px)`;
-            textElement2.style.color = getContrastForText(doctorColor);
-            currentGaps[startIdx].appendChild(textElement2);
-            
-            const textElement = document.createElement('p');
-            textElement.classList.add('appointment-interval');
-            textElement.innerText = `${appointment.title}`;
-            if (appointmentLength < 3) textElement.style.display = 'none';
-            else  textElement.style.top = `calc(-100% + ${(appointmentLength / 3 + 1) * gapsRef.current[0].clientHeight}px + 12px)`;
-
-            textElement.style.color = getContrastForText(doctorColor);
-            currentGaps[startIdx].appendChild(textElement);
-            currentGaps[startIdx].classList.add("resizeable");
-            currentGaps[startIdx].classList.add("resizeable-up");
-
-            
-            // currentGaps.forEach(gap => {
-
-            //     gap.addEventListener("mousedown", e => {
-            //         console.log(e.target);
-            //         if (!e.target.classList.contains("resizeable") || !e.target.classList.contains("resizeable-up")) return;
-            //         setStartEvent(true);
-            //         setLastElement(e.target);
-            //         setStartPosition(e.clientY);
-            //         setModifyEvent(true);
-            //     });
-
-            //     gap.addEventListener("mousemove", e => {
-            //         console.log(startEvent, lastElement);
-            //         if (!startEvent || !lastElement) return;
-            //         console.log(e.target);
-            //         while (e.target && !e.target.classList.contains("gap")) {
-            //             e.target = e.target?.parentElement;
-            //         }
-            //         console.log(e.target !== lastElement);
-
-            //         if (e.target === lastElement) return;
-
-            //         if (e.clientY < startPosition) {
-            //             e.target.classList.add("highlight");
-            //             console.log("ADD");
-            //         } else {
-            //             e.target.classList.remove("highlight");
-            //         }
-                  
-            //         setStartPosition(e.target);
-            //         setLastElement(e.target);
-                    
-                    
-                   
-            //     });
-
-            //     gap.addEventListener("mouseup", e => {
-            //         setStartEvent(false);
-            //         setModifyEvent(false);
-            //         setLastElement();
-                    
-
-            //     });
-            // });    
-
-            const titleAppointmentDivElement = document.createElement('div');
-            titleAppointmentDivElement.classList.add("appointment-interval-container");
-            currentGaps[startIdx].appendChild(titleAppointmentDivElement);
-
-            ReactDOM.render(
-            <>
-                <p className="appointment-interval appointment-interval-title" style={appointmentLength <= 3 ? { 
-                    color: getContrastForText(doctorColor), 
-                    top: `calc(-100% - 20px + ${gapsRef.current[0].clientHeight}px)`
-                } : {
-                    color: getContrastForText(doctorColor), 
-                    top: `calc(-100% - 20px + ${gapsRef.current[0].clientHeight}px)`, 
-                    fontSize: '20px',
-                    height: `${gapsRef.current[0].clientHeight}px`
-                }}>
-                    {startHourAppointment < 10 ? `0${startHourAppointment}` : startHourAppointment}:{startMinutesAppointment < 10 ? `0${startMinutesAppointment}` : startMinutesAppointment} - {endHourAppointment < 10 ? `0${endHourAppointment}` : endHourAppointment}:{endMinutesAppointment < 10 ? `0${endMinutesAppointment}` : endMinutesAppointment}
-                    {appointment.confirmed ? <FontAwesomeIcon icon={faCheck} className="check-appointment-icon" style={{ marginLeft: '10px', marginRight: '10px' }}/> : null}
-                </p>
-            </>, titleAppointmentDivElement);
-
-            
-            // const patientNameElement = document.createElement('p');
-            // patientNameElement.classList.add("appointment-interval");
-            // console.log(appointment.patients);
-            // patientNameElement.innerText = `${isJSON(appointment.patients) ? JSON.parse(appointment.patients)[0].firstname : appointment.patients[0].firstname} ${isJSON(appointment.patients) ? JSON.parse(appointment.patients)[0].lastname : appointment.patients[0].lastname}`;
-            // patientNameElement.style.top = 'calc(-100% + 60px)';
-            // patientNameElement.style.fontSize = '20px';
-            // patientNameElement.style.color = getContrastForText(doctorColor);
-            // currentGaps[startIdx].appendChild(patientNameElement);
-
-            currentGaps[endIdx].classList.add("resizeable");
-            currentGaps[endIdx].classList.add("resizeable-down");
-            console.log(currentGaps[startIdx]);
-            const appointmentHourIdx = Number(currentGaps[startIdx].getAttribute("starthour")) - startHour;
-            const appointmentGapIdx = Number(currentGaps[startIdx].getAttribute("key"));
-     
-            currentGaps[endIdx].addEventListener("mousedown", e => {
-                initiateAppointment(e, appointmentHourIdx, appointmentGapIdx, appointmentDoctor, true);
-            });
-
-            // currentGaps[startIdx].addEventListener("mousedown", e => {
-            //     initiateAppointment(e, appointmentHourIdx, appointmentGapIdx, appointmentDoctor, true);
-            // });
-
-            // currentGaps[endIdx].addEventListener("mousemove", e => {
-            //     moveAppointment(e, true, currentGaps[startIdx]);
-            // });
-
-            //currentGaps[endIdx].addEventListener("mouseup", e => resizeAppointment(e));
-
-            const activeGaps = [...currentGaps].filter(currentGap => currentGap.classList.contains("highlight") && currentGap.classList.contains("created"));
-
-            // Hover appointment event
-            activeGaps.forEach((currentGap, idx) => {
-                // currentGap.addEventListener("mouseover", e => {
-                //     let firstIdx = idx, lastIdx = idx;
-                //     while (!activeGaps[firstIdx].classList.contains("resizeable-up")) {
-                //         activeGaps[firstIdx].classList.add("mouse-over-gap");
-                //         if (firstIdx === 0) break;
-                //         firstIdx--;
-                //     }
-                    
-                //     if (firstIdx >= 0) activeGaps[firstIdx].classList.add("mouse-over-gap");
-                    
-                //     while (!activeGaps[lastIdx].classList.contains("resizeable-down")) {
-                //         activeGaps[lastIdx].classList.add("mouse-over-gap")
-                //         if (lastIdx === activeGaps.length - 1) break;
-                //         lastIdx++;
-                //     }
-
-                //     if (lastIdx <= activeGaps.length - 1) activeGaps[lastIdx].classList.add("mouse-over-gap")
-
-                // });
-
-                // currentGap.addEventListener("mouseout", e => {
-                     
-                //     let firstIdx = idx, lastIdx = idx;
-                //     while (!activeGaps[firstIdx].classList.contains("resizeable-up")) {
-                //         activeGaps[firstIdx].classList.remove("mouse-over-gap")
-                //         if (firstIdx === 0) break;
-                //         firstIdx--;
-                //     }
-
-                //     if (firstIdx >= 0) activeGaps[firstIdx].classList.remove("mouse-over-gap");
-                    
-                //     while (!activeGaps[lastIdx].classList.contains("resizeable-down")) {
-                //         activeGaps[lastIdx].classList.remove("mouse-over-gap")
-                //         if (lastIdx === activeGaps.length - 1) break;
-                //         lastIdx++;
-                //     }
-
-                //     if (lastIdx <= activeGaps.length - 1) activeGaps[lastIdx].classList.remove("mouse-over-gap")
-                // });
-            });
-            // currentGaps[startIdx].innerHTML = `<p class='appointment-interval'>${startHourAppointment < 10 ? `0${startHourAppointment}` : startHourAppointment}:${startMinutesAppointment < 10 ? `0${startMinutesAppointment}` : startMinutesAppointment}-${endHourAppointment < 10 ? `0${endHourAppointment}` : endHourAppointment}-${endMinutesAppointment < 10 ? `0${endMinutesAppointment}` : endMinutesAppointment}<br /> ${appointment.title}</p>`;
-            
         });
     }, [date, appointments, filterActive, days]);
 
@@ -2430,12 +2424,12 @@ const Appointments = ({ data }) => {
                     </div>
                 }
 
-                {<div className="add-button" onClick={() => {
+                {activePlusButton ? <div className="add-button" onClick={() => {
                     setAppointmentDateValue(filterActive === 0 ? new Date(date) : new Date(days[0]));
                     setActiveCreateAppointment(true);
                 }}>
                     <FontAwesomeIcon icon={faPlus} className="add-icon" />
-                </div>}
+                </div> : null}
            
                 <div className={`error-message-button ${activeErrorMessage ? "active" : ""}`}>
                     <p>{cookies?.language === "en" ? "You can't create / edit an appointment in the past!" : "Nu puteti crea / edita o programare in trecut!"}</p>

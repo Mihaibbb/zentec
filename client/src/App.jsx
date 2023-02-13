@@ -101,7 +101,7 @@ const App = () => {
                 document.documentElement.style.setProperty("--over-color-2", "rgba(255, 255, 255, .6)");
                 document.documentElement.style.setProperty("--over-difference-color", "rgba(0, 0, 0, .2)");
                 document.documentElement.style.setProperty("--over-difference-color-2", "rgba(0, 0, 0, .075)");
-                document.documentElement.style.setProperty("--over-difference-color-3", "rgba(125, 125, 255, .18)");
+                document.documentElement.style.setProperty("--over-difference-color-3", "linear-gradient(135deg, rgba(125, 125, 255, 0.18), rgba(125, 125, 255, .45))");
                 document.documentElement.style.setProperty("--error-color", "crimson");
                 document.documentElement.style.setProperty("--success-color", "#589858");
                 document.documentElement.style.setProperty("--selected-color", "rgba(96, 61, 128, .973)");

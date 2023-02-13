@@ -25,8 +25,11 @@ const ImportPatients = ({ data }) => {
     const uploadFileInputRef = useRef();
 
     const uploadPatients = async () => {
-       excelData.forEach(async (row, rowIdx) => {
+        console.log(excelData);
+        let counter = 0;
+        await Promise.all(excelData.map(async (row, rowIdx) => {
             try {
+                console.log(row);
                 const options = {
                     method: "POST",
                     headers: {
@@ -34,31 +37,36 @@ const ImportPatients = ({ data }) => {
                     },
                     body: JSON.stringify({
                         _id: data.organisation._id,
-                        firstname: row.FirstName || row.Nume,
-                        lastname: row.LastName || row.Prenume,
-                        email: row.Email,
-                        brithdate: new Date(row.Birthdate) || new Date(row["DataNastere"]),
-                        doctors: row.Doctor || row.Medic,
+                        firstname: row?.FirstName || row?.Nume,
+                        lastname: row?.LastName || row?.Prenume,
+                        email: row?.Email,
+                        brithdate: new Date(row?.Birthdate) || new Date(row["DataNastere"]),
+                       
                         phone: row?.Phone || row?.Telefon,
                         username: row?.Username,
                         cnp: row?.PersonalCode || row?.CNP,
                         country: row?.Country || row?.Tara,
                         city: row?.City || row?.Oras, 
-                        address: row?.Address || row.Adresa,
-                        gender: row.Gender || row.Gen,
-                        notes: row.Notes || row.Observatii,
-                        fileNumber: row?.FileNumber || row?.NumarFisa || currentFileNumber
+                        address: row?.Address || row?.Adresa,
+                        gender: row?.Gender || row?.Gen,
+                        notes: row?.Notes || row?.Observatii,
+                        fileNumber: row?.FileNumber || row?.NumarFisa || (currentFileNumber + rowIdx)
                     })
                 };
     
                 const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/create-patient`, options);
                 const response = await request.json();
+                console.log(response);
                 if (!response.success) setErrorList(currList => [...currList, row.Email]);
+                else counter++;
+                
                 updateFileNumber();
             } catch (e) {
                 console.log(e);
             }
-        });
+        }));
+
+
     };
 
     const handleFile = e => {
@@ -83,8 +91,9 @@ const ImportPatients = ({ data }) => {
         reader.onload = (evt) => {
             setErrorMessage(null);
             setErrorList([]);
+            
             setExcelFile(evt.target.result);
-            console.log("handle submit");
+            console.log("handle submit", evt.target, evt.target.result);
             handleSubmit();
         };
         
@@ -174,7 +183,7 @@ const ImportPatients = ({ data }) => {
                 ))}
 
           
-                <button type="button" className={`save-button ${success ? "show" : ""}`} onClick={async () => await uploadPatients()}>
+                <button type="button" className={`save-button ${success ? "show" : ""}`} onClick={async () => success && await uploadPatients()}>
                     <h2>{cookies.language === "en" ? "Save Patients" : "Salveaza Pacientii"}</h2>
                 </button>
                 
