@@ -129,7 +129,7 @@
 .home-container .content .advantages 
 {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    grid-template-columns: repeat(2, minmax(350px, 1fr));
     grid-template-rows: 1fr 1fr;
     grid-gap: 2rem;
     max-width: 85%;
@@ -389,12 +389,22 @@
   
 }
 
+@media only screen and (max-width: 900px)
+{
+    .home-container .content .advantages
+    {
+        grid-template-columns: 1fr;
+    }
+}
+
 @media only screen and (max-width: 800px)
 {
     .home-container .content h2.title 
     {
         font-size: max(12vw, 40px);
     }
+    
+  
 }
 
 
@@ -409,7 +419,6 @@
 
     .home-container .content .advantages
     {
-        grid-template-columns: repeat(auto-fit, minmax(325px, 1fr));
         max-width: 90%;
         margin: 3rem auto;
     

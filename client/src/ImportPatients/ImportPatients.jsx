@@ -32,16 +32,17 @@ const ImportPatients = ({ data }) => {
                 console.log(row);
                 const options = {
                     method: "POST",
+                    
                     headers: {
                         "Content-Type" : "application/json"
                     },
+
                     body: JSON.stringify({
                         _id: data.organisation._id,
                         firstname: row?.FirstName || row?.Nume,
                         lastname: row?.LastName || row?.Prenume,
                         email: row?.Email,
-                        brithdate: new Date(row?.Birthdate) || new Date(row["DataNastere"]),
-                       
+                        birthdate: new Date(row?.Birthdate) || new Date(row["DataNastere"]),
                         phone: row?.Phone || row?.Telefon,
                         username: row?.Username,
                         cnp: row?.PersonalCode || row?.CNP,
@@ -59,14 +60,21 @@ const ImportPatients = ({ data }) => {
                 console.log(response);
                 if (!response.success) setErrorList(currList => [...currList, row.Email]);
                 else counter++;
-                
+
                 updateFileNumber();
             } catch (e) {
                 console.log(e);
             }
         }));
 
-
+        if (counter === excelData.length) {
+            window.history.replaceState({
+                success: true,
+                message: cookies.language === "en" ? "Patients imported successfully!" : "Pacientii au fost importati cu succes!"
+            }, '');
+            navigate(-1);
+        }
+        
     };
 
     const handleFile = e => {

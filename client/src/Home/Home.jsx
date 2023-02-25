@@ -7,10 +7,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChartSimple, faComments, faDatabase, faHandPointUp, faHeadset } from '@fortawesome/free-solid-svg-icons';
 import iphoneMockup from "../imgs/iphone_mockup.webp";
 //import macbookMockup from "../imgs/mockup_macbook_test.png";
+import Footer from '../Components/Footer_Home/Footer';
 
 const Home = ({ data }) => {
 
     const [cookies, setCookies] = useCookies();
+
+    
     
     return (
         <div className="home-container">
@@ -21,7 +24,7 @@ const Home = ({ data }) => {
                 
                 <div className="block-1">
                     <h2 className="title">
-                        Manageriază-<span>ți programarile</span> <br />  
+                        Digitalizează-ți <span>afacerea</span> <br />  
                         cu ZenTec.
                     </h2>
 
@@ -72,14 +75,10 @@ const Home = ({ data }) => {
                     </h2>
 
                     <div className="advantages">
-                        <div className="advantage">
-                            <FontAwesomeIcon icon={faHeadset} className="advantage-icon"/>
-                            <h2>{cookies.language === "en" ? "24/7 Support" : "Suport 24/7"}</h2>
-                            <p>{cookies.language === "en" ? "" : "ZenTec este asistentul digital, la dispozitia ta 24/7, oriunde te-ai afla. In caz ca noi nu putem raspunde ZenBot te va ajuta in locul nostru."}</p>
-                        </div>
+
                         <div className="advantage">
                             <FontAwesomeIcon icon={faComments} className="advantage-icon" />
-                            <h2>{cookies.language === "en" ? "Everything's automated" : "Totul automatizat"}</h2>
+                            <h2>{cookies.language === "en" ? "Automation and Personalization" : "Automatizat si personalizat"}</h2>
                             <p>
                                 {cookies.language === "en" ?
                                 "Because we know how important it is for you to keep in touch with your patients, we offer you the possibility of sending personalized messages to them. from now on your patients don't forget their appointments." : 
@@ -87,7 +86,6 @@ const Home = ({ data }) => {
                                 }
                             </p>
                         </div>
-
 
                         <div className="advantage">
                             <FontAwesomeIcon icon={faHandPointUp} className="advantage-icon" />
@@ -98,11 +96,16 @@ const Home = ({ data }) => {
                             <p className="enumerate">{cookies.language === "en" ? "" : "Poti asocia un pret fiecarei programari sau il poti lasa nedefinit"}</p>
                         </div>
 
+                        <div className="advantage">
+                            <FontAwesomeIcon icon={faHeadset} className="advantage-icon"/>
+                            <h2>{cookies.language === "en" ? "We are with you, 24/7 😊" : "Suntem cu tine oriunde, 24/7 😊"}</h2>
+                            <p>{cookies.language === "en" ? "ZenTec is your digital assistant, at your disposal 24/7, wherever you are. Mobile, laptop, tablet or desktop? Zentec is available on any device with any operating system." : "ZenTec este asistentul digital, la dispozitia ta 24/7, oriunde te-ai afla. Mobil, laptop, tableta sau Desktop? Zentec este disponibil pe orice dispozitiv cu orice sistem de operare."}</p>
+                        </div>
 
                         <div className="advantage">
                             <FontAwesomeIcon icon={faDatabase} className="advantage-icon" />
                             <h2>{cookies.language === "en" ? "Daily Backup" : "Backup-uri zilnice"}</h2>
-                            <p>{cookies.langauge === "en" ? "We offer you daily backup with a maximum of 30 days ago, in case of introduced data got corrupted. This way, you won't need to take care of your business's safety." : "Oferim backup-uri zilnice cu maxim 30 de zile in urma, in caz ca, spre exemplu, datele au fost corupte. Astfel, nu va trebuie sa iti faci nicio grija pentru siguranta afacerii tale."}</p>
+                            <p>{cookies.langauge === "en" ? "We offer security through daily backups for the practice data. Thus, you won't have to worry about the safety of your data." : " Oferim securitate prin backup-uri zilnice pentru datele cabinetului. Astfel, nu vei avea nicio grija pentru siguranța datelor."}</p>
                         </div>
 
 
@@ -158,6 +161,9 @@ const Home = ({ data }) => {
 
 
             </div>
+
+            <Footer />
+
         </div>
     );
 };

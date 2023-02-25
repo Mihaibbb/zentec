@@ -149,6 +149,8 @@ const Appointments = ({ data }) => {
     
     const hours = [];
     const filterRef = useRef();
+    const scrollButtonRef = useRef();
+    const dayTitleRef = useRef();
     const scheduleRef = useRef();
     const doctorRef = useRef([]);
     const gapsRef = useRef([]);
@@ -222,6 +224,24 @@ const Appointments = ({ data }) => {
         window.history.replaceState(null, "");
 
     }, []);
+
+    // Freeze for the appointments
+
+    useEffect(() => {
+        if (!dayTitleRef || !dayTitleRef?.current) return;
+        if (!scrollButtonRef || !scrollButtonRef?.current) return;
+
+        window.addEventListener("scroll", () => {
+            if (window.scrollY >= 180) {
+                dayTitleRef.current.classList.add("scrolled");
+            } else dayTitleRef.current.classList.remove("scrolled");
+
+            if (window.scrollY >= 525) {
+                scrollButtonRef.current.classList.add("active");
+            } else scrollButtonRef.current.classList.remove("active");
+        });
+       
+    }, [dayTitleRef, scrollButtonRef]);
 
     useEffect(() => {
         const sleep = setTimeout(() => {
@@ -577,7 +597,6 @@ const Appointments = ({ data }) => {
     const createAppointment = async (e, doctorSchedules) => {
         
         if (dragAppointment || activeResizing) return await finishDragAppointment();
-        console.log('here', firstElement, lastElement);
         const startId = Number(firstElement.getAttribute('id'));
         const endId = Number(lastElement.getAttribute('id'));
         // Array for each gap in the appointment
@@ -736,10 +755,9 @@ const Appointments = ({ data }) => {
 
     const sendAppointment = async () => {
 
-        if (appointmentPatient.length === 0 || appointmentPatientPhoneNumber.toString().length === 0 || appointmentTitle.length === 0) {
-            setErrorMessage(cookies.language === "en" ? "Fill required fields!" : "Completeaza campurile obligatorii!");
-            return;
-        }
+        if (appointmentPatient.length === 0 || appointmentPatientPhoneNumber.toString().length === 0 || appointmentTitle.length === 0 || !appointmentPatientData)
+            return setErrorMessage(cookies.language === "en" ? "Fill required fields!" : "Completeaza campurile obligatorii!");
+
 
         if (Number(appointmentEndHour) > endHour || (Number(appointmentEndHour) === endHour && Number(appointmentEndMinutes) > 0)) return setErrorMessage(cookies.language === "en" ? "End hour's appointment is not in the schedule!" : "Ora de sfarsit a programarii nu este in program!");
         if (Number(appointmentStartHour) > endHour || (Number(appointmentStartHour) === endHour && Number(appointmentStartMinutes) > 0)) return setErrorMessage(cookies.language === "en" ? "Start hour's appointment is not in the schedule!" : "Ora de inceput a programarii nu este in program!");
@@ -805,7 +823,7 @@ const Appointments = ({ data }) => {
 
     const closeCreateAppointment = () => {
         console.log(firstElement, lastElement);
-        if (activePlusButton) return resetAppointmentData();
+        if (activePlusButton && !firstElement) return resetAppointmentData();
         if (!firstElement || !lastElement) return;
         let currentId = parseInt(firstElement.getAttribute('id'));
         const finalId = parseInt(lastElement.getAttribute('id'));
@@ -1620,7 +1638,7 @@ const Appointments = ({ data }) => {
                 </div>
                 
        
-                <div className="day-title">
+                <div className="day-title" ref={dayTitleRef}>
                     <div className="half">
                         <div className="title-btn" onClick={() => {
                             if (filterActive === 0) {
@@ -1682,6 +1700,7 @@ const Appointments = ({ data }) => {
                                 opening={openDatePicker} 
                                 headerOpen={window.innerWidth >= 1200 ? (headerElement?.classList?.contains("active") ? 'desktop_active' : 'desktop_inactive') : 'mobile_active'}
                             /> 
+                            
                         : null}
                         <div className="title-btn" onClick={() => {
                             if (filterActive === 0) {
@@ -1754,7 +1773,7 @@ const Appointments = ({ data }) => {
                         {filterActive !== 3 && filterActive !== 4 ? doctors && doctors.length > 0 && doctors.map((doctor, idx) => (
                             
                             <div className="schedule-parent-container" key={idx} style={{ minHeight: `${window.innerHeight * 1.75}px` }} ref={ref => scheduleContentContainerRef.current[idx] = ref}>
-                                <div className="doctors-title-container">
+                                <div className={`doctors-title-container ${filterActive === 1 || filterActive === 2 ? "week-title" : ""}`}>
                                     <div className="doctor-color" style={{ backgroundColor: doctor.color }} />
                                     <h2 className="doctors-title" id={doctor._id} ref={ref => scheduleContentRef.current[idx] = ref}>{doctor.firstname} {doctor.lastname}</h2>
                                 </div>
@@ -1807,7 +1826,7 @@ const Appointments = ({ data }) => {
                                  </div>
  
                                  <div className="schedule-parent-container flex-column">
-                                    <div className="doctors-title-container">
+                                    <div className={`doctors-title-container ${filterActive === 1 || filterActive === 2 ? "week-title" : ""}`}>
                                         <div className="doctor-color" style={{ backgroundColor: doctor.color }} />
                                         <h2 className="doctors-title" id={doctor._id} ref={ref => scheduleContentRef.current[idx] = ref}>{doctor.firstname} {doctor.lastname}</h2>
                                     </div>
@@ -1857,7 +1876,7 @@ const Appointments = ({ data }) => {
                     
                         <div className="appointment-details">
 
-                            {activePlusButton ? 
+                            {activePlusButton && !firstElement ? 
                                 <div className="label one-row">
                                     <p>{cookies.language === "en" ? "Doctor" : "Medic"}</p>
                                     <Select 
@@ -2424,12 +2443,17 @@ const Appointments = ({ data }) => {
                     </div>
                 }
 
+                <div className={`scroll-button`} ref={scrollButtonRef} onClick={() => window.scrollTo({ left: 0, top: 0, behavior: 'smooth' })}>
+                    <FontAwesomeIcon icon={faAngleUp} className="scroll-icon" />
+                </div>
+
                 {activePlusButton ? <div className="add-button" onClick={() => {
                     setAppointmentDateValue(filterActive === 0 ? new Date(date) : new Date(days[0]));
                     setActiveCreateAppointment(true);
                 }}>
                     <FontAwesomeIcon icon={faPlus} className="add-icon" />
                 </div> : null}
+                
            
                 <div className={`error-message-button ${activeErrorMessage ? "active" : ""}`}>
                     <p>{cookies?.language === "en" ? "You can't create / edit an appointment in the past!" : "Nu puteti crea / edita o programare in trecut!"}</p>

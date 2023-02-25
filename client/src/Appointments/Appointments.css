@@ -32,10 +32,21 @@ input[type=number] {
     color: var(--text-color);
     font-weight: 600;
     font-family: "Inter";
-    margin: 2rem 3rem;
+    margin: 2rem 0rem;
+    position: sticky;
+    top: calc(10vh + 15px);
+    z-index: 1000;
+    padding: 0 2rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    transition: all 350ms ease-in-out;
+}
+
+.appointments .content .day-title.scrolled 
+{
+    backdrop-filter: blur(6px);
+    background: var(--over-difference-color-2);
 }
 
 
@@ -250,14 +261,20 @@ body.light .appointments .filter div.active p
 
 .appointments .schedule-parent-container .doctors-title-container 
 {
-    position: absolute;
-    top: -125px;
+    position: sticky;
+    top: 125px;
     display: flex;
     align-items: center;
     justify-content: center;
-
-    
+    width: fit-content;
+    z-index: 1000;
+    border-radius: 50px;
+    margin-top: -100px;
+    margin-bottom: 100px;
+    transition: all 350ms ease-in-out;
 }
+
+
 
 .appointments .schedule-parent-container .doctors-title-container .doctor-color 
 {
@@ -265,6 +282,7 @@ body.light .appointments .filter div.active p
     height: 30px;
     border-radius: 50%;
     margin-right: 16px;
+
 }
 
 
@@ -272,12 +290,11 @@ body.light .appointments .filter div.active p
 {
     color: var(--text-color);
     text-align: center;
-   
 }
 
 .appointments .schedule-parent-container.flex-column .doctors-title-container
 {
-    top: -100px;
+    top: calc(10vh + 25px);
 } 
 
 .appointments .schedule-parent-container .schedule-container
@@ -1271,7 +1288,6 @@ body.light .appointments .filter div.active p
     height: 45px;
     grid-column: 1 / -1;
     position: fixed;
-    z-index: 103;
     transition: all .35s ease-in-out;
 }
 
@@ -1294,8 +1310,67 @@ body.light .appointments .filter div.active p
 
 }
 
+.appointments .scroll-button 
+{
+    position: fixed;
+    bottom: 85px;
+    right: 10px;
+
+    align-items: center;
+    background: var(--over-color-2);
+    backdrop-filter: blur(6px);
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    z-index: -1;
+    opacity: 0;
+    border: 3px solid var(--contrast-color);
+    transition: all 300ms ease-in-out;
+}
+
+.appointments .scroll-button.active
+{
+    z-index: 100;
+    opacity: 1;
+    cursor: pointer;
+}
+
+.appointments .scroll-button .scroll-icon 
+{
+    width: 35px;
+    height: 35px;
+    padding: 9.6px;
+    color: var(--text-color);
+}
+
+@media only screen and (max-width: 1050px)
+{
+    .appointments .schedule-parent-container.flex-column .doctors-title-container
+    {
+        top: calc(10vh + 95px);
+    } 
+
+    .appointments .schedule-parent-container .doctors-title-container
+    {
+        background: var(--over-difference-color);
+        backdrop-filter: blur(6px);
+    }
+
+    .appointments .schedule-parent-container .doctors-title-container 
+    {
+        width: 100.5%;
+    }
+}
+
 @media only screen and (max-width: 800px)
 {
+
+
+    html 
+    {
+        overflow-x: hidden;
+    }
 
 
     body.light .appointments .filter, body.light .appointments .filter div
@@ -1303,9 +1378,9 @@ body.light .appointments .filter div.active p
         border: none;
     }
 
-    html 
+    body 
     {
-        overflow-x: hidden;
+        overflow-x: initial;
     }
 
     .appointments .appointment-details.active .appointment-details-card 
@@ -1342,10 +1417,7 @@ body.light .appointments .filter div.active p
         border-right-width: 2.5px;
     }
 
-    .appointments .content .day-title
-    {
-        margin: 2rem 1.5rem;
-    }
+    
 
     .appointments .filter
     {

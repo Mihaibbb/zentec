@@ -85,11 +85,11 @@ const App = () => {
             if (cookies?.theme === 'light') {
 
                 document.documentElement.style.setProperty("--background", "#f7f7f7");
-                document.documentElement.style.setProperty("--contrast-color", "#4659ff");
-                document.documentElement.style.setProperty("--contrast-color-2", "#579AFF");
+                document.documentElement.style.setProperty("--contrast-color", "rgb(46,128,251)");
+                document.documentElement.style.setProperty("--contrast-color-2", "rgb(12 94 217)");
                 document.documentElement.style.setProperty("--contrast-color-3", "#FF447C");
                 document.documentElement.style.setProperty("--background-color", "#f5f5f5");
-                document.documentElement.style.setProperty("--background-contrast", "#e5e5e5");
+                document.documentElement.style.setProperty("--background-contrast", "rgba(0, 0, 0, .6)");
                 document.documentElement.style.setProperty("--dark-color", "#666");
                 document.documentElement.style.setProperty("--light-color", "#fff");
                 document.documentElement.style.setProperty("--text-color", "#222");
