@@ -99,6 +99,18 @@ p.error
     color: var(--text-color);
 }
 
+.no-video-content
+{
+    transition: all 300ms ease-in-out;
+}
+
+.no-video-content.invisble
+{
+    opacity: 0;
+}
+
+
+
 @media only screen and (max-width: 600px) 
 {
 

@@ -5,21 +5,69 @@ import mockup from "../imgs/Mockup-Zentec.webp";
 import ZenLogo from "../imgs/logo_zen.svg";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChartSimple, faComments, faDatabase, faHandPointUp, faHeadset } from '@fortawesome/free-solid-svg-icons';
+import { faWhatsapp } from "@fortawesome/free-brands-svg-icons"
 import iphoneMockup from "../imgs/iphone_mockup.webp";
 //import macbookMockup from "../imgs/mockup_macbook_test.png";
 import Footer from '../Components/Footer_Home/Footer';
+import { useState } from 'react';
+import { useRef } from 'react';
+import zenAnimation from "../imgs/Zentec_Animation.mp4";
+import zenAnimationMobile from "../imgs/Zentec_Animation_Mobile.mp4";
+import { useEffect } from 'react';
+import bell3d from "../imgs/bell3d.png";
+import backup3d from "../imgs/backup3d.png";
+import calendar3d from "../imgs/calendar3d.png";
+import support3d from "../imgs/support3d.png";
+
 
 const Home = ({ data }) => {
 
     const [cookies, setCookies] = useCookies();
+    const [videoEnded, setVideoEnded] = useState(performance.navigation.type === 0 ? false : true);
+    const currentVideoSource = window.innerWidth / window.innerHeight >= 1.3 * (9 / 16) ? zenAnimation : zenAnimationMobile;
+    const videoRef = useRef();
+
+    const handleVideoEnded = () => {
+        console.log("ENDED!");
+    
+        document.body.style.opacity = 0;
+        setTimeout(() => {
+            setVideoEnded(true);
+        }, 350);
+        setTimeout(() => {
+            document.body.style.opacity = 1;
+            document.body.style.background = 'var(--background)';
+
+        }, 650);
+    };
+
+    const startVideo = () => {
+        videoRef.current.playbackRate = 1.5;
+        document.body.style.background = '#D9D8D9';
+    }
+      
 
     
-    
-    return (
+    return !videoEnded ? (
+        <div style={{ width: "100%", minHeight: "100vh", display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <video
+            src={currentVideoSource}
+            controls={false}
+            autoPlay
+            playsInline
+            onEnded={handleVideoEnded}
+            onCanPlay={startVideo}
+            ref={videoRef}
+            muted
+            style={{ width: "100%", height: "100%" }}
+            />
+        </div>
+      
+        
+    ) : (
         <div className="home-container">
             <HeaderHome data={data}/>
             
-
             <div className="content">
                 
                 <div className="block-1">
@@ -47,7 +95,6 @@ const Home = ({ data }) => {
                     {/* Rating-uri / testimoniale */}
                 </div>
 
-             
 
                 <div className="block-4">
                 
@@ -58,7 +105,7 @@ const Home = ({ data }) => {
                     </h2>
                         <p>Am conceput ZenTec special pentru a veni în ajutorul medicilor si asistentelor care
                         au nevoie de cel mai simplu soft pentru automatizarea programarilor, gestionarea
-                        cabinetului si personalului intr-un singur loc. So <span>ZEN!</span></p>
+                        Fcabinetului si personalului intr-un singur loc. So <span>ZEN!</span></p>
                     </div>
          
                     
@@ -77,7 +124,7 @@ const Home = ({ data }) => {
                     <div className="advantages">
 
                         <div className="advantage">
-                            <FontAwesomeIcon icon={faComments} className="advantage-icon" />
+                            <img src={bell3d} className="advantage-icon" />
                             <h2>{cookies.language === "en" ? "Automation and Personalization" : "Automatizat si personalizat"}</h2>
                             <p>
                                 {cookies.language === "en" ?
@@ -88,7 +135,7 @@ const Home = ({ data }) => {
                         </div>
 
                         <div className="advantage">
-                            <FontAwesomeIcon icon={faHandPointUp} className="advantage-icon" />
+                            <img src={calendar3d} className="advantage-icon" />
                             <h2>{cookies.language === "en" ? "Easy to use" : "Simplu de utilizat"}</h2>
                             <p className="enumerate">{cookies.language === "en" ? "" : "Poti crea rapid programari simple sau recurente si poti reprograma la fel de usor dincateva clickuri"}</p>
                             <p className="enumerate">{cookies.langauge === "en" ? "" : "Ai vizibilitate a calendarului pe zile, saptamani si luni"}</p>
@@ -97,13 +144,13 @@ const Home = ({ data }) => {
                         </div>
 
                         <div className="advantage">
-                            <FontAwesomeIcon icon={faHeadset} className="advantage-icon"/>
+                            <img src={support3d} className="advantage-icon"/>
                             <h2>{cookies.language === "en" ? "We are with you, 24/7 😊" : "Suntem cu tine oriunde, 24/7 😊"}</h2>
                             <p>{cookies.language === "en" ? "ZenTec is your digital assistant, at your disposal 24/7, wherever you are. Mobile, laptop, tablet or desktop? Zentec is available on any device with any operating system." : "ZenTec este asistentul digital, la dispozitia ta 24/7, oriunde te-ai afla. Mobil, laptop, tableta sau Desktop? Zentec este disponibil pe orice dispozitiv cu orice sistem de operare."}</p>
                         </div>
 
                         <div className="advantage">
-                            <FontAwesomeIcon icon={faDatabase} className="advantage-icon" />
+                            <img src={backup3d} className="advantage-icon" />
                             <h2>{cookies.language === "en" ? "Daily Backup" : "Backup-uri zilnice"}</h2>
                             <p>{cookies.langauge === "en" ? "We offer security through daily backups for the practice data. Thus, you won't have to worry about the safety of your data." : " Oferim securitate prin backup-uri zilnice pentru datele cabinetului. Astfel, nu vei avea nicio grija pentru siguranța datelor."}</p>
                         </div>
@@ -157,6 +204,13 @@ const Home = ({ data }) => {
                     <h2 className="title"><span>Simplifică-ți afacerea.</span> <br /> Nu este nevoie de experiență. </h2>
 
                     <img src={ZenLogo} alt="logo-image" className="logo-icon" width={100} height="auto" />
+                </div>
+                
+                
+                <div className="fixed-icon-container">
+                    <a href="https://wa.me/+40734893938" target="_blank">
+                        <FontAwesomeIcon icon={faWhatsapp} className="fixed-icon" />
+                    </a>
                 </div>
 
 

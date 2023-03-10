@@ -121,7 +121,7 @@ input[type=number] {
 .appointments .content .scheduler 
 {
     display: flex;
-    margin: 3rem 0rem;
+    margin: 6rem 0rem;
     width: 100%;
 }
 
@@ -208,19 +208,17 @@ body.light .appointments .filter div.active p
 .appointments .scheduler
 {
     width: 100%;
-
-    
 }
 
 .appointments .scheduler .hours 
 {
     display: flex;
+    flex: .5 1;
     flex-direction: column;
-    min-height: 100%;
-    flex: 1;
     justify-content: center;
-    margin-right: -16px;
-    margin-left: 32px;
+    min-height: 100%;
+    margin-top: -40px;
+
 }
 
 .appointments .scheduler .hours .hour p 
@@ -232,13 +230,10 @@ body.light .appointments .filter div.active p
 
 .appointments .scheduler .hours .hour 
 {
-    flex: 1;
+    align-items: center;
     display: flex;
     justify-content: center;
-    align-items: center;
-    margin-left: auto;
-    margin-right: 20px;
-    margin-top: 24px;
+    min-height: 110px;
 
 }
 
@@ -366,12 +361,34 @@ body.light .appointments .filter div.active p
 {
     color: var(--text-color);
     text-align: center;
-    position: absolute;
+    position: sticky;
     align-self: center;
-    top: -55px;
+    top: calc(10vh + 95px);
+    width: 100%;
+    margin-bottom: 30px;
+    z-index: 1000;
+    background: var(--over-difference-color);
+    backdrop-filter: blur(10px);
+    transition: all 350ms ease-in-out;
 }
 
+.appointments .schedule-container .day-of-week-container h2.active-sticky 
+{
+    /* background: var(--over-difference-color);
+    backdrop-filter: blur(10px); */
+}
 
+.appointments .schedule-container .day-of-week-container:first-child h2
+{
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+}
+
+.appointments .schedule-container .day-of-week-container:last-child h2 
+{
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
 
 .appointments .schedule-container .day-container:last-child
 {
@@ -996,9 +1013,6 @@ body.light .appointments .filter div.active p
     user-select: none;
 }
 
-
-
-
 .appointments .appointment-details.active .appointment-details-card .appointment-details .label .label-row
 {
     display: flex;
@@ -1361,6 +1375,12 @@ body.light .appointments .filter div.active p
     {
         width: 100.5%;
     }
+
+    .appointments .schedule-container .day-of-week-container h2 
+
+    {
+        top: calc(10vh + 170px);
+    }
 }
 
 @media only screen and (max-width: 800px)
@@ -1451,13 +1471,34 @@ body.light .appointments .filter div.active p
     }
 }
 
-@media only screen and (max-width: 500px)
+@media only screen and (max-width: 700px)
 {
     .appointments .content .day-title
     {
         display: block;
         margin: 1rem 0;
     }
+
+    .appointments .schedule-parent-container.flex-column .doctors-title-container 
+    {
+        top: calc(10vh + 150px);
+    }
+
+    .appointments .content .day-title
+    {
+        z-index: 10000;
+    }
+
+    .appointments .schedule-container .day-of-week-container h2 
+
+    {
+        top: calc(10vh + 230px);
+    }
+}
+
+@media only screen and (max-width: 500px)
+{
+   
 
     .appointments .scheduler .hours
     {
@@ -1489,7 +1530,6 @@ body.light .appointments .filter div.active p
         margin-top: 120px;
     }
 
-    
 }
 
 @keyframes clicked {

@@ -7,6 +7,8 @@ import Header from "../Components/Header/Header";
 import Navigation from "../Components/Navigation/Navigation";
 import "./CreatePatient.css";
 import DateCustomInput from "../Components/DatePicker/DatePicker";
+import tickAnimation from "../imgs/green-tick.mp4";
+
 const CreatePatient = ({ data, fromAppointments, patientSaved }) => {
 
     const location = useLocation();
@@ -34,6 +36,9 @@ const CreatePatient = ({ data, fromAppointments, patientSaved }) => {
     const [dropMenu, setDropMenu] = useState(false);
     const [errorMessage, setErrorMessage] = useState();
     const [numberPatients, setNumberPatients] = useState();
+    const [patientAdded, setPatientAdded] = useState(false);
+
+    const noVideoContentRef = useRef();
 
     const doctorOptions = doctors.map(doctor => {
         return {
@@ -137,7 +142,11 @@ const CreatePatient = ({ data, fromAppointments, patientSaved }) => {
                 return setErrorMessage(await message[cookies.language]);
             }
 
-            if (!fromAppointments) navigate("/patients", { state: { message: { en: "Patient added successfully!", ro: "Pacient adaugat cu succes." } } });
+            if (!fromAppointments) {
+                noVideoContentRef.current.classList.add("invisible");
+                document.body.style.background = "#000";
+                setTimeout(() => setPatientAdded(true), 300);
+            }
             else patientSaved();
         } catch (e) {
             console.log(e);
@@ -217,109 +226,133 @@ const CreatePatient = ({ data, fromAppointments, patientSaved }) => {
 
     const handleChangeDate = (newBirthdate) => setBirthDate(new Date(newBirthdate));
 
+    const animationFinished = () => {
+        document.body.style.background = "var(--background)";
+        navigate("/patients");
+    };
+
     return (
         <div className="create-patient">
             <Navigation page={fromAppointments ? "appointments" : "patients"} />
-            <div className="content">
+            <div className="content" style={patientAdded ? { maxHeight: "100vh" } : {}}>
                 <Header data={data} />
-                <h2 className="title">{cookies.language === "en" ? "Create new patient" : "Creeaza un nou pacient"}</h2>
+                {patientAdded ? (
+                    <div className="video-content" style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
+                        <video
+                            src={tickAnimation}
+                            controls={false}
+                            autoPlay
+                            playsInline
+                            onEnded={animationFinished}
+
+                            muted
+                            style={{ height: "40vh" }}
+                        
+                        />
+                        <h2 className="title title-video-content" style={{ margin: 0 }}>{cookies.language === "en" ? "Patient added successfully!" : "Pacientul a fost adaugat cu succes!"}</h2>
+                    </div> 
+                ) : (
+                    <div className="no-video-content" ref={noVideoContentRef}>
+                         <h2 className="title">{cookies.language === "en" ? "Create new patient" : "Creeaza un nou pacient"}</h2>
                 
-                <div className="go-back" onClick={() => navigate(-1)}>
-                    <FontAwesomeIcon icon={faAngleLeft} />
-                </div>
-
-                <div className="form">
-                    <div className="input">
-                        <p>{cookies.language === "en" ? "First Name " : "Nume "}<span className="star">*</span></p>
-                        <input type="text" placeholder={cookies.language === "en" ? "First Name" : "Nume"} value={firstName} onChange={e => setFirstName(e.target.value)} required />
-                    </div>
-
-                    <div className="input">
-                        <p>{cookies.language === "en" ? "Last Name " : "Prenume "}<span className="star">*</span></p>
-                        <input type="text" placeholder={cookies.language === "en" ? "Last Name" : "Prenume"} value={lastName} onChange={e => setLastName(e.target.value)} required />
-                    </div>
-
-                    <div className="input">
-                        <p>{cookies.language === "en" ? "Phone number " : "Numar de telefon "}<span className="star">*</span></p>
-                        <input type="number" placeholder={cookies.language === "en" ? "Phone number" : "Numar de telefon"} value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)} required />
-                    </div>
-
-                    <div className="input">
-                        <p>{cookies.language === "en" ? "Date of birth" : "Data de nastere"}</p>
-                        {/* <input type="date" placeholder={cookies.language === "en" ? "Birthdate" : "Data de nastere"} ref={birthRef} value={birthDate} onChange={e => setBirthDate(e.target.value)} required /> */}
-                        <DateCustomInput initialDate={null} changeDate={handleChangeDate} future={false} past={true} label={cookies.language === "en" ? "Date of birth" : "Data de nastere"} />
-                    </div>
-
-                    {/* <div className="input">
-                        <p>{cookies.language === "en" ? "Doctor" : "Medic"}</p>
-                        <Select options={doctorOptions} styles={customStyles} value={doctor} onChange={e => setDoctor(e)} />
-                    </div> */}
-
-                    <div className="input">
-                        <p>{cookies.language === "en" ? "File Number " : "Nr. fisa "}<span className="star">*</span></p>
-                        <input type="number" placeholder={cookies.language === "en" ? "File Number" : "Nr. fisa"} value={fileNumber || ""} onChange={e => setFileNumber(e.target.value)}/>
-                    </div>
-
-                    <div className="info">
-                        <p>{cookies.language === "en" ? "Other fields" : "Alte campuri"}</p>
-                        <FontAwesomeIcon className={`option-icon ${dropMenu ? "active" : ""}`} icon={faAngleDown} onClick={() => setDropMenu(currStatus => !currStatus)}/>
-                    </div>
-                   
-                    {dropMenu && 
-                    <>
-                        <div className="input">
-                            <p>{cookies.language === "en" ? "Email" : "Adresa de email"}</p>
-                            <input type="email" placeholder={cookies.language === "en" ? "Email" : "Adresa de email"} value={email || ""} onChange={e => setEmail(e.target.value)} />
+                        <div className="go-back" onClick={() => fromAppointments ? patientSaved() : navigate(-1)}>
+                            <FontAwesomeIcon icon={faAngleLeft} />
                         </div>
 
-                        <div className="input">
-                            <p>{cookies.language === "en" ? "Country" : "Tara"}</p>
-                            <input type="text" placeholder={cookies.language === "en" ? "Country" : "Tara"} value={county || ""} onChange={e => setCounty(e.target.value)} />
-                        </div>
-
-                        <div className="input">
-                            <p>{cookies.language === "en" ? "City" : "Oras"}</p>
-                            <input type="text" placeholder={cookies.language === "en" ? "City" : "Oras"} value={city || ""} onChange={e => setCity(e.target.value)} />
-                        </div>
-
-                        <div className="input">
-                            <p>{cookies.language === "en" ? "Address" : "Adresa"}</p>
-                            <input type="text" placeholder={cookies.language === "en" ? "Address" : "Adresa"} value={address || ""} onChange={e => setAddress(e.target.value)} />
-                        </div>
-
-                        <div className="input">
-                            <p>{cookies.language === "en" ? "Gender" : "Sex"}</p>
-                            <div className="options">
-                                {genders.map((gender, idx) => (
-                                    <div className="option" key={idx} ref={ref => gendersRef.current[idx] = ref}>
-                                        <div className="circle" onClick={() => toggleGender(idx)}>
-                                            
-                                            <FontAwesomeIcon icon={faCheck} className={`active-icon`} />
-                                            
-                                        </div>
-                                        <p>{gender}</p>
-                                    </div>
-                                ))}
-                            
+                        <div className="form">
+                            <div className="input">
+                                <p>{cookies.language === "en" ? "First Name " : "Nume "}<span className="star">*</span></p>
+                                <input type="text" placeholder={cookies.language === "en" ? "First Name" : "Nume"} value={firstName} onChange={e => setFirstName(e.target.value)} required />
                             </div>
-                        </div>
-                
 
-                        <div className="input">
-                            <p>{cookies.language === "en" ? "PIC" : "CNP"}</p>
-                            <input placeholder={cookies.language === "en" ? "Personal Identification Code" : "Cod Numeric Personal"} value={PIC || ""} onChange={e => setPIC(e.target.value)}/>
-                        </div>
+                            <div className="input">
+                                <p>{cookies.language === "en" ? "Last Name " : "Prenume "}<span className="star">*</span></p>
+                                <input type="text" placeholder={cookies.language === "en" ? "Last Name" : "Prenume"} value={lastName} onChange={e => setLastName(e.target.value)} required />
+                            </div>
 
-                        <div className="input">
-                            <p>{cookies.language === "en" ? "Notes" : "Observatii"}</p>
-                            <textarea placeholder={cookies.language === "en" ? "Notes" : "Observatii"} value={notes || ""} onChange={e => setNotes(e.target.value)} />
-                        </div>
-                    </>
-                    }
+                            <div className="input">
+                                <p>{cookies.language === "en" ? "Phone number " : "Numar de telefon "}<span className="star">*</span></p>
+                                <input type="number" placeholder={cookies.language === "en" ? "Phone number" : "Numar de telefon"} value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)} required />
+                            </div>
 
-                    {errorMessage ? <p className="error">{errorMessage}</p> : null}
-                    <button type="button" className="confirm-button" onClick={async () => await createNewPatient()}>{cookies.language === "en" ? "Add patient" : "Adauga pacient"}</button>
-                </div>
+                            <div className="input">
+                                <p>{cookies.language === "en" ? "Date of birth" : "Data de nastere"}</p>
+                                {/* <input type="date" placeholder={cookies.language === "en" ? "Birthdate" : "Data de nastere"} ref={birthRef} value={birthDate} onChange={e => setBirthDate(e.target.value)} required /> */}
+                                <DateCustomInput initialDate={null} changeDate={handleChangeDate} future={false} past={true} label={cookies.language === "en" ? "Date of birth" : "Data de nastere"} />
+                            </div>
+
+                            {/* <div className="input">
+                                <p>{cookies.language === "en" ? "Doctor" : "Medic"}</p>
+                                <Select options={doctorOptions} styles={customStyles} value={doctor} onChange={e => setDoctor(e)} />
+                            </div> */}
+
+                            <div className="input">
+                                <p>{cookies.language === "en" ? "File Number " : "Nr. fisa "}<span className="star">*</span></p>
+                                <input type="number" placeholder={cookies.language === "en" ? "File Number" : "Nr. fisa"} value={fileNumber || ""} onChange={e => setFileNumber(e.target.value)}/>
+                            </div>
+
+                            <div className="info">
+                                <p>{cookies.language === "en" ? "Other fields" : "Alte campuri"}</p>
+                                <FontAwesomeIcon className={`option-icon ${dropMenu ? "active" : ""}`} icon={faAngleDown} onClick={() => setDropMenu(currStatus => !currStatus)}/>
+                            </div>
+                        
+                            {dropMenu && 
+                            <>
+                                <div className="input">
+                                    <p>{cookies.language === "en" ? "Email" : "Adresa de email"}</p>
+                                    <input type="email" placeholder={cookies.language === "en" ? "Email" : "Adresa de email"} value={email || ""} onChange={e => setEmail(e.target.value)} />
+                                </div>
+
+                                <div className="input">
+                                    <p>{cookies.language === "en" ? "Country" : "Tara"}</p>
+                                    <input type="text" placeholder={cookies.language === "en" ? "Country" : "Tara"} value={county || ""} onChange={e => setCounty(e.target.value)} />
+                                </div>
+
+                                <div className="input">
+                                    <p>{cookies.language === "en" ? "City" : "Oras"}</p>
+                                    <input type="text" placeholder={cookies.language === "en" ? "City" : "Oras"} value={city || ""} onChange={e => setCity(e.target.value)} />
+                                </div>
+
+                                <div className="input">
+                                    <p>{cookies.language === "en" ? "Address" : "Adresa"}</p>
+                                    <input type="text" placeholder={cookies.language === "en" ? "Address" : "Adresa"} value={address || ""} onChange={e => setAddress(e.target.value)} />
+                                </div>
+
+                                <div className="input">
+                                    <p>{cookies.language === "en" ? "Gender" : "Sex"}</p>
+                                    <div className="options">
+                                        {genders.map((gender, idx) => (
+                                            <div className="option" key={idx} ref={ref => gendersRef.current[idx] = ref}>
+                                                <div className="circle" onClick={() => toggleGender(idx)}>
+                                                    
+                                                    <FontAwesomeIcon icon={faCheck} className={`active-icon`} />
+                                                    
+                                                </div>
+                                                <p>{gender}</p>
+                                            </div>
+                                        ))}
+                                    
+                                    </div>
+                                </div>
+                        
+
+                                <div className="input">
+                                    <p>{cookies.language === "en" ? "PIC" : "CNP"}</p>
+                                    <input placeholder={cookies.language === "en" ? "Personal Identification Code" : "Cod Numeric Personal"} value={PIC || ""} onChange={e => setPIC(e.target.value)}/>
+                                </div>
+
+                                <div className="input">
+                                    <p>{cookies.language === "en" ? "Notes" : "Observatii"}</p>
+                                    <textarea placeholder={cookies.language === "en" ? "Notes" : "Observatii"} value={notes || ""} onChange={e => setNotes(e.target.value)} />
+                                </div>
+                            </>
+                            }
+
+                            {errorMessage ? <p className="error">{errorMessage}</p> : null}
+                            <button type="button" className="confirm-button" onClick={async () => await createNewPatient()}>{cookies.language === "en" ? "Add patient" : "Adauga pacient"}</button>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );

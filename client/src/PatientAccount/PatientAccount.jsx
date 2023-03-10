@@ -7,6 +7,7 @@ import Header from "../Components/Header/Header";
 import Navigation from "../Components/Navigation/Navigation";
 import "./PatientAccount.css";
 import DateCustomInput from "../Components/DatePicker/DatePicker";
+import tickAnimation from "../imgs/green-tick.mp4";
 
 const PatientAccount = ({ data }) => {
 
@@ -57,10 +58,12 @@ const PatientAccount = ({ data }) => {
     const [historic, setHistoric] = useState(JSON.parse(patient.historic));
     const [historicOption, setHistoricOption] = useState(0);
     const [errorMessage, setErrorMessage] = useState();
+    const [patientAdded, setPatientAdded] = useState(false);
 
     const currGenders = cookies.language === "en" ? ['Male', 'Female', 'Not mentioned'] : ['Masculin', 'Feminin', 'Nespecificat'];
 
     const gendersRef = useRef([]);
+    const noVideoContentRef = useRef();
 
     const toggleGender = (idx) => {
         gendersRef.current[idx].classList.toggle("active");
@@ -122,11 +125,10 @@ const PatientAccount = ({ data }) => {
             const response = await request.json();
             console.log(response.message);
             if (!response.success) setErrorMessage(response.message[cookies.language]);
-            else navigation("/patients", { 
-                state: { 
-                    message: response.message
-                } 
-            });
+            else {
+                noVideoContentRef.current.classList.add("invisble");
+                setTimeout(() => setPatientAdded(true));
+            }
         } catch(e) {
             console.log(e);
         }
@@ -218,199 +220,223 @@ const PatientAccount = ({ data }) => {
     }, [historicOption]);
 
     const handleChangeDate = (newBirthdate) => setBirthDate(new Date(newBirthdate));
+
+    const animationFinished = () => {
+        document.body.style.background = 'var(--background)';
+        navigation("/patients");
+    };
     
     return (
         <div className="account-container"> 
             <Navigation />
 
-            <div className="content">
+            <div className="content" style={patientAdded ? { maxHeight: "100vh" } : {}}>
                 <Header data={data} />
 
-                <div className="patient-account-details">
-                    {!historicPage ? <h2 className="title">{cookies.language === "en" ? "Patient's account details " : "Detalii cont pacient"}</h2> : null}
+                {patientAdded ? (
+                    <div className="video-content" style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
+                        <video
+                            src={tickAnimation}
+                            controls={false}
+                            autoPlay
+                            playsInline
+                            onEnded={animationFinished}
 
-                    <div className="go-back" onClick={() => navigation(-1)}>
-                        <FontAwesomeIcon icon={faAngleLeft} />
+                            muted
+                            style={{ height: "40vh" }}
+                        
+                        />
+                        <h2 className="title title-video-content" style={{ margin: 0 }}>{cookies.language === "en" ? "Patient removed successfully!" : "Pacientul a fost sters cu succes!"}</h2>
                     </div>
+                ) : (
+                    <div className="no-video-content" ref={noVideoContentRef}>
+                         <div className="patient-account-details">
+                            {!historicPage ? <h2 className="title">{cookies.language === "en" ? "Patient's account details " : "Detalii cont pacient"}</h2> : null}
 
-                    {!historicPage ? <div className="inputs-container">
-                        <div className="input">
-                            <div className="input-title">
-                                <FontAwesomeIcon className="icon" icon={faUser} />
-                                <p>{cookies.language === "en" ? "First name" : "Prenume"}</p>
+                            <div className="go-back" onClick={() => navigation(-1)}>
+                                <FontAwesomeIcon icon={faAngleLeft} />
                             </div>
+
+                            {!historicPage ? <div className="inputs-container">
+                                <div className="input">
+                                    <div className="input-title">
+                                        <FontAwesomeIcon className="icon" icon={faUser} />
+                                        <p>{cookies.language === "en" ? "First name" : "Prenume"}</p>
+                                    </div>
+                                    
+                                    <input type="text" value={firstName} onChange={e => setFirstName(e.target.value)}/>
+                                </div>   
+
+                                <div className="input">
+                                    <div className="input-title">
+                                        <FontAwesomeIcon className="icon" icon={faUser} />
+                                        <p>{cookies.language === "en" ? "Last name" : "Nume de familie"}</p>
+                                    </div>
+                                    
+                                    <input type="text" value={lastName} onChange={e => setLastName(e.target.value)}/>
+                                </div>  
+
+                                <div className="input">
+                                    <div className="input-title">
+                                        <FontAwesomeIcon className="icon" icon={faCalendar} />
+                                        <p>{cookies.language === "en" ? "Date of birth" : "Data de nastere"}</p>
+                                    </div>
+                                    <DateCustomInput initialDate={initialBirthdate} changeDate={handleChangeDate} future={false} past={true} label={cookies.language === "en" ? "Date of birth" : "Data de nastere"} />
+                                </div>
+
+                                <div className="input">
+                                    <div className="input-title">
+                                        <FontAwesomeIcon className="icon" icon={faPhone} />
+                                        <p>{cookies.language === "en" ? "Phone number" : "Numar de telefon"}</p>
+                                    </div>
+                                    
+                                    <input type="number" value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)}/>
+                                </div> 
+
+                                <div className="input">
+                                    <div className="input-title">
+                                        <FontAwesomeIcon className="icon" icon={faEnvelope} />
+                                        <p>Email</p>
+                                    </div>
+                                    
+                                    <input type="text" value={email} onChange={e => setEmail(e.target.value)}/>
+                                </div> 
+
+                                <div className="input">
+                                    <div className="input-title">
+                                        <FontAwesomeIcon className="icon" icon={faUser} />
+                                        <p>{cookies.language === "en" ? "Username" : "Nume utilizator"}</p>
+                                    </div>
+                                    
+                                    <input type="text" value={username} onChange={e => setUsername(e.target.value)}/>
+                                </div> 
+
+                                <div className="input">
+                                    <div className="input-title">
+                                        <FontAwesomeIcon className="icon" icon={faCity} />
+                                        <p>{cookies.language === "en" ? "City" : "Oras"}</p>
+                                    </div>
+                                    
+                                    <input type="text" value={city} onChange={e => setCity(e.target.value)}/>
+                                </div> 
+
+                                <div className="input">
+                                    <div className="input-title">
+                                        <FontAwesomeIcon className="icon" icon={faCity} />
+                                        <p>{cookies.language === "en" ? "County" : "Judet"}</p>
+                                    </div>
+                                    
+                                    <input type="text" value={county} onChange={e => setCounty(e.target.value)}/>
+                                </div> 
+
+                                <div className="input">
+                                    <div className="input-title">
+                                        <FontAwesomeIcon className="icon" icon={faAddressCard} />
+                                        <p>{cookies.language === "en" ? "Address" : "Adresa"}</p>
+                                    </div>
+                                    
+                                    <input type="text" value={address} onChange={e => setAddress(e.target.value)}/>
+                                </div> 
+
+                                <div className="input">
+
+                                    <div className="input-title">
+                                        <FontAwesomeIcon className="icon" icon={faMars} />
+                                        <p>{cookies.language === "en" ? "Gender" : "Sex"}</p>
+                                    </div>
+                                    <div className="options">
+                                        {currGenders.map((currGender, idx) => (
+                                            <div className={`option ${currGender === gender ? "active" : ""}`} key={idx} ref={ref => gendersRef.current[idx] = ref}>
+                                                <div className="circle" onClick={() => toggleGender(idx)}>
+                                                    
+                                                    <FontAwesomeIcon icon={faCheck} className={`active-icon`} />
+                                                    
+                                                </div>
+                                                <p className="patient-gender">{currGender}</p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                
+                                    
+                                </div>
+
+                                <div className="input">
+                                    <div className="input-title">
+                                        <FontAwesomeIcon className="icon" icon={faIdBadge} />
+                                        <p>{cookies.language === "en" ? "File number" : "Numar fisa"}</p>
+                                    </div>
+                                    
+                                    <input type="number" value={fileNumber} onChange={e => setFileNumber(e.target.value)}/>
+                                </div> 
+
+                                <div className="input">
+                                    <div className="input-title">
+                                        <FontAwesomeIcon className="icon" icon={faAddressCard} />
+                                        <p>{cookies.language === "en" ? "PIC" : "CNP"}</p>
+                                    </div>
+                                    
+                                    <input type="number" value={PIC} onChange={e => setPIC(e.target.value)}/>
+                                </div> 
+                                
+
+                                <div className="input">
+                                    <div className="input-title">
+                                        <FontAwesomeIcon className="icon" icon={faNoteSticky} />
+                                        <p>{cookies.language === "en" ? "Notes" : "Observatii"}</p>
+                                    </div>
+                                    <textarea value={notes} onChange={e => setNotes(e.target.value)} />
+                                </div> 
+
+                                
+                                <button className={`update ${showUpdate ? "active" : ""}`} onClick={async () => showUpdate && await updateAccount()}>
+                                    <p>{cookies.language === "en" ? "Update account" : "Confirma modificarile"}</p>
+                                </button>    
                             
-                            <input type="text" value={firstName} onChange={e => setFirstName(e.target.value)}/>
-                        </div>   
-
-                        <div className="input">
-                            <div className="input-title">
-                                <FontAwesomeIcon className="icon" icon={faUser} />
-                                <p>{cookies.language === "en" ? "Last name" : "Nume de familie"}</p>
-                            </div>
-                            
-                            <input type="text" value={lastName} onChange={e => setLastName(e.target.value)}/>
-                        </div>  
-
-                        <div className="input">
-                            <div className="input-title">
-                                <FontAwesomeIcon className="icon" icon={faCalendar} />
-                                <p>{cookies.language === "en" ? "Date of birth" : "Data de nastere"}</p>
-                            </div>
-                            <DateCustomInput initialDate={initialBirthdate} changeDate={handleChangeDate} future={false} past={true} label={cookies.language === "en" ? "Date of birth" : "Data de nastere"} />
+                                {errorMessage && <p className="error-message">{errorMessage}</p>}
+                            </div> : null} 
+                                
                         </div>
 
-                        <div className="input">
-                            <div className="input-title">
-                                <FontAwesomeIcon className="icon" icon={faPhone} />
-                                <p>{cookies.language === "en" ? "Phone number" : "Numar de telefon"}</p>
+                        {historicPage ? <div className="patient-historic">
+                            <h2 className="title">{cookies.language === "en" ? "Patient's historic" : "Istoric Pacient"}</h2>
+
+                            <div className="historic-options">
+
+                                <div className={`historic-option ${historicOption === 0 ? "active" : ""}`} onClick={() => setHistoricOption(0)}>
+                                    <p>{cookies.language === "en" ? "Past appointments" : "Programari trecute"}</p>
+                                </div>
+
+                                <div className={`historic-option ${historicOption === 1 ? "active" : ""}`} onClick={() => setHistoricOption(1)}>
+                                    <p>{cookies.language === "en" ? "Future appointments" : "Programari viitoare"}</p>
+                                </div>
+
+                                <div className={`historic-option ${historicOption === 2 ? "active" : ""}`} onClick={() => setHistoricOption(2)}>
+                                    <p>{cookies.language === "en" ? "Canceled appointments" : "Programari anulate"}</p>
+                                </div>
+
                             </div>
                             
-                            <input type="number" value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)}/>
-                        </div> 
+                            <div className="historic-container">
+                                
+                                <div className="first-row">
+                                    <div className="col">{cookies.language === "en" ? "Title" : "Titlu"}</div>
+                                    <div className="col">{cookies.language === "en" ? "Date" : "Data"}</div>
+                                    <div className="col">{cookies.language === "en" ? "Interval": "Interval"}</div>
+                                    <div className="col">{cookies.language === "en" ? "Price": "Cost"}</div>
+                                </div>
 
-                        <div className="input">
-                            <div className="input-title">
-                                <FontAwesomeIcon className="icon" icon={faEnvelope} />
-                                <p>Email</p>
-                            </div>
-                            
-                            <input type="text" value={email} onChange={e => setEmail(e.target.value)}/>
-                        </div> 
-
-                        <div className="input">
-                            <div className="input-title">
-                                <FontAwesomeIcon className="icon" icon={faUser} />
-                                <p>{cookies.language === "en" ? "Username" : "Nume utilizator"}</p>
-                            </div>
-                            
-                            <input type="text" value={username} onChange={e => setUsername(e.target.value)}/>
-                        </div> 
-
-                        <div className="input">
-                            <div className="input-title">
-                                <FontAwesomeIcon className="icon" icon={faCity} />
-                                <p>{cookies.language === "en" ? "City" : "Oras"}</p>
-                            </div>
-                            
-                            <input type="text" value={city} onChange={e => setCity(e.target.value)}/>
-                        </div> 
-
-                        <div className="input">
-                            <div className="input-title">
-                                <FontAwesomeIcon className="icon" icon={faCity} />
-                                <p>{cookies.language === "en" ? "County" : "Judet"}</p>
-                            </div>
-                            
-                            <input type="text" value={county} onChange={e => setCounty(e.target.value)}/>
-                        </div> 
-
-                        <div className="input">
-                            <div className="input-title">
-                                <FontAwesomeIcon className="icon" icon={faAddressCard} />
-                                <p>{cookies.language === "en" ? "Address" : "Adresa"}</p>
-                            </div>
-                            
-                            <input type="text" value={address} onChange={e => setAddress(e.target.value)}/>
-                        </div> 
-
-                        <div className="input">
-
-                            <div className="input-title">
-                                <FontAwesomeIcon className="icon" icon={faMars} />
-                                <p>{cookies.language === "en" ? "Gender" : "Sex"}</p>
-                            </div>
-                            <div className="options">
-                                {currGenders.map((currGender, idx) => (
-                                    <div className={`option ${currGender === gender ? "active" : ""}`} key={idx} ref={ref => gendersRef.current[idx] = ref}>
-                                        <div className="circle" onClick={() => toggleGender(idx)}>
-                                            
-                                            <FontAwesomeIcon icon={faCheck} className={`active-icon`} />
-                                            
-                                        </div>
-                                        <p className="patient-gender">{currGender}</p>
+                                {historic && historic.length > 0 && historic.map(historicItem => (
+                                    <div className="historic-item">
+                                        <div className="col">{historicItem.title}</div>
+                                        <div className="col">{new Date(historicItem.date).getDate() < 10 ? `0${new Date(historicItem.date).getDate()}` : new Date(historicItem.date).getDate()}/{new Date(historicItem.date).getMonth() + 1 < 10 ? `0${new Date(historicItem.date).getMonth() + 1}` : new Date(historicItem.date).getMonth() + 1}/{new Date(historicItem.date).getFullYear()}</div>
+                                        <div className="col">{historicItem.startHour < 10 ? `0${historicItem.startHour}` : historicItem.startHour}:{historicItem.startMinutes < 10 ? `0${historicItem.startMinutes}` : historicItem.startMinutes} - {historicItem.endHour < 10 ? `0${historicItem.endHour}` : historicItem.endHour}:{historicItem.endMinutes < 10 ? `0${historicItem.endMinutes}` : historicItem.endMinutes}</div>
+                                        <div className="col">{historicItem?.price || "Nedefinit"} {historicItem?.price ? historicItem?.typePrice : ""}</div>
                                     </div>
                                 ))}
                             </div>
-                           
-                            
-                        </div>
-
-                        <div className="input">
-                            <div className="input-title">
-                                <FontAwesomeIcon className="icon" icon={faIdBadge} />
-                                <p>{cookies.language === "en" ? "File number" : "Numar fisa"}</p>
-                            </div>
-                            
-                            <input type="number" value={fileNumber} onChange={e => setFileNumber(e.target.value)}/>
-                        </div> 
-
-                        <div className="input">
-                            <div className="input-title">
-                                <FontAwesomeIcon className="icon" icon={faAddressCard} />
-                                <p>{cookies.language === "en" ? "PIC" : "CNP"}</p>
-                            </div>
-                            
-                            <input type="number" value={PIC} onChange={e => setPIC(e.target.value)}/>
-                        </div> 
-                        
-
-                        <div className="input">
-                            <div className="input-title">
-                                <FontAwesomeIcon className="icon" icon={faNoteSticky} />
-                                <p>{cookies.language === "en" ? "Notes" : "Observatii"}</p>
-                            </div>
-                            <textarea value={notes} onChange={e => setNotes(e.target.value)} />
-                        </div> 
-
-                        
-                        <button className={`update ${showUpdate ? "active" : ""}`} onClick={async () => showUpdate && await updateAccount()}>
-                            <p>{cookies.language === "en" ? "Update account" : "Confirma modificarile"}</p>
-                        </button>    
-                     
-                        {errorMessage && <p className="error-message">{errorMessage}</p>}
-                    </div> : null} 
-                        
-                </div>
-
-                {historicPage ? <div className="patient-historic">
-                    <h2 className="title">{cookies.language === "en" ? "Patient's historic" : "Istoric Pacient"}</h2>
-
-                    <div className="historic-options">
-
-                        <div className={`historic-option ${historicOption === 0 ? "active" : ""}`} onClick={() => setHistoricOption(0)}>
-                            <p>{cookies.language === "en" ? "Past appointments" : "Programari trecute"}</p>
-                        </div>
-
-                        <div className={`historic-option ${historicOption === 1 ? "active" : ""}`} onClick={() => setHistoricOption(1)}>
-                            <p>{cookies.language === "en" ? "Future appointments" : "Programari viitoare"}</p>
-                        </div>
-
-                        <div className={`historic-option ${historicOption === 2 ? "active" : ""}`} onClick={() => setHistoricOption(2)}>
-                            <p>{cookies.language === "en" ? "Canceled appointments" : "Programari anulate"}</p>
-                        </div>
-
+                        </div> : null}
                     </div>
-                    
-                    <div className="historic-container">
-                        
-                        <div className="first-row">
-                            <div className="col">{cookies.language === "en" ? "Title" : "Titlu"}</div>
-                            <div className="col">{cookies.language === "en" ? "Date" : "Data"}</div>
-                            <div className="col">{cookies.language === "en" ? "Interval": "Interval"}</div>
-                            <div className="col">{cookies.language === "en" ? "Price": "Cost"}</div>
-                        </div>
-
-                        {historic && historic.length > 0 && historic.map(historicItem => (
-                            <div className="historic-item">
-                                <div className="col">{historicItem.title}</div>
-                                <div className="col">{new Date(historicItem.date).getDate() < 10 ? `0${new Date(historicItem.date).getDate()}` : new Date(historicItem.date).getDate()}/{new Date(historicItem.date).getMonth() + 1 < 10 ? `0${new Date(historicItem.date).getMonth() + 1}` : new Date(historicItem.date).getMonth() + 1}/{new Date(historicItem.date).getFullYear()}</div>
-                                <div className="col">{historicItem.startHour < 10 ? `0${historicItem.startHour}` : historicItem.startHour}:{historicItem.startMinutes < 10 ? `0${historicItem.startMinutes}` : historicItem.startMinutes} - {historicItem.endHour < 10 ? `0${historicItem.endHour}` : historicItem.endHour}:{historicItem.endMinutes < 10 ? `0${historicItem.endMinutes}` : historicItem.endMinutes}</div>
-                                <div className="col">{historicItem?.price || "Nedefinit"} {historicItem?.price ? historicItem?.typePrice : ""}</div>
-                            </div>
-                        ))}
-                    </div>
-                </div> : null}
+                )} 
             </div>
         </div>
     );

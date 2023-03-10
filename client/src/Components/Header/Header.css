@@ -92,7 +92,7 @@
 
 .header .account-details .theme 
 {
-    background: rgba(0, 0, 0, .3);
+    background: rgba(255 255, 255,.15);
     border-radius: 50%;
     position: relative;
     cursor: pointer;
@@ -109,7 +109,7 @@
 
 .header .account-details .notifications
 {
-    background: rgba(0, 0, 0, .3);
+    background: rgba(255 255, 255,.15);
     border-radius: 50%;
     position: relative;
     cursor: pointer;
@@ -190,7 +190,7 @@ body.light .header .account-details .account-name-container .account-name
 {
     width: 55px;
     height: 55px;
-    background: var(--dark-color);
+    background: rgba(255, 255, 255, .15);
     border-radius: 50%;
     display: flex;
     justify-content: center;

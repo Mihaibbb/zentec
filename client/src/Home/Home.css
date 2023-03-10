@@ -1,3 +1,8 @@
+body 
+{
+    transition: all 350ms ease-out;
+}
+
 .home-container
 {
     width: 100%;
@@ -142,6 +147,12 @@
     padding: 1rem;
     border-radius: 1.5rem;
     position:relative;
+ 
+}
+
+.home-container .content .advantages .advantage p 
+{
+    font-size: 18px;
 }
 
 .home-container .content .advantages .advantage p.enumerate 
@@ -152,24 +163,41 @@
 
 .home-container .content .advantages .advantage .advantage-icon 
 {
-    width: 30px;
-    height: 30px;
-    cursor: pointer;
+    width: 115px;
+  
     padding: 1rem;
     position: absolute;
-    top: 15px;
-    right: 15px;
+    bottom: -5px;
+    right: 5px;
     border-radius: 50%;
+    cursor: pointer;
     color: var(--contrast-color);
     transition: all 350ms ease-in-out;
 
 
 }
 
+.home-container .content .advantages .advantage:nth-child(3) .advantage-icon
+{
+    transform: scale(2);
+    bottom: 15px;
+    right: 15px;
+ 
+}
+
+.home-container .content .advantages .advantage:nth-child(2)
+{
+    padding-bottom: 6rem;
+}
+
+.home-container .content .advantages .advantage:nth-child(2) .advantage-icon
+{
+    transform: scale(1.2);
+}
+
 .home-container .content .advantages .advantage .advantage-icon:hover
 {
-    color: var(--home-opposite-text-color);
-    background: linear-gradient(-90deg, var(--home-contrast-color), var(--home-contrast-color-2));
+ 
 }
 
 .home-container .content .advantages .advantage h2 
@@ -304,6 +332,35 @@
     margin-inline: .25rem;
 }
 
+.home-container .content .fixed-icon-container 
+{
+    position: fixed;
+    bottom: 15px;
+    right: 15px;
+    background: linear-gradient(90deg, rgba(0, 0, 0, .9), rgba(0, 0, 0, .7));
+    backdrop-filter: blur(10px);
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    border: 2px solid var(--home-opposite-text-color);
+    transition: all 350ms ease-in-out;
+}
+
+.home-container .content .fixed-icon-container:hover 
+{
+    box-shadow: 0 0 10px rgba(0, 0, 0, .8);
+}
+
+.home-container .content .fixed-icon-container .fixed-icon 
+{
+    font-size: 45px;
+    color: #25D366;
+}
+
 @media only screen and (max-width: 1100px)
 {
     .block-4 
@@ -394,6 +451,12 @@
     .home-container .content .advantages
     {
         grid-template-columns: 1fr;
+        grid-template-rows: repeat(4, 1fr);
+    }
+
+    .home-container .content .advantages .advantage h2
+    {
+        text-align: center;
     }
 }
 

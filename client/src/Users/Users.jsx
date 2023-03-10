@@ -19,10 +19,12 @@ const Users = ({ data }) => {
     const [doctorId, setDoctorId] = useState();
     const [message, setMessage] = useState();
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+    const [scrollY, setScrollY] = useState(0);
     const navigation = useNavigate();
  
 
     const optionsRef = useRef([]);
+    const optionsColumnRef = useRef([]);
     const contentRef = useRef();
 
     const getDoctors = async () => {
@@ -61,7 +63,7 @@ const Users = ({ data }) => {
             const response = await request.json();
             setWarning(false);
             setDoctorId();
-            if (await response.success) navigation("/doctors", { state: { success: true, message: await response[cookies.language], notEdit: true }});
+            if (await response.success) navigation("/doctors", { state: { success: true, message: cookies.language === "en" ? "Doctor removed successfully!" : "Doctorul a fost sters cu succes!", notEdit: true }});
             
         } catch (e) {
             console.log(e);
@@ -113,10 +115,22 @@ const Users = ({ data }) => {
     const location = useLocation();
 
     useEffect(() => {
-        window.addEventListener("resize", () => {
+        const resizeEvent = () => {
             setWindowWidth(window.innerWidth);
-        });
+        };
+
+        window.addEventListener("resize", resizeEvent);
+        return () => window.removeEventListener("resize", resizeEvent);
     }, [location]);
+
+    useEffect(() => {
+        const scrollEvent = () => {
+            setScrollY(window.scrollY);
+        };
+
+        window.addEventListener("scroll", scrollEvent);
+        return () => window.removeEventListener("scroll", scrollEvent);
+    }, []);
 
     useEffect(() => {
        
@@ -158,8 +172,6 @@ const Users = ({ data }) => {
         
     }, [location]);
 
-
-
     useEffect(() => {
         (async () => {
             await getDoctors();
@@ -192,6 +204,32 @@ const Users = ({ data }) => {
         })();
      
     }, [query]);
+
+    useEffect(() => {
+        if (!optionsRef || !optionsRef?.current) return;
+        if (!optionsColumnRef || !optionsColumnRef?.current) return;
+        const clickEvent = (evt) => {
+           
+            const target = evt.target;
+        
+            let activeIdx = undefined;
+            optionsRef.current.forEach((optionRef, idx) => {
+                if (optionRef.classList.contains("show")) activeIdx = idx;
+            });
+
+            if (activeIdx === undefined) return;
+            const optionsElements = [...optionsColumnRef?.current[activeIdx]?.querySelectorAll("*")];
+            const clickOnTarget = optionsElements.some(element => element === target);
+            
+            if (!clickOnTarget) 
+                optionsRef?.current.forEach(optionRef => {
+                    optionRef.classList.remove("show"); 
+                }); 
+        };
+
+        window.addEventListener("click", clickEvent);
+        return () => window.removeEventListener("click", clickEvent);
+    }, [optionsRef, optionsColumnRef]);
 
 
     const triggerOptions = (idx) => {
@@ -266,7 +304,7 @@ const Users = ({ data }) => {
                                 <div className="square" style={{ width: 50, height: 20, borderRadius: 10, backgroundColor: doctor.color }} />
                             </div>
 
-                            <div className="column pressable">
+                            <div className="column pressable" ref={ref => optionsColumnRef.current[idx] = ref}>
                                 <FontAwesomeIcon icon={faEllipsis} className="column-icon" onClick={() => triggerOptions(idx)} />
                                 <div className="options-container" ref={ref => optionsRef.current[idx] = ref}>
                                     
@@ -313,7 +351,7 @@ const Users = ({ data }) => {
                 </div>
 
                 {warning && <div className="warning-container">
-                    <div className="warning-card">
+                    <div className="warning-card" style={{ position: "relative", top: `${scrollY}px` }}>
                         <p>{warning}</p>
                         <div className="buttons-warning">
                             <button onClick={async () => await removeDoctor(doctorId)}>{cookies.language === "en" ? "Yes" : "Da"}</button>

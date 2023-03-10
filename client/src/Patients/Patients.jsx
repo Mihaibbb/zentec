@@ -16,7 +16,10 @@ const Patients = ({ data }) => {
     const [query, setQuery] = useState("");
     const [arrowElements, setArrowElements] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
+    const [warning, setWarning] = useState(false);
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+    const [scrollY, setScrollY] = useState(0);
+    const [patientId, setPatientId] = useState();
 
     const patientsPerPage = 10;
     const [pages, setPages] = useState();
@@ -26,6 +29,8 @@ const Patients = ({ data }) => {
     const fileNumberArrow = useRef();
 
     const optionsRef = useRef([]);
+    const optionsColumnRef = useRef([]);
+
 
     const location = useLocation();
     const navigation = useNavigate();
@@ -61,6 +66,7 @@ const Patients = ({ data }) => {
         }
     };
 
+
     const removePatient = async (patientId) => {
         const options = {
             method: 'DELETE',
@@ -72,10 +78,13 @@ const Patients = ({ data }) => {
                 patientId
             })
         };
+
+  
         
         try {
             const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/remove-patient`, options);
             const response = await request.json();
+            setWarning(false);
             console.log(response);
             if (response.success) window.location.reload();
         } catch (e) {
@@ -120,10 +129,11 @@ const Patients = ({ data }) => {
             if (response.success) {
                 setPatients(currPatients => {
                     return response.patients.filter((patient, idx) => {
-                        return (idx + 1) > patientsPerPage * (currentPage - 1) && (idx + 1) <= patientsPerPage * currentPage;
+                        return idx + 1 <= patientsPerPage;
                     });
                 });
                 setTotalPatients(response.patients || []);
+                
             } else {
                 setPatients([]);
                 setTotalPatients([]);
@@ -197,6 +207,15 @@ const Patients = ({ data }) => {
     }, [location]);
 
     useEffect(() => {
+        const scrollEvent = () => {
+            setScrollY(window.scrollY);
+        };
+
+        window.addEventListener("scroll", scrollEvent);
+        return () => window.removeEventListener("scroll", scrollEvent);
+    }, []);
+
+    useEffect(() => {
         if (!fileNumberArrow?.current) return;
         fileNumberArrow.current.classList.add("up");
     }, [fileNumberArrow?.current]);
@@ -221,6 +240,32 @@ const Patients = ({ data }) => {
             });
         });
     }, [currentPage]);
+
+    useEffect(() => {
+        if (!optionsRef || !optionsRef?.current) return;
+        if (!optionsColumnRef || !optionsColumnRef?.current) return;
+        const clickEvent = (evt) => {
+           
+            const target = evt.target;
+        
+            let activeIdx = undefined;
+            optionsRef.current.forEach((optionRef, idx) => {
+                if (optionRef.classList.contains("show")) activeIdx = idx;
+            });
+
+            if (activeIdx === undefined) return;
+            const optionsElements = [...optionsColumnRef?.current[activeIdx]?.querySelectorAll("*")];
+            const clickOnTarget = optionsElements.some(element => element === target);
+            
+            if (!clickOnTarget) 
+                optionsRef?.current.forEach(optionRef => {
+                    optionRef.classList.remove("show"); 
+                }); 
+        };
+
+        window.addEventListener("click", clickEvent);
+        return () => window.removeEventListener("click", clickEvent);
+    }, [optionsRef, optionsColumnRef]);
 
     const changeActiveArrow = (newActiveArrow, type) => {
         console.log(arrowElements);
@@ -329,10 +374,14 @@ const Patients = ({ data }) => {
                                 <p>{patient.phone}</p>
                             </div>  : null}
 
-                            <div className="column pressable">
+                            <div className="column pressable" ref={ref => optionsColumnRef.current[idx] = ref}>
                                 <FontAwesomeIcon className="column-icon" icon={faEllipsis} onClick={() => triggerOptions(idx)}/>
                                 <div className="options-container" ref={ref => optionsRef.current[idx] = ref}>
-                                    <div className="option" onClick={async () => optionsRef.current[idx].classList.contains("show") ? await removePatient(patient._id) : null}>
+                                    <div className="option" onClick={async () => {
+                                        if (!optionsRef.current[idx].classList.contains("show")) return;
+                                        setPatientId(patient._id);
+                                        setWarning(cookies.language === "en" ? "Are you sure that you want to remove this doctor?" : "Sunteti sigur ca doriti sa stergeti acest doctor?");
+                                    }}>
                                         <FontAwesomeIcon icon={faTimes} className="option-icon" /> 
                                         <p>{cookies.language === "en" ? "Remove" : "Sterge"}</p>
                                     </div>
@@ -386,6 +435,19 @@ const Patients = ({ data }) => {
                         </div>
                     </div> : null}
                 </div>
+
+                {warning && <div className="warning-container">
+                    <div className="warning-card" style={{ position: "relative", top: `${scrollY}px` }}>
+                        <p>{warning}</p>
+                        <div className="buttons-warning">
+                            <button onClick={async () => await removePatient(patientId)}>{cookies.language === "en" ? "Yes" : "Da"}</button>
+                            <button onClick={() => {
+                                setPatientId();
+                                setWarning(false);
+                            }}>{cookies.language === "en" ? "No" : "Nu"}</button>
+                        </div>
+                    </div>
+                </div>}
 
                 <div className="add-button" onClick={() => navigation("/create-patient")}>
                     <FontAwesomeIcon icon={faPlus} className="add-icon"/>

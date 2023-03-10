@@ -40,10 +40,10 @@ const Footer = () => {
             <div className="footer-container">
                 <h2>CONTACT</h2>
                 <div className="footer-content">
-                    <div className="footer-element">
+                    {/* <div className="footer-element">
                         <FontAwesomeIcon icon={faBuilding} className="footer-icon" />
                         <p>Barbu Zentec I.F.</p>
-                    </div>
+                    </div> */}
 
                     <div className="footer-element">
                         <FontAwesomeIcon icon={faMapPin} className="footer-icon" />

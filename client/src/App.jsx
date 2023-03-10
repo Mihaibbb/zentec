@@ -32,19 +32,10 @@ const App = () => {
 
     useEffect(() => {
         // For scrolling effects
-
-        let isScrolling;
-		window.addEventListener("scroll", () => {
-        	window.clearTimeout(isScrolling);
-            document.querySelector("html").classList.add("active");
-            isScrolling = setTimeout(() => {
-     	        document.querySelector("html").classList.remove("active");
-            }, 500);
-		});
-        
+      
         (async () => {
-            const cacheNames = await caches.keys();
-            cacheNames.forEach(cacheName => caches.delete(cacheName));
+            const cacheNames = await caches?.keys();
+            cacheNames && cacheNames.forEach(cacheName => caches.delete(cacheName));
         })();
 
         cookies.language && setLanguage(cookies.language);
@@ -110,6 +101,21 @@ const App = () => {
         })();
 
     }, []);
+
+    useEffect(() => {
+        if (!window.location.href.includes("appointments")) {
+            let isScrolling;
+            const scrollEvent = () => {
+                window.clearTimeout(isScrolling);
+                document.querySelector("html").classList.add("active");
+                isScrolling = setTimeout(() => {
+                     document.querySelector("html").classList.remove("active");
+                }, 500);
+            };
+            window.addEventListener("scroll", scrollEvent);
+            return () => window.removeEventListener("scroll", scrollEvent);
+        } else document.querySelector("html").classList.add("active");
+    }, [window.location.href]);
 
     useEffect(() => {
         // Stop increasing / decreasing value of input number from scrolling on it

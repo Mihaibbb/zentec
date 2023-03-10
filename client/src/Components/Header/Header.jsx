@@ -1,4 +1,4 @@
-import { faAngleDown, faBars, faBell, faSearch, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faAngleDown, faBars, faBell, faCompress, faExpand, faSearch, faUser } from '@fortawesome/free-solid-svg-icons';
 import { faMoon, faSun } from '@fortawesome/free-regular-svg-icons';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -16,6 +16,7 @@ const Header = ({ data }) => {
     const [cookies, setCookie] = useCookies();
 
     const [theme, setTheme] = useState(cookies?.theme);
+    const [fullScreen, setFullScreen] = useState(cookies?.fullScreen || false);
 
     useEffect(() => {
         console.log(theme);
@@ -86,6 +87,48 @@ const Header = ({ data }) => {
         });
     }, [headerRef?.current, location]);
 
+
+
+    // Fullscreen functions 
+
+    const cancelFullScreen = () => {
+        var el = document;
+        var requestMethod = el.cancelFullScreen||el.webkitCancelFullScreen||el.mozCancelFullScreen||el.exitFullscreen||el.webkitExitFullscreen;
+        if (requestMethod) { // cancel full screen.
+            requestMethod.call(el);
+        }
+        // else if (typeof window.ActiveXObject != "undefined") { // Older IE.
+        //     var wscript = new ActiveXObject("WScript.Shell");
+        //     if (wscript !== null) {
+        //         wscript.SendKeys("{F11}");
+        //     }
+        // }
+    }
+
+    const requestFullScreen = () => {
+        var el = document.documentElement, rfs = el.requestFullscreen || el.webkitRequestFullScreen || el.mozRequestFullScreen || el.msRequestFullscreen;
+        
+        if (typeof rfs != "undefined" && rfs) rfs.call(el);
+        // else if (typeof window?.ActiveXObject != "undefined" && typeof window?.ActiveXObject != "null") {
+        //     // for Internet Explorer
+        //     var wscript = new ActiveXObject("WScript.Shell");
+        //     if (wscript!=null) wscript.SendKeys("{F11}");
+        // }
+
+        return false;
+    }
+
+    const toggleFullScreen = () => {
+        
+        const isInFullScreen = (document.fullScreenElement && document.fullScreenElement !== null) ||  (document.mozFullScreen || document.webkitIsFullScreen);
+
+        if (isInFullScreen) cancelFullScreen();
+        else requestFullScreen();
+        setFullScreen(curr => !curr);
+        setCookie("fullScreen", !isInFullScreen);
+        return false;
+    }
+
     return (
         <div className="header" ref={headerRef}>
             <div className="searchbar-container">
@@ -104,6 +147,10 @@ const Header = ({ data }) => {
                     document.querySelector('.header').classList.remove("no-navigation");
                     document.querySelector(".content").classList.remove("no-navigation");
                 }} />
+
+                <div className="theme" onClick={() => toggleFullScreen()}>
+                    <FontAwesomeIcon icon={fullScreen ? faCompress : faExpand} style={ theme === 'light' ? { color: 'rgb(102,102,102)' } : {}} className="theme-icon" />
+                </div>
 
                 <div className="theme" onClick={() => setTheme(currTheme => currTheme === 'dark' ? 'light' : 'dark')}>
                     <FontAwesomeIcon icon={theme === 'dark' ? faMoon : faSun} style={ theme === 'light' ? { color: '#e0844f' } : {}} className="theme-icon" />

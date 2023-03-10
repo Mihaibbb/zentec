@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useState } from "react";
 import { useCookies } from "react-cookie";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
@@ -8,6 +8,7 @@ import InputColor from "react-input-color";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleLeft, faCheck } from "@fortawesome/free-solid-svg-icons";
 import "./DoctorAccount.css";
+import tickAnimation from "../imgs/green-tick.mp4";
 
 const DoctorAccount = ({ data }) => {
 
@@ -26,8 +27,9 @@ const DoctorAccount = ({ data }) => {
     const initialHistoric = data.organisation.schedules.filter(schedule => JSON.parse(schedule.users).includes(id));
     const [historic, setHistoric] = useState(initialHistoric);
     const [historicOption, setHistoricOption] = useState(0);
-   
+    const [doctorAdded, setDoctorAdded] = useState(false);
 
+    const noVideoContentRef = useRef();
     
     const navigate = useNavigate();
 
@@ -91,10 +93,11 @@ const DoctorAccount = ({ data }) => {
 
             const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/edit-doctor`, options);
             const response = await request.json();
-            if (await response.success) navigate("/doctors", { state: {
-                success: true,
-                message: cookies.language === "en" ? "Doctor edited successfully!" : "Medicul a fost modificat cu succes!"
-            } });
+            if (await response.success) {
+                document.body.style.background = "#000";
+                noVideoContentRef.current.classList.add("invisible");
+                setTimeout(() => setDoctorAdded(true), 300);
+            }
 
         } catch (e) {
             console.log(e);
@@ -142,103 +145,127 @@ const DoctorAccount = ({ data }) => {
         }
     
     }, [historicOption]);
+
+    const animationFinished = () => {
+        document.body.style.background = "var(--background)";
+        navigate("/doctors");
+    };
     
     return initialColor && (
         <div className="doctor-account-container">
             <Navigation page="doctors" />
 
-            <div className="content">
+            <div className="content" style={doctorAdded ? { maxHeight: "100vh" } : {}}>
                 <Header data={data} />
 
-                {!historicPage ? <h2 className="title">{cookies.language === "en" ? "Edit doctor" : "Editare medic"}</h2> : null}
-                
-                <div className="go-back" onClick={() => navigate(-1)}>
-                    <FontAwesomeIcon icon={faAngleLeft} />
-                </div>
+                {doctorAdded ? (
+                    <div className="video-content" style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
+                        <video
+                            src={tickAnimation}
+                            controls={false}
+                            autoPlay
+                            playsInline
+                            onEnded={animationFinished}
 
-                {!historicPage ? <div className="form">
-                    <div className="input">
-                        <p>{cookies.langauge === "en" ? "Surname" : "Nume"}</p>
-                        <input type="text" value={firstname} onChange={e => setFirstname(e.target.value)} />
-                    </div>
-
-                    <div className="input">
-                        <p>{cookies.language === "en" ? "Name": "Prenume"}</p>
-                        <input type="text" value={lastname} onChange={e => setLastname(e.target.value)} />
-                    </div>
-
-                    <div className="input">
-                        <p>Email</p>
-                        <input type="email" value={email} onChange={e => setEmail(e.target.value)} />
-                    </div>
-
-                    <div className="input">
-                        <p>{cookies.language === "en" ? "Phone Number" : "Numar de telefon"}</p>
-                        <input type="number" value={phone} onChange={e => setPhone(e.target.value)} />
-
-                    </div>
-
-                    {/* <div className="input">
-                        <div className="option">
-                            <div className={`box ${multipleSchedules ? "active" : ""}`} onClick={() => setMultipleSchedules(curr => !curr)}>
-                                {multipleSchedules && 
-                                    <FontAwesomeIcon className="check-icon" icon={faCheck}/>
-                                }
-                            </div>
-                            <p>{cookies.language === "en" ? "Allow multiple schedules" : "Permite programari multiple"}</p>
-                        </div>
-                    </div> */}
-
-                    <div className="input">
-                        <div className="option">
-                            <p>{cookies.language === "en" ? "Highlight Color: " : "Culoare: "}</p>
-                            <InputColor initialValue={initialColor} onChange={setColor} />
-                            
-                        </div>
-                    </div>
-
-                    <button type="submit" className="confirm-button" onClick={async () => await submitEditDoctor()}>{cookies.language === "en" ? "Save changes": "Salveaza modificarile"}</button>
-                    <p className="error">{errorMessage}</p>
-                </div> : null}
-
-                {historicPage ? <div className="patient-historic">
-                    <h2 className="title">{cookies.language === "en" ? "Doctor's historic" : "Istoric Medic"}</h2>
-                    
-                    <div className="historic-options">
-
-                        <div className={`historic-option ${historicOption === 0 ? "active" : ""}`} onClick={() => setHistoricOption(0)}>
-                            {cookies.language === "en" ? "Past appointments" : "Programari trecute"}
-                        </div>
-
-                        <div className={`historic-option ${historicOption === 1 ? "active" : ""}`} onClick={() => setHistoricOption(1)}>
-                            {cookies.language === "en" ? "Future appointments" : "Programari viitoare"}
-                        </div>
-
-                        <div className={`historic-option ${historicOption === 2 ? "active" : ""}`} onClick={() => setHistoricOption(2)}>
-                            {cookies.language === "en" ? "Canceled appointments" : "Programari anulate"}
-                        </div>
+                            muted
+                            style={{ height: "40vh" }}
                         
+                        />
+                        <h2 className="title title-video-content" style={{ margin: 0 }}>{cookies.language === "en" ? "Doctor saved successfully!" : "Doctorul a fost salvat cu succes!"}</h2>
                     </div>
-
-                    <div className="historic-container">
-                        <div className="first-row">
-                            <div className="col">{cookies.language === "en" ? "Title" : "Titlu"}</div>
-                            <div className="col">{cookies.language === "en" ? "Patient" : "Pacient"}</div>
-                            <div className="col">{cookies.language === "en" ? "Date" : "Data"}</div>
-                            <div className="col">{cookies.language === "en" ? "Interval": "Interval"}</div>
-                            <div className="col">{cookies.language === "en" ? "Income": "Venit"}</div>
+                ) : (
+                    <div className="no-video-content" ref={noVideoContentRef}>
+                        {!historicPage ? <h2 className="title">{cookies.language === "en" ? "Edit doctor" : "Editare medic"}</h2> : null}
+                
+                        <div className="go-back" onClick={() => navigate(-1)}>
+                            <FontAwesomeIcon icon={faAngleLeft} />
                         </div>
-                        {historic && historic.length > 0 && historic.map(historicItem => (
-                            <div className="historic-item">
-                                <div className="col">{historicItem.title}</div>
-                                <div className="col">{JSON.parse(historicItem.patients)[0].firstname} {JSON.parse(historicItem.patients)[0].lastname}</div>
-                                <div className="col">{new Date(historicItem.date).getDate() < 10 ? `0${new Date(historicItem.date).getDate()}` : new Date(historicItem.date).getDate()}/{new Date(historicItem.date).getMonth() + 1 < 10 ? `0${new Date(historicItem.date).getMonth() + 1}` : new Date(historicItem.date).getMonth() + 1}/{new Date(historicItem.date).getFullYear()}</div>
-                                <div className="col">{new Date(historicItem.startDate).getHours() < 10 ? `0${new Date(historicItem.startDate).getHours()}` : new Date(historicItem.startDate).getHours()}:{new Date(historicItem.startDate).getMinutes() < 10 ? `0${new Date(historicItem.startDate).getMinutes()}` : new Date(historicItem.startDate).getMinutes()} - {new Date(historicItem.endDate).getHours() < 10 ? `0${new Date(historicItem.endDate).getHours()}` : new Date(historicItem.endDate).getHours()}:{new Date(historicItem.endDate).getMinutes() < 10 ? `0${new Date(historicItem.endDate).getMinutes()}` : new Date(historicItem.endDate).getMinutes()}</div>
-                                <div className="col">{historicItem?.income || "Nedefinit"} {historicItem?.income ? historicItem?.typeIncome : ""}</div>
+
+                        {!historicPage ? <div className="form">
+                            <div className="input">
+                                <p>{cookies.langauge === "en" ? "Surname" : "Nume"}</p>
+                                <input type="text" value={firstname} onChange={e => setFirstname(e.target.value)} />
                             </div>
-                        ))}
+
+                            <div className="input">
+                                <p>{cookies.language === "en" ? "Name": "Prenume"}</p>
+                                <input type="text" value={lastname} onChange={e => setLastname(e.target.value)} />
+                            </div>
+
+                            <div className="input">
+                                <p>Email</p>
+                                <input type="email" value={email} onChange={e => setEmail(e.target.value)} />
+                            </div>
+
+                            <div className="input">
+                                <p>{cookies.language === "en" ? "Phone Number" : "Numar de telefon"}</p>
+                                <input type="number" value={phone} onChange={e => setPhone(e.target.value)} />
+
+                            </div>
+
+                            {/* <div className="input">
+                                <div className="option">
+                                    <div className={`box ${multipleSchedules ? "active" : ""}`} onClick={() => setMultipleSchedules(curr => !curr)}>
+                                        {multipleSchedules && 
+                                            <FontAwesomeIcon className="check-icon" icon={faCheck}/>
+                                        }
+                                    </div>
+                                    <p>{cookies.language === "en" ? "Allow multiple schedules" : "Permite programari multiple"}</p>
+                                </div>
+                            </div> */}
+
+                            <div className="input">
+                                <div className="option">
+                                    <p>{cookies.language === "en" ? "Highlight Color: " : "Culoare: "}</p>
+                                    <InputColor initialValue={initialColor} onChange={setColor} />
+                                    
+                                </div>
+                            </div>
+
+                            <button type="submit" className="confirm-button" onClick={async () => await submitEditDoctor()}>{cookies.language === "en" ? "Save changes": "Salveaza modificarile"}</button>
+                            <p className="error">{errorMessage}</p>
+                        </div> : null}
+
+                        {historicPage ? <div className="patient-historic">
+                            <h2 className="title">{cookies.language === "en" ? "Doctor's historic" : "Istoric Medic"}</h2>
+                            
+                            <div className="historic-options">
+
+                                <div className={`historic-option ${historicOption === 0 ? "active" : ""}`} onClick={() => setHistoricOption(0)}>
+                                    {cookies.language === "en" ? "Past appointments" : "Programari trecute"}
+                                </div>
+
+                                <div className={`historic-option ${historicOption === 1 ? "active" : ""}`} onClick={() => setHistoricOption(1)}>
+                                    {cookies.language === "en" ? "Future appointments" : "Programari viitoare"}
+                                </div>
+
+                                <div className={`historic-option ${historicOption === 2 ? "active" : ""}`} onClick={() => setHistoricOption(2)}>
+                                    {cookies.language === "en" ? "Canceled appointments" : "Programari anulate"}
+                                </div>
+                                
+                            </div>
+
+                            <div className="historic-container">
+                                <div className="first-row">
+                                    <div className="col">{cookies.language === "en" ? "Title" : "Titlu"}</div>
+                                    <div className="col">{cookies.language === "en" ? "Patient" : "Pacient"}</div>
+                                    <div className="col">{cookies.language === "en" ? "Date" : "Data"}</div>
+                                    <div className="col">{cookies.language === "en" ? "Interval": "Interval"}</div>
+                                    <div className="col">{cookies.language === "en" ? "Income": "Venit"}</div>
+                                </div>
+                                {historic && historic.length > 0 && historic.map(historicItem => (
+                                    <div className="historic-item">
+                                        <div className="col">{historicItem.title}</div>
+                                        <div className="col">{JSON.parse(historicItem.patients)[0].firstname} {JSON.parse(historicItem.patients)[0].lastname}</div>
+                                        <div className="col">{new Date(historicItem.date).getDate() < 10 ? `0${new Date(historicItem.date).getDate()}` : new Date(historicItem.date).getDate()}/{new Date(historicItem.date).getMonth() + 1 < 10 ? `0${new Date(historicItem.date).getMonth() + 1}` : new Date(historicItem.date).getMonth() + 1}/{new Date(historicItem.date).getFullYear()}</div>
+                                        <div className="col">{new Date(historicItem.startDate).getHours() < 10 ? `0${new Date(historicItem.startDate).getHours()}` : new Date(historicItem.startDate).getHours()}:{new Date(historicItem.startDate).getMinutes() < 10 ? `0${new Date(historicItem.startDate).getMinutes()}` : new Date(historicItem.startDate).getMinutes()} - {new Date(historicItem.endDate).getHours() < 10 ? `0${new Date(historicItem.endDate).getHours()}` : new Date(historicItem.endDate).getHours()}:{new Date(historicItem.endDate).getMinutes() < 10 ? `0${new Date(historicItem.endDate).getMinutes()}` : new Date(historicItem.endDate).getMinutes()}</div>
+                                        <div className="col">{historicItem?.income || "Nedefinit"} {historicItem?.income ? historicItem?.typeIncome : ""}</div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div> : null}
                     </div>
-                </div> : null}
+                )}
             </div>
         </div>
     );

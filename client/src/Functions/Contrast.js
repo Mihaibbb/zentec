@@ -8,7 +8,7 @@ const getContrastForText = (hex) => {
     ];
     
     const yiq = ((red * 299) + (green * 587) + (blue * 114)) / 1000;
-    return (yiq >= 128) ? '#000' : "#fff";
+    return (yiq >= 128) || hex === "#fff" || hex === "#ffffff" || hex === "#ffffff00" ? '#000' : "#fff";
 };
 
 export default getContrastForText;
