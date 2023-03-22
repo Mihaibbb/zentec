@@ -51,8 +51,11 @@ const Footer = () => {
                     </div>
 
                     <div className="footer-element">
-                        <FontAwesomeIcon icon={faEnvelope}  className="footer-icon"/>
-                        <p>office@zentec.ro</p>
+                        <a href="mailto:zentec@zentec.ro" target="_blank">
+                            <FontAwesomeIcon icon={faEnvelope}  className="footer-icon"/>
+                            <p>zentec@zentec.ro</p>
+                        </a>
+                       
                     </div>
 
                     <div className="footer-element">

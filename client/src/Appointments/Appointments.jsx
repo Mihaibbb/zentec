@@ -62,11 +62,9 @@ const Appointments = ({ data }) => {
     const [appointmentFinished, setAppointmentFinished] = useState();
     const [appointmentConfirmed, setAppointmentConfirmed] = useState();
     const [appointmentIntervalWarning, setAppointmentIntervalWarning] = useState(false);
+    const [initialAppointmentValues, setInitialAppointmentValues] = useState({});
     const activePlusButton = true;
-    const scheduleRefHeight = useMemo(() => {
-        if (!scheduleRef || !scheduleRef?.current) return 110;
-        return scheduleRef?.current?.offsetHeight;
-    }, [scheduleRef]);
+    const [scheduleRefHeights, setScheduleRefHeights] = useState({});
 
     // State for date picker calendars are open
     const [openDatePicker, setOpenDatePicker] = useState(false);
@@ -160,6 +158,8 @@ const Appointments = ({ data }) => {
     const createAppointmentRef = useRef();
     const scheduleContentRef = useRef([]);
     const scheduleContentContainerRef = useRef([]);
+    const leftArrowBtn = useRef();
+    const rightArrowBtn = useRef();
 
 
     // const { startHour, endHour, gaps, doctors } = location?.state;
@@ -283,6 +283,11 @@ const Appointments = ({ data }) => {
     }, [document?.querySelector(".navigation")]);
 
 
+    useEffect(() => {
+        leftArrowBtn.current.click();
+        rightArrowBtn.current.click();
+    }, [doctors]);
+
     const getSchedule = (dayFormat, doctorColor, doctorObject) => {
         const gapsArr = [];
         for (let gap = 0; gap < gaps; gap++)
@@ -291,7 +296,7 @@ const Appointments = ({ data }) => {
 
         return hours.map((hour, idx) => {
             return (
-                <div className={`schedule-hour ${idx === hours.length - 1 ? "inactive" : ""}`} key={idx} ref={!scheduleRef?.current && idx === 0 ? scheduleRef : null}>
+                <div className={`schedule-hour ${idx === hours.length - 1 ? "inactive" : ""}`} key={idx} ref={ref => idx === 0 ? scheduleRef.current = ref : null}>
                     {gapsArr.map((gap, gapIdx) => {
 
                         const startHourGapAttr = idx + startHour < 10 ? `0${idx + startHour}` : (idx + startHour).toString(); 
@@ -759,11 +764,38 @@ const Appointments = ({ data }) => {
         if (appointmentPatient.length === 0 || appointmentPatientPhoneNumber.toString().length === 0 || appointmentTitle.length === 0 || !appointmentPatientData)
             return setErrorMessage(cookies.language === "en" ? "Fill required fields!" : "Completeaza campurile obligatorii!");
 
+        if (appointmentStartMinutes % minutesPerGap !== 0 || appointmentEndMinutes % minutesPerGap !== 0) 
+            return setErrorMessage(cookies.language === "en" ? `Appointment's minutes fields must be every ${minutesPerGap} minutes!` : `Campurile de minute ale programarii trebuie sa fie din ${minutesPerGap} in ${minutesPerGap} minute!`);
 
         if (Number(appointmentEndHour) > endHour || (Number(appointmentEndHour) === endHour && Number(appointmentEndMinutes) > 0)) return setErrorMessage(cookies.language === "en" ? "End hour's appointment is not in the schedule!" : "Ora de sfarsit a programarii nu este in program!");
         if (Number(appointmentStartHour) > endHour || (Number(appointmentStartHour) === endHour && Number(appointmentStartMinutes) > 0)) return setErrorMessage(cookies.language === "en" ? "Start hour's appointment is not in the schedule!" : "Ora de inceput a programarii nu este in program!");
         if (Number(appointmentEndHour) < startHour) return setErrorMessage(cookies.language === "en" ? "End hour's appointment is not in the schedule!" : "Ora de sfarsit a programarii nu este in program!");
         if (Number(appointmentStartHour) < startHour) return setErrorMessage(cookies.language === "en" ? "Start hour's appointment is not in the schedule!" : "Ora de inceput a programarii nu este in program!");
+
+        const intersectingDoctorAppointments = appointments.some(appointment => {
+            const appointmentStartHourInMinutes = Number(appointmentStartHour) * 60 + Number(appointmentStartMinutes);
+            const appointmentEndHourInMinutes = Number(appointmentEndHour) * 60 + Number(appointmentEndMinutes);
+
+            const currentAppointmentStartHourInMinutes = new Date(appointment.startDate).getHours() * 60 + new Date(appointment.startDate).getMinutes();
+            const currentAppointmentEndHourInMinutes =  new Date(appointment.endDate).getHours() * 60 + new Date(appointment.endDate).getMinutes();
+            
+            console.log(appointmentStartHourInMinutes, appointmentEndHourInMinutes, currentAppointmentStartHourInMinutes, currentAppointmentEndHourInMinutes);
+
+            return (
+                (isJSON(appointment.users) ? JSON.parse(appointment.users)[0] : appointment.users[0]) === appointmentDoctorId.toString() &&
+                sameDay(new Date(appointment.date), new Date(appointmentDateValue)) &&
+                (
+                    (appointmentStartHourInMinutes >= currentAppointmentStartHourInMinutes && appointmentStartHourInMinutes <= currentAppointmentEndHourInMinutes) ||
+                    (appointmentEndHourInMinutes >= currentAppointmentStartHourInMinutes && appointmentEndHourInMinutes <= currentAppointmentEndHourInMinutes)
+                )
+            );
+            
+        });
+
+        console.log(intersectingDoctorAppointments);
+
+        if (intersectingDoctorAppointments) 
+            return setErrorMessage(cookies.language === "en" ? "An appointment was already created in this time slot" : "O programare a fost deja facuta in acest interval de timp!");
 
         const appointmentStartDate = new Date(new Date(appointmentDateValue).getFullYear(), new Date(appointmentDateValue).getMonth(), new Date(appointmentDateValue).getDate(), appointmentStartHour, appointmentStartMinutes);
         const appointmentEndDate = new Date(new Date(appointmentDateValue).getFullYear(), new Date(appointmentDateValue).getMonth(), new Date(appointmentDateValue).getDate(), appointmentEndHour, appointmentEndMinutes);
@@ -787,6 +819,8 @@ const Appointments = ({ data }) => {
             saved: !patientSaved,
             language: cookies.language
         };
+
+        console.log(appointmentData);
 
 
         const options = {
@@ -818,7 +852,6 @@ const Appointments = ({ data }) => {
             console.log(e);
         }
 
-       
     };
 
     const closeCreateAppointment = () => {
@@ -840,9 +873,11 @@ const Appointments = ({ data }) => {
         setActiveEditAppointment(false);
         resetAppointmentData();
         setErrorMessage("");
+        setInitialAppointmentValues({});
     };
 
     const resetAppointmentData = () => {
+        setInitialAppointmentValues({});
         setActiveCreateAppointment(false);
         setAppointmentStartHour("");
         setAppointmentStartMinutes("");
@@ -887,17 +922,36 @@ const Appointments = ({ data }) => {
 
     const editAppointment = async (currentAppointmentId) => {
 
+    
         if (Number(appointmentEndHour) > endHour || (Number(appointmentEndHour) === endHour && Number(appointmentEndMinutes) > 0)) return setErrorMessage(cookies.language === "en" ? "End hour's appointment is not in the schedule!" : "Ora de sfarsit a programarii nu este in program!");
         if (Number(appointmentStartHour) > endHour || (Number(appointmentStartHour) === endHour && Number(appointmentStartMinutes) > 0)) return setErrorMessage(cookies.language === "en" ? "Start hour's appointment is not in the schedule!" : "Ora de inceput a programarii nu este in program!");
         if (Number(appointmentEndHour) < startHour || (Number(appointmentEndHour) === startHour && Number(appointmentEndMinutes) > 0)) return setErrorMessage(cookies.language === "en" ? "End hour's appointment is not in the schedule!" : "Ora de sfarsit a programarii nu este in program!");
         if (Number(appointmentStartHour) < startHour || (Number(appointmentStartHour) === startHour && Number(appointmentStartMinutes) > 0)) return setErrorMessage(cookies.language === "en" ? "Start hour's appointment is not in the schedule!" : "Ora de inceput a programarii nu este in program!");
 
+
+        if (appointmentStartMinutes % minutesPerGap !== 0 || appointmentEndMinutes % minutesPerGap !== 0) 
+            return setErrorMessage(cookies.language === "en" ? `Appointment's minutes fields must be every ${minutesPerGap} minutes!` : `Campurile de minute ale programarii trebuie sa fie din ${minutesPerGap} in ${minutesPerGap} minute!`);
+
+
         const appointmentStartDate = new Date(new Date(appointmentDateValue).getFullYear(), new Date(appointmentDateValue).getMonth(), new Date(appointmentDateValue).getDate(), appointmentStartHour, appointmentStartMinutes);
         const appointmentEndDate = new Date(new Date(appointmentDateValue).getFullYear(), new Date(appointmentDateValue).getMonth(), new Date(appointmentDateValue).getDate(), appointmentEndHour, appointmentEndMinutes);
 
-        if (appointmentStartDate.getTime() >= appointmentEndDate.getTime()) {
-            setErrorMessage(cookies.language === "en" ? "Schedule's start hour must be before end hour!" : "Ora de incepere a programarii trebuie sa fie inaintea orei de finalizare!");
-            return;
+        if (appointmentStartDate.getTime() >= appointmentEndDate.getTime()) 
+            return setErrorMessage(cookies.language === "en" ? "Schedule's start hour must be before end hour!" : "Ora de incepere a programarii trebuie sa fie inaintea orei de finalizare!");
+   
+        if (new Date(appointmentDateValue).getTime() < new Date().getTime()) {
+            if (
+                Number(initialAppointmentValues.startHour) !== Number(appointmentStartHour) || 
+                Number(initialAppointmentValues.endHour) !== Number(appointmentEndHour) ||
+                initialAppointmentValues.title !== appointmentTitle || 
+                initialAppointmentValues.patient !== appointmentPatient || 
+                Number(initialAppointmentValues.startMinutes) !== Number(appointmentStartMinutes) ||
+                Number(initialAppointmentValues.endMinutes) !== Number(appointmentEndMinutes) ||
+                Number(initialAppointmentValues.cost) !== Number(appointmentCost) ||
+                initialAppointmentValues.appointmentNotes !== appointmentNotes ||
+                initialAppointmentValues.doctorId !== appointmentDoctorId ||
+                initialAppointmentValues.confirmed !== appointmentConfirmed
+            ) return setErrorMessage(cookies.language === "en" ? "Schedule can't be modified if its in the past. Please change date to a future one to edit this appointment's data!" : "Programarea nu poate fi modificata daca data sa este in trecut. Schimbati data programarii sa fie in viitor pentru a modifica datele acestei programari!");
         }
 
         const appointmentData = {
@@ -1054,9 +1108,24 @@ const Appointments = ({ data }) => {
     }, [activeEditAppointment, activeCreateAppointment]);
 
     useEffect(() => {
-        if (!scheduleRef.current) return;
+        if (!scheduleRef?.current) return;
+        console.log(scheduleRef.current.offsetHeight);
         setHourContainerHeight(scheduleRef.current.offsetHeight / 2);
+        
     }, [scheduleRef]);
+
+
+    // useEffect(() => {
+    //     console.log(scheduleRefHeights);
+    //     if (!scheduleRefHeights?.[`${filterActive}${doctors > 2 ? "single" : "multiple"}`]) {
+    //         setScheduleRefHeights(currHeights => {
+    //             const previousHeights = {...currHeights};
+    //             previousHeights[`${filterActive}${doctors > 2 ? "single" : "multiple"}`] = document.querySelector(".schedule-hour").getBoundingClientRect().height;
+    //             return previousHeights;
+    //         });
+    //     }
+       
+    // }, [filterActive, doctors]);
 
     useEffect(() => {
         if (month === date.getMonth() && year === date.getFullYear()) return;
@@ -1089,13 +1158,17 @@ const Appointments = ({ data }) => {
             
             return sameDay(new Date(appointment.date), date) && !appointment.canceled;
         }) : appointments.filter((appointment) => {
+            const firstDayTime = new Date(days[0].getFullYear(), days[0].getMonth(), days[0].getDate(), startHour, 0);
+            const lastDayTime = new Date(days[days.length - 1].getFullYear(), days[days.length - 1].getMonth(), days[days.length - 1].getDate(), endHour + 1, 0);
+
             return (
-                days[0].getTime() <= new Date(appointment.date).getTime() && 
-                new Date(appointment.date).getTime() <= days[days.length - 1].getTime() &&
+                firstDayTime.getTime() <= new Date(appointment.startDate).getTime() && 
+                new Date(appointment.endDate).getTime() <= lastDayTime.getTime() &&
                 !appointment.canceled
             );
         });
 
+        console.log(currentAppointments);
         
         currentAppointments.forEach((appointment) => {
             const appointmentDate = new Date(appointment.startDate);
@@ -1133,7 +1206,7 @@ const Appointments = ({ data }) => {
                     if (appointment.finished) currentGaps[i].classList.add("finished");
                     currentGaps[i].addEventListener('click', () => {
                         if (!sameDay( new Date(currentGaps[i].getAttribute("day")), new Date(appointment.date) )) return;
-                        if (new Date(appointment.startDate).getTime() < new Date().getTime()) return;
+                        //if (new Date(appointment.startDate).getTime() < new Date().getTime()) return;
                         setActiveEditAppointment(true);
                         setAppointmentTitle(appointment.title);
                         setAppointmentPatient(`${isJSON(appointment.patients) ? JSON.parse(appointment.patients)[0].firstname : appointment.patients[0].firstname} ${isJSON(appointment.patients) ? JSON.parse(appointment.patients)[0].lastname : appointment.patients[0].lastname}`);
@@ -1150,11 +1223,25 @@ const Appointments = ({ data }) => {
                         setAppointmentFinished(appointment.finished);
                         setAppointmentConfirmed(appointment.confirmed);
                         setAppointmentDateValue(new Date(appointment.date));
+                        setInitialAppointmentValues({
+                            title: appointment.title,
+                            patient: `${isJSON(appointment.patients) ? JSON.parse(appointment.patients)[0].firstname : appointment.patients[0].firstname} ${isJSON(appointment.patients) ? JSON.parse(appointment.patients)[0].lastname : appointment.patients[0].lastname}`,
+                            startHour: new Date(appointment.startDate).getHours() < 10 ? `0${new Date(appointment.startDate).getHours()}` : new Date(appointment.startDate).getHours(),
+                            startMinutes: new Date(appointment.startDate).getMinutes() < 10 ? `0${new Date(appointment.startDate).getMinutes()}` : new Date(appointment.startDate).getMinutes(),
+                            endHour: new Date(appointment.endDate).getHours() < 10 ? `0${new Date(appointment.endDate).getHours()}` : new Date(appointment.endDate).getHours(),
+                            endMinutes: new Date(appointment.endDate).getMinutes() < 10 ? `0${new Date(appointment.endDate).getMinutes()}` : new Date(appointment.endDate).getMinutes(),
+                            cost: appointment.income,
+                            appointmentNotes: appointment.notes,
+                            doctorId: JSON.parse(appointment.users)[0],
+                            date: new Date(appointment.date),
+                            confirmed: appointment.confirmed
+
+                        });
                     });
                 }
 
                 const appointmentLength = (new Date(appointment.endDate).getTime() - new Date(appointment.startDate).getTime()) / (1000 * 60 * minutesPerGap);
-
+               
                 const textElement2 = document.createElement('p');
                 textElement2.classList.add('appointment-interval');
                 const currentPatient = isJSON(appointment.patients) ? JSON.parse(appointment.patients)[0] : appointment.patients[0];
@@ -1324,7 +1411,8 @@ const Appointments = ({ data }) => {
     }, [date, appointments, filterActive, days]);
 
     const searchPatients = useCallback((currPatient) => {
-        setAppointmentPatient(currPatient)
+        setAppointmentPatient(currPatient);
+        setAppointmentPatientData();
         if (currPatient === "") {
             setAppointmentPatientsList([]);
             return;
@@ -1467,11 +1555,11 @@ const Appointments = ({ data }) => {
                                 key={idx} 
                                 className="month-appointment" 
                                 onClick={() => {
-                                    if (new Date(appointment.startDate).getTime() < new Date().getTime()) {
-                                        // setActiveErrorMessage(true);
-                                        setTimeout(() => setActiveErrorMessage(false), 5000);
-                                        return;
-                                    }
+                                    // if (new Date(appointment.startDate).getTime() < new Date().getTime()) {
+                                    //     setActiveErrorMessage(true);
+                                    //     setTimeout(() => setActiveErrorMessage(false), 5000);
+                                    //     return;
+                                    // }
                                   
                                     setActiveEditAppointment(true);
                                     setAppointmentTitle(appointment.title);
@@ -1488,6 +1576,20 @@ const Appointments = ({ data }) => {
                                     setAppointmentFinished(appointment.finished);
                                     setAppointmentConfirmed(appointment.confirmed);
                                     setAppointmentDateValue(new Date(appointment.date));
+                                    setInitialAppointmentValues({
+                                        title: appointment.title,
+                                        patient: `${isJSON(appointment.patients) ? JSON.parse(appointment.patients)[0].firstname : appointment.patients[0].firstname} ${isJSON(appointment.patients) ? JSON.parse(appointment.patients)[0].lastname : appointment.patients[0].lastname}`,
+                                        startHour: new Date(appointment.startDate).getHours() < 10 ? `0${new Date(appointment.startDate).getHours()}` : new Date(appointment.startDate).getHours(),
+                                        startMinutes: new Date(appointment.startDate).getMinutes() < 10 ? `0${new Date(appointment.startDate).getMinutes()}` : new Date(appointment.startDate).getMinutes(),
+                                        endHour: new Date(appointment.endDate).getHours() < 10 ? `0${new Date(appointment.endDate).getHours()}` : new Date(appointment.endDate).getHours(),
+                                        endMinutes: new Date(appointment.endDate).getMinutes() < 10 ? `0${new Date(appointment.endDate).getMinutes()}` : new Date(appointment.endDate).getMinutes(),
+                                        cost: appointment.income,
+                                        appointmentNotes: appointment.notes,
+                                        doctorId: JSON.parse(appointment.users)[0],
+                                        date: new Date(appointment.date),
+                                        confirmed: appointment.confirmed
+            
+                                    });
                                 }
                             }>
                                 <p className="patient-text" style={{ color: getContrastForText( currDoctorColor || doctorColor ) === "#000" ? "#000" : "var(--text-color)" }}>{JSON.parse(appointment.patients)[0].firstname} {JSON.parse(appointment.patients)[0].lastname}</p>
@@ -1584,8 +1686,9 @@ const Appointments = ({ data }) => {
     const handlePatientSaved = () => setActiveCreatePatient(false);
     const changeDate = (currDate) => {
         setDate(new Date(currDate));
-       
     }
+
+    const changeStatus = (currStatus) => setOpenDatePicker(currStatus);
 
     const handleOpenChangeCreate = (status) => setOpenDatePickerCreateApp(status);
     const handleOpenChangeEdit = (status) => setOpenDatePickerEditApp(status);
@@ -1635,35 +1738,39 @@ const Appointments = ({ data }) => {
        
                 <div className="day-title" ref={dayTitleRef}>
                     <div className="half">
-                        <div className="title-btn" onClick={() => {
-                            if (filterActive === 0) {
-                                setDate(currDate => {
-                                    const newDate = new Date(currDate.getTime() - 24 * 60 * 60 * 1000);
-                                    setDays([newDate]);
-                                    return newDate;
+                        <div className="title-btn" ref={leftArrowBtn} onClick={() => {
+                            try {
+                                if (filterActive === 0) {
+                                    setDate(currDate => {
+                                        const newDate = new Date(currDate.getTime() - 24 * 60 * 60 * 1000);
+                                        setDays([newDate]);
+                                        return newDate;
+                                    });
+                                    
+                                }
+                                else if (filterActive === 1 || filterActive === 2) setDays(currDays => {
+                                    const newDays = currDays.map(currDay => {
+                                        return new Date(currDay.getTime() - 7 * 24 * 60 * 60 * 1000)
+                                    });
+                                    setMonth(newDays[newDays.length - 1].getMonth());
+                                    return newDays;
                                 });
-                                
-                            }
-                            else if (filterActive === 1 || filterActive === 2) setDays(currDays => {
-                                const newDays = currDays.map(currDay => {
-                                    return new Date(currDay.getTime() - 7 * 24 * 60 * 60 * 1000)
-                                });
-                                setMonth(newDays[newDays.length - 1].getMonth());
-                                return newDays;
-                            });
-
-                            else if (filterActive === 3) {
-                                if (month === 0) {
-                                    setMonth(11);
+    
+                                else if (filterActive === 3) {
+                                    if (month === 0) {
+                                        setMonth(11);
+                                        setYear(currYear => currYear - 1);
+                                    }
+                                    else setMonth(currMonth => currMonth - 1);
+                                }
+    
+                                else if (filterActive === 4) {
+                                    if (year < 0) return;
                                     setYear(currYear => currYear - 1);
                                 }
-                                else setMonth(currMonth => currMonth - 1);
+                            } catch (e) {
                             }
-
-                            else if (filterActive === 4) {
-                                if (year < 0) return;
-                                setYear(currYear => currYear - 1);
-                            }
+                            
                             
                         }}>
                             <FontAwesomeIcon icon={faAngleLeft} className="title-icon" />
@@ -1692,37 +1799,42 @@ const Appointments = ({ data }) => {
                                 inputHidden={true}
                                 opening={openDatePicker} 
                                 headerOpen={window.innerWidth >= 1200 ? (headerElement?.classList?.contains("active") ? 'desktop_active' : 'desktop_inactive') : 'mobile_active'}
+                                changeOpenStatus={changeStatus}
                             /> 
                             
                         : null}
-                        <div className="title-btn" onClick={() => {
-                            if (filterActive === 0) {
-                                setDate(currDate => {
-                                    const newDate = new Date(currDate.getTime() + 24 * 60 * 60 * 1000);
-                                    setDays([newDate]);
-                                    return newDate;
-                                });
-                            }
-                            else if (filterActive === 1 || filterActive === 2) setDays(currDays => {
-                                const newDays = currDays.map(currDay => {
-                                    return new Date(currDay.getTime() + 7 * 24 * 60 * 60 * 1000)
-                                });
-                                setMonth(newDays[newDays.length - 1].getMonth());
-                                return newDays;
-                            }); 
-                            else if (filterActive === 3) {
-                                
-                                if (month === 11) {
-                                    setMonth(0);
+                        <div className="title-btn" ref={rightArrowBtn} onClick={() => {
+                            try {
+                                if (filterActive === 0) {
+                                    setDate(currDate => {
+                                        const newDate = new Date(currDate.getTime() + 24 * 60 * 60 * 1000);
+                                        setDays([newDate]);
+                                        return newDate;
+                                    });
+                                }
+                                else if (filterActive === 1 || filterActive === 2) setDays(currDays => {
+                                    const newDays = currDays.map(currDay => {
+                                        return new Date(currDay.getTime() + 7 * 24 * 60 * 60 * 1000)
+                                    });
+                                    setMonth(newDays[newDays.length - 1].getMonth());
+                                    return newDays;
+                                }); 
+                                else if (filterActive === 3) {
+                                    
+                                    if (month === 11) {
+                                        setMonth(0);
+                                        setYear(currYear => currYear + 1);
+                                    }
+                                    else setMonth(currMonth => currMonth + 1);
+    
+                                    
+                                }
+                                else if (filterActive === 4) {
                                     setYear(currYear => currYear + 1);
                                 }
-                                else setMonth(currMonth => currMonth + 1);
-
-                                
+                            } catch (e) {
                             }
-                            else if (filterActive === 4) {
-                                setYear(currYear => currYear + 1);
-                            }
+                           
                         }}>
                             <FontAwesomeIcon icon={faAngleRight} className="title-icon" />
                         </div>
@@ -1749,14 +1861,16 @@ const Appointments = ({ data }) => {
                     </div>
                 </div>
             
-                {doctors && doctors.length <= 3 && window.innerWidth > 800 && <div className="scheduler">
+                {doctors && doctors.length <= 2 && window.innerWidth > 800 && <div className="scheduler">
                     {filterActive !== 3 && filterActive !== 4 && 
-                        <div className="hours">
+                        <div className="hours" filterid={filterActive.toString()}>
                             {hours.map((hour, hourIdx) => (
-                                <div className="hour" key={hourIdx} style={{ minHeight: `${scheduleRefHeight}px` }}>
+                                <div className="hour" key={hourIdx}>
                                     <p>{hour < 10 ? `0${hour}:00` : `${hour}:00`}</p>
                                 </div>
                             ))}
+
+                          
                         </div>
                     }
 
@@ -1801,7 +1915,7 @@ const Appointments = ({ data }) => {
                     
                 </div>}
 
-                {doctors && (doctors.length > 3 || window.innerWidth <= 800) && 
+                {doctors && (doctors.length > 2 || window.innerWidth <= 800) && 
                      <div className="scheduler flex-column">
                     
                      <div className="schedules flex-column" style={{ marginTop: hourContainerHeight }}>
@@ -1814,6 +1928,10 @@ const Appointments = ({ data }) => {
                                              <p>{hour < 10 ? `0${hour}:00` : `${hour}:00`}</p>
                                          </div>
                                      ))}
+                                     
+                                     <div className="hour">
+                                        <p>{hours.at(-1) + 1 < 10 ? `0${hours.at(-1) + 1}:00` : `${hours.at(-1) + 1}:00`}</p>
+                                    </div>
                                  </div>
  
                                  <div className="schedule-parent-container flex-column">
@@ -1898,8 +2016,8 @@ const Appointments = ({ data }) => {
                                 }} placeholder={cookies.language === "en" ? "Patient" : "Pacient"} />
                             </div>
 
-                            {window.innerWidth <= 800 ? <div className={`patient-list-container ${appointmentPatient.length > 0 ? "active" : ""}`}>
-                                    {appointmentPatientsList ?
+                            {window.innerWidth <= 800 && appointmentPatientsList && (appointmentPatientsList.length === 0 || !appointmentPatientData?.firstname) ? <div className={`patient-list-container ${appointmentPatient.length > 0 ? "active" : ""}`}>
+                                
                                         <>
                                             <div className="patient-list">
                                                 {appointmentPatientsList.map((patient, idx) => (
@@ -1914,7 +2032,7 @@ const Appointments = ({ data }) => {
                                                     </div>
                                                 ))}
                                             </div>
-                                            <div className="add-patient-container">
+                                            {!appointmentPatientData?.firstname ? <div className="add-patient-container">
                                                 {appointmentPatientsList.length === 0 ? <p className="normal-text">{cookies.language === "en" ? "No patient found." : "Niciun pacient gasit."}</p> : null}
                                                 <div className="line-patient">
                                                     <p className="normal-text">{cookies.language === "en" ? "Do you want to add a new patient?" : "Doriti sa adaugati un pacient nou?"}</p>
@@ -1922,9 +2040,8 @@ const Appointments = ({ data }) => {
                                                     <button type="button" onClick={() => patientGotSaved()}>{cookies.language === "en" ? "YES" : "DA"}</button>
                                                     <button type="button" onClick={() => patientNotSaved()}>{cookies.language === "en" ? "NO" : "NU"}</button>
                                                 </div>
-                                            </div>
-                                        </> : null
-                                    }
+                                            </div> : null}
+                                        </>
                             </div> : null}
 
                             <div className="label">
@@ -1932,8 +2049,8 @@ const Appointments = ({ data }) => {
                                 <input type="number" className="number-input" value={appointmentPatientPhoneNumber} onChange={e => setAppointmentPatientPhoneNumber(e.target.value)} readOnly={phoneNumberReadOnly} />
                             </div>
 
-                            {window.innerWidth > 800 ? <div className={`patient-list-container ${appointmentPatient.length > 0 ? "active" : ""}`}>
-                                    {appointmentPatientsList ?
+                            {window.innerWidth > 800 && appointmentPatientsList && (appointmentPatientsList.length === 0 || !appointmentPatientData?.firstname) ? <div className={`patient-list-container ${appointmentPatient.length > 0 ? "active" : ""}`}>
+                                    
                                         <>
                                             <div className="patient-list">
                                                 {appointmentPatientsList.map((patient, idx) => (
@@ -1948,7 +2065,7 @@ const Appointments = ({ data }) => {
                                                     </div>
                                                 ))}
                                             </div>
-                                            <div className="add-patient-container">
+                                            {!appointmentPatientData?.firstname ? <div className="add-patient-container">
                                                 {appointmentPatientsList.length === 0 ? <p className="normal-text">{cookies.language === "en" ? "No patient found." : "Niciun pacient gasit."}</p> : null}
                                                 <div className="line-patient">
                                                     <p className="normal-text">{cookies.language === "en" ? "Do you want to add a new patient?" : "Doriti sa adaugati un pacient nou?"}</p>
@@ -1956,9 +2073,8 @@ const Appointments = ({ data }) => {
                                                     <button type="button" onClick={() => patientGotSaved()}>{cookies.language === "en" ? "YES" : "DA"}</button>
                                                     <button type="button" onClick={() => patientNotSaved()}>{cookies.language === "en" ? "NO" : "NU"}</button>
                                                 </div>
-                                            </div>
-                                        </> : null
-                                    }
+                                            </div> : null}
+                                        </>
                             </div> : null}
            
                             <div className={`non-visible ${appointmentPatient.length > 0 ? "active" : ""}`} />

@@ -148,7 +148,7 @@ const DoctorAccount = ({ data }) => {
 
     const animationFinished = () => {
         document.body.style.background = "var(--background)";
-        navigate("/doctors");
+        navigate("/doctors", { state: { success: true, message: cookies.language === "en" ? "Changes have been saved successfully!" : "Modificarile au fost salvate cu succes!" } });
     };
     
     return initialColor && (
@@ -171,7 +171,7 @@ const DoctorAccount = ({ data }) => {
                             style={{ height: "40vh" }}
                         
                         />
-                        <h2 className="title title-video-content" style={{ margin: 0 }}>{cookies.language === "en" ? "Doctor saved successfully!" : "Doctorul a fost salvat cu succes!"}</h2>
+                        <h2 className="title title-video-content" style={{ margin: 0 }}>{cookies.language === "en" ? "Changes have been saved successfully!" : "Modificarile au fost salvate cu succes!"}</h2>
                     </div>
                 ) : (
                     <div className="no-video-content" ref={noVideoContentRef}>

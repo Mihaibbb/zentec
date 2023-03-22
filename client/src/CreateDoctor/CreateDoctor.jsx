@@ -82,7 +82,7 @@ const CreateDoctor = ({ data }) => {
 
     const animationFinished = () => {
         document.body.style.background = "var(--background)";
-        navigate("/doctors");
+        navigate("/doctors", { state: { success: true, message: cookies.language === "en" ? "Doctor has been added successfully!" : "Doctorul a fost adaugat cu succes!" } });
     };
 
     return (

@@ -217,9 +217,11 @@ body.light .appointments .filter div.active p
     flex-direction: column;
     justify-content: center;
     min-height: 100%;
-    margin-top: -40px;
-
+    
+    margin-left: 15px;
 }
+
+
 
 .appointments .scheduler .hours .hour p 
 {
@@ -233,8 +235,7 @@ body.light .appointments .filter div.active p
     align-items: center;
     display: flex;
     justify-content: center;
-    min-height: 110px;
-
+    flex: 1;
 }
 
 .appointments .scheduler.flex-column .hours .hour:last-child 
@@ -307,6 +308,12 @@ body.light .appointments .filter div.active p
 {
     flex-direction: column;
     gap: 5rem;
+}
+
+.appointments .schedules.flex-column .hours
+{
+    margin-top: 100px;
+    min-height: calc(100% - 60px);
 }
 
 .appointments .schedules .schedule-content 
@@ -743,7 +750,9 @@ body.light .appointments .filter div.active p
 {
     color: var(--text-color);
     font-size: 100%;
-    
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 .appointments .month-schedule .month-day .month-appointments .month-appointment p:first-child 
@@ -755,6 +764,8 @@ body.light .appointments .filter div.active p
 {
     margin-right: .25rem;
     color: var(--text-color-3);
+    overflow: initial;
+    text-overflow: initial;
 }
 
 .appointments .month-schedule .month-day:nth-child(7)
