@@ -20,13 +20,15 @@ exports.createAppointment = async (req, res, next) => {
         const detailsOrganisation = detailsOrganisationRows[0];
         //const smsMessageRaw = detailsOrganisation["sms_message"];
         const organisationSMS = JSON.parse(detailsOrganisation["sms_message"]);
-        const apiKey = detailsOrganisation["api_key"];
+        const apiKey = detailsOrganisation?.["api_key"];
     
         // 1 day earlier message
 
         let currentSmsModemId = detailsOrganisation["sms_modem_id"], totalSMS = 0;
 
         await Promise.all(organisationSMS.map(async sms => {
+
+            logger.debug(sms);
 
             const currentSmsSchedule = sms.scheduledAt - 2;
             
@@ -193,21 +195,20 @@ exports.removeAppointment = async (req, res, next) => {
         let sql = "SELECT * FROM ?? WHERE _id = ?";
 
         const currentAppointment = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.schedules`, appointmentId]);
-        if (!currentAppointment) return new ErrorResponse("An error occured!", 404);
+        if (!currentAppointment || !currentAppointment?.length) return new ErrorResponse("An error occured!", 404);
 
 
         sql = "DELETE FROM ?? WHERE _id = ?";
         const deletedAppointment = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.schedules`, appointmentId]);
 
         sql = "SELECT * FROM ?? WHERE _id = ?";
-        const currentPatient = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.patients`, patientId]);
-        const historic = JSON.parse(currentPatient.historic);
+        const currentPatients = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.patients`, patientId]);
+        const historic = JSON.parse(currentPatients[0]?.historic);
         const newHistoric = historic.filter(appointment => {
             return new Date(currentAppointment.startDate).getTime() !== new Date(new Date(appointment.date).getFullYear(), new Date(appointment.date).getMonth(), new Date(appointment.date).getDate(), Number(appointment.startHour), Number(appointment.startMinutes())).getTime();
         });
 
         await db.query("UPDATE ?? SET historic = ? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${_id}.patients`, JSON.stringify(newHistoric), patientId]);
-        
         
         res.status(200).json({ success: true, message: { en: "Appointment removed successfully!", ro: "Programare stearsa cu succes!"}});
         
@@ -336,7 +337,7 @@ exports.checkPatient = async (req, res, next) => {
     try {
         let sql = "SELECT * FROM ?? WHERE _id = ?";
         const patient = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.patients`, patientId]);
-        if (!await patient) return res.status(200).json({ success: false });
+        if (!patient || !patient?.length) return res.status(200).json({ success: false });
         res.status(200).json({ success: true });
     } catch (e) {
         console.log(e);
@@ -1303,7 +1304,7 @@ exports.pushMessageInbox = async (req, res) => {
 };
 
 exports.removeMessageInbox = async (req, res) => {
-    const { inboxMessageId, organisationId } = req.body;
+    const { inboxMessageId, organisationId } = req.params;
 
     try {
         let sql = "SELECT * FROM ??";
@@ -1336,7 +1337,7 @@ exports.removeMessageInbox = async (req, res) => {
 };
 
 exports.clearInbox = async (req, res) => {
-    const { organisationId } = req.query;
+    const { organisationId } = req.params;
     
     try {
         let sql = "SELECT * FROM ??";
@@ -1426,7 +1427,230 @@ exports.restoreBackup = async (req, res, next) => {
 
 exports.getStatisticsData = async (req, res, next) => {
     const { _id } = req.body; 
+   
+};
+
+exports.contactForm = async (req, res, next) => {
+    const { firstName, lastName, email, phoneNumber, message } = req.body;
+    try {
+        await db.query("INSERT INTO ?? (firstname, lastname, email, phone, message) VALUES (?, ?, ?, ?, ?)", [`${process.env.DB_PREFIX}zentec.contacts`, firstName, lastName, email, phoneNumber, message]);
+        res.status(200).json({ success: true });
+    } catch (e) {
+        logger.debug(e);
+        res.status(404).json({ error: e, message: 'An error eccored!', success: false});
+    }
+};
+
+exports.createAssistant = async (req, res, next) => {
+    const { organisationId, firstName, lastName, phoneNumber, email, language } = req.body;
+    try {
+        const _id = generateId(25);
+        const phoneUsed = await db.query("SELECT * FROM ?? WHERE phone = ?", [`${process.env.DB_PREFIX}org_${organisationId}.assistants`, phone]);
+        if (phoneUsed?.length) return res.status(404).json({
+            success: false,
+            message: language === "en" ? "Phone number is already in use!" : "Numarul de telefon este folosit!"
+        });
+
+        const emailUsed = await db.query("SELECT * FROM ?? WHERE email = ?", [`${process.env.DB_PREFIX}org_${organisationId}.assistants`, email]);
+
+        if (emailUsed?.length) return res.status(404).json({
+            success: false,
+            message: language === "en" ? "Email address is already in use!" : "Adresa de email este folosita!"
+        });
+
+        const inserted = await db.query("INSERT INTO ?? (_id, firstname, lastname, phone, email) VALUES (?, ?, ?, ?, ?)", [`${process.env.DB_PREFIX}org_${organisationId}.assistants`, _id, firstName, lastName, phoneNumber, email]);
+        if (inserted) return res.status(200).json({
+            success: true,
+            message: language === "en" ? "Assistant was added successfully!" : "Asistentul a fost adaugat cu succes!"
+        });
     
+    } catch (e) {
+        logger.debug(e);
+        res.status(404).json({ success: false, message: "An error occured!", error: e});
+    }
+};
+
+exports.editAssistant = async (req, res, next) => {
+    const { organisationId, firstName, lastName, phoneNumber, email, _id, language } = req.body;
+    try {
+        const phoneUsed = await db.query("SELECT * FROM ?? WHERE phone = ? AND _id != ?", [`${process.env.DB_PREFIX}org_${organisationId}.assistants`, phone, _id]);
+        if (phoneUsed && phone > 0) return res.status(404).json({
+            success: false,
+            message: language === "en" ? "Phone number is already in use!" : "Numarul de telefon este folosit!"
+        });
+
+        const emailUsed = await db.query("SELECT * FROM ?? WHERE email = ? AND _id != ?", [`${process.env.DB_PREFIX}org_${organisationId}.assistants`, email, _id]);
+
+
+        if (emailUsed && email.length > 0) return res.status(404).json({
+            success: false,
+            message: language === "en" ? "Email address is already in use!" : "Adresa de email este folosita!"
+        });
+
+        const inserted = await db.query("UPDATE ?? SET firstname = ?, lastname = ?, phone = ?, email = ? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.assistants`, firstName, lastName, phoneNumber, email, _id]);
+        if (inserted) return res.status(200).json({
+            success: true,
+            message: language === "en" ? "Modifications were made successfully!" : "Modificarile au fost salvate cu succes!"
+        });
+
+        res.status(200).json({ success: false, message: language === "en" ? "An error occured" : "A aparut o eroare!" });
+
+    } catch (e) {
+        logger.debug(e);
+        res.status(404).json({ success: false, message: "An error occured!", error: e });
+    }
+};
+
+exports.removeAssistant = async (req, res, next) => {
+    const { organisationId, _id, language } = req.params;
+
+    try {
+        await db.query("DELETE FROM ?? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.assistants`, _id]);
+        res.status(200).json({
+            success: true,
+            message: language === "en" ? "Assistant removed successfully!" : "Asistentul a fost sters cu succes!"
+        })
+    } catch (e) {
+        logger.debug(e);
+        res.status(404).json({ success: false, message: "An error occured!", error: e });
+    }
+};
+
+exports.assistantInfo = async (req, res, next) => {
+    const { organisationId, _id } = req.body;
+    try {
+        const assistants = await db.query('SELECT * FROM ?? WHERE _id = ?', [`${process.env.DB_PREFIX}org_${organisationId}.assistants`, _id]);
+        if (assistants && assistants?.length === 1) return res.status(200).json({ success: true, assistant: assistants[0] });
+        res.status(200).json({ success: false, message: "Assistant not found!" });
+    } catch (e) {
+        console.log(e);
+        res.status(404).json({ success: false, message: "An error occured!" });
+    }
+};
+
+exports.searchAssistant = async (req, res, next) => {
+    const { organisationId, searchQuery } = req.body;
+    try {
+        let sql = "SELECT * FROM ??";
+        const totalAssistants = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.assistants`]);
+        
+        const searchAssistants = await totalAssistants.filter((patient, idx) => {
+            return  (patient.firstname.toLowerCase().search(searchQuery.toLowerCase()) !== -1 || patient.firstname.toLowerCase().includes(searchQuery.toLowerCase())) ||
+                    (patient.lastname.toLowerCase().search(searchQuery.toLowerCase()) !== -1 || patient.lastname.toLowerCase().includes(searchQuery.toLowerCase())) ||
+                    (patient.phone && (patient.phone.toString().toLowerCase().search(searchQuery.toLowerCase()) !== -1 || patient.phone.toString().toLowerCase().includes(searchQuery.toLowerCase()))) ||
+                    (patient.email && (patient.email.toLowerCase().search(searchQuery.toLowerCase()) !== -1 || patient.email.toLowerCase().includes(searchQuery.toLowerCase()))) ||
+                    (`${patient.firstname.toLowerCase()} ${patient.lastname.toLowerCase()}`.search(searchQuery.toLowerCase()) !== -1 || `${patient.firstname.toLowerCase()} ${patient.lastname.toLowerCase()}`.includes(searchQuery.toLowerCase())) ||
+                    (`${patient.lastname.toLowerCase()} ${patient.firstname.toLowerCase()}`.search(searchQuery.toLowerCase()) !== -1 || `${patient.lastname.toLowerCase()} ${patient.firstname.toLowerCase()}`.includes(searchQuery.toLowerCase()));
+        });
+        
+        if (!searchAssistants || !searchAssistants.length > 0) return res.status(200).json({ success: false, message: { en: "No results", ro: "Niciun rezultat" } });
+        res.status(200).json({ success: true, assistants: searchAssistants });
+    } catch (e) {
+        console.log(e);
+        res.status(404).json({ 
+            success: false,
+            message: "An error occured!",
+            error: e
+         });
+    }
+};
+
+
+exports.createSterilizationInstrument = async (req, res, next) => {
+    const { organisationId, isoCode, name, language } = req.body;
+
+    try {
+
+        const _id = generateId(25);
+        await db.query("INSERT INTO ?? (iso, name, _id) VALUES (?, ?, ?)", [`${process.env.DB_PREFIX}org_${organisationId}.sterilization_instruments`, isoCode, name, _id]);
+        res.status(200).json({ 
+            success: true, 
+            message: language === "en" ? "Sterilization instrument has been added successfully!" : "Instrumentul de sterilizare a fost adaugat cu success!" 
+        });
+    
+    } catch (e) {
+        logger.debug(e);
+        res.status(404).json({ success: false, message: "An error occured!", error: e });
+    }
+};
+
+exports.editSterilizationInstrument = async (req, res, next) => {
+    try {
+        const { organisationId, isoCode, name, language, _id } = req.body;
+        await db.query("UPDATE ?? SET name = ?, iso = ? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.sterilization_instruments`, name, isoCode, _id]);
+        res.status(200).json({
+            success: true,
+            message: language === "en" ? "Modifications were saved successfully!" : "Modificarile au fost salvate cu succes!"
+        });
+    } catch (e) {
+        logger.debug(e);
+        res.status(404).json({ success: false, message: "An error occured!", error: e });
+    }
+};
+
+exports.removeSterilizationInstrument = async (req, res, next) => {
+    const { organisationId, _id, language } = req.params;
+    try {
+        await db.query("DELETE FROM ?? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.sterilization_instruments`, _id]);
+        res.status(200).json({
+            success: true,
+            message: language === "en" ? "Sterilization instrument was removed successfully!" : "Instrumentul de sterilizare a fost sters cu succes!"
+        });
+    } catch (e) {
+        logger.debug(e);
+        res.status(404).json({ success: false, message: "An error occured!", error: e });
+    }
+};
+
+exports.createSterilization = async (req, res, next) => {
+    const { organisationId, language, addDate, expireDate, sarja, assistantId, sterilizationInstruments } = req.body;
+    try {
+        const _id = generateId(25);
+        await db.query("INSERT INTO ?? (_id, add_date, expire_date, sarja, assistant, sterilization_instruments) VALUES (?, ?, ?, ?, ?, ?, ?)", [`${process.env.DB_PREFIX}org_${organisationId}.sterilizations`, _id, new Date(addDate), new Date(expireDate), sarja, assistantId, JSON.stringify(sterilizationInstruments)]);
+        res.status(200).json({
+            success: true,
+            message: language === 'en' ? "Sterilization was created successfully!" : "Sterilizarea a fost creata cu succes!"
+        });
+    } catch (e) {
+        logger.debug(e);
+        res.status(404).json({ error: e, success: false, message: "An error occured!" });
+    }
+};
+
+exports.removeSterilization = async (req, res, next) => {
+    const { organisationId, _id, language } = req.params;
+    try {
+        await db.query("DELETE FROM ?? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.sterilizations`, _id]);
+        res.status(200).json({
+            success: true,
+            message: language === 'en' ? "Sterilization was removed successfully!" : "Sterilizarea a fost stearsa cu succes!"
+        });
+    } catch (e) {
+        logger.debug(e);
+        res.status(404).json({
+            success: false,
+            error: e,
+            message: "An error occured!"
+        });
+    }
+};
+
+exports.editSterilization = async (req, res, next) => {
+    const { organisationId, _id, language, addDate, expireDate, sarja, assistantId, sterilizationInstruments } = req.body;
+    try {
+        await db.query("UPDATE ?? SET add_date = ?, expire_date = ?, sarja = ?, assistant = ?, sterilization_instruments = ? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.sterilizations`, new Date(addDate), new Date(expireDate), sarja, assistantId, JSON.stringify(sterilizationInstruments), _id]);
+        res.status(200).json({
+            success: true,
+            message: language === "en" ? "Modifications were saved successfully!" : "Modificarile au fost salvate cu succes!"
+        });
+    } catch (e) {
+        logger.debug(e);
+        res.status(404).json({
+            success: false,
+            error: e,
+            message: "An error occured!"
+        });
+    }
 };
 
 const sameDate = (date1, date2) => {

@@ -8,6 +8,7 @@ import InputColor from "react-input-color";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleLeft, faCheck } from "@fortawesome/free-solid-svg-icons";
 import tickAnimation from "../imgs/green-tick.mp4";
+import tickAnimationWhite from "../imgs/green-tick-light-theme.mp4";
 
 const CreateDoctor = ({ data }) => {
 
@@ -69,7 +70,7 @@ const CreateDoctor = ({ data }) => {
             const response = await request.json();
             if (response.success) {
                 noVideoContentRef.current.classList.add("invisible");
-                document.body.style.background = "#000";
+                document.body.style.background = cookies?.theme === "white" ? "#fff" : "#000";
                 setTimeout(() => setDoctorAdded(true), 300);
             
              
@@ -93,7 +94,7 @@ const CreateDoctor = ({ data }) => {
                 {doctorAdded ? (
                     <div className="video-content" style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
                         <video
-                            src={tickAnimation}
+                            src={cookies?.theme === "white" ? tickAnimationWhite : tickAnimation}
                             controls={false}
                             autoPlay
                             playsInline

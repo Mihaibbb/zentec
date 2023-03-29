@@ -4,14 +4,23 @@ import Header from "../Components/Header/Header";
 import { useCookies } from "react-cookie";
 import { useState } from "react";
 import { useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faClockRotateLeft, faEllipsis, faFileArrowDown, faFileArrowUp, faMagnifyingGlass, faMinus, faPlus, faSearch, faSortDown, faTimes, faUser } from "@fortawesome/free-solid-svg-icons";
+import greenTick from "../imgs/green-tick.mp4";
+import greenTickWhiteTheme from "../imgs/green-tick-white-theme.mp4";
+import { useRef } from "react";
+import { getBackups } from "../../../controllers/user";
 
 const Profile = ({ data }) => {
 
-    const [cookies, setCookie] = useCookies();
-    const options = cookies.language === "en" ? ["Details", "Services", "Scheduled SMS", "Backups"] : ["Detalii", "Servicii", "SMS-uri Programate", "Backup-uri"];
+    const navigate = useNavigate();
+
+    const [cookies, setCookie, removeCookie] = useCookies();
+    const options = cookies.language === "en" ? ["Details", "Assistants", "Services", "Scheduled SMS", "Backups", "Working Hours"] : ["Detalii", "Personal", "Servicii", "SMS-uri Programate", "Backup-uri", "Ore de lucru"];
     const optionsTitle = cookies.language === "en" ? ["", "", "", ""] : ["", "", ""];
-    const [activeOption, setActiveOption] = useState(0);
-    const [sideMenuOption, setSideMenuOption] = useState(0);
+    const [activeOption, setActiveOption] = useState(window?.history?.state?.activeOption || 0);
+    const [sideMenuOption, setSideMenuOption] = useState(window?.history?.state?.sideMenuOption || 0);
 
     const [currentSMS, setCurrentSMS] = useState(JSON.parse(data.organisation.details[0].sms_message));
 
@@ -29,10 +38,201 @@ const Profile = ({ data }) => {
     const [organisationCity, setOrganisationCity] = useState(data.organisation.details[0]?.city);
     const [organisationCounty, setOrganisationCounty] = useState(data.organisation.details[0]?.county);
     const [organisationCountry, setOrganisationCountry] = useState(data.organisation.details[0]?.city);
+    const users = data.organisation.users;
+
+    const [assistants, setAssistants] = useState(data.organisation?.assistants || []);
+    const [assistantsQuery, setAssistantsQuery] = useState("");
+
+    const [videoStart, setVideoStart] = useState(false);
+
+    const [patients, setPatients] = useState([]);
+
+    const [query, setQuery] = useState("");
+    const [arrowElements, setArrowElements] = useState([]);
+    const [currentPageAssistants, setCurrentPageAssistants] = useState(1);
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+    const [totalAssistants, setTotalAssistants] = useState([]);
+
+    const perPage = 10;
+    const [pages, setPages] = useState();
+    
+    const firstNameArrow = useRef();
+    const lastNameArrow = useRef();
+    const fileNumberArrow = useRef();
+
+    const optionsRef = useRef([]);
+
+    const location = useLocation();
+    const navigation = useNavigate();
+
+
+    const getAssistants = async () => {
+        const options = {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                _id: data.organisation._id
+            })
+        };
+
+        try {
+            const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/get-assistants`, options);
+            const response = await request.json();
+            console.log(await response);
+            if (!await response.success) return;
+            
+            setAssistants(currPatients => {
+                return response.patients.filter((patient, idx) => {
+                    return (idx + 1) > perPage * (currentPageAssistants - 1) && (idx + 1) <= perPage * currentPageAssistants;
+                });
+            });
+            
+            setTotalAssistants(await response.patients);
+
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
+    const getBackups = async () => {
+        const options = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                organisationId: data.organisationId,
+
+            })
+        };
+
+        try {
+
+        } catch (e) {
+
+        }
+    };
+
+    const triggerOptions = (idx) => {
+        optionsRef?.current?.length && optionsRef?.current[idx]?.classList?.toggle("show");
+        optionsRef?.current?.length && optionsRef?.current.forEach((option, currIdx) => currIdx !== idx && option?.classList?.remove("show"));
+    };
 
     useEffect(() => {
-        
+        (async () => {
+            await getAssistants();
+            await getBackups();
+        })();
     }, []);
+
+    
+
+    useEffect(() => {
+        if (assistantsQuery === "") {
+            (async () => {
+                await getAssistants();
+            })();
+            return;
+        }
+        (async () => {
+            const options = {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    organisationId: data.organisation._id,
+                    searchQuery: assistantsQuery
+                })
+            };
+
+            const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/search-assistant`, options);
+            const response = await request.json();
+          
+            if (response.success) {
+                setAssistants(currPatients => {
+                    return response.patients.filter((patient, idx) => {
+                        return (idx + 1) > perPage * (currentPageAssistants - 1) && (idx + 1) <= perPage * currentPageAssistants;
+                    });
+                });
+                setTotalAssistants(response.patients || []);
+            } else {
+                setAssistants([]);
+                setTotalAssistants([]);
+            }
+        })();
+    }, [assistantsQuery]);
+
+
+    useEffect(() => {
+        setPages(Math.floor(totalAssistants.length / perPage) + (totalAssistants.length % perPage !== 0 ? 1 : 0));
+
+    }, [totalAssistants]);
+
+    useEffect(() => {
+      
+        const navigationElement = document.querySelector(".navigation");
+        if (!navigationElement || !navigationElement?.classList?.contains("active")) return;
+        setWindowWidth(window.innerWidth);
+        if (window.innerWidth >= 1200) return;
+        navigationElement.classList.remove("active");
+        document.querySelector(".header").classList.add("no-navigation");
+        document.querySelector(".content").classList.add("no-navigation");
+        
+    }, [location]);
+
+
+    useEffect(() => {
+        const resizeEvent = () => {
+            setWindowWidth(window.innerWidth);
+
+        }
+        window.addEventListener("resize", resizeEvent);
+        return () => window.removeEventListener("resize", resizeEvent);
+    }, [location]);
+
+    useEffect(() => {
+        if (!fileNumberArrow?.current) return;
+        fileNumberArrow.current.classList.add("up");
+    }, [fileNumberArrow?.current]);
+
+    useEffect(() => {
+        if (!lastNameArrow?.current) return;
+        setArrowElements([fileNumberArrow?.current, firstNameArrow?.current, lastNameArrow?.current]);
+    }, [lastNameArrow?.current]);
+
+    useEffect(() => {
+        setAssistants(currAssistants => {
+            return [...totalAssistants].filter((assistant, idx) => {
+                return (idx + 1) > perPage * (currentPageAssistants - 1) && (idx + 1) <= perPage * currentPageAssistants;
+            });
+        });
+    }, [currentPageAssistants]);
+
+    const changeActiveArrowAssistants = (newActiveArrow, type) => {
+        console.log(arrowElements);
+        if (!arrowElements || !arrowElements.length) return;
+        newActiveArrow.classList.toggle("up");
+        
+        setAssistants(currPatients => {
+            if (type === "fileNumber") return [...currPatients].sort((patient1, patient2) => newActiveArrow.classList.contains("up") ? patient1.fileNumber - patient2.fileNumber : patient2.fileNumber - patient1.fileNumber);
+            
+            return [...currPatients].sort((patient1, patient2) => {
+                if (patient1[type] < patient2[type]) return newActiveArrow.classList.contains("up") ? -1 : 1;
+                if (patient1[type] > patient2[type]) return newActiveArrow.classList.contains("up") ? 1 : -1;
+                return 0;
+            });
+
+        });
+
+        arrowElements.forEach(arrowElement => {
+            if (arrowElement !== newActiveArrow) {
+                arrowElement.classList.remove("up");
+            }
+        });
+    };
    
 
     const addSMS = async () => {
@@ -58,7 +258,6 @@ const Profile = ({ data }) => {
                     activeOption: activeOption,
                     sideMenuOption: sideMenuOption,
                     successProfile: true,
-                    message: cookies.language === "en" ? "SMS configured successfully!" : "SMS configurat cu succes!"
                 }, "");
 
                 window.location.reload();
@@ -139,6 +338,7 @@ const Profile = ({ data }) => {
                 window.history.replaceState({
                     activeOption: activeOption,
                     sideMenuOption: sideMenuOption,
+                    
                     successProfile: true,
                     message: cookies.language === "en" ? "SMS edited successfully!" : "SMS-ul a fost modificat cu succes!"
                 }, "");
@@ -157,61 +357,287 @@ const Profile = ({ data }) => {
             window.location.reload();
         }
     };
-
-    const addService = () => {
-
-    };
     
-    const removeService = () => {
+    const removeService = async () => {
+        const options = {
+            method: "DELETE",
+            headers: {
+                'Content-Type': "application/json"
+            }
+        };
 
+        
+        try {
+            const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/remove-service`, options);
+            const response = await request.json();
+            if (response.success) {
+                
+            } else console.log(response);
+        } catch (e) {
+            console.log(e);
+        }
     };
 
-    const editService = () => {
 
+    const loadBackup = async (backupCategory, backupDate) => {
+        const options = {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                organisationId: data.organisation._id,
+                category: backupCategory,
+                date: backupDate
+            })
+        };
+
+        try {
+            const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/restore-backup`, options);
+            const response = await request.json();
+            if (response.success) {
+                 
+            } else console.log(response);
+        } catch (e) {
+            console.log(e);
+
+        }
     };
 
-    const loadBackup = () => {
-
+    const removeAssistant = async (_id) => {
+        const options = {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        };
+        try {
+            const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/remove-assistant/${data.organisation._id}/${_id}/${cookies.language}`, options);
+            const response = await request.json();
+            if (response.success) {
+                document.body.style.background = cookies.theme === "dark" ? "#000" : "#fff";
+                setTimeout(() =>  setVideoStart(cookies.language === "en" ? "Assistant was removed successfully!" : "Personalul a fost sters cu succes!"), 300);
+            } else console.log(response);
+        } catch (e) {
+            console.log(e);
+        }
     };
 
+    const logOut = () => {
+        [...Object.keys(cookies)].forEach(cookie => {
+            removeCookie(cookie);
+        }); 
 
+        window.location.reload();
+    };
+
+    const animationFinished = () => {
+        document.body.style.background = "var(--background)";
+        navigate("/profile", { state: { 
+            activeOption: activeOption, 
+            sideMenuOption: sideMenuOption, 
+            successProfile: true
+        } });
+    };
 
     return (
         <div className="profile-container">
             <Navigation page="" />
             <div className="content">
                 <Header data={data} />
-
-                <h2 className="title">{cookies.language === "en" ? "Profile" : "Profil"}</h2>
-
-                <div className="options-bar">
-                    {options && options.length && options.map((option, idx) => (
-                        <div className={`option ${activeOption === idx ? "active" : ""}`} key={idx} onClick={() => setActiveOption(idx)}>
-                            <h3>{option}</h3>
-                        </div>
-                    ))}
-                </div>
-
-                <div className="line" />
                 
-                <div className="details-container">
-                    {activeOption === 0 ? (
-                        <div className="account-details">
-                            <div className="account-container"></div>
-                            <div className="account-container"></div>
-                            <div className="account-container"></div>
-                            <div className="account-container"></div>
-                            <div className="account-container"></div>
-                        </div>
-                    ) : activeOption === 1 ? (
-                        <div className="services-details">
-                        </div>
-                    ) : (
-                        <div className="sms-details">
+                {!videoStart ? 
+                <>
+                    <h2 className="title" style={{ textAlign: "initial", marginLeft: "50px" }}>{cookies.language === "en" ? "Profile" : "Profil"}</h2>
 
-                        </div>
-                    )}
-                </div>
+                    <div className="options-bar">
+                        {options && options.length && options.map((option, idx) => (
+                            <div className={`option ${activeOption === idx ? "active" : ""}`} key={idx} onClick={() => setActiveOption(idx)}>
+                                <h3>{option}</h3>
+                            </div>
+                        ))}
+                    </div>
+
+                    <div className="line" />
+                    
+                    <div className="details-container">
+                        {activeOption === 0 ? (
+                            <div className="account-details form">
+                                <div className="account-container input">
+                                    <p>{cookies.language === "en" ? "Clinic's name" : "Numele clinicii"}</p>
+                                    <input type="text" value={organisationName} onChange={e => setOrganisationName(e.target.value)} />
+                                </div>
+
+                                <div className="users-list">
+                                    <h3>{cookies.language === "en" ? "Users' list" : "Lista utilizatori"}</h3>
+
+                                </div>
+
+                                <button className="save">
+                                    <p>{cookies.language === "en" ? "Save changes" : "Salveaza modificarile"}</p>
+                                </button>
+                            </div>
+                        ) : activeOption === 1 ? (
+                            <div className="assistants-details">
+                                <h3>{cookies.language === "en" ? "Assistants List" : "Lista Personal"}</h3>
+
+                                {patients && (patients.length > 0 || query.length > 0) && <div className="search-container">
+                                <input type="text" value={query} onChange={e => setQuery(e.target.value)} placeholder={cookies.language === "en" ? "Search patient..." : "Cauta pacient..."} />
+                                <FontAwesomeIcon icon={faSearch} className="search-icon" />
+                            </div>}
+
+                            <div className="patients-container">
+                                {patients.length > 0 && <div className="first-row">
+                                    {windowWidth >= 600 ? <div className="column">
+                                        <p>{cookies.language === "en" ? "File Nr." : "Nr. fisa"}</p>
+                                        <FontAwesomeIcon 
+                                            icon={faSortDown} 
+                                            ref={fileNumberArrow} 
+                                            className="sort-icon"
+                                            onClick={() => changeActiveArrowAssistants(fileNumberArrow?.current, "fileNumber")}
+                                        />
+                                    </div> : null}
+                                    <div className="column">
+                                        <p>{cookies.language === "en" ? "First Name" : "Nume"}</p>
+                                        <FontAwesomeIcon 
+                                            icon={faSortDown} 
+                                            ref={firstNameArrow} 
+                                            className="sort-icon"
+                                            onClick={() => changeActiveArrowAssistants(firstNameArrow?.current, "firstname")}
+                                        />
+                                    </div>
+                                    <div className="column">
+                                        <p>{cookies.language === "en" ? "Last Name" : "Prenume"}</p>
+                                        <FontAwesomeIcon 
+                                            icon={faSortDown} 
+                                            ref={lastNameArrow} 
+                                            className="sort-icon"
+                                            onClick={() => changeActiveArrowAssistants(lastNameArrow?.current, "lastname")}
+                                        />
+                                    </div>
+
+                                    {windowWidth >= 800 ? <div className="column">
+                                        <p>{cookies.language === "en" ? "Phone" : "Telefon"}</p>
+                                        
+                                    </div> : null}
+
+                                    <div className="column">
+                                        <p>{cookies.language === "en" ? "Options" : "Optiuni"}</p>
+                                    </div>
+                                </div>}
+
+                        {assistants.length > 0 ? assistants.map((assistant, idx) => (
+                            <div className="row" key={idx}>
+
+                                {windowWidth >= 600 ? <div clqassName="column">
+                                    <p>{idx + 1}</p>
+                                </div> : null}
+
+                                <div className="column">
+                                    <p>{assistant.firstname}</p>
+                                </div>
+
+                                <div className="column">
+                                    <p>{assistant.lastname}</p>
+                                </div>
+
+                                {windowWidth >= 800 && assistant?.email ? <div className="column">
+                                    <p>{assistant.email}</p>
+                                </div>  : null}
+
+                                {windowWidth >= 800 && assistant?.phone ? <div className="column">
+                                    <p>{assistant.phone}</p>
+                                </div> : null}
+
+                                <div className="column pressable">
+                                    <FontAwesomeIcon className="column-icon" icon={faEllipsis} onClick={() => triggerOptions(idx)}/>
+                                    <div className="options-container" ref={ref => optionsRef.current[idx] = ref}>
+                                        <div className="option" onClick={async () => optionsRef.current[idx].classList.contains("show") ? await removeAssistant(assistant._id) : null}>
+                                            <FontAwesomeIcon icon={faTimes} className="option-icon" /> 
+                                            <p>{cookies.language === "en" ? "Remove" : "Sterge"}</p>
+                                        </div>
+
+                                        <div className="option" onClick={() => navigation(`/assistant/${assistant._id}`, { state: { assistant: assistant } })}>
+                                            <FontAwesomeIcon icon={faUser} className="option-icon" />
+                                            <p>{cookies.language === "en" ? "Edit" : "Editeaza"}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )) : (
+                            <h2 className="center">{cookies.language === "en" ? "No assistant found." : "Niciun personal gasit."}</h2>
+                        )}
+
+                        {pages > 1 ? <div className="pages-container">
+                            <div className="page-container" onClick={() => setCurrentPageAssistants(1)}>
+                                <p>1</p>
+                            </div>
+                            <div className="page-input">
+                                <div 
+                                    className="value-container"
+                                    onClick={() => currentPageAssistants > 1 ? setCurrentPageAssistants(currValue => currValue - 1) : null}
+                                >
+                                    <FontAwesomeIcon icon={faMinus} className="value-icon" />
+                                </div>
+                                
+                                <input 
+                                    type="number" 
+                                    placeholder={cookies.language === "en" ? "Page's number" : "Numarul paginii"}
+                                    value={currentPageAssistants}
+                                    onChange={e => Number(e.target.value) ? setCurrentPageAssistants(Number(e.target.value)) : setCurrentPageAssistants("")}
+                                />
+
+                                <div 
+                                    className="value-container"
+                                    onClick={() => currentPageAssistants < pages ? setCurrentPageAssistants(currValue => currValue + 1) : null}
+                                >
+                                    <FontAwesomeIcon icon={faPlus} className="value-icon" />
+                                </div>
+                            </div>
+                            <div className="page-container" onClick={() => setCurrentPageAssistants(pages)}>
+                                <p>{pages}</p>
+                            </div>
+                    </div> : null}
+                                </div>
+                            </div>
+                        ) : activeOption === 2 ? (
+                            <div className="services-details">
+
+                            </div>
+                        ) : activeOption === 3 ? (
+                            <div className="sms-details">
+
+                            </div>
+                        ) : activeOption === 4 ? (
+                            <div className="backup-details">
+
+                            </div>
+                        ) : activeOption === 5 ? (
+                            <div className="hours-details">
+
+                            </div>
+                        ) : null}
+                    </div>
+                    
+
+                    <button className="logout-button" type="button" onClick={() => logOut()}>
+                        <p>{cookies.language === "en" ? "Log out" : "Delogare"}</p>
+                    </button> 
+                </>
+                : 
+                    <div className="video-content" style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
+                        <video
+                            src={cookies.theme === 'light' ? greenTickWhiteTheme : greenTick}
+                            controls={false}
+                            autoPlay
+                            playsInline
+                            onEnded={animationFinished}
+                            muted
+                            style={{ height: "40vh" }}
+                        />
+                        <h2 className="title title-video-content" style={{ margin: 0 }}>{videoStart}</h2>
+                    </div>
+                }
 
             </div>
         </div>

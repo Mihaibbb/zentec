@@ -22,26 +22,33 @@ const removeOldOrganisationsBackup = async () => {
             return null;
         });
 
-        if (!organisationsUnfiltered || !organisationsUnfiltered.length) return;
+        if (!organisationsUnfiltered || !organisationsUnfiltered?.length) return;
 
         const organisations = organisationsUnfiltered.filter(org => org !== null);
 
         organisations.forEach(async currDb => {
-            const currentTablesUnmapped = await db.query("USE ??; SHOW TABLES", [currDb]);
-            const currentTables = currentTablesUnmapped.map(table => Object.values(table)[0]);
-
-            currentTables.forEach(async table => {
-                let currentIdx = table.length - 1;
-                while (table[currentIdx] !== "_") currentIdx--;
-                const tableDate = new Date( Number( table.slice(currentIdx + 1) ) );
-                if (new Date().getTime() - tableDate.getTime() >= 1000 * 60 * 60 * 24 * 30) {
-                    try {
-                        await db.query("DROP TABLE ??", [`${currDb}.${table}`]);
-                    } catch (e) {
-                        logger.debug("Backup table couldn't be removed", e);
+            try {
+                await db.query("USE ??;", [currDb]);
+                const currentTablesUnmapped = await db.query("SHOW TABLES");
+                const currentTables = currentTablesUnmapped.map(table => Object.values(table)[0]);
+    
+                currentTables.forEach(async table => {
+                    let currentIdx = table.length - 1;
+                    while (table[currentIdx] !== "_") currentIdx--;
+                    logger.debug(currDb, table, currentIdx);
+                    const tableDate = new Date( Number( table.slice(currentIdx) ) );
+                    if (new Date().getTime() - tableDate.getTime() >= 1000 * 60 * 60 * 24 * 30) {
+                        try {
+                            await db.query("DROP TABLE ??", [`${currDb}.${table}`]);
+                        } catch (e) {
+                            logger.debug("Backup table couldn't be removed", e);
+                        }
                     }
-                }
-            });
+                });
+            } catch (e) {
+                logger.debug('Error removing backup data', e);
+            }
+            
         });
         
     
@@ -111,7 +118,6 @@ const backupSchedules = async () => {
 
 const backupData = () => {
     setInterval(async () => {
-        logger.debug("INTERVAL WORKING!");
         await removeOldOrganisationsBackup();
         await backupPatients();
         await backupDoctors();

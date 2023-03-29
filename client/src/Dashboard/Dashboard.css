@@ -176,7 +176,7 @@ body.light .dashboard .left-container .new-appointments .row div p
     margin: calc(10vh + 2rem) auto 2rem auto;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
-    border: 1px solid var(--over-difference-color-2);
+    border: 1px solid var(--over-difference-color);
     background: var(--over-color);
     border-radius: 10px;
 }

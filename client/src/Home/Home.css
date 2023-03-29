@@ -91,7 +91,7 @@ body
     cursor: pointer;
     font-family: "Inter";
     font-weight: 600;
-    font-size:16px;
+    font-size: 16px;
 
     transition: all 350ms ease-in-out;
 }
@@ -144,8 +144,9 @@ body
 .home-container .content .advantages .advantage 
 {
     background: var(--home-background-container);
-    padding: 1rem;
+    padding: 1rem 1rem 5rem 1rem;
     border-radius: 1.5rem;
+
     position:relative;
  
 }
@@ -229,7 +230,8 @@ body
 
 .home-container .content .advantages .advantage p 
 {
-    font-size: 18px;
+    font-size: 20px;
+    font-weight: 600;
 }
 
 .home-container .content .advantages .advantage p.enumerate 
@@ -254,11 +256,18 @@ body
 
 }
 
+.home-container .content .advantages .advantage:first-child .advantage-icon
+{
+    transform: scale(0.9);
+    right: -5px;
+    bottom: -10px;
+}
+
 .home-container .content .advantages .advantage:nth-child(3) .advantage-icon
 {
-    transform: scale(2);
-    bottom: 15px;
-    right: 15px;
+    transform: scale(1.5);
+    bottom: 5px;
+    right: 5px;
  
 }
 

@@ -65,6 +65,20 @@ header .items .item
     margin-right: 16px;
 }
 
+header .items .item a 
+{
+    text-decoration: none;
+    color: inherit;
+}
+
+header .items .item.active a
+{
+    border-bottom: 3px solid var(--home-contrast-color);
+    
+}
+
+
+
 header .right-container,
 header .left-container
 {
@@ -208,6 +222,7 @@ header .right-container .button:hover p
     {
         font-size: 20px;
         text-align: center;
+       
     }
 
     header .right-container, header .left-container

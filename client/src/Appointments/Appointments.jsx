@@ -64,7 +64,6 @@ const Appointments = ({ data }) => {
     const [appointmentIntervalWarning, setAppointmentIntervalWarning] = useState(false);
     const [initialAppointmentValues, setInitialAppointmentValues] = useState({});
     const activePlusButton = true;
-    const [scheduleRefHeights, setScheduleRefHeights] = useState({});
 
     // State for date picker calendars are open
     const [openDatePicker, setOpenDatePicker] = useState(false);
@@ -151,7 +150,8 @@ const Appointments = ({ data }) => {
     const filterRef = useRef();
     const scrollButtonRef = useRef();
     const dayTitleRef = useRef();
-    const scheduleRef = useRef();
+    const scheduleRef = useRef([]);
+    const hoursRef = useRef([]);
     const doctorRef = useRef([]);
     const gapsRef = useRef([]);
     const editAppointmentRef = useRef();
@@ -287,8 +287,33 @@ const Appointments = ({ data }) => {
         leftArrowBtn.current.click();
         rightArrowBtn.current.click();
     }, [doctors]);
+    
 
-    const getSchedule = (dayFormat, doctorColor, doctorObject) => {
+    useEffect(() => {
+        if (!scheduleRef || !scheduleRef.current) return;
+        if (!hoursRef || !hoursRef.current) return;
+        console.log(hoursRef.current, scheduleRef.current);
+        const sleep = setTimeout(() => {
+            hoursRef.current.forEach((doctors, doctorsIdx) => {
+                doctors.forEach((hour, hourIdx) => {
+                    if (hoursRef.current?.[doctorsIdx]?.[hourIdx] && scheduleRef.current?.[doctorsIdx]?.[hourIdx]) {
+                        if (isTouchDevice()) {
+                            hoursRef.current[doctorsIdx][hourIdx].style.minHeight = `${scheduleRef.current[doctorsIdx][hourIdx].offsetHeight}px`;
+                            hoursRef.current[doctorsIdx][hourIdx].style.position = 'relative';
+                        } else {
+                            hoursRef.current[doctorsIdx][hourIdx].style.top = `${window.scrollY + scheduleRef.current[doctorsIdx][hourIdx].getBoundingClientRect().top - 13}px`;
+                            hoursRef.current[doctorsIdx][hourIdx].style.position = 'absolute';
+                        }
+                    } 
+                });
+            });
+        }, 500);
+
+        return () => clearTimeout(sleep);
+        
+    }, [scheduleRef, hoursRef, filterActive, doctors]);
+
+    const getSchedule = (dayFormat, doctorColor, doctorObject, doctorIdx) => {
         const gapsArr = [];
         for (let gap = 0; gap < gaps; gap++)
             gapsArr.push(gap);
@@ -296,7 +321,10 @@ const Appointments = ({ data }) => {
 
         return hours.map((hour, idx) => {
             return (
-                <div className={`schedule-hour ${idx === hours.length - 1 ? "inactive" : ""}`} key={idx} ref={ref => idx === 0 ? scheduleRef.current = ref : null}>
+                <div className={`schedule-hour ${idx === hours.length - 1 ? "inactive" : ""}`} key={idx} ref={ref =>  {
+                    scheduleRef.current[doctorIdx] = scheduleRef?.current?.[doctorIdx] || [];
+                    scheduleRef.current[doctorIdx][idx] = ref;
+                }}>
                     {gapsArr.map((gap, gapIdx) => {
 
                         const startHourGapAttr = idx + startHour < 10 ? `0${idx + startHour}` : (idx + startHour).toString(); 
@@ -1109,9 +1137,7 @@ const Appointments = ({ data }) => {
 
     useEffect(() => {
         if (!scheduleRef?.current) return;
-        console.log(scheduleRef.current.offsetHeight);
-        setHourContainerHeight(scheduleRef.current.offsetHeight / 2);
-        
+        setHourContainerHeight(scheduleRef.current?.[0]?.[0]?.offsetHeight / 2);
     }, [scheduleRef]);
 
 
@@ -1769,6 +1795,7 @@ const Appointments = ({ data }) => {
                                     setYear(currYear => currYear - 1);
                                 }
                             } catch (e) {
+                                console.log(e);
                             }
                             
                             
@@ -1865,7 +1892,10 @@ const Appointments = ({ data }) => {
                     {filterActive !== 3 && filterActive !== 4 && 
                         <div className="hours" filterid={filterActive.toString()}>
                             {hours.map((hour, hourIdx) => (
-                                <div className="hour" key={hourIdx}>
+                                <div className="hour" key={hourIdx} ref={ref => {
+                                    hoursRef.current[0] = hoursRef.current[0] || [];
+                                    hoursRef.current[0][hourIdx] = ref;
+                                }}>
                                     <p>{hour < 10 ? `0${hour}:00` : `${hour}:00`}</p>
                                 </div>
                             ))}
@@ -1886,13 +1916,13 @@ const Appointments = ({ data }) => {
                                     {days && days.length > 0 && days.map((day, dayIdx) => (
                                         filterActive === 0 ? (
                                             <div className={"day-container"} key={dayIdx} style={{ minHeight: `${window.innerHeight * 1.75}px` }}>
-                                                {getSchedule(new Date(day), doctor.color, doctor)}
+                                                {getSchedule(new Date(day), doctor.color, doctor, idx)}
                                             </div>
                                         ) : filterActive === 1 || filterActive === 2 ? (
                                             <div key={dayIdx} className="day-of-week-container" style={{ minHeight: `${window.innerHeight * 1.75}px` }}>
                                                 <h2>{`${daysOfWeek[day.getDay()]} ${day.getDate()}`}</h2>
                                                 <div className="day-container" >
-                                                    {getSchedule(new Date(day), doctor.color, doctor)}
+                                                    {getSchedule(new Date(day), doctor.color, doctor, idx)}
                                                 </div>
                                             </div>
                                         ) : null
@@ -1924,7 +1954,10 @@ const Appointments = ({ data }) => {
                              <div className="schedule-content" key={idx} id={doctor._id} style={{ minHeight: `${window.innerHeight * 1.75}px` }} ref={ref => scheduleContentContainerRef.current[idx] = ref}>
                                  <div className="hours">
                                      {hours.map((hour, hourIdx) => (
-                                         <div className="hour" key={hourIdx}>
+                                         <div className="hour" key={hourIdx} ref={ref => {
+                                            hoursRef.current[idx] = hoursRef.current[idx] || [];
+                                            hoursRef.current[idx][hourIdx] = ref;
+                                         }}>
                                              <p>{hour < 10 ? `0${hour}:00` : `${hour}:00`}</p>
                                          </div>
                                      ))}
@@ -1943,13 +1976,13 @@ const Appointments = ({ data }) => {
                                          {days && days.length > 0 && days.map((day, dayIdx) => (
                                              filterActive === 0 ? (
                                                  <div className="day-container" key={dayIdx} style={{ minHeight: `${window.innerHeight * 1.75}px` }}>
-                                                     {getSchedule(day, doctor.color, doctor)}
+                                                     {getSchedule(day, doctor.color, doctor, idx)}
                                                  </div>
                                              ) : filterActive === 1 || filterActive === 2 ? (
                                                  <div key={dayIdx} className="day-of-week-container" style={{ minHeight: `${window.innerHeight * 1.75}px` }}>
                                                      <h2>{`${daysOfWeek[day.getDay()]} ${day.getDate()}`}</h2>
                                                      <div className="day-container" style={{ minHeight: `${window.innerHeight * 1.75}px` }}>
-                                                         {getSchedule(day, doctor.color, doctor)}
+                                                         {getSchedule(day, doctor.color, doctor, idx)}
                                                      </div>
                                                  </div>
                                              ) : null

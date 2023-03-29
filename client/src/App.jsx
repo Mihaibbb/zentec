@@ -15,7 +15,6 @@ import CreateOrganisation from "./CreateOrganisation/CreateOrganisation";
 import CreateUser from "./CreateUser/CreateUser";
 import CreatePatient from "./CreatePatient/CreatePatient";
 import PatientAccount from "./PatientAccount/PatientAccount";
-import Settings from "./Settings/Settings";
 import CreateDoctor from "./CreateDoctor/CreateDoctor";
 import DoctorAccount from "./DoctorAccount/DoctorAccount";
 import DoctorSchedule from "./DoctorSchedule/DoctorSchedule";
@@ -23,6 +22,8 @@ import EditDoctorSchedule from "./EditDoctorSchedule/EditDoctorSchedule";
 import ImportPatients from "./ImportPatients/ImportPatients";
 import Feedback from "./Feedback/Feedback";
 import Profile from "./Profile/Profile";
+import Contact from "./Contact/Contact";
+import Sterilizations from "./Sterilizations/Sterilizations";
 
 const App = () => {
     const [cookies, setCookie, removeCookie] = useCookies();
@@ -76,7 +77,9 @@ const App = () => {
             if (cookies?.theme === 'light') {
 
                 document.documentElement.style.setProperty("--background", "#f7f7f7");
-                document.documentElement.style.setProperty("--contrast-color", "rgb(46,128,251)");
+                document.documentElement.style.setProperty("--contrast-color", "rgb(46,128,251)");            
+                document.documentElement.style.setProperty("--contrast-color-highlight", "rgb(53 110 196)");
+
                 document.documentElement.style.setProperty("--contrast-color-2", "rgb(12 94 217)");
                 document.documentElement.style.setProperty("--contrast-color-3", "#FF447C");
                 document.documentElement.style.setProperty("--background-color", "#f5f5f5");
@@ -147,10 +150,10 @@ const App = () => {
                                 <Route path="appointments" element={<Appointments data={data} />} />
                                 <Route path="import-patients" element={<ImportPatients data={data} />}/>
                                 <Route path="create-patient" element={<CreatePatient data={data} />} />
-                                <Route path="settings" element={<Settings data={data} />} />
                                 <Route path="create-doctor" element={<CreateDoctor data={data} />} />    
                                 <Route path="feedback" element={<Feedback data={data} />}/>
                                 <Route path="profile" element={<Profile data={data} />} />
+                                <Route path="sterilizations" element={<Sterilizations data={data} />} />
                             </>
                         ) : (
                             <>
@@ -168,6 +171,7 @@ const App = () => {
                 )}
 
                 <Route path="/" element={<Home />} />
+                <Route path="/contact" element={<Contact />} />
 
 
                 {/*

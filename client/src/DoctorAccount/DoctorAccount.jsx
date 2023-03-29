@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleLeft, faCheck } from "@fortawesome/free-solid-svg-icons";
 import "./DoctorAccount.css";
 import tickAnimation from "../imgs/green-tick.mp4";
+import tickAnimationLight from "../imgs/green-tick-light-theme.mp4";
 
 const DoctorAccount = ({ data }) => {
 
@@ -94,7 +95,7 @@ const DoctorAccount = ({ data }) => {
             const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/edit-doctor`, options);
             const response = await request.json();
             if (await response.success) {
-                document.body.style.background = "#000";
+                document.body.style.background = cookies?.theme === "light" ? "#fff" : "#000";
                 noVideoContentRef.current.classList.add("invisible");
                 setTimeout(() => setDoctorAdded(true), 300);
             }
@@ -161,7 +162,7 @@ const DoctorAccount = ({ data }) => {
                 {doctorAdded ? (
                     <div className="video-content" style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
                         <video
-                            src={tickAnimation}
+                            src={cookies?.theme === "light" ? tickAnimationLight : tickAnimation}
                             controls={false}
                             autoPlay
                             playsInline

@@ -1,0 +1,46 @@
+.options-bar 
+{
+    display: flex;
+    margin-left: 2rem;
+}
+
+.options-bar .option 
+{
+    padding-left: 32px;
+    padding-right: 32px;
+    cursor: pointer;
+    transition: all 350ms ease-in-out;
+}
+
+.options-bar .option.active 
+{
+    border-bottom: 3px solid var(--contrast-color);
+}
+
+.logout-button 
+{
+    width: 100%;
+    max-width: 200px;
+    border-radius: 200px;
+    border: none;
+    outline: none;
+    background: var(--error-color);
+    cursor: pointer;
+    position: fixed;
+    bottom: 20px;
+    margin-left: 20px;
+}
+
+.logout-button p 
+{
+    color: #fff;
+    font-weight: 700;
+    font-family: 'SOURCE SANS PRO';
+    font-size: 20px;
+    margin: 15px;
+}
+
+.account-container.input 
+{
+    display: flex;
+}

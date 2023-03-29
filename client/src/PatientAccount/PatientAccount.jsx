@@ -7,6 +7,9 @@ import Header from "../Components/Header/Header";
 import Navigation from "../Components/Navigation/Navigation";
 import "./PatientAccount.css";
 import DateCustomInput from "../Components/DatePicker/DatePicker";
+import tickAnimationWhite from "../imgs/green-tick-light-theme.mp4";
+import tickAnimation from "../imgs/green-tick.mp4";
+
 
 const PatientAccount = ({ data }) => {
 
@@ -16,6 +19,8 @@ const PatientAccount = ({ data }) => {
    
     const [cookies, setCookie] = useCookies();
     const birthRef = useRef();
+    const noVideoContentRef = useRef();
+
 
     console.log(location?.state, data);
     
@@ -57,6 +62,8 @@ const PatientAccount = ({ data }) => {
     const [historic, setHistoric] = useState(JSON.parse(patient.historic));
     const [historicOption, setHistoricOption] = useState(0);
     const [errorMessage, setErrorMessage] = useState();
+    const [patientMessage, setPatientMessage] = useState("");
+    const [patientEdited, setPatientEdited] = useState(false);
 
     const currGenders = cookies.language === "en" ? ['Male', 'Female', 'Not mentioned'] : ['Masculin', 'Feminin', 'Nespecificat'];
 
@@ -122,11 +129,14 @@ const PatientAccount = ({ data }) => {
             const response = await request.json();
             console.log(response.message);
             if (!response.success) setErrorMessage(response.message[cookies.language]);
-            else navigation("/patients", { 
-                state: { 
-                    message: response.message
-                } 
-            });
+            else {
+                noVideoContentRef.current.classList.add("invisible");
+                document.body.style.background = cookies?.theme === "white" ? "#fff" : "#000";
+                setTimeout(() => {
+                    setPatientEdited(true);
+                    setPatientMessage(response.message);
+                }, 300);
+            }
         } catch(e) {
             console.log(e);
         }
@@ -218,6 +228,11 @@ const PatientAccount = ({ data }) => {
     }, [historicOption]);
 
     const handleChangeDate = (newBirthdate) => setBirthDate(new Date(newBirthdate));
+
+    const animationFinished = () => {
+        document.body.style.background = "var(--background)";
+        navigation("/patients", { state: patientMessage });
+    };
     
     return (
         <div className="account-container"> 
@@ -226,7 +241,22 @@ const PatientAccount = ({ data }) => {
             <div className="content">
                 <Header data={data} />
 
-                <div className="patient-account-details">
+                {patientEdited ? 
+                <div className="video-content" style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
+                    <video
+                        src={cookies?.theme === "light" ? tickAnimationWhite : tickAnimation}
+                        controls={false}
+                        autoPlay
+                        playsInline
+                        onEnded={animationFinished}
+
+                        muted
+                        style={{ height: "40vh" }}
+                    
+                    />
+                    <h2 className="title title-video-content" style={{ margin: 0 }}>{cookies.language === "en" ? "Changes have been saved successfully!" : "Modificarile au fost salvate cu succes!"}</h2>
+                </div>  : 
+                <div className="patient-account-details" ref={noVideoContentRef}>
                     {!historicPage ? <h2 className="title">{cookies.language === "en" ? "Patient's account details " : "Detalii cont pacient"}</h2> : null}
 
                     <div className="go-back" onClick={() => navigation(-1)}>
@@ -371,7 +401,7 @@ const PatientAccount = ({ data }) => {
                         {errorMessage && <p className="error-message">{errorMessage}</p>}
                     </div> : null} 
                         
-                </div>
+                </div>}
 
                 {historicPage ? <div className="patient-historic">
                     <h2 className="title">{cookies.language === "en" ? "Patient's historic" : "Istoric Pacient"}</h2>

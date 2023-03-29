@@ -217,10 +217,9 @@ body.light .appointments .filter div.active p
     flex-direction: column;
     justify-content: center;
     min-height: 100%;
-    
+    margin-top: -40px;
     margin-left: 15px;
 }
-
 
 
 .appointments .scheduler .hours .hour p 
@@ -235,7 +234,6 @@ body.light .appointments .filter div.active p
     align-items: center;
     display: flex;
     justify-content: center;
-    flex: 1;
 }
 
 .appointments .scheduler.flex-column .hours .hour:last-child 
@@ -269,6 +267,15 @@ body.light .appointments .filter div.active p
     margin-bottom: 100px;
     transition: all 350ms ease-in-out;
 }
+
+.appointments .scheduler:not(.flex-column) .schedule-parent-container .doctors-title-container 
+{
+    top: 175px;
+    backdrop-filter: blur(6px);
+    background: var(--over-difference-color);
+    width: 100.5%;
+}
+
 
 
 
@@ -377,6 +384,11 @@ body.light .appointments .filter div.active p
     background: var(--over-difference-color);
     backdrop-filter: blur(10px);
     transition: all 350ms ease-in-out;
+}
+
+.appointments .scheduler:not(.flex-column) .schedule-container .day-of-week-container h2
+{
+    top: calc(10vh + 160px);
 }
 
 .appointments .schedule-container .day-of-week-container h2.active-sticky 
@@ -564,7 +576,7 @@ body.light .appointments .filter div.active p
     font-family: "Inter";
     font-weight: 500;
     position: absolute;
-    top: calc(-100% + 6px);
+    top: calc(-100% + 25px);
     left: 5px;
     user-select: none;
     text-overflow: ellipsis;

@@ -217,7 +217,7 @@ body.light .patients .content .patients-container .row
 {
     display: flex;
     gap: .5rem;
-    background: var(--dark-color);
+    background: var(--over-color);
     border-radius: 30px;
     border: 2px solid var(--over-difference-color);
     padding: 0.35rem;
@@ -246,7 +246,7 @@ body.light .patients .content .patients-container .row
 
 .patients .pages-container .page-input .value-container:hover .value-icon 
 {
-    color: var(--text-color);
+    color: rgba(255, 255, 255, .85);
 }
 
 .patients .pages-container .page-input input 
@@ -286,6 +286,11 @@ body.light .patients .content .patients-container .row
 {
     background: var(--contrast-color);
 
+}
+
+.patients .pages-container .page-container:hover p 
+{
+    color: rgba(255, 255, 255, .85);
 }
 
 .patients .content .patients-container .row div .column-icon 

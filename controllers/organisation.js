@@ -112,6 +112,32 @@ exports.createOrganisation = async (req, res, next) => {
 
         await db.query(createTableSql, ['doctors']);
 
+        createTableSql = 'CREATE TABLE ?? ( ';
+        createTableSql += '_id varchar(25) unique not null, ';
+        createTableSql += 'firstname varchar(50) not null, ';
+        createTableSql += 'lastname varchar(50) not null, ';
+        createTableSql += 'email varchar(128), ';
+        createTableSql += 'phone varchar(16) )';
+        
+        await db.query(createTableSql, ['assistants']);
+
+        createTableSql = 'CREATE TABLE ?? ( ';
+        createTableSql += 'iso int(11) not null, ';
+        createTableSql += 'name varchar(64) not null, ';
+        createTableSql += '_id varchar(25) unique not null)';
+
+        await db.query(createTableSql, ['sterilization_instruments']);
+
+        createTableSql = 'CREATE TABLE ?? ( ';
+        createTableSql += 'id int(14) auto_increment primary key not null, ';
+        createTableSql += '_id varchar(25) unique not null, ';
+        createTableSql += 'add_date date not null, ';
+        createTableSql += 'expire_date not null, ';
+        createTableSql += 'sarja int(10) not null, ';
+        createTableSql += 'assistant varchar(25) not null, ';
+        createTableSql += 'sterilization_instruments json not null)';
+
+        await db.query(createTableSql, ['sterilizations']);
         // Insert into details a row of organisation's details
 
         let sql = 'INSERT INTO ?? (name, date, sms_limit, sms_message, sms_modem_id, inbox, _id) VALUES (?, ?, ?, ?, ?, ?, ?)';

@@ -8,6 +8,7 @@ import Navigation from "../Components/Navigation/Navigation";
 import "./CreatePatient.css";
 import DateCustomInput from "../Components/DatePicker/DatePicker";
 import tickAnimation from "../imgs/green-tick.mp4";
+import tickAnimationWhite from "../imgs/green-tick-light-theme.mp4";
 
 const CreatePatient = ({ data, fromAppointments, patientSaved }) => {
 
@@ -144,7 +145,7 @@ const CreatePatient = ({ data, fromAppointments, patientSaved }) => {
 
             if (!fromAppointments) {
                 noVideoContentRef.current.classList.add("invisible");
-                document.body.style.background = "#000";
+                document.body.style.background = cookies?.theme === "white" ? "#fff" : "#000";
                 setTimeout(() => setPatientAdded(true), 300);
             }
             else patientSaved();
@@ -239,7 +240,7 @@ const CreatePatient = ({ data, fromAppointments, patientSaved }) => {
                 {patientAdded ? (
                     <div className="video-content" style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
                         <video
-                            src={tickAnimation}
+                            src={cookies?.theme === "light" ? tickAnimationWhite : tickAnimation}
                             controls={false}
                             autoPlay
                             playsInline

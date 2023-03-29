@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { useRef } from "react";
 
-const HeaderHome = ({ data }) => {
+const HeaderHome = ({ data, activePage }) => {
 
     const [cookies, setCookie] = useCookies();
     const [foundUser, setFoundUser] = useState(false);
@@ -52,10 +52,15 @@ const HeaderHome = ({ data }) => {
                 <div className="left-container">
                 
                     <div className="items">
-                        <p className="item">{cookies?.language === "en" ? "Home" : "Acasa" }</p>
-                        <p className="item">{cookies?.language === "en" ? "About us" : "Despre noi"}</p>
-                        <p className="item">Contact</p>
-                        <p className="item">{cookies?.language === "en" ? "Support" : "Suport"}</p>
+                        <p className={`item ${activePage === "home" ? "active" : ""}`}>
+                            <a href="/">{cookies?.language === "en" ? "Home" : "Acasa" }</a>
+                        </p>
+                        <p className={`item ${activePage === "about-us" ? "active" : ""}`}>
+                            <a href="/about-us">{cookies?.language === "en" ? "About us" : "Despre noi"}</a>
+                        </p>
+                        <p className={`item ${activePage === "contact" ? "active" : ""}`}>
+                            <a href="/contact">Contact</a>
+                        </p>
                     </div>
                 </div>
 

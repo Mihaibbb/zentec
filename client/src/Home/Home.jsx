@@ -24,6 +24,7 @@ import patientVideo from "../imgs/videos/pacient.mp4";
 import doctorScheduleVideo from "../imgs/videos/program_doctori.mp4";
 import appointmentVideo from "../imgs/videos/programare.mp4";
 import { useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Home = ({ data }) => {
 
@@ -32,21 +33,25 @@ const Home = ({ data }) => {
     const currentVideoSource = window.innerWidth / window.innerHeight >= 1.3 * (9 / 16) ? zenAnimation : zenAnimationMobile;
     const videoRef = useRef();
     const tutorialVideosRef = useRef([]);
+    const [foundUser, setFoundUser] = useState(false);
 
     const [videosStatus, setVideosStatus] = useState([]);
 
+    const navigate = useNavigate();
+
 
     useEffect(() => {
+        if (!videoEnded) return;
         if (!tutorialVideosRef || !tutorialVideosRef?.current) return;
-        setVideosStatus(tutorialVideosRef.current.map(video => "playing"));
+        console.log("effect");
+        setVideosStatus(currVideos => tutorialVideosRef.current.map(video => "playing"));
         tutorialVideosRef.current.forEach(video => {
             video.playbackRate = 1.2;
         });
-    }, [tutorialVideosRef]);
+    }, [videoEnded, tutorialVideosRef]);
    
 
     const handleVideoEnded = () => {
-        console.log("ENDED!");
     
         document.body.style.opacity = 0;
         setTimeout(() => {
@@ -69,7 +74,40 @@ const Home = ({ data }) => {
 
         videoRef.current.playbackRate = 1.5;
         document.body.style.background = '#D9D8D9';
-    }
+    };
+
+    useEffect(() => {
+        document.body.style.overflowX = 'hidden';
+    }, []);
+
+    const userConnected = async () => {
+        if (!cookies["user-id"] || !cookies["pwd"]) return;
+        const options = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                hashedPassword: cookies["pwd"],
+                userId: cookies["user-id"]
+            })
+        };
+
+        try {
+            const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/auth/login-remember`, options);
+            const response = await request.json();
+            if (!response.success) return;
+            setFoundUser(response.admin ? "admin" : "user");
+        } catch(e) {
+            console.log(e);
+        }
+    };
+
+    useEffect(() => {
+        (async () => {
+            await userConnected();
+        })();
+    }, []);
 
 
     
@@ -92,7 +130,7 @@ const Home = ({ data }) => {
         
     ) : (
         <div className="home-container">
-            <HeaderHome data={data}/>
+            <HeaderHome data={data} activePage="home"/>
             
             <div className="content">
                 
@@ -104,8 +142,8 @@ const Home = ({ data }) => {
 
                     <p className="description">{cookies.language === "en" ? "ZenTec is a software designed for medical cabients, easy to use, which simplifies handling with appointments." : "ZenTec este o platformă destinată cabinetelor medicale, ce este intuitivă și ușor de folosit, simplificând gestionarea pacienților, cât și a programarilor."}</p>
 
-                    <button type="button">
-                        <p>{cookies?.language === "en" ? "Contact us" : "Contactează-ne"}</p>
+                    <button type="button" onClick={() => foundUser ? navigate("/dashboard") : navigate("/contact")}>
+                        {foundUser ? <p>{cookies?.language === "en" ? "Towards app" : "Spre aplicație"}</p> : <p>{cookies?.language === "en" ? "Contact us" : "Contactează-ne"}</p>}
                     </button>
 
                     {/* <p className="sm-text">{cookies?.language === "en" ? "No credit card required" : "Fără card de credit"}</p> */}
@@ -131,7 +169,7 @@ const Home = ({ data }) => {
                     </h2>
                         <p>Am conceput ZenTec special pentru a veni în ajutorul medicilor si asistentelor care
                         au nevoie de cel mai simplu soft pentru automatizarea programarilor, gestionarea
-                        Fcabinetului si personalului intr-un singur loc. So <span>ZEN!</span></p>
+                        cabinetului si personalului intr-un singur loc. So <span>ZEN!</span></p>
                     </div>
          
                     
@@ -152,22 +190,20 @@ const Home = ({ data }) => {
 
                         <div className="advantage">
                             <img src={bell3d} className="advantage-icon" />
-                            <h2>{cookies.language === "en" ? "Automation and Personalization" : "Automatizat si personalizat"}</h2>
+                            <h2>{cookies.language === "en" ? "Notifications and Reminders" : "Notificări și Remindere nelimitate"}</h2>
                             <p>
                                 {cookies.language === "en" ?
-                                "Because we know how important it is for you to keep in touch with your patients, we offer you the possibility of sending personalized messages to them. from now on your patients don't forget their appointments." : 
-                                "Pentru că știm cât este de important pentru tine să păstrezi legătura cu pacienții, îți oferim posibilitatea transmiterii de mesaje personalizate către aceștia.  De acum pacientii tai nu mai uita de programari."
+                                "Both you and your clients receive automatic notifications and reminders, so no one misses appointments again" :
+                                "Atât tu, cât și clienții tăi, primiți notificări și remindere automate, deci nimeni nu mai uită de programări. De asemenea, confirmarile programarilor sunt realizate automat de soft-ul nostru."
                                 }
                             </p>
                         </div>
 
                         <div className="advantage">
                             <img src={calendar3d} className="advantage-icon" />
-                            <h2>{cookies.language === "en" ? "Easy to use" : "Simplu de utilizat"}</h2>
-                            <p className="enumerate">{cookies.language === "en" ? "" : "Poti crea rapid programari simple sau recurente si poti reprograma la fel de usor din cateva clickuri"}</p>
-                            <p className="enumerate">{cookies.langauge === "en" ? "" : "Ai vizibilitate a calendarului pe zile, saptamani si luni"}</p>
-                            <p className="enumerate">{cookies.langauge === "en" ? "" : "Poti defini programul de lucru al doctorului si poti bloca perioade de timp din timpul zilei in care doctorul nu este disponibil"}</p>
-                            <p className="enumerate">{cookies.language === "en" ? "" : "Poti asocia un pret fiecarei programari sau il poti lasa nedefinit"}</p>
+                            <h2>{cookies.language === "en" ? "Reports and analysis" : "Rapoarte și analize"}</h2>
+                            <p>{cookies.language === "en" ? "You have accurate data on the evolution of sales and profitability of the company in general or for each individual employee" : "Ai date exacte despre evoluția vânzărilor, a pacientilor și a programilor pe un interval de timp ales de catre tine (zi, saptamana, luna, an)."}</p>
+                        
                         </div>
 
                         <div className="advantage">
@@ -233,27 +269,28 @@ const Home = ({ data }) => {
 
                     <div className="advantages videos-container">
 
-                        <div className="advantage">
-                            {/* <img src={bell3d} className="advantage-icon" /> */}
-                            <h2>{cookies.language === "en" ? "Add appointment" : "Adaugare programare"}</h2>
+                    <div className="advantage">
+                            {/* <img src={backup3d} className="advantage-icon" /> */}
+                            <h2>{cookies.language === "en" ? "Add doctor's schedule" : "Adaugare program doctor"}</h2>
                             <div className="video-container">
                                 <video 
-                                    src={appointmentVideo} 
-                                    
-                                    controls={false}
-                                    muted
-                                    style={{ width: "100%", height: "100%", borderRadius: '20px' }}
-                                    ref={ref => tutorialVideosRef.current[0] = ref}
+                                    src={doctorScheduleVideo} 
+                                     
                                     onEnded={() => setVideosStatus(currStatuses => {
                                         return currStatuses.map((currStatus, idx) => {
-                                            if (idx === 0) return "ended";
+                                            if (idx === 3) return "ended";
                                             return currStatus;
                                         });
                                     })}
+                                    playsInline 
+                                    controls={false}
+                                    muted
+                                    style={{ width: "100%", height: "100%", borderRadius: '20px' }}
+                                    ref={ref => tutorialVideosRef.current[3] = ref}
                                     onClick={() => {
                                         setVideosStatus(currStatuses => {
                                             return currStatuses.map((currStatus, idx) => {
-                                                if (idx === 0) {
+                                                if (idx === 3) {
                                                     if (currStatus === "playing") return "paused";
                                                     else return "playing";
                                                 }
@@ -261,18 +298,20 @@ const Home = ({ data }) => {
                                             });
                                         });
                                     }}
+
+                                    
                                 />
 
                                 {<div className="play-button" onClick={(e) => {
-                                    if (videosStatus[0] === "paused") tutorialVideosRef.current[0].pause(); 
-                                    else if(videosStatus[0] === "playing") tutorialVideosRef.current[0].play();
+                                    if (videosStatus[3] === "paused") tutorialVideosRef.current[3].pause(); 
+                                    else if(videosStatus[3] === "playing") tutorialVideosRef.current[3].play();
                                     else {
-                                        tutorialVideosRef.current[0].pause();
-                                        tutorialVideosRef.current[0].currentTime = 0;
-                                        tutorialVideosRef.current[0].play();
+                                        tutorialVideosRef.current[3].pause();
+                                        tutorialVideosRef.current[3].currentTime = 0;
+                                        tutorialVideosRef.current[3].play();
                                         setVideosStatus(currStatuses => {
                                             return currStatuses.map((currStatus, idx) => {
-                                                if (idx === 0) return "playing";
+                                                if (idx === 3) return "playing";
                                                 return currStatus;
                                             });
                                         });
@@ -280,7 +319,7 @@ const Home = ({ data }) => {
                                 
                                     setVideosStatus(currStatuses => {
                                         return currStatuses.map((currStatus, idx) => {
-                                            if (idx === 0) {
+                                            if (idx === 3) {
                                                 if (currStatus === "playing") return "paused";
                                                 else return "playing";
                                             }
@@ -288,16 +327,16 @@ const Home = ({ data }) => {
                                         });
                                     });
                                 }}>
-                                    <FontAwesomeIcon icon={videosStatus?.[0] === "paused" ? faPause : videosStatus?.[0] === "playing" ? faPlay : faUndo} className="play-icon" />
+                                    <FontAwesomeIcon icon={videosStatus?.[3] === "paused" ? faPause : videosStatus?.[3] === "playing" ? faPlay : faUndo} className="play-icon" />
                                 </div>}
 
                                 <div className="fullscreen-button" onClick={() => {
-                                    if (tutorialVideosRef.current[0].requestFullscreen) {
-                                        tutorialVideosRef.current[0].requestFullscreen();
-                                      } else if (tutorialVideosRef.current[0].webkitRequestFullscreen) { /* Safari */
-                                        tutorialVideosRef.current[0].webkitRequestFullscreen();
-                                      } else if (tutorialVideosRef.current[0].msRequestFullscreen) { /* IE11 */
-                                        tutorialVideosRef.current[0].msRequestFullscreen();
+                                    if (tutorialVideosRef.current[3].requestFullscreen) {
+                                        tutorialVideosRef.current[3].requestFullscreen();
+                                      } else if (tutorialVideosRef.current[3].webkitRequestFullscreen) { /* Safari */
+                                        tutorialVideosRef.current[3].webkitRequestFullscreen();
+                                      } else if (tutorialVideosRef.current[3].msRequestFullscreen) { /* IE11 */
+                                        tutorialVideosRef.current[3].msRequestFullscreen();
                                       }
 
                                 }}>
@@ -306,12 +345,13 @@ const Home = ({ data }) => {
                             </div>
                         </div>
 
+
                         <div className="advantage">
                             {/* <img src={calendar3d} className="advantage-icon" /> */}
                             <h2>{cookies.language === "en" ? "Add patient" : "Adaugare pacient"}</h2>
                             <div className="video-container">
                                 <video 
-                                    src={appointmentVideo} 
+                                    src={patientVideo} 
                                     onEnded={() => setVideosStatus(currStatuses => {
                                         return currStatuses.map((currStatus, idx) => {
                                             if (idx === 1) return "ended";
@@ -334,6 +374,7 @@ const Home = ({ data }) => {
                                             });
                                         });
                                     }}
+                                   
                                 />
 
                                 {<div className="play-button" onClick={(e) => {
@@ -380,11 +421,86 @@ const Home = ({ data }) => {
                         </div>
 
                         <div className="advantage">
+                            {/* <img src={bell3d} className="advantage-icon" /> */}
+                            <h2>{cookies.language === "en" ? "Add appointment" : "Adaugare programare"}</h2>
+                            <div className="video-container">
+                                <video 
+                                    src={appointmentVideo} 
+                                    
+                                    controls={false}
+                                    muted
+                                    style={{ width: "100%", height: "100%", borderRadius: '20px' }}
+                                    ref={ref => tutorialVideosRef.current[0] = ref}
+                                    onEnded={() => setVideosStatus(currStatuses => {
+                                        return currStatuses.map((currStatus, idx) => {
+                                            if (idx === 0) return "ended";
+                                            return currStatus;
+                                        });
+                                    })}
+                                    onClick={() => {
+                                        setVideosStatus(currStatuses => {
+                                            return currStatuses.map((currStatus, idx) => {
+                                                if (idx === 0) {
+                                                    if (currStatus === "playing") return "paused";
+                                                    else return "playing";
+                                                }
+                                                return currStatus;
+                                            });
+                                        });
+                                    }}
+
+                                    
+                                />
+
+                                {<div className="play-button" onClick={(e) => {
+                                    if (videosStatus[0] === "paused") tutorialVideosRef.current[0].pause(); 
+                                    else if(videosStatus[0] === "playing") tutorialVideosRef.current[0].play();
+                                    else {
+                                        tutorialVideosRef.current[0].pause();
+                                        tutorialVideosRef.current[0].currentTime = 0;
+                                        tutorialVideosRef.current[0].play();
+                                        setVideosStatus(currStatuses => {
+                                            return currStatuses.map((currStatus, idx) => {
+                                                if (idx === 0) return "playing";
+                                                return currStatus;
+                                            });
+                                        });
+                                    }
+                                
+                                    setVideosStatus(currStatuses => {
+                                        return currStatuses.map((currStatus, idx) => {
+                                            if (idx === 0) {
+                                                if (currStatus === "playing") return "paused";
+                                                else return "playing";
+                                            }
+                                            return currStatus;
+                                        });
+                                    });
+                                }}>
+                                    <FontAwesomeIcon icon={videosStatus?.[0] === "paused" ? faPause : videosStatus?.[0] === "playing" ? faPlay : faUndo} className="play-icon" />
+                                </div>}
+
+                                <div className="fullscreen-button" onClick={() => {
+                                    if (tutorialVideosRef.current[0].requestFullscreen) {
+                                        tutorialVideosRef.current[0].requestFullscreen();
+                                      } else if (tutorialVideosRef.current[0].webkitRequestFullscreen) { /* Safari */
+                                        tutorialVideosRef.current[0].webkitRequestFullscreen();
+                                      } else if (tutorialVideosRef.current[0].msRequestFullscreen) { /* IE11 */
+                                        tutorialVideosRef.current[0].msRequestFullscreen();
+                                      }
+
+                                }}>
+                                    <FontAwesomeIcon icon={faExpand} className="fullscreen-icon" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="advantage">
                             {/* <img src={support3d} className="advantage-icon"/> */}
                             <h2>{cookies.language === "en" ? "Add doctor" : "Adaugare doctor"}</h2>
                             <div className="video-container">
                                 <video 
-                                    src={appointmentVideo} 
+                                    src={doctorVideo} 
                                      
                                     onEnded={() => setVideosStatus(currStatuses => {
                                         return currStatuses.map((currStatus, idx) => {
@@ -408,6 +524,7 @@ const Home = ({ data }) => {
                                             });
                                         });
                                     }}
+                                  
                                 />
 
                                 {<div className="play-button" onClick={(e) => {
@@ -453,80 +570,7 @@ const Home = ({ data }) => {
                             </div>
                         </div>
 
-                        <div className="advantage">
-                            {/* <img src={backup3d} className="advantage-icon" /> */}
-                            <h2>{cookies.language === "en" ? "Add doctor's schedule" : "Adaugare program doctor"}</h2>
-                            <div className="video-container">
-                                <video 
-                                    src={appointmentVideo} 
-                                     
-                                    onEnded={() => setVideosStatus(currStatuses => {
-                                        return currStatuses.map((currStatus, idx) => {
-                                            if (idx === 3) return "ended";
-                                            return currStatus;
-                                        });
-                                    })}
-                                    playsInline 
-                                    controls={false}
-                                    muted
-                                    style={{ width: "100%", height: "100%", borderRadius: '20px' }}
-                                    ref={ref => tutorialVideosRef.current[3] = ref}
-                                    onClick={() => {
-                                        setVideosStatus(currStatuses => {
-                                            return currStatuses.map((currStatus, idx) => {
-                                                if (idx === 3) {
-                                                    if (currStatus === "playing") return "paused";
-                                                    else return "playing";
-                                                }
-                                                return currStatus;
-                                            });
-                                        });
-                                    }}
-                                />
-
-                                {<div className="play-button" onClick={(e) => {
-                                    if (videosStatus[3] === "paused") tutorialVideosRef.current[3].pause(); 
-                                    else if(videosStatus[3] === "playing") tutorialVideosRef.current[3].play();
-                                    else {
-                                        tutorialVideosRef.current[3].pause();
-                                        tutorialVideosRef.current[3].currentTime = 0;
-                                        tutorialVideosRef.current[3].play();
-                                        setVideosStatus(currStatuses => {
-                                            return currStatuses.map((currStatus, idx) => {
-                                                if (idx === 3) return "playing";
-                                                return currStatus;
-                                            });
-                                        });
-                                    }
-                                
-                                    setVideosStatus(currStatuses => {
-                                        return currStatuses.map((currStatus, idx) => {
-                                            if (idx === 3) {
-                                                if (currStatus === "playing") return "paused";
-                                                else return "playing";
-                                            }
-                                            return currStatus;
-                                        });
-                                    });
-                                }}>
-                                    <FontAwesomeIcon icon={videosStatus?.[3] === "paused" ? faPause : videosStatus?.[3] === "playing" ? faPlay : faUndo} className="play-icon" />
-                                </div>}
-
-                                <div className="fullscreen-button" onClick={() => {
-                                    if (tutorialVideosRef.current[3].requestFullscreen) {
-                                        tutorialVideosRef.current[3].requestFullscreen();
-                                      } else if (tutorialVideosRef.current[3].webkitRequestFullscreen) { /* Safari */
-                                        tutorialVideosRef.current[3].webkitRequestFullscreen();
-                                      } else if (tutorialVideosRef.current[3].msRequestFullscreen) { /* IE11 */
-                                        tutorialVideosRef.current[3].msRequestFullscreen();
-                                      }
-
-                                }}>
-                                    <FontAwesomeIcon icon={faExpand} className="fullscreen-icon" />
-                                </div>
-                            </div>
-                        </div>
-
+                        
 
                     </div>
 

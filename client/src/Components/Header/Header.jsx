@@ -4,7 +4,7 @@ import { faMoon, faSun } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import './Header.css';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useRef } from 'react';
 import { useCookies } from 'react-cookie';
 
@@ -18,6 +18,8 @@ const Header = ({ data }) => {
     const [theme, setTheme] = useState(cookies?.theme);
     const [fullScreen, setFullScreen] = useState(cookies?.fullScreen || false);
 
+    const [fullScreenAccess, setFullScreenAccess] = useState(false);
+
     useEffect(() => {
         console.log(theme);
         setCookie('theme', theme, "/");
@@ -27,7 +29,8 @@ const Header = ({ data }) => {
         if (cookies?.theme === 'light') {
 
             document.documentElement.style.setProperty("--background", "#f7f7f7");
-            document.documentElement.style.setProperty("--contrast-color", "rgb(46,128,251)");
+            document.documentElement.style.setProperty("--contrast-color", "rgb(46,128,251)");            
+            document.documentElement.style.setProperty("--contrast-color-highlight", "rgb(53 110 196)");
             document.documentElement.style.setProperty("--contrast-color-2", "rgb(12 94 217)");
             document.documentElement.style.setProperty("--contrast-color-3", "#FF447C");
             document.documentElement.style.setProperty("--background-color", "#f5f5f5");
@@ -87,6 +90,27 @@ const Header = ({ data }) => {
         });
     }, [headerRef?.current, location]);
 
+    useEffect(() => {
+        var el = document.documentElement, rfs = el.requestFullscreen || el.webkitRequestFullScreen || el.mozRequestFullScreen || el.msRequestFullscreen;
+        
+        if (typeof rfs != "undefined" && rfs) setFullScreenAccess(true);
+        else setFullScreenAccess(false);
+    }, []);
+
+    const requestFullScreen = () => {
+        var el = document.documentElement, rfs = el.requestFullscreen || el.webkitRequestFullScreen || el.mozRequestFullScreen || el.msRequestFullscreen;
+        
+        if (typeof rfs != "undefined" && rfs) rfs.call(el);
+        // else if (typeof window?.ActiveXObject != "undefined" && typeof window?.ActiveXObject != "null") {
+        //     // for Internet Explorer
+        //     var wscript = new ActiveXObject("WScript.Shell");
+        //     if (wscript!=null) wscript.SendKeys("{F11}");
+        // }
+
+        return false;
+    }
+
+
 
 
     // Fullscreen functions 
@@ -105,19 +129,7 @@ const Header = ({ data }) => {
         // }
     }
 
-    const requestFullScreen = () => {
-        var el = document.documentElement, rfs = el.requestFullscreen || el.webkitRequestFullScreen || el.mozRequestFullScreen || el.msRequestFullscreen;
-        
-        if (typeof rfs != "undefined" && rfs) rfs.call(el);
-        // else if (typeof window?.ActiveXObject != "undefined" && typeof window?.ActiveXObject != "null") {
-        //     // for Internet Explorer
-        //     var wscript = new ActiveXObject("WScript.Shell");
-        //     if (wscript!=null) wscript.SendKeys("{F11}");
-        // }
-
-        return false;
-    }
-
+ 
     const toggleFullScreen = () => {
         
         const isInFullScreen = (document.fullScreenElement && document.fullScreenElement !== null) ||  (document.mozFullScreen || document.webkitIsFullScreen);
@@ -148,9 +160,9 @@ const Header = ({ data }) => {
                     document.querySelector(".content").classList.remove("no-navigation");
                 }} />
 
-                <div className="theme" onClick={() => toggleFullScreen()}>
+                {fullScreenAccess ? <div className="theme" onClick={() => toggleFullScreen()}>
                     <FontAwesomeIcon icon={fullScreen ? faCompress : faExpand} style={ theme === 'light' ? { color: 'rgb(102,102,102)' } : {}} className="theme-icon" />
-                </div>
+                </div> : null}
 
                 <div className="theme" onClick={() => setTheme(currTheme => currTheme === 'dark' ? 'light' : 'dark')}>
                     <FontAwesomeIcon icon={theme === 'dark' ? faMoon : faSun} style={ theme === 'light' ? { color: '#e0844f' } : {}} className="theme-icon" />

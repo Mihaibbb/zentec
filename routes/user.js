@@ -36,7 +36,18 @@ const {
     getBackups,
     restoreBackup,
     responseSMSDecline,
-    cancelAppointment
+    cancelAppointment,
+    contactForm,
+    createAssistant,
+    editAssistant,
+    removeAssistant,
+    createSterilization,
+    editSterilization,
+    removeSterilization,
+    createSterilizationInstrument,
+    editSterilizationInstrument,
+    removeSterilizationInstrument,
+    assistantInfo
 } = require("../controllers/user");
 
 router.post("/create-appointment", createAppointment);
@@ -72,9 +83,20 @@ router.post("/add-service", addService);
 router.delete("/remove-service", removeService);
 router.put("/edit-service", editService);
 router.post("/push-message-inbox", pushMessageInbox);
-router.delete("/remove-message-inbox", removeMessageInbox);
-router.delete("/clear-inbox", clearInbox);
+router.delete("/remove-message-inbox/:inboxMessageId/:organisationId", removeMessageInbox);
+router.delete("/clear-inbox/:organisationId", clearInbox);
 router.get("/get-backups", getBackups);
 router.put("/restore-backup", restoreBackup);
-
+router.post("/contact-form", contactForm);
+router.post("/create-assistant", createAssistant);
+router.put("/edit-assistant", editAssistant);
+router.delete("/remove-assistant/:organisationId/:_id/:language", removeAssistant);
+router.post("/assistant-info", assistantInfo);
+router.post("/search-assistant", searchAssistant);
+router.post("/create-sterilization", createSterilization);
+router.put("/edit-sterilization", editSterilization);
+router.delete("/remove-sterilization/:organisationId/:_id/:language", removeSterilization);
+router.post("/create-sterilization-instrument", createSterilizationInstrument);
+router.put("/edit-sterilization-instrument", editSterilizationInstrument);
+router.delete("/remove-sterilization-instrument/:organisationId/:_id/:language", removeSterilizationInstrument);
 module.exports = router;
