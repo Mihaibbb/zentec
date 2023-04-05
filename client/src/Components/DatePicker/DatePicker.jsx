@@ -4,18 +4,61 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import dayjs from "dayjs";
+import { useCookies } from 'react-cookie';
+import de from 'date-fns/locale/de';
+
+
 
 const DateCustomInput = ({ changeDate, initialDate, future, past, label, opening, inputHidden, headerOpen, changeOpenStatus }) => {
 
     const [value, setValue] = useState(dayjs(new Date(initialDate).toISOString()));
-    const [cookies, setCookie] = useState();
+    const [cookies, setCookie] = useCookies();
+ 
     const darkTheme = createTheme({
       palette: {
         mode: 'dark',
       },
+
+      components: {
+        MuiIconButton: {
+          styleOverrides: {
+            sizeMedium: {
+              color: cookies?.theme === "light" ? "var(--text-color-3)" : "var(--text-color)"
+            }
+          }
+        },
+
+        MuiOutlinedInput: {
+          styleOverrides: {
+            root: {
+              outline: "none",
+              border: `1px solid ${cookies?.theme === "light" ? "#000" : "#fff"}`
+            },
+          }
+        },
+
+        MuiInput: {
+          styleOverrides: {
+            root: {
+              border: "none",
+              outline: "none"
+            }
+          }
+        },
+
+        
+
+        MuiFormLabel: {
+          styleOverrides: {
+            root: {
+                opacity: "0"
+            }
+          }
+        }
+      }
     });
 
     const [openStatus, setOpen] = useState(opening);
@@ -38,7 +81,8 @@ const DateCustomInput = ({ changeDate, initialDate, future, past, label, opening
             background: "var(--dark-color)",
             top: headerOpen === "desktop_active" ? '250px' : '180px',
             left: headerOpen === "desktop_active" ? `${0.175 * window.innerWidth + 32}px` : headerOpen === "desktop_inactive" ? "32px" : `${(window.innerWidth - document?.querySelectorAll(".MuiPaper-root")[0]?.clientWidth) / 2}px`,
-            position: inputHidden ? 'absolute' : 'initial'
+            position: inputHidden ? 'absolute' : 'initial',
+            
         },
 
         "& button.PrivatePickersYear-yearButton,  button.PrivatePickersMonth-root,  button.MuiPickersDay-root": {
@@ -55,19 +99,24 @@ const DateCustomInput = ({ changeDate, initialDate, future, past, label, opening
           backgroundColor: "var(--contrast-color-highlight)",
       
         },
+
+        
     };
 
     const inputSx = {
       ".MuiInputBase-input": {
         padding: "0 0 0 1rem",
         maxWidth: '260px'
-      }
+      },
+
+  
+
     };
   
 
     return (
       <ThemeProvider theme={darkTheme}>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={de}>
           {/* <MobileDatePicker
             label="For mobile"
             value={value}
@@ -98,7 +147,8 @@ const DateCustomInput = ({ changeDate, initialDate, future, past, label, opening
                 changeOpenStatus && changeOpenStatus(false);
               }}
               inputFormat="DD/MM/YYYY"
-              label={label}
+              label=""
+              
               disableFuture={!future}
               disablePast={!past}
               openTo='day'
@@ -114,6 +164,8 @@ const DateCustomInput = ({ changeDate, initialDate, future, past, label, opening
               InputProps={{
                 sx: inputSx
               }}
+              
+              
               
           />
       </LocalizationProvider>

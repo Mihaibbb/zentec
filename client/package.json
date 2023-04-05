@@ -16,23 +16,29 @@
     "@fortawesome/free-solid-svg-icons": "^6.1.2",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@mui/icons-material": "^5.8.4",
+    "@mui/lab": "^5.0.0-alpha.124",
     "@mui/material": "^5.11.2",
-    "@mui/x-date-pickers": "^5.0.12",
+    "@mui/x-date-pickers": "^5.0.20",
+    "@react-pdf/renderer": "^3.1.9",
     "@react-spectrum/color": "^3.0.0-beta.16",
     "@react-stately/color": "^3.2.0",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.3.0",
     "@testing-library/user-event": "^13.5.0",
+    "date-fns": "^2.29.3",
     "dayjs": "^1.11.7",
     "dhtmlx-scheduler": "^6.0.2",
     "dotenv": "^16.0.1",
     "env-cmd": "^10.1.0",
     "file-saver": "^2.0.5",
+    "jsbarcode": "^3.11.5",
     "react": "^18.2.0",
+    "react-barcode": "^1.4.6",
     "react-color": "^2.19.3",
     "react-cookie": "^4.1.1",
     "react-dom": "^18.2.0",
     "react-input-color": "^4.0.1",
+    "react-pdf": "^6.2.2",
     "react-phone-number-input": "^3.2.9",
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
@@ -80,6 +86,7 @@
     ]
   },
   "devDependencies": {
+    "@craco/craco": "^7.1.0",
     "@types/file-saver": "^2.0.5"
   }
 }

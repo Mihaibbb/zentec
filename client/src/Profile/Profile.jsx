@@ -8,16 +8,16 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClockRotateLeft, faEllipsis, faFileArrowDown, faFileArrowUp, faMagnifyingGlass, faMinus, faPlus, faSearch, faSortDown, faTimes, faUser } from "@fortawesome/free-solid-svg-icons";
 import greenTick from "../imgs/green-tick.mp4";
-import greenTickWhiteTheme from "../imgs/green-tick-white-theme.mp4";
+import greenTickWhiteTheme from "../imgs/green-tick-light-theme.mp4";
 import { useRef } from "react";
-import { getBackups } from "../../../controllers/user";
 
 const Profile = ({ data }) => {
 
     const navigate = useNavigate();
-
     const [cookies, setCookie, removeCookie] = useCookies();
-    const options = cookies.language === "en" ? ["Details", "Assistants", "Services", "Scheduled SMS", "Backups", "Working Hours"] : ["Detalii", "Personal", "Servicii", "SMS-uri Programate", "Backup-uri", "Ore de lucru"];
+    const [theme, setTheme] = useState(cookies?.theme || "dark");
+
+    const options = cookies.language === "en" ? ["Details", "Assistants", "Services", "Scheduled SMS", "Backups", "Working Hours", "Treatments"] : ["Detalii", "Personal", "Servicii", "SMS-uri Programate", "Backup-uri", "Ore de lucru", "Tratamente"];
     const optionsTitle = cookies.language === "en" ? ["", "", "", ""] : ["", "", ""];
     const [activeOption, setActiveOption] = useState(window?.history?.state?.activeOption || 0);
     const [sideMenuOption, setSideMenuOption] = useState(window?.history?.state?.sideMenuOption || 0);
@@ -51,7 +51,8 @@ const Profile = ({ data }) => {
     const [arrowElements, setArrowElements] = useState([]);
     const [currentPageAssistants, setCurrentPageAssistants] = useState(1);
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-    const [totalAssistants, setTotalAssistants] = useState([]);
+    const [totalAssistants, setTotalAssistants] = useState(data.organisation?.assistants);
+
 
     const perPage = 10;
     const [pages, setPages] = useState();
@@ -59,6 +60,7 @@ const Profile = ({ data }) => {
     const firstNameArrow = useRef();
     const lastNameArrow = useRef();
     const fileNumberArrow = useRef();
+    const noVideoContentRef = useRef();
 
     const optionsRef = useRef([]);
 
@@ -78,18 +80,15 @@ const Profile = ({ data }) => {
         };
 
         try {
-            const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/get-assistants`, options);
-            const response = await request.json();
-            console.log(await response);
-            if (!await response.success) return;
+          
             
-            setAssistants(currPatients => {
-                return response.patients.filter((patient, idx) => {
+            setAssistants(currAssistants => {
+                return data.organisation?.assistants && data.organisation?.assistants.filter((assistant, idx) => {
                     return (idx + 1) > perPage * (currentPageAssistants - 1) && (idx + 1) <= perPage * currentPageAssistants;
                 });
             });
             
-            setTotalAssistants(await response.patients);
+            setTotalAssistants(data.organisation.assistants || []);
 
         } catch (e) {
             console.log(e);
@@ -127,7 +126,9 @@ const Profile = ({ data }) => {
         })();
     }, []);
 
-    
+    useEffect(() => {
+        setTheme(cookies?.theme || 'dark');
+    }, [cookies]);
 
     useEffect(() => {
         if (assistantsQuery === "") {
@@ -415,7 +416,7 @@ const Profile = ({ data }) => {
             const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/remove-assistant/${data.organisation._id}/${_id}/${cookies.language}`, options);
             const response = await request.json();
             if (response.success) {
-                document.body.style.background = cookies.theme === "dark" ? "#000" : "#fff";
+                document.body.style.background = theme === "light" ? "#fff" : "#000";
                 setTimeout(() =>  setVideoStart(cookies.language === "en" ? "Assistant was removed successfully!" : "Personalul a fost sters cu succes!"), 300);
             } else console.log(response);
         } catch (e) {
@@ -438,7 +439,22 @@ const Profile = ({ data }) => {
             sideMenuOption: sideMenuOption, 
             successProfile: true
         } });
+        window.history.replaceState({
+            activeOption: activeOption,
+            sideMenuOption: sideMenuOption,
+            successProfile: true
+        }, "");
+        window.location.reload();
     };
+
+    useEffect(() => {
+        if (location?.state?.refresh && !window.history?.state?.refresh) {
+            window.history.replaceState({
+                refresh: true
+            }, "");
+            window.location.reload();
+        } else window.history.replaceState({}, "");
+    }, [location]);
 
     return (
         <div className="profile-container">
@@ -447,7 +463,7 @@ const Profile = ({ data }) => {
                 <Header data={data} />
                 
                 {!videoStart ? 
-                <>
+                <div className="no-video-content" ref={noVideoContentRef}>
                     <h2 className="title" style={{ textAlign: "initial", marginLeft: "50px" }}>{cookies.language === "en" ? "Profile" : "Profil"}</h2>
 
                     <div className="options-bar">
@@ -463,14 +479,48 @@ const Profile = ({ data }) => {
                     <div className="details-container">
                         {activeOption === 0 ? (
                             <div className="account-details form">
-                                <div className="account-container input">
+                                <div className="account-container input profile-input">
                                     <p>{cookies.language === "en" ? "Clinic's name" : "Numele clinicii"}</p>
                                     <input type="text" value={organisationName} onChange={e => setOrganisationName(e.target.value)} />
                                 </div>
 
                                 <div className="users-list">
                                     <h3>{cookies.language === "en" ? "Users' list" : "Lista utilizatori"}</h3>
+                                    <div className="patients-container">
+                                        
+                                        <div className="first-row">
+                                            <div className="column">
+                                                <p>{cookies.language === "en" ? "No." : "Nr."}</p>
+                                            </div>
+                                            <div className="column">
+                                                <p>{cookies.language === "en" ? "Firstname" : "Nume"}</p>
+                                            </div>
+                                            <div className="column">
+                                                <p>{cookies.language === "en" ? "Lastname" : "Prenume"}</p>
+                                            </div>
+                                            <div className="column">
+                                                <p>Username</p>
+                                            </div>
+                                        </div>
 
+
+                                        {users && users.length && users.map((user, idx) => (
+                                            <div className="row" key={idx}>
+                                                <div className="column">
+                                                    <p>{idx + 1}</p>
+                                                </div>
+                                                <div className="column">
+                                                    <p>{user.name.split(" ")[0]}</p>
+                                                </div>
+                                                <div className="column">
+                                                    <p>{user.name.slice(user.name.split(" ")[0].length)}</p>
+                                                </div>
+                                                <div className="column">
+                                                    <p>{user.username}</p>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
 
                                 <button className="save">
@@ -487,7 +537,7 @@ const Profile = ({ data }) => {
                             </div>}
 
                             <div className="patients-container">
-                                {patients.length > 0 && <div className="first-row">
+                                {assistants.length > 0 && <div className="first-row">
                                     {windowWidth >= 600 ? <div className="column">
                                         <p>{cookies.language === "en" ? "File Nr." : "Nr. fisa"}</p>
                                         <FontAwesomeIcon 
@@ -521,6 +571,11 @@ const Profile = ({ data }) => {
                                         
                                     </div> : null}
 
+                                    {windowWidth >= 1000 ? <div className="column">
+                                        <p>{cookies.language === "en" ? "Email" : "Email"}</p>
+                                        
+                                    </div> : null}
+
                                     <div className="column">
                                         <p>{cookies.language === "en" ? "Options" : "Optiuni"}</p>
                                     </div>
@@ -529,7 +584,7 @@ const Profile = ({ data }) => {
                         {assistants.length > 0 ? assistants.map((assistant, idx) => (
                             <div className="row" key={idx}>
 
-                                {windowWidth >= 600 ? <div clqassName="column">
+                                {windowWidth >= 600 ? <div className="column">
                                     <p>{idx + 1}</p>
                                 </div> : null}
 
@@ -541,12 +596,12 @@ const Profile = ({ data }) => {
                                     <p>{assistant.lastname}</p>
                                 </div>
 
-                                {windowWidth >= 800 && assistant?.email ? <div className="column">
-                                    <p>{assistant.email}</p>
+                                {windowWidth >= 800 ? <div className="column">
+                                    <p>{assistant?.email || "Nedefinit"}</p>
                                 </div>  : null}
 
-                                {windowWidth >= 800 && assistant?.phone ? <div className="column">
-                                    <p>{assistant.phone}</p>
+                                {windowWidth >= 1000 ? <div className="column">
+                                    <p>{assistant?.phone || "Nedefinit"}</p>
                                 </div> : null}
 
                                 <div className="column pressable">
@@ -599,6 +654,10 @@ const Profile = ({ data }) => {
                             </div>
                     </div> : null}
                                 </div>
+
+                                <div className="add-button" onClick={() => navigate("/create-assistant")}>
+                                    <FontAwesomeIcon icon={faPlus} className="add-icon" />
+                                </div>
                             </div>
                         ) : activeOption === 2 ? (
                             <div className="services-details">
@@ -623,11 +682,11 @@ const Profile = ({ data }) => {
                     <button className="logout-button" type="button" onClick={() => logOut()}>
                         <p>{cookies.language === "en" ? "Log out" : "Delogare"}</p>
                     </button> 
-                </>
+                </div>
                 : 
                     <div className="video-content" style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
                         <video
-                            src={cookies.theme === 'light' ? greenTickWhiteTheme : greenTick}
+                            src={theme === 'light' ? greenTickWhiteTheme : greenTick}
                             controls={false}
                             autoPlay
                             playsInline

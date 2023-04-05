@@ -87,8 +87,8 @@
 
 body.light .form .input:not(.no-bg) input
 {
-    border: 1px solid var(--text-color-3);
-    background: var(--over-difference-color-3);
+    /*border: 1px solid var(--text-color-3);*/
+    background: var(--over-difference-color-2);
 }
 
 .form .input > p

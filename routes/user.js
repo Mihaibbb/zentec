@@ -27,7 +27,6 @@ const {
     addSMS,
     removeSMS,
     editSMS,
-    addService,
     removeService,
     editService,
     pushMessageInbox,
@@ -41,13 +40,17 @@ const {
     createAssistant,
     editAssistant,
     removeAssistant,
+    searchAssistant,
     createSterilization,
     editSterilization,
     removeSterilization,
+    searchSterilization,
     createSterilizationInstrument,
     editSterilizationInstrument,
     removeSterilizationInstrument,
-    assistantInfo
+    searchSterilizationInstrument,
+    assistantInfo,
+    createService
 } = require("../controllers/user");
 
 router.post("/create-appointment", createAppointment);
@@ -79,7 +82,7 @@ router.post("/response-sms-decline", responseSMSDecline);
 router.post("/add-sms", addSMS);
 router.delete("/remove-sms", removeSMS);
 router.put("/edit-sms", editSMS);
-router.post("/add-service", addService);
+router.post("/create-service", createService);
 router.delete("/remove-service", removeService);
 router.put("/edit-service", editService);
 router.post("/push-message-inbox", pushMessageInbox);
@@ -95,8 +98,11 @@ router.post("/assistant-info", assistantInfo);
 router.post("/search-assistant", searchAssistant);
 router.post("/create-sterilization", createSterilization);
 router.put("/edit-sterilization", editSterilization);
+router.post("/search-sterilization", searchSterilization);
 router.delete("/remove-sterilization/:organisationId/:_id/:language", removeSterilization);
 router.post("/create-sterilization-instrument", createSterilizationInstrument);
 router.put("/edit-sterilization-instrument", editSterilizationInstrument);
 router.delete("/remove-sterilization-instrument/:organisationId/:_id/:language", removeSterilizationInstrument);
+router.post("/search-sterilization-instrument", searchSterilizationInstrument);
+
 module.exports = router;

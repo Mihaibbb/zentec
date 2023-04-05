@@ -36,6 +36,20 @@
     padding: 2rem;
 }
 
+.dashboard .doctors-list 
+{
+    width: 100%;
+    max-width: 300px;
+    margin-left: 3rem;
+    margin-top: 2rem;
+    margin-bottom: -1rem;
+}
+
+.dashboard .doctors-list h3 
+{
+    text-align: center;
+}
+
 .dashboard .left-container 
 {
     flex: 2;
@@ -54,6 +68,8 @@
     overflow-x: hidden;
     border: 1px solid var(--over-difference-color-3);
     box-shadow: 0 0 10px var(--over-difference-color-3);
+    position: relative;
+
 }
 
 .dashboard .left-container .new-appointments
@@ -356,6 +372,26 @@ body.light .dashboard .data .data-container .image .data-icon
 .dashboard .right-container .doctors .doctor .status.off p
 {
     color: #F25F64;
+}
+
+.dashboard .left-container .new-appointments .export-pdf 
+{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.dashboard .left-container .new-appointments .export-pdf .export-icon 
+{
+    color: rgba(255, 255, 255, .8);
+    font-size: 30px;
+    cursor: pointer;
+    transition: all 350ms ease-in-out;
+}
+
+.dashboard .left-container .new-appointments .export-pdf .export-icon:hover 
+{
+    transform: scale(1.2);
 }
 
 @media only screen and (max-width: 1200px) {

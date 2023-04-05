@@ -2,6 +2,8 @@
 {
     display: flex;
     margin-left: 2rem;
+    overflow-x: auto;
+    padding-bottom: 1rem;
 }
 
 .options-bar .option 
@@ -17,6 +19,11 @@
     border-bottom: 3px solid var(--contrast-color);
 }
 
+.options-bar .option h3 
+{
+    white-space: nowrap;
+}
+
 .logout-button 
 {
     width: 100%;
@@ -26,9 +33,8 @@
     outline: none;
     background: var(--error-color);
     cursor: pointer;
-    position: fixed;
     bottom: 20px;
-    margin-left: 20px;
+    margin: 64px 32px 32px 32px;
 }
 
 .logout-button p 
@@ -44,3 +50,68 @@
 {
     display: flex;
 }
+
+body.light .account-container.input.profile-input input 
+{
+    background: var(--over-color);
+    border: none;
+    border: 2px solid var(--text-color-4);
+    border-radius: 12px;
+    transition: all 350ms ease-in-out;
+}
+
+body.light .account-container.input.profile-input input:focus 
+{
+    border-radius: 32px;
+    border: 2px solid var(--contrast-color);
+}
+
+.account-details.form,
+.assistants-details
+{
+    grid-template-columns: 1fr;
+    justify-content: flex-start;
+    margin-left: 32px;
+    margin-right: 32px;
+}
+
+.account-details.form button.save 
+{
+    width: 100%;
+    max-width: 200px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    background: var(--contrast-color);
+    border-radius: 50px;
+}
+
+.account-details.form button.save p 
+{
+    font-size: 18px;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    color: rgba(255, 255, 255, .8);
+    font-weight: 600;
+    font-family: 'Source Sans Pro';
+}
+
+.profile-container .users-list,
+.profile-container .assistants-details
+{
+    width: calc(100% - 32px);
+}
+
+.profile-container .users-list h3,
+.profile-container .assistants-details h3
+{
+    font-size: 30px;
+}
+
+
+
+
+
+

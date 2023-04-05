@@ -53,7 +53,7 @@ const EditDoctorSchedule = ({ data }) => {
     const customStyles = {
         control: (base, state) => ({
             ...base,
-            background: "var(--dark-color)",
+            background: "var(--over-difference-color)",
             border: "none",
             borderRadius: 10,
             width: "90%",
@@ -64,8 +64,8 @@ const EditDoctorSchedule = ({ data }) => {
 
         option: (provided, state) => ({
             ...provided,
-            color: "var(--text-color)",
-            background: state.isSelected ? "var(--contrast-color)" : state.isFocused ? "var(--selected-color)" : "initial",
+            color: "rgba(255, 255, 255, .85)",
+            background: state.isSelected ? "var(--contrast-color)" : state.isFocused ? "var(--contrast-color)" : "initial",
             borderRadius: 10
         }),
         
@@ -349,11 +349,11 @@ const EditDoctorSchedule = ({ data }) => {
                     <FontAwesomeIcon icon={faAngleLeft} />
                 </div>
 
-                {schedules && schedules.length === 0 && !editing && (
+                {schedules && schedules.length === 0 && !editing ? (
                     <div className="no-schedules">
                         <h2>{cookies.language === "en" ? "No schedules registered in current date!" : "Niciun program inregistrat in data curenta!"}</h2>
                     </div>
-                )}
+                ) : null}
 
                 {/* {schedules && schedules.length && (
                     <div className="first-row">
@@ -378,7 +378,7 @@ const EditDoctorSchedule = ({ data }) => {
                     </div>
                 )} */}
 
-                {schedules && schedules.length && schedules.map((schedule, idx) => (
+                {schedules && schedules.length ? schedules.map((schedule, idx) => (
                     <div className="schedule" key={idx}>
                         
                         <div className="input">
@@ -652,7 +652,7 @@ const EditDoctorSchedule = ({ data }) => {
 
 
                         <div className="input">
-                            {idx === 0 && <p className="title">{cookies.language === "en" ? "Notes" : "Observatii"}</p> }
+                            {idx === 0 ? <p className="title">{cookies.language === "en" ? "Notes" : "Observatii"}</p> : null }
 
                             <textarea className="doctor-notes" spellCheck={false} value={notes[idx]} onChange={e => {
                                 setNotes(currNotes => {
@@ -665,7 +665,7 @@ const EditDoctorSchedule = ({ data }) => {
                         </div>
 
                         <div className="input input-square">
-                            {idx === 0 && <p className="title">{cookies.language === "en" ? "Apply for calendar" : "Aplica pt tot calendarul"}</p> }
+                            {idx === 0 ? <p className="title">{cookies.language === "en" ? "Apply for calendar" : "Aplica pt tot calendarul"}</p> : null }
 
                             <div className={`square ${applyToCalendarValue[idx] ? "active" : ""}`} onClick={() => setApplyToCalendarValue(currValues => {
                                 return currValues.map((currValue, valueIdx) => {
@@ -678,12 +678,12 @@ const EditDoctorSchedule = ({ data }) => {
                         </div>
 
                         <div className="input remove">
-                            {idx === 0 && <p className="title">{cookies.language === "en" ? "Remove" : "Sterge"}</p> }
+                            {idx === 0 ? <p className="title">{cookies.language === "en" ? "Remove" : "Sterge"}</p> : null}
 
                             <FontAwesomeIcon className="remove-button" icon={faTimes} onClick={async () => await removeSchedule(schedule?.scheduleId, doctorValue[idx] || null, idx)} />
                         </div>
                     </div>
-                ))}
+                )) : null}
 
                 <div className="add-button" onClick={() => {
                     setSchedules(currSchedules => [...currSchedules, {}]);

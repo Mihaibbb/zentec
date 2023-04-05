@@ -24,6 +24,15 @@ import Feedback from "./Feedback/Feedback";
 import Profile from "./Profile/Profile";
 import Contact from "./Contact/Contact";
 import Sterilizations from "./Sterilizations/Sterilizations";
+import CreateAssistant from "./CreateAssistant/CreateAssistant";
+import AssistantAccount from "./AssistantAccount/AssistantAccount";
+import CreateInstrument from "./CreateInstrument/CreateInstrument";
+import EditInstrument from "./EditInstrument/EditInstrument";
+import CreateSterilization from "./CreateSterilization/CreateSterilization";
+import EditSterilization from "./EditSterilization/EditSterilization";
+import SterilizationFiles from "./SterilizationFiles/SterilizationFiles";
+import PatientsListFile from "./PatientsListFile/PatientsListFile";
+
 
 const App = () => {
     const [cookies, setCookie, removeCookie] = useCookies();
@@ -154,6 +163,14 @@ const App = () => {
                                 <Route path="feedback" element={<Feedback data={data} />}/>
                                 <Route path="profile" element={<Profile data={data} />} />
                                 <Route path="sterilizations" element={<Sterilizations data={data} />} />
+                                <Route path="create-assistant" element={<CreateAssistant data={data} />} />
+                                <Route path="assistant/:id" element={<AssistantAccount data={data} />} />
+                                <Route path="create-instrument" element={<CreateInstrument data={data} />} />
+                                <Route path="edit-instrument/:id" element={<EditInstrument data={data} />} />
+                                <Route path="create-sterilization" element={<CreateSterilization data={data} />} />
+                                <Route path="edit-sterilization/:id" element={<EditSterilization data={data} />} />
+                                <Route path="sterilization-files/:id" element={<SterilizationFiles data={data} />} />
+                                <Route path="patients-list-file/:doctorId" element={<PatientsListFile data={data} />} />
                             </>
                         ) : (
                             <>

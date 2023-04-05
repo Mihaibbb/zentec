@@ -1,0 +1,56 @@
+.splitter 
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 50%;
+    border: 2px solid var(--over-difference-color);
+    margin: 2rem auto;
+    border-radius: 50px;
+
+}
+
+.splitter .splitter-container
+{
+    flex: 1;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 50px;
+    transition: all 350ms ease-in-out;
+}
+
+.splitter .splitter-container:not(:last-child)
+{
+    border-bottom-right-radius: 0px;
+    border-top-right-radius: 0px;
+    border: none;
+    border-right: 2px solid var(--over-difference-color);
+}
+
+.splitter .splitter-container:last-child
+{
+    border-left: none;
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+}
+
+
+
+
+.splitter .splitter-container h3 
+{
+    color: var(--text-color);
+    transition: all 350ms ease-in-out;
+}
+
+.splitter .splitter-container.selected 
+{
+    background: var(--contrast-color);
+   
+}
+
+.splitter .splitter-container.selected h3 
+{
+    color: rgba(255, 255, 255, .85);
+}

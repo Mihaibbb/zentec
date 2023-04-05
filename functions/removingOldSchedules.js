@@ -33,14 +33,17 @@ const removingDoctorsSchedules = async () => {
 const removingOldSchedules = () => {
     setInterval(async () => {
         const databases = await db.query("SHOW DATABASES");
-        const organisations = await databases.filter(database => Object.values(database)[0].includes(`${process.env.DB_PREFIX}org_`));
-        logger.debug(organisations)
-        await organisations.forEach(async organisation => {
+        console.log(databases);
+        const organisations = await databases.filter(database => Object.values(database)[0].includes(`${process.env.DB_PREFIX}org_`) && !Object.values(database)[0].includes('_backup'));
+        logger.debug(organisations);
+
+        organisations && organisations.length && organisations.forEach(async organisation => {
             const currentOrg = Object.values(organisation)[0];
             const schedulesDeadlineISO = new Date(new Date().getTime() - PERIOD_SCHEDULES);
             const schedulesDeadline = `${schedulesDeadlineISO.getFullYear()}-${schedulesDeadlineISO.getMonth() + 1}-${schedulesDeadlineISO.getDate()}`;
             await db.query("DELETE FROM ?? WHERE date < ?", [`${currentOrg}.schedules`, schedulesDeadline]);
         });
+
     }, 1000 * 30);
 };
 

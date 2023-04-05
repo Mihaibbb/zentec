@@ -25,11 +25,11 @@ exports.createOrganisation = async (req, res, next) => {
         createTableSql += 'sms_message json not null, ';
         createTableSql += 'sms_modem_id varchar(64) not null, ';
         createTableSql += 'inbox json not null, ';
-        createTableSql += 'country varchar(128) not null, ';
-        createTableSql += 'county varchar(64) not null, ';
-        createTableSql += 'city varchar(128) not null, ';
-        createTableSql += 'address varchar(128) not null, ';
-        createTableSql += 'business_address varchar(128) not null, ';
+        createTableSql += "country varchar(128) default 'Romania', ";
+        createTableSql += "county varchar(64), ";
+        createTableSql += 'city varchar(128), ';
+        createTableSql += 'address varchar(128), ';
+        createTableSql += 'business_address varchar(128), ';
         createTableSql += '_id varchar(25) not null )';
         
         await db.query(createTableSql, ["details"]);
@@ -108,8 +108,7 @@ exports.createOrganisation = async (req, res, next) => {
         createTableSql += 'smsSent int DEFAULT 0 not null, ';
         createTableSql += 'active boolean not null, ';
         createTableSql += 'date date not null )';
-
-
+        
         await db.query(createTableSql, ['doctors']);
 
         createTableSql = 'CREATE TABLE ?? ( ';
@@ -132,7 +131,7 @@ exports.createOrganisation = async (req, res, next) => {
         createTableSql += 'id int(14) auto_increment primary key not null, ';
         createTableSql += '_id varchar(25) unique not null, ';
         createTableSql += 'add_date date not null, ';
-        createTableSql += 'expire_date not null, ';
+        createTableSql += 'expire_date date not null, ';
         createTableSql += 'sarja int(10) not null, ';
         createTableSql += 'assistant varchar(25) not null, ';
         createTableSql += 'sterilization_instruments json not null)';
@@ -146,6 +145,7 @@ exports.createOrganisation = async (req, res, next) => {
         
     } catch (e) {
         logger.debug(e);
+        console.log(e);
         res.status(404).json({ success: false, message: { en: "An error occured!", ro: "A aparut o eroare!" } });
     }
 };
@@ -177,7 +177,7 @@ exports.getOrganisationsData = async (req, res, next) => {
         if (!isAdmin.length) return new ErrorResponse("You cannot add an organisation if you are not an admin!", 404, res);
         sql = "SHOW DATABASES;";
         const currDbs = await db.query(sql);
-        const currOrganisations = await currDbs.filter(currDb => currDb.Database.search(`${process.env.DB_PREFIX}org_`) !== -1);
+        const currOrganisations = await currDbs.filter(currDb => currDb.Database.search(`${process.env.DB_PREFIX}org_`) !== -1 && currDb.Database.search("_backup") === -1);
         const organisations = await Promise.all(await currOrganisations.map(async org => {
             const users = await db.query("SELECT * FROM ??", [`${org.Database}.users`]);
             const details = await db.query("SELECT * FROM ??", [`${org.Database}.details`]);

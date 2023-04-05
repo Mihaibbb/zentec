@@ -36,7 +36,7 @@
     border: 2px dotted var(--contrast-color);
     margin: auto auto;
     align-self: center;
-    background: var(--dark-color);
+    background: var(--over-difference-color-2);
     cursor: pointer;
     border-radius: 20px;
     padding-block: 2rem;
@@ -44,7 +44,7 @@
 
 .import-container .drop-container .cloud-icon
 {
-    color: var(--contrast-color-2);
+    color: var(--contrast-color);
     font-size: 100px;
     margin: 1rem;
     

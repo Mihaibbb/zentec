@@ -920,7 +920,7 @@ body.light .appointments .filter div.active p
 
 .appointments .appointment-warning .response-buttons button 
 {
-    color: var(--text-color);
+    color: rgba(255, 255, 255, .9);
     font-family: "Source Sans Pro";
     font-size: 16px;
     font-weight: bold;
@@ -975,7 +975,7 @@ body.light .appointments .filter div.active p
     min-width: 100%;
     border-radius: 32px;
     cursor: pointer;
-    background:rgba(0, 0, 0, .6);
+    background:var(--over-difference-color);
     border: none;
     outline: none;
     gap: 10px;
@@ -1067,6 +1067,7 @@ body.light .appointments .filter div.active p
     width: 100%;
 }
 
+
 .appointments .appointment-details.active .appointment-details-card .appointment-details .label .label-row .scale 
 {
     position: absolute;
@@ -1099,6 +1100,21 @@ body.light .appointments .filter div.active p
     font-weight: 600;
 }
 
+.appointments .appointment-details.active .appointment-details-card .appointment-details .labels-container
+{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    justify-content: center;
+    align-items: center;
+}
+
+.appointments .appointment-details.active .appointment-details-card .appointment-details .labels-container .label 
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 
 
 .appointments .appointment-details.active .appointment-details-card .appointment-details .patient-list-container:not(.active)
@@ -1114,7 +1130,7 @@ body.light .appointments .filter div.active p
 
 .appointments .appointment-details.active .appointment-details-card .appointment-details .patient-list-container
 {
-    background: var(--dark-color);
+    background: var(--over-difference-color);
     border-radius: 12px;
     padding: 1rem;
     margin-block: 1rem;
@@ -1153,7 +1169,7 @@ body.light .appointments .filter div.active p
 {
     margin: .5rem auto;
     border: 1.5px solid var(--contrast-color);
-    background: var(--dark-color);
+    background: var(--over-color-2);
     padding-left: .75rem;
     border-radius: .5rem;
     display: flex;
@@ -1218,6 +1234,11 @@ body.light .appointments .filter div.active p
     border-bottom-right-radius: 8px;
 }
 
+.appointments .appointment-details.active .appointment-details-card .appointment-details .appointment-input .scale-icon 
+{
+    color: rgba(255, 255, 255, .85);
+}
+
 .appointments .appointment-details.active .appointment-details-card .appointment-details .label textarea
 {
     width: 100%;
@@ -1259,7 +1280,7 @@ body.light .appointments .filter div.active p
 
 .appointments .appointment-details.active .appointment-details-card .add-appointment p
 {
-    color: var(--text-color);
+    color: rgba(255, 255, 255, .85);
     font-size: 20px;
     font-family: "Source Sans Pro";
     font-weight: 800;

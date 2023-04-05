@@ -345,11 +345,11 @@
 
 @media only screen and (max-width: 1000px)
 {
-    .patients .content .patients-container {
+    .content .patients-container {
         margin: 0 1.5rem;
     }
 
-    .patients .content .patients-container .row div p
+    .content .patients-container .row div p
     {
         font-size: 100%;
     }
@@ -357,7 +357,7 @@
 
 @media only screen and (max-width: 800px)
 {
-    .patients .content .patients-container {
+    .content .patients-container {
         margin: 0 .5rem;
     }
 }

@@ -80,19 +80,23 @@ exports.loginRemember = async (req, res, next) => {
             if (currDb.Database.search(`${process.env.DB_PREFIX}org_`) === 0 && currDb.Database.search("_backup") === -1) return currDb.Database;
             else return null;
         });
-        
         const organisations = await organisationsUnfiltered.filter(currDb => currDb !== null);        
+        console.log("ORGANISATIONS: ", organisations);
+
         await organisations && await organisations.length > 0 && await organisations.forEach(organisation => {
             (async () => {
                 const users = await db.query("SELECT * FROM ??", [`${organisation}.users`]);
                 const details = await db.query("SELECT * FROM ??", [`${organisation}.details`]);
                 const row1 = await details[0];
+                console.log("heree", details);
                 const { _id, name, date } = await row1;
                 const schedules = await db.query("SELECT * FROM ??", [`${organisation}.schedules`]);
                 const patients = await db.query("SELECT * FROM ??", [`${organisation}.patients`]);
                 const doctors = await db.query("SELECT * FROM ??", [`${organisation}.doctors`]);
-                
-                const currUser = users && users.find(user => {
+                const assistants = await db.query("SELECT * FROM ??", [`${organisation}.assistants`]);
+                const instruments = await db.query("SELECT * FROM ??", [`${organisation}.sterilization_instruments`]);
+                const sterilizations = await db.query("SELECT * FROM ??", [`${organisation}.sterilizations`]);
+                const currUser = users && users.length && users.find(user => {
                     return user.userId.toString() === userId.toString() && user.password === hashedPassword;
                 });
     
@@ -106,11 +110,14 @@ exports.loginRemember = async (req, res, next) => {
     
                     const organisationData = {
                         name: name,
-                        schedules: await schedules || [],
-                        patients: await patients,
-                        users: await users,
-                        doctors: await doctors,
-                        details: await details,
+                        schedules: schedules || [],
+                        patients: patients,
+                        users: users,
+                        doctors: doctors,
+                        details: details,
+                        assistants: assistants,
+                        instruments: instruments,
+                        sterilizations: sterilizations,
                         _id: _id
                     };
     

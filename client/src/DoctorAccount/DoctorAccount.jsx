@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useState } from "react";
 import { useCookies } from "react-cookie";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
@@ -31,10 +31,12 @@ const DoctorAccount = ({ data }) => {
     const [doctorAdded, setDoctorAdded] = useState(false);
 
     const noVideoContentRef = useRef();
-    
     const navigate = useNavigate();
 
+    const theme = useMemo(() => cookies?.theme || "dark", [cookies]);
+
     const getDoctorInfo = async () => {
+
         try {
             const options = {
                 method: "POST",
@@ -59,7 +61,6 @@ const DoctorAccount = ({ data }) => {
             setMultipleSchedules(await fetchedData.multiple_schedules);
             setActiveDoctor(await fetchedData.active);
             
-           
         } catch (e) {
             console.log(e);
             setErrorMessage(cookies.langauge === "en" ? "An error occured!" : "A aparut o eroare!");
@@ -95,7 +96,7 @@ const DoctorAccount = ({ data }) => {
             const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/edit-doctor`, options);
             const response = await request.json();
             if (await response.success) {
-                document.body.style.background = cookies?.theme === "light" ? "#fff" : "#000";
+                document.body.style.background = theme === "light" ? "#fff" : "#000";
                 noVideoContentRef.current.classList.add("invisible");
                 setTimeout(() => setDoctorAdded(true), 300);
             }
@@ -162,7 +163,7 @@ const DoctorAccount = ({ data }) => {
                 {doctorAdded ? (
                     <div className="video-content" style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
                         <video
-                            src={cookies?.theme === "light" ? tickAnimationLight : tickAnimation}
+                            src={theme === "light" ? tickAnimationLight : tickAnimation}
                             controls={false}
                             autoPlay
                             playsInline

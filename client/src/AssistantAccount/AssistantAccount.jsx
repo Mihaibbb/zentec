@@ -19,7 +19,8 @@ const AssistantAccount = ({ data }) => {
     const [lastname, setLastname] = useState("");
     const [email, setEmail] = useState("");
     const [phone, setPhone] = useState("");
-    const [color, setColor] = useState({});
+    
+    const [theme, setTheme] = useState(cookies?.theme || "dark");
 
     const [errorMessage, setErrorMessage] = useState();
     const [assistantAdded, setAssistantAdded] = useState(false);
@@ -75,13 +76,15 @@ const AssistantAccount = ({ data }) => {
                     lastname,
                     email: email || "",
                     phone: phone || "",
+                    language: cookies?.language || "ro"
                 })
             };
 
             const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/edit-assistant`, options);
             const response = await request.json();
+            console.log(response);
             if (await response.success) {
-                document.body.style.background = cookies?.theme === "light" ? "#fff" : "#000";
+                document.body.style.background = theme === "light" ? "#fff" : "#000";
                 noVideoContentRef.current.classList.add("invisible");
                 setTimeout(() => setAssistantAdded(true), 300);
             }
@@ -111,15 +114,23 @@ const AssistantAccount = ({ data }) => {
         
     }, [location]);
 
+    useEffect(() => {
+        setTheme(cookies?.theme || "dark");
+    }, [cookies]);
 
     const animationFinished = () => {
         document.body.style.background = "var(--background)";
-        navigate("/profile", { state: { activeOption: 1, success: true, message: cookies.language === "en" ? "Changes have been saved successfully!" : "Modificarile au fost salvate cu succes!" } });
+        window.history.replaceState({ 
+            activeOption: 1, 
+            success: true, 
+            message: cookies.language === "en" ? "Changes have been saved successfully!" : "Modificarile au fost salvate cu succes!" 
+        }, "");
+        navigate("/profile", { state: { refresh: true } });
     };
     
     return (
         <div className="doctor-account-container">
-            <Navigation page="doctors" />
+            <Navigation page="" />
 
             <div className="content" style={assistantAdded ? { maxHeight: "100vh" } : {}}>
                 <Header data={data} />
@@ -127,7 +138,7 @@ const AssistantAccount = ({ data }) => {
                 {assistantAdded ? (
                     <div className="video-content" style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
                         <video
-                            src={cookies?.theme === "light" ? tickAnimationLight : tickAnimation}
+                            src={theme === "light" ? tickAnimationLight : tickAnimation}
                             controls={false}
                             autoPlay
                             playsInline
@@ -141,7 +152,7 @@ const AssistantAccount = ({ data }) => {
                     </div>
                 ) : (
                     <div className="no-video-content" ref={noVideoContentRef}>
-                        <h2 className="title">{cookies.language === "en" ? "Edit doctor" : "Editare medic"}</h2>
+                        <h2 className="title">{cookies.language === "en" ? "Edit assistant" : "Editare asistent"}</h2>
                 
                         <div className="go-back" onClick={() => navigate(-1)}>
                             <FontAwesomeIcon icon={faAngleLeft} />
@@ -165,7 +176,7 @@ const AssistantAccount = ({ data }) => {
 
                             <div className="input">
                                 <p>{cookies.language === "en" ? "Phone Number" : "Numar de telefon"}</p>
-                                <input type="number" value={phone} onChange={e => setPhone(e.target.value)} />
+                                <input type="tel" value={phone} onChange={e => setPhone(e.target.value)} />
 
                             </div>
 

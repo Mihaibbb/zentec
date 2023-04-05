@@ -41,13 +41,13 @@ html ::-webkit-scrollbar-thumb
 
 html.active ::-webkit-scrollbar-thumb 
 {
-  background: linear-gradient(#5d37dc, #8146ff);
+  background: linear-gradient(135deg, var(--contrast-color), var(--contrast-color-highlight));
 }
 
 /* Handle on hover */
 html ::-webkit-scrollbar-thumb:hover 
 {
-    background: linear-gradient(#5d37dc, #e83771); 
+    background: var(--contrast-color);
 }
 
 input::-webkit-outer-spin-button,

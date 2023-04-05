@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import Navigation from "../Components/Navigation/Navigation";
 import Header from "../Components/Header/Header";
 import "./CreateDoctor.css";
@@ -26,9 +26,15 @@ const CreateDoctor = ({ data }) => {
     
     
     const [cookies, setCookie] = useCookies();
+    const theme = useMemo(() => cookies?.theme || "dark", [cookies]);
+
     const navigate = useNavigate();
 
     const location = useLocation();
+
+    useEffect(() => {
+        console.log(cookies);
+    }, [cookies]);
 
     useEffect(() => {
       
@@ -70,7 +76,7 @@ const CreateDoctor = ({ data }) => {
             const response = await request.json();
             if (response.success) {
                 noVideoContentRef.current.classList.add("invisible");
-                document.body.style.background = cookies?.theme === "white" ? "#fff" : "#000";
+                document.body.style.background = theme === "white" ? "#fff" : "#000";
                 setTimeout(() => setDoctorAdded(true), 300);
             
              
@@ -94,7 +100,7 @@ const CreateDoctor = ({ data }) => {
                 {doctorAdded ? (
                     <div className="video-content" style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
                         <video
-                            src={cookies?.theme === "white" ? tickAnimationWhite : tickAnimation}
+                            src={theme === "white" ? tickAnimationWhite : tickAnimation}
                             controls={false}
                             autoPlay
                             playsInline

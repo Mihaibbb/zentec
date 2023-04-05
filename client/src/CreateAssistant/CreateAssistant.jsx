@@ -12,19 +12,18 @@ import tickAnimationWhite from "../imgs/green-tick-light-theme.mp4";
 
 const CreateAssistant = ({ data }) => {
 
+    const [cookies, setCookie] = useCookies();
+    const navigate = useNavigate();
+
     const [firstname, setFirstname] = useState("");
     const [lastname, setLastname] = useState("");
     const [email, setEmail] = useState("");
     const [phone, setPhone] = useState();
     const [errorMessage, setErrorMessage] = useState("");
     const [assistantAdded, setAssistantAdded] = useState(false);
+    const [theme, setTheme] = useState(cookies?.theme || "dark");
 
     const noVideoContentRef = useRef();
-    
-    
-    const [cookies, setCookie] = useCookies();
-    const navigate = useNavigate();
-
     const location = useLocation();
 
     useEffect(() => {
@@ -38,9 +37,13 @@ const CreateAssistant = ({ data }) => {
         
     }, [location]);
 
+    useEffect(() => {
+        setTheme(cookies?.theme || "dark");
+    }, [cookies]);
+
     const createAssistantRequest = async () => {
 
-        if (firstname.length || lastname.length) {
+        if (!firstname.length || !lastname.length) {
             setErrorMessage(cookies.language === "en" ? "Fill each required field!" : "Completeaza toate campurile obligatorii!");
             return;
         } 
@@ -52,19 +55,21 @@ const CreateAssistant = ({ data }) => {
             },
             body: JSON.stringify({
                 organisationId: data.organisation._id,
-                firstname,
-                lastname,
+                firstName: firstname,
+                lastName: lastname,
                 email: email && email?.length > 0 ? email : "",
                 phone: phone && phone?.length > 0 ? phone : "",
+                language: cookies?.language || "ro"
             })
         };
 
         try {
             const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/create-assistant`, options);
             const response = await request.json();
+            console.log(response);
             if (response.success) {
                 noVideoContentRef.current.classList.add("invisible");
-                document.body.style.background = cookies?.theme === "white" ? "#fff" : "#000";
+                document.body.style.background = theme === "light" ? "#fff" : "#000";
                 setTimeout(() => setAssistantAdded(true), 300);
             } else console.log(errorMessage);
         } catch (e) {
@@ -75,7 +80,8 @@ const CreateAssistant = ({ data }) => {
 
     const animationFinished = () => {
         document.body.style.background = "var(--background)";
-        navigate("/profile", { state: { activeOption: 1, success: true, message: cookies.language === "en" ? "Assistant has been created successfully!" : "Personalul a fost creat cu succes!" } });
+        window.history.replaceState({ activeOption: 1, success: true, message: cookies.language === "en" ? "Assistant has been created successfully!" : "Personalul a fost creat cu succes!" }, "");
+        navigate("/profile");
     };
 
     return (
@@ -86,7 +92,7 @@ const CreateAssistant = ({ data }) => {
                 {assistantAdded ? (
                     <div className="video-content" style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
                         <video
-                            src={cookies?.theme === "white" ? tickAnimationWhite : tickAnimation}
+                            src={theme === "light" ? tickAnimationWhite : tickAnimation}
                             controls={false}
                             autoPlay
                             playsInline

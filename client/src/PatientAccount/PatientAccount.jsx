@@ -1,6 +1,6 @@
 import { faAddressBook, faAddressCard, faAngleLeft, faCalendar, faCheck, faCity, faEnvelope, faIdBadge, faMars, faNoteSticky, faPhone, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { useCookies } from "react-cookie";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Header from "../Components/Header/Header";
@@ -64,6 +64,8 @@ const PatientAccount = ({ data }) => {
     const [errorMessage, setErrorMessage] = useState();
     const [patientMessage, setPatientMessage] = useState("");
     const [patientEdited, setPatientEdited] = useState(false);
+
+    const theme = useMemo(() => cookies?.theme || "dark", [cookies]);
 
     const currGenders = cookies.language === "en" ? ['Male', 'Female', 'Not mentioned'] : ['Masculin', 'Feminin', 'Nespecificat'];
 
@@ -131,7 +133,7 @@ const PatientAccount = ({ data }) => {
             if (!response.success) setErrorMessage(response.message[cookies.language]);
             else {
                 noVideoContentRef.current.classList.add("invisible");
-                document.body.style.background = cookies?.theme === "white" ? "#fff" : "#000";
+                document.body.style.background = theme === "white" ? "#fff" : "#000";
                 setTimeout(() => {
                     setPatientEdited(true);
                     setPatientMessage(response.message);
@@ -244,7 +246,7 @@ const PatientAccount = ({ data }) => {
                 {patientEdited ? 
                 <div className="video-content" style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
                     <video
-                        src={cookies?.theme === "light" ? tickAnimationWhite : tickAnimation}
+                        src={theme === "light" ? tickAnimationWhite : tickAnimation}
                         controls={false}
                         autoPlay
                         playsInline
@@ -257,8 +259,16 @@ const PatientAccount = ({ data }) => {
                     <h2 className="title title-video-content" style={{ margin: 0 }}>{cookies.language === "en" ? "Changes have been saved successfully!" : "Modificarile au fost salvate cu succes!"}</h2>
                 </div>  : 
                 <div className="patient-account-details" ref={noVideoContentRef}>
-                    {!historicPage ? <h2 className="title">{cookies.language === "en" ? "Patient's account details " : "Detalii cont pacient"}</h2> : null}
-
+                    {!historicPage ? (
+                        <>
+                            <h2 className="title">{cookies.language === "en" ? "Patient's data" : "Date pacient"}</h2> 
+                            <div className="patient-name">
+                                <FontAwesomeIcon icon={faUser} className="patient-icon" />
+                                <h2>{initialFirstName} {initialLastName}</h2>
+                            </div>
+                        </>
+                    ) : null}
+                  
                     <div className="go-back" onClick={() => navigation(-1)}>
                         <FontAwesomeIcon icon={faAngleLeft} />
                     </div>
@@ -404,7 +414,11 @@ const PatientAccount = ({ data }) => {
                 </div>}
 
                 {historicPage ? <div className="patient-historic">
-                    <h2 className="title">{cookies.language === "en" ? "Patient's historic" : "Istoric Pacient"}</h2>
+                    <h2 className="title">{cookies.language === "en" ? "Patient's appointments" : "Programarile pacientului"}</h2>
+                    <div className="patient-name">
+                        <FontAwesomeIcon icon={faUser} className="patient-icon" />
+                        <h2>{initialFirstName} {initialLastName}</h2>
+                    </div>
 
                     <div className="historic-options">
 

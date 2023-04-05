@@ -1,3 +1,30 @@
+
+.account-container h2.title 
+{
+    margin-bottom: 0;
+    margin-top: 3.5rem;
+}
+
+.account-container .patient-name
+{
+    color: var(--text-color-3);
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    gap: .5rem;
+}
+
+.account-container .patient-name .patient-icon 
+{
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid var(--text-color-3);
+    padding: .5rem;
+    
+}
+
 .patient-account-details 
 {
     margin-top: 10vh;
@@ -38,9 +65,9 @@
 .patient-account-details .inputs-container .input input 
 {
     width: 300px;
-    border: 1px solid rgba(255, 255, 255, .1);
+    border: 2px solid var(--over-difference-color);
     outline: none;
-    background: rgba(255, 255, 255, .025);
+    background: var(--over-difference-color-2);
     height: 40px;
     border-radius: 10px;
     font-family: 'Inter';
@@ -54,9 +81,9 @@
     width: 100%;
     max-width: 300px;
     resize: vertical;
-    border: 1px solid rgba(255, 255, 255, .1);
+    border: 2px solid var(--over-difference-color);    
     outline: none;
-    background: rgba(255, 255, 255, .025);
+    background: var(--over-difference-color-2);
     min-height: 100px;
     color: var(--text-color);
     border-radius: 10px;
@@ -198,7 +225,7 @@
 
 .patient-historic
 {
-    margin-top: 7.5rem;
+    /* margin-top: 3.5rem; */
 }
 
 .patient-historic .title

@@ -7,6 +7,7 @@ const generateId = require("../functions/generateId");
 exports.createAdmin = async (req, res, next) => {
     const { username, firstname, lastname, email, password } = req.body;
     const adminId = generateId(25);
+    console.log(firstname);
     try {
         const result = await db.query('USE ??', [`${process.env.DB_PREFIX}admins`]);
         console.log("The result", result);

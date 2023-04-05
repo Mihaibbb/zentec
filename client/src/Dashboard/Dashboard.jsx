@@ -2,10 +2,11 @@ import './Dashboard.css';
 import Navigation from '../Components/Navigation/Navigation';
 import Header from '../Components/Header/Header';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCab, faCalendar, faCoins, faE, faEllipsis, faUsers } from '@fortawesome/free-solid-svg-icons';
-import { useState, useEffect } from "react";
+import { faCab, faCalendar, faCloudArrowDown, faCoins, faE, faEllipsis, faUsers } from '@fortawesome/free-solid-svg-icons';
+import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { useCookies } from 'react-cookie';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import Select   from 'react-select';
 
 const Dashboard = ({ data }) => {
 
@@ -19,7 +20,13 @@ const Dashboard = ({ data }) => {
     const [filter, setFilter] = useState(filters_server[0]);
     const [typeIncome, setTypeIncome] = useState("");
 
+    const [doctorValue, setDoctorValue] = useState(data.organisation.doctors?.[0]?._id || null);
+    const [doctorNameValue, setDoctorNameValue] = useState(`${data.organisation.doctors?.[0]?.firstname} ${data.organisation.doctors?.[0]?.lastname}` || null);
+
     const location = useLocation();
+    const dataRef = useRef();
+
+    const navigation = useNavigate();
 
     useEffect(() => {
       
@@ -70,13 +77,16 @@ const Dashboard = ({ data }) => {
             const response = await request.json();
             
             if (response.success) {
-                setNextAppointments(await response.appointments.map(appointment => {
+                const filteredAppointments = response.appointments.filter(appointment => appointment?.doctorName === doctorNameValue);
+                setNextAppointments(filteredAppointments.map(appointment => {
                     return {
                         name: `${JSON.parse(appointment.patients)[0].firstname} ${JSON.parse(appointment.patients)[0].lastname}`,
                         hour: `${new Date(appointment.startDate).getHours() < 10 ? `0${new Date(appointment.startDate).getHours()}` : new Date(appointment.startDate).getHours()}:${new Date(appointment.startDate).getMinutes() < 10 ? `0${new Date(appointment.startDate).getMinutes()}` : new Date(appointment.startDate).getMinutes()}`,
                         income: appointment?.income || "Nedefinit",
                         typeIncome: appointment?.typeIncome || "",
-                        doctorName: appointment?.doctorName
+                        doctorName: appointment?.doctorName,
+                        finishHour: `${new Date(appointment.endDate).getHours() < 10 ? `0${new Date(appointment.endDate).getHours()}` : new Date(appointment.endDate).getHours()}:${new Date(appointment.endDate).getMinutes() < 10 ? `0${new Date(appointment.endDate).getMinutes()}` : new Date(appointment.endDate).getMinutes()}`,
+                        title: appointment.title || "",
                     };
                 }));
                 console.log(response);
@@ -131,7 +141,61 @@ const Dashboard = ({ data }) => {
         })();
     }, [filter]);
 
-    const filters = cookies.language === "en" ? ["Day", "Week", "Month", "Year"] : ["Zi", "Saptamana", "Luna", "An"];
+    const filters = useMemo(() => cookies.language === "en" ? ["Day", "Week", "Month", "Year"] : ["Zi", "Saptamana", "Luna", "An"], [cookies]);
+
+    const doctorOptions = useMemo(() => data.organisation.doctors.map(doctor => {
+        return {
+            value: `${doctor._id}`,
+            label: `${doctor.firstname} ${doctor.lastname}`
+        };
+    }), []);
+
+    const customStyles = useMemo(() => {
+        return {
+        control: (base, state) => ({
+            ...base,
+            background: "var(--over-difference-color-2)",
+            border: "none",
+            borderRadius: 10,
+            width: "90%",
+            margin: "0 auto",
+            boxShadow: "0 0 10px var(--contrast-color)",
+            color: "var(--text-color)"
+        }),
+
+        option: (provided, state) => ({
+            ...provided,
+            color: "rgba(255, 255, 255, .85)",
+            background: state.isSelected ? "var(--contrast-color)" : state.isFocused ? "var(--contrast-color-highlight)" : "initial",
+            borderRadius: 10
+        }),
+        
+        menu: (provided, state) => ({
+            ...provided,
+            
+            
+            background: cookies?.theme === "light" ? "var(--dark-color)" : "var(--dark-color)",
+            border: "none",
+            borderRadius: 10,
+            boxShadow: "0 0 15px var(--dark-color)"
+        }),
+
+        singleValue: (provided) => ({
+            ...provided,
+            color: "var(--text-color)",
+            width: "100%"
+        })
+    }}, []);
+
+    const isTouchDevice = useCallback(() => {
+        return (('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0));
+    }, []);
+
+    useEffect(() => {
+       (async () => {
+        await getNextAppointments();
+       })();
+    }, [doctorValue]);
 
     return (
         <div className="dashboard">
@@ -151,7 +215,7 @@ const Dashboard = ({ data }) => {
                     ))}
                 </div>
 
-                <div className="data">
+                <div className="data" ref={dataRef}>
 
                     <div className="data-container">
                         <div className="image">
@@ -192,6 +256,21 @@ const Dashboard = ({ data }) => {
                         </div>
                     </div>
                 </div>
+
+                {data.organisation?.doctors?.length > 0 ? <div className="doctors-list">
+                        {/* <h3>{cookies?.language === "en" ? "Select a doctor" : "Selecteaza un medic"}</h3> */}
+                        <Select 
+                            options={doctorOptions} 
+                            placeholder={doctorNameValue} 
+                            value={{ label: doctorValue ? doctorNameValue : "Selecteaza un medic...", value: doctorValue }}
+                            styles={customStyles} 
+                            onChange={e => {
+                                setDoctorValue(e.value);
+                                setDoctorNameValue(e.label);
+                            }} 
+                            readOnly={isTouchDevice()}
+                        />
+                </div> : null}
 
                 <div className="sm-content">
                     <div className="left-container">
@@ -243,6 +322,14 @@ const Dashboard = ({ data }) => {
                                     <h2>{cookies.language === "en" ? "No appointments for today!" : "Nicio programare pentru astazi"}</h2>
                                 </div>
                             )}
+
+                            {nextAppointments && nextAppointments?.length ? <div className="export-pdf">
+                                <FontAwesomeIcon 
+                                    onClick={() => navigation(`/patients-list-file/${doctorValue}`, { state: { appointments: nextAppointments }  })}
+                                    icon={faCloudArrowDown} 
+                                    className="export-icon" 
+                                /> 
+                            </div> : null}
                             
                         </div>
                     </div>

@@ -91,7 +91,7 @@
     cursor: pointer;
 }
 
-.patients .content .patients-container .row .column .options-container 
+.content .patients-container .row .column .options-container 
 {
     top: calc(100% - .75rem);
     right: -105px;
@@ -101,12 +101,12 @@
 
 
 
-.patients .content .patients-container .row .column .options-container .option
+.content .patients-container .row .column .options-container .option
 {
     cursor: initial;
 }
 
-.patients .content .patients-container .row .column .options-container.show .option
+.content .patients-container .row .column .options-container.show .option
 {
     cursor: pointer;
 }
@@ -154,7 +154,7 @@
     cursor: pointer;
 }
 
-.patients .content .patients-container .first-row
+.content .patients-container .first-row
 {
     margin: 1rem auto;
 }
@@ -162,7 +162,7 @@
 
 @media only screen and (max-width: 1000px)
 {
-    .patients .content .patients-container .row .column .options-container
+    .content .patients-container .row .column .options-container
     {
         right: -25px;
         gap: 0.5rem;
@@ -170,12 +170,12 @@
         padding-inline: 1rem;
     }
 
-    .patients .content .patients-container .row .column .options-container .option
+    .content .patients-container .row .column .options-container .option
     {
         justify-content: initial;
     }
 
-    .patients .content .patients-container .row .column .options-container .option p
+    .content .patients-container .row .column .options-container .option p
     {
         width: 100%;
 
@@ -190,13 +190,13 @@
 @media only screen and (max-width: 500px)
 {
 
-    .patients .content .patients-container
+    .content .patients-container
     {
         padding: 1rem 0.75rem;
         margin: 1rem .5rem 5rem;
     }
 
-    .patients .content .patients-container .first-row div p
+    .content .patients-container .first-row div p
     {
         font-size: 14px;
     }

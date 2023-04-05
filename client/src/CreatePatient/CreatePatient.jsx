@@ -1,6 +1,6 @@
 import { faAngleDown, faAngleLeft, faAngleUp, faCheck, faTicket } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useMemo } from "react";
 import { useCookies } from "react-cookie";
 import { useLocation, useNavigate } from "react-router-dom";
 import Header from "../Components/Header/Header";
@@ -38,6 +38,8 @@ const CreatePatient = ({ data, fromAppointments, patientSaved }) => {
     const [errorMessage, setErrorMessage] = useState();
     const [numberPatients, setNumberPatients] = useState();
     const [patientAdded, setPatientAdded] = useState(false);
+
+    const theme = useMemo(() => cookies?.theme || "dark", [cookies]);
 
     const noVideoContentRef = useRef();
 
@@ -145,7 +147,7 @@ const CreatePatient = ({ data, fromAppointments, patientSaved }) => {
 
             if (!fromAppointments) {
                 noVideoContentRef.current.classList.add("invisible");
-                document.body.style.background = cookies?.theme === "white" ? "#fff" : "#000";
+                document.body.style.background = theme === "white" ? "#fff" : "#000";
                 setTimeout(() => setPatientAdded(true), 300);
             }
             else patientSaved();
@@ -240,7 +242,7 @@ const CreatePatient = ({ data, fromAppointments, patientSaved }) => {
                 {patientAdded ? (
                     <div className="video-content" style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
                         <video
-                            src={cookies?.theme === "light" ? tickAnimationWhite : tickAnimation}
+                            src={theme === "light" ? tickAnimationWhite : tickAnimation}
                             controls={false}
                             autoPlay
                             playsInline

@@ -1,0 +1,23 @@
+.form .input.one-row 
+{
+    grid-column: 1 / -1;
+}
+
+.create-doctor .schedule,
+.create-doctor .first-row 
+{
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    width: 100%;
+}
+
+.create-doctor .schedule .input 
+{
+    flex: 1;   
+}
+
+.create-doctor .form .input:not(.no-bg) input
+{
+    width: initial;
+}
