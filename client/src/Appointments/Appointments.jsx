@@ -1031,7 +1031,8 @@ const Appointments = ({ data }) => {
                         date: date,
                         appointmentId: currentAppointmentId,
                         finished: appointmentFinished ? true : false,
-                        confirmed: appointmentConfirmed
+                        confirmed: appointmentConfirmed,
+                        unpresented: appointmentUnpresented
                     };
 
                     return currAppointment;

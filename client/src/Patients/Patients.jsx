@@ -61,28 +61,7 @@ const Patients = ({ data }) => {
         }
     };
 
-    const removePatient = async (patientId) => {
-        const options = {
-            method: 'DELETE',
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                _id: data.organisation._id,
-                patientId
-            })
-        };
-        
-        try {
-            const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/remove-patient`, options);
-            const response = await request.json();
-            console.log(response);
-            if (response.success) window.location.reload();
-        } catch (e) {
-            console.log(e);
-        }
-   
-    };
+
 
     const triggerOptions = (idx) => {
         optionsRef?.current?.length && optionsRef?.current[idx]?.classList?.toggle("show");
@@ -330,6 +309,12 @@ const Patients = ({ data }) => {
                             </div>  : null}
 
                             <div className="column pressable">
+                                <button type="button" onClick={() => navigation(`/patient/${patient._id}/0`, { state: { patient: patient } })}>
+                                    <p>{cookies?.language === "en" ? "View profile" : "Vezi profil"}</p>
+                                </button>
+                            </div>
+
+                            {/* <div className="column pressable">
                                 <FontAwesomeIcon className="column-icon" icon={faEllipsis} onClick={() => triggerOptions(idx)}/>
                                 <div className="options-container" ref={ref => optionsRef.current[idx] = ref}>
                                     <div className="option" onClick={async () => optionsRef.current[idx].classList.contains("show") ? await removePatient(patient._id) : null}>
@@ -347,7 +332,7 @@ const Patients = ({ data }) => {
                                         <p>{cookies.language === "en" ? "Schedules" : "Programari"}</p>
                                     </div>
                                 </div>
-                            </div>
+                            </div> */}
 
 
                         </div>

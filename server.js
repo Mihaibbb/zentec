@@ -38,6 +38,33 @@ app.get("/test", (req, res) => {
     res.send("Hello");
 });
 
+(async () => {
+    const databases = await db.query("SHOW DATABASES");
+    const realDatabases = databases.filter(database => database.Database.includes("org") && !database.Database.includes("_backup"));
+    realDatabases.forEach(async currDb => {
+        const dbName = currDb.Database;
+        // await db.query("USE ??", [dbName]);
+        // let createTableSql = 'CREATE TABLE ?? ( ';
+        // createTableSql += 'id int(14) auto_increment primary key not null, ';
+        // createTableSql += 'name varchar(128) not null, ';
+        // createTableSql += 'color varchar(20) not null );';
+
+        // await db.query(createTableSql, ['treatment_categories']);
+
+        // // Treatments
+        // createTableSql = 'CREATE TABLE ?? ( ';
+        // createTableSql += '_id varchar(26) not null, ';
+        // createTableSql += 'name varchar(128) not null, ';
+        // createTableSql += 'category varchar(128) not null, ';
+        // createTableSql += 'price int not null, ';
+        // createTableSql += 'pricePer varchar(64) not null, ';
+        // createTableSql += 'type varchar(64) not null, ';
+        // createTableSql += 'color varchar(20) not null );';
+        // await db.query(createTableSql, ['treatments']);
+
+    }); 
+})();
+
 
 // Routes
 app.use("/api/auth", authRouter);

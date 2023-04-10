@@ -30,6 +30,8 @@ exports.createOrganisation = async (req, res, next) => {
         createTableSql += 'city varchar(128), ';
         createTableSql += 'address varchar(128), ';
         createTableSql += 'business_address varchar(128), ';
+        createTableSql += 'start_hour int(2) not null, ';
+        createTableSql += 'end_hour int(2) not null, ';
         createTableSql += '_id varchar(25) not null )';
         
         await db.query(createTableSql, ["details"]);
@@ -75,6 +77,7 @@ exports.createOrganisation = async (req, res, next) => {
         createTableSql += 'finished boolean not null, ';
         createTableSql += 'confirmed boolean not null, ';
         createTableSql += 'canceled boolean not null, ';
+        createTableSql += 'unpresented boolean not null, ';
         createTableSql += 'date date not null, ';
         createTableSql += 'createdAt date not null )';
 
@@ -137,10 +140,29 @@ exports.createOrganisation = async (req, res, next) => {
         createTableSql += 'sterilization_instruments json not null)';
 
         await db.query(createTableSql, ['sterilizations']);
-        // Insert into details a row of organisation's details
 
-        let sql = 'INSERT INTO ?? (name, date, sms_limit, sms_message, sms_modem_id, inbox, _id) VALUES (?, ?, ?, ?, ?, ?, ?)';
-        const result = await db.query(sql, ['details', name, new Date(), smsLimit, JSON.stringify(smsMessage), modemId, JSON.stringify([]), orgId]);
+        // Treatment categories
+        createTableSql = 'CREATE TABLE ?? ( ';
+        createTableSql += 'id int(14) auto_increment primary key not null, ';
+        createTableSql += 'name varchar(128) not null, ';
+        createTableSql += 'color varchar(20) not null );';
+
+        await db.query(createTableSql, ['treatment_categories']);
+
+        // Treatments
+        createTableSql = 'CREATE TABLE ?? ( ';
+        createTableSql += '_id varchar(26) not null, ';
+        createTableSql += 'name varchar(128) not null, ';
+        createTableSql += 'category varchar(128) not null, ';
+        createTableSql += 'price int not null, ';
+        createTableSql += 'pricePer varchar(64) not null, ';
+        createTableSql += 'type varchar(64) not null, ';
+        createTableSql += 'color varchar(20) not null );';
+
+        await db.query(createTableSql, ['treatments']);
+
+        let sql = 'INSERT INTO ?? (name, date, sms_limit, sms_message, sms_modem_id, inbox, _id, start_hour, end_hour) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+        const result = await db.query(sql, ['details', name, new Date(), smsLimit, JSON.stringify(smsMessage), modemId, JSON.stringify([]), orgId, 8, 20]);
         if (await result) return res.status(201).json({ message: { en: "Organisation created successfully!", ro: "Organizatia a fost creata cu succes!" }, success: true });
         
     } catch (e) {

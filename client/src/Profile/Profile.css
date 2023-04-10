@@ -4,6 +4,7 @@
     margin-left: 2rem;
     overflow-x: auto;
     padding-bottom: 1rem;
+    width: 95%;
 }
 
 .options-bar .option 
@@ -11,6 +12,7 @@
     padding-left: 32px;
     padding-right: 32px;
     cursor: pointer;
+    
     transition: all 350ms ease-in-out;
 }
 
@@ -44,6 +46,18 @@
     font-family: 'SOURCE SANS PRO';
     font-size: 20px;
     margin: 15px;
+}
+
+.account-flex 
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.account-flex > .account-container 
+{
+    flex: 1;
 }
 
 .account-container.input 

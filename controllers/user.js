@@ -63,8 +63,8 @@ exports.createAppointment = async (req, res, next) => {
             }
         }));
 
-        sql = "INSERT INTO ?? (_id, startDate, endDate, users, patients, title, income, incomePaid, typeIncome, notes, finished, confirmed, canceled, date, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        const insertedAppointment = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.schedules`, appointmentId, new Date(startDate), new Date(endDate), JSON.stringify(users), JSON.stringify(patients), title, income, incomePaid, typeIncome, notes, false, false, false, new Date(date), new Date()]);
+        sql = "INSERT INTO ?? (_id, startDate, endDate, users, patients, title, income, incomePaid, typeIncome, notes, finished, confirmed, canceled, unpresented, date, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        const insertedAppointment = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.schedules`, appointmentId, new Date(startDate), new Date(endDate), JSON.stringify(users), JSON.stringify(patients), title, income, incomePaid, typeIncome, notes, false, false, false, false, new Date(date), new Date()]);
         if (!insertedAppointment) return new ErrorResponse("An error occured!", 404);
 
         // Push message to inbox if patient didn't confirm his appointment
@@ -139,12 +139,12 @@ exports.createAppointment = async (req, res, next) => {
 };
 
 exports.updateAppointment = async (req, res, next) => {
-    const { appointmentId, _id, startDate, endDate, users, patients, title, income, incomePaid, typeIncome, notes, date, finished, confirmed, language } = req.body;
+    const { appointmentId, _id, startDate, endDate, users, patients, title, income, incomePaid, typeIncome, notes, date, finished, confirmed, unpresented, language } = req.body;
     
     try {
         console.log(_id);
-        let sql = 'UPDATE ?? SET startDate = ?, endDate = ?, users = ?, patients = ?, title = ?, income = ?, incomePaid = ?, typeIncome = ?, notes = ?, date = ?, finished = ?, confirmed = ? WHERE _id = ?';
-        const updatedAppointment = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.schedules`, new Date(startDate), new Date(endDate), JSON.stringify(users), JSON.stringify(patients), title, income, incomePaid, typeIncome, notes, new Date(date), finished, confirmed, appointmentId]);
+        let sql = 'UPDATE ?? SET startDate = ?, endDate = ?, users = ?, patients = ?, title = ?, income = ?, incomePaid = ?, typeIncome = ?, notes = ?, date = ?, finished = ?, confirmed = ?, unpresented = ? WHERE _id = ?';
+        const updatedAppointment = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.schedules`, new Date(startDate), new Date(endDate), JSON.stringify(users), JSON.stringify(patients), title, income, incomePaid, typeIncome, notes, new Date(date), finished, confirmed, unpresented, appointmentId]);
         if (!updatedAppointment) return res.status(200).json({ success: false, message: { en: "Appointment could not be updated!", ro: "Programarea nu a putut fi modificata!" } })
         if (confirmed) return res.status(200).json({ success: true, message: { en: "Appointment updated successfully!", ro: "Programare modificata cu succes!"}});
         
@@ -213,6 +213,46 @@ exports.removeAppointment = async (req, res, next) => {
         
         res.status(200).json({ success: true, message: { en: "Appointment removed successfully!", ro: "Programare stearsa cu succes!"}});
         
+    } catch (e) {
+        console.log(e);
+        res.status(404).json({ success: false, message: "An error occured." });
+    }
+};
+
+exports.removeFutureAppointment = async (req, res, next) => {
+    const { organisationId, patientId, date, startHour, startMinutes, endHour, endMinutes } = req.params;
+    try {
+
+
+        const patientsData = await db.query("SELECT * FROM ?? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.patients`, patientId]);
+        const newPatientsHistoric = JSON.parse(patientsData[0]?.historic).filter(historicData => {
+            return !(
+                sameDate(new Date(historicData?.date), new Date(date)) &&
+                Number(historicData.startHour) === Number(startHour) && 
+                Number(historicData.startMinutes) === Number(startMinutes) && 
+                Number(historicData.endHour) === Number(endHour) && 
+                Number(historicData.endMinutes) === Number(endMinutes)
+            );
+        });
+
+        await db.query("UPDATE ?? SET historic = ? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.patients`, JSON.stringify(newPatientsHistoric), patientId]);
+
+
+        const totalSchedules = await db.query('SELECT * FROM ??', [`${process.env.DB_PREFIX}org_${organisationId}.schedules`]);
+        const foundSchedule = totalSchedules.find(appointment => {
+            const appointmentStartHour = new Date(appointment.startDate).getHours();
+            const appointmentEndHour = new Date(appointment.endDate).getHours();
+            const appointmentStartMinutes = new Date(appointment.startDate).getMinutes();
+            const appointmentEndMinutes = new Date(appointment.endDate).getMinutes();
+            const samePatient = JSON.parse(appointment.patients).some(patient => patient._id === patientId);
+
+            return samePatient && sameDate(new Date(Number(date)), new Date(appointment.date)) && Number(startHour) === appointmentStartHour && Number(startMinutes) === appointmentStartMinutes && Number(endHour) === appointmentEndHour && Number(endMinutes) === appointmentEndMinutes;
+        });
+
+        if (!foundSchedule) return res.status(200).json({ success: false, message: "Appointment not found!" });
+        await db.query("DELETE FROM ?? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.schedules`, foundSchedule._id]);
+
+        return res.status(200).json({ success: true, message: "Success!" });
     } catch (e) {
         console.log(e);
         res.status(404).json({ success: false, message: "An error occured." });
@@ -1713,6 +1753,193 @@ exports.searchSterilization = async (req, res, next) => {
 };
 
 // Treatments
+
+exports.createTreatment = async (req, res, next) => {
+    const { organisationId, name, category, price, pricePer, type, color } = req.body;
+    try {
+        const _id = generateId(25);
+        const sameName = await db.query("SELECT * FROM ?? WHERE name = ?", [`${process.env.DB_PREFIX}org_${organisationId}.treatments`, name]);
+        if (sameName?.length) return res.status(200).json({ success: false, message: { en: "Name already in use!", ro: "Nume deja folosit!" } });
+        await db.query("INSERT INTO ?? (_id, name, category, price, pricePer, type, color) VALUES (?, ?, ?, ?, ?, ?, ?)", [`${process.env.DB_PREFIX}org_${organisationId}.treatments`, _id, name, category, price, pricePer, type, color]);
+        res.status(200).json({ success: true, message: { en: "Treatment created successfully!", ro: "Tratamentul a fost creat cu succes!" } });
+    } catch (e) {
+        console.log(e);
+        res.status(404).json({ 
+            success: false,
+            message: "An error occured!",
+            error: e
+         });
+    }
+};
+
+exports.editTreatment = async (req, res, next) => {
+    const { organisationId, name, category, price, pricePer, type, color, _id } = req.body;
+    try {
+        const sameName = await db.query("SELECT * FROM ?? WHERE name = ? AND _id != ?", [`${process.env.DB_PREFIX}org_${organisationId}.treatments`, name, _id]);
+        if (sameName?.length) return res.status(200).json({ success: false, message: { en: "Name already in use!", ro: "Nume deja folosit!" } });
+        await db.query("UPDATE ?? SET name = ?, category = ?, price = ?, pricePer = ?, type = ?, color = ? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.treatments`, name, category, price, pricePer, type, color, _id]);
+        res.status(200).json({ success: true, message: { en: "Modifications saved successfully!", ro: "Modificarile au fost salvate cu succes!" } });
+    } catch (e) {
+        console.log(e);
+        res.status(404).json({ 
+            success: false,
+            message: "An error occured!",
+            error: e
+         });
+    }
+};
+
+exports.removeTreatment = async (req, res, next) => {
+    const { organisationId, treatmentId } = req.params;
+    try {
+        await db.query("DELETE FROM ?? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.treatments`, treatmentId]);
+        res.status(200).json({ success: true, message: { en: "Treatment removed successfully!", ro: "Tratamentul a fost sters cu succes!" } });
+    } catch (e) {
+        console.log(e);
+        res.status(404).json({ success: false, error: e, message: "An error occured!" });
+    }
+};
+
+exports.searchTreatment = async (req, res, next) => {
+    const { organisationId, searchQuery } = req.body;
+    try {
+        let sql = "SELECT * FROM ??";
+        const totalCategories = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.treatments`]);
+        
+        const searchCategories = totalCategories.filter((category, idx) => {
+            return (category.name.toLowerCase().search(searchQuery.toLowerCase()) !== -1 || category.name.toLowerCase().includes(searchQuery.toLowerCase()))
+        });
+        
+        if (!searchCategories || !searchCategories.length > 0) return res.status(200).json({ success: false, message: { en: "No results", ro: "Niciun rezultat" } });
+        res.status(200).json({ success: true, categories: searchCategories });
+    } catch (e) {
+        console.log(e);
+        res.status(404).json({ 
+            success: false,
+            message: "An error occured!",
+            error: e
+         });
+    }
+};
+
+exports.createTreatmentCategory = async (req, res, next) => {
+    const { organisationId, name, color } = req.body;
+    try {
+        const sameName = await db.query("SELECT * FROM ?? WHERE name = ?", [`${process.env.DB_PREFIX}org_${organisationId}.treatment_categories`, name]);
+        if (sameName?.length) return res.status(200).json({ success: false, message: { en: "Name is already in use!", ro: "Numele este deja folosit!" } });
+        
+        await db.query("INSERT INTO ?? (name, color) VALUES (?, ?)", [`${process.env.DB_PREFIX}org_${organisationId}.treatment_categories`, name, color]);
+        res.status(200).json({ success: true, message: { en: "Category created successfully!", ro: "Categorie creata cu succes!" } });
+    } catch (e) {
+        console.log(e);
+        res.status(404).json({ success: false, error: e, message: "An error occured!" });
+    }
+};
+
+exports.editTreatmentCategory = async (req, res, next) => {
+    const { organisationId, name, color, id } = req.body;
+    try {
+        const sameName = await db.query("SELECT * FROM ?? WHERE name = ? AND id != ?", [`${process.env.DB_PREFIX}org_${organisationId}.treatment_categories`, name, id]);
+        if (sameName?.length) return res.status(200).json({ success: false, message: { en: "Name is already in use!", ro: "Numele este deja folosit!" } });
+        
+        await db.query("UPDATE ?? SET name = ?, color = ? WHERE id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.treatment_categories`, name, color, id]);
+        res.status(200).json({ success: true, message: { en: "Modifications saved successfully!", ro: "Modificarile au fost salvate cu succes!" } });
+    } catch (e) {
+        console.log(e);
+        res.status(404).json({ success: false, error: e, message: "An error occured!" });
+    }
+};
+
+exports.removeTreatmentCategory = async (req, res, next) => {
+    const { organisationId, id } = req.params;
+    try {
+        await db.query("DELETE FROM ?? WHERE id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.treatment_categories`, id]);
+        res.status(200).json({ success: true, message: { en: "Category removed successfully!", ro: "Categoria a fost stearsa cu succes!" } });
+    } catch (e) {
+        console.log(e);
+        res.status(404).json({ success: false, error: e, message: "An error occured!" });
+    }
+};
+
+exports.searchTreatmentCategory = async (req, res, next) => {
+    const { organisationId, searchQuery } = req.body;
+    try {
+        let sql = "SELECT * FROM ??";
+        const totalTreatments = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.treatment_categories`]);
+        
+        const searchTreatments = totalTreatments.filter((treatment, idx) => {
+            return (
+                (treatment.name.toLowerCase().search(searchQuery.toLowerCase()) !== -1 || treatment.name.toLowerCase().includes(searchQuery.toLowerCase())) ||
+                (treatment.category.toLowerCase().search(searchQuery.toLowerCase()) !== -1 || treatment.category.toLowerCase().includes(searchQuery.toLowerCase()))
+            );
+        });
+        
+        if (!searchTreatments || !searchTreatments.length > 0) return res.status(200).json({ success: false, message: { en: "No results", ro: "Niciun rezultat" } });
+        res.status(200).json({ success: true, treatments: searchTreatments });
+    } catch (e) {
+        console.log(e);
+        res.status(404).json({ 
+            success: false,
+            message: "An error occured!",
+            error: e
+        });
+    }
+};
+
+exports.createTreatmentPlan = async (req, res, next) => {
+
+};
+
+exports.editTreatmentPlan = async (req, res, next) => {
+
+};
+
+exports.removeTreatmentPlan = async (req, res, next) => {
+
+};
+
+exports.createPatientDocument = async (req, res, next) => {
+    const { organisationId, notes, documents } = req.body;
+    try {
+
+    } catch (e) {
+        console.log(e);
+        res.status(404).json({ success: false, error: e, message: "An error occured!" });
+    }
+};
+
+exports.removePatientDocument = async (req, res, next) => {
+
+};
+
+exports.createPatientAdvancePayment = async (req, res, next) => {
+
+};
+
+exports.editPatientAdvancePayment = async (req, res, next) => {
+
+};
+
+exports.removePatientAdvancePayment = async (req, res, next) => {
+
+};
+
+exports.createPatientPayment = async (req, res, next) => {
+
+};
+
+exports.editPatientPayment = async (req, res, next) => {
+    
+};
+
+exports.removePatientPayment = async (req, res, next) => {
+    
+};
+
+exports.editDetails = async (req, res, next) => {
+
+};
+
 
 const sameDate = (date1, date2) => {
     console.log("DATE1", date1.getDate(), date2.getDate());

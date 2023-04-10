@@ -96,6 +96,8 @@ exports.loginRemember = async (req, res, next) => {
                 const assistants = await db.query("SELECT * FROM ??", [`${organisation}.assistants`]);
                 const instruments = await db.query("SELECT * FROM ??", [`${organisation}.sterilization_instruments`]);
                 const sterilizations = await db.query("SELECT * FROM ??", [`${organisation}.sterilizations`]);
+                const treatmentCategories = await db.query("SELECT * FROM ??", [`${organisation}.treatment_categories`]);
+                const treatments = await db.query("SELECT * FROM ??", [`${organisation}.treatments`]);
                 const currUser = users && users.length && users.find(user => {
                     return user.userId.toString() === userId.toString() && user.password === hashedPassword;
                 });
@@ -118,6 +120,8 @@ exports.loginRemember = async (req, res, next) => {
                         assistants: assistants,
                         instruments: instruments,
                         sterilizations: sterilizations,
+                        treatmentCategories: treatmentCategories,
+                        treatments: treatments,
                         _id: _id
                     };
     

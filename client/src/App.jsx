@@ -32,6 +32,8 @@ import CreateSterilization from "./CreateSterilization/CreateSterilization";
 import EditSterilization from "./EditSterilization/EditSterilization";
 import SterilizationFiles from "./SterilizationFiles/SterilizationFiles";
 import PatientsListFile from "./PatientsListFile/PatientsListFile";
+import CreateTreatmentCategory from "./CreateTreatmentCategory/CreatTreatmentCategory";
+import EditTreatmentCategory from "./EditTreatmentCategory/EditTreatmentCategory";
 
 
 const App = () => {
@@ -115,7 +117,8 @@ const App = () => {
     }, []);
 
     useEffect(() => {
-        if (!window.location.href.includes("appointments")) {
+        
+        if (!window.location.href.includes("appointments") && !window.location.href.includes("profile")) {
             let isScrolling;
             const scrollEvent = () => {
                 window.clearTimeout(isScrolling);
@@ -171,6 +174,8 @@ const App = () => {
                                 <Route path="edit-sterilization/:id" element={<EditSterilization data={data} />} />
                                 <Route path="sterilization-files/:id" element={<SterilizationFiles data={data} />} />
                                 <Route path="patients-list-file/:doctorId" element={<PatientsListFile data={data} />} />
+                                <Route path="create-treatment-category" element={<CreateTreatmentCategory data={data} />} />
+                                <Route path="edit-treatment-category/:id" element={<EditTreatmentCategory data={data} />} />
                             </>
                         ) : (
                             <>

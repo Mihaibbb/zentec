@@ -50,11 +50,22 @@ const {
     removeSterilizationInstrument,
     searchSterilizationInstrument,
     assistantInfo,
-    createService
+    createService,
+    createTreatment,
+    editTreatment,
+    removeTreatment,
+    createTreatmentCategory,
+    editTreatmentCategory,
+    removeTreatmentCategory,
+    searchTreatment,
+    searchTreatmentCategory,
+    removeFutureAppointment,
+    editDetails
 } = require("../controllers/user");
 
 router.post("/create-appointment", createAppointment);
 router.post("/remove-appointment", removeAppointment);
+router.delete("/remove-future-appointment/:organisationId/:patientId/:date/:startHour/:startMinutes/:endHour/:endMinutes", removeFutureAppointment);
 router.post("/cancel-appointment", cancelAppointment);
 router.post("/next-appointments", nextAppointments);
 router.post("/update-appointment", updateAppointment);
@@ -104,5 +115,14 @@ router.post("/create-sterilization-instrument", createSterilizationInstrument);
 router.put("/edit-sterilization-instrument", editSterilizationInstrument);
 router.delete("/remove-sterilization-instrument/:organisationId/:_id/:language", removeSterilizationInstrument);
 router.post("/search-sterilization-instrument", searchSterilizationInstrument);
+router.post("/create-treatment", createTreatment);
+router.put("/edit-treatment", editTreatment);
+router.delete("/remove-treatment/:organisationId/:treatmentId", removeTreatment);
+router.post("/search-treatment", searchTreatment);
+router.post("/create-treatment-category", createTreatmentCategory);
+router.put("/edit-treatment-category", editTreatmentCategory);
+router.delete("/remove-treatment-category/:organisationId/:id", removeTreatmentCategory);
+router.post("/search-treatment-category", searchTreatmentCategory);
+router.put("/edit-details", editDetails);
 
 module.exports = router;

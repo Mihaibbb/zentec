@@ -1,4 +1,4 @@
-import { faAddressBook, faAddressCard, faAngleLeft, faCalendar, faCheck, faCity, faEnvelope, faIdBadge, faMars, faNoteSticky, faPhone, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faAddressBook, faAddressCard, faAngleLeft, faCalendar, faCheck, faCity, faDeleteLeft, faEnvelope, faIdBadge, faMars, faNoteSticky, faPhone, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState, useEffect, useRef, useMemo } from "react";
 import { useCookies } from "react-cookie";
@@ -9,9 +9,11 @@ import "./PatientAccount.css";
 import DateCustomInput from "../Components/DatePicker/DatePicker";
 import tickAnimationWhite from "../imgs/green-tick-light-theme.mp4";
 import tickAnimation from "../imgs/green-tick.mp4";
+import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
 
 
 const PatientAccount = ({ data }) => {
+
 
     const navigation = useNavigate();
     const param = useParams();
@@ -20,9 +22,7 @@ const PatientAccount = ({ data }) => {
     const [cookies, setCookie] = useCookies();
     const birthRef = useRef();
     const noVideoContentRef = useRef();
-
-
-    console.log(location?.state, data);
+    const options = cookies.language === "en" ? ["Patient's Data", "Appointments", "Documents", "Treatment Plan", "Treatments", "Advance Payments", "Payments", "Invoices"] : ["Datele Pacientului", "Programari", "Documente", "Plan Tratament", "Tratamente", "Plati in avans", "Plati", "Facturi"];
     
     if (!param?.id || !param?.historicPage) navigation(-1);
     console.log(param);                      
@@ -60,10 +60,14 @@ const PatientAccount = ({ data }) => {
     const [notes, setNotes] = useState(initialNotes);
     const [showUpdate, setShowUpdate] = useState(false);
     const [historic, setHistoric] = useState(JSON.parse(patient.historic));
+    console.log(historic);
     const [historicOption, setHistoricOption] = useState(0);
     const [errorMessage, setErrorMessage] = useState();
     const [patientMessage, setPatientMessage] = useState("");
     const [patientEdited, setPatientEdited] = useState(false);
+    const [videoMessage, setVideoMessage] = useState("");
+    const initialActiveOption = location?.state?.activeOption || 0;
+    const [activeOption, setActiveOption] = useState(initialActiveOption);
 
     const theme = useMemo(() => cookies?.theme || "dark", [cookies]);
 
@@ -133,15 +137,46 @@ const PatientAccount = ({ data }) => {
             if (!response.success) setErrorMessage(response.message[cookies.language]);
             else {
                 noVideoContentRef.current.classList.add("invisible");
-                document.body.style.background = theme === "white" ? "#fff" : "#000";
+                document.body.style.background = theme === "light" ? "#fff" : "#000";
                 setTimeout(() => {
                     setPatientEdited(true);
                     setPatientMessage(response.message);
+                    setVideoMessage(cookies?.language === "en" ? "Changes have been saved successfully!" : "Modificarile au fost salvate cu succes!");
                 }, 300);
             }
         } catch(e) {
             console.log(e);
         }
+    };
+
+    const removePatient = async (patientId) => {
+        const options = {
+            method: 'DELETE',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                _id: data.organisation._id,
+                patientId
+            })
+        };
+        
+        try {
+            const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/remove-patient`, options);
+            const response = await request.json();
+            console.log(response);
+            if (response.success) {
+                noVideoContentRef.current.classList.add("invisible");
+                document.body.style.background = theme === "light" ? "#fff" : "#000";
+                setTimeout(() => {
+                    setPatientEdited(true);
+                    setVideoMessage(cookies?.language === "en" ? "Patient removed successfully!" : "Pacientul a fost sters cu succes!");
+                }, 300);
+            }
+        } catch (e) {
+            console.log(e);
+        }
+   
     };
 
     useEffect(() => {
@@ -236,13 +271,43 @@ const PatientAccount = ({ data }) => {
         navigation("/patients", { state: patientMessage });
     };
     
+    const removeFutureAppointment = async (appointmentDate, appointmentStartHour, appointmentStartMinutes, appointmentEndHour, appointmentEndMinutes) => {
+        try {
+            const options = {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            };
+            const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/remove-future-appointment/${data.organisation._id}/${param?.id}/${new Date(appointmentDate).getTime()}/${appointmentStartHour}/${appointmentStartMinutes}/${appointmentEndHour}/${appointmentEndMinutes}`, options);
+            const response = await request.json();
+            if (response?.success) {
+                noVideoContentRef.current.classList.add("invisible");
+                document.body.style.background = theme === "light" ? "#fff" : "#000";
+                setTimeout(() => {
+                    setPatientEdited(true);
+                    setVideoMessage(cookies?.language === "en" ? "Appointment removed successfully!" : "Programarea a fost stearsa cu succes!");
+                }, 300);
+            } else console.log(response);
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
+    useEffect(() => {
+        if (activeOption === initialActiveOption) return;
+        if (activeOption === 0) navigation(`/patient/${param?.id}/0`, { state: { ...location?.state, activeOption } });
+        if (activeOption === 1) navigation(`/patient/${param?.id}/1`, { state: { ...location?.state, activeOption } });
+        else if (activeOption === 2) navigation(`/patient/${param?.id}/2`, { state: {...location?.state, activeOption} });
+    }, [activeOption]);
+    
     return (
         <div className="account-container"> 
             <Navigation />
 
-            <div className="content">
+            <div className="content" style={patientEdited ? { maxHeight: "100vh" } : {}}> 
                 <Header data={data} />
-
+              
                 {patientEdited ? 
                 <div className="video-content" style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
                     <video
@@ -256,20 +321,37 @@ const PatientAccount = ({ data }) => {
                         style={{ height: "40vh" }}
                     
                     />
-                    <h2 className="title title-video-content" style={{ margin: 0 }}>{cookies.language === "en" ? "Changes have been saved successfully!" : "Modificarile au fost salvate cu succes!"}</h2>
+                    <h2 className="title title-video-content" style={{ margin: 0 }}>{videoMessage}</h2>
                 </div>  : 
-                <div className="patient-account-details" ref={noVideoContentRef}>
+                <div className="patient-account-details no-video-content" ref={noVideoContentRef}>
+                     <div className="patient-name">
+                        <FontAwesomeIcon icon={faUser} className="patient-icon" />
+                        <h2>{initialFirstName} {initialLastName}</h2>
+                        <div className="patient-option-icon">
+                            <FontAwesomeIcon icon={faTrashCan} className="remove-icon option-icon" onClick={async () => await removePatient()} />
+                            <div className="label">
+                                <p>{cookies?.language === "en" ? "Remove Patient" : "Sterge Pacient"}</p>
+                            </div>
+                        </div>
+
+                       
+                    </div>
+                    <div className="options-bar">
+                        {options && options.length && options.map((option, idx) => (
+                            <div className={`option ${activeOption === idx ? "active" : ""}`} key={idx} onClick={() => setActiveOption(idx)}>
+                                <h3>{option}</h3>
+                            </div>
+                        ))}
+                    </div>
+                    
                     {!historicPage ? (
                         <>
-                            <h2 className="title">{cookies.language === "en" ? "Patient's data" : "Date pacient"}</h2> 
-                            <div className="patient-name">
-                                <FontAwesomeIcon icon={faUser} className="patient-icon" />
-                                <h2>{initialFirstName} {initialLastName}</h2>
-                            </div>
+                            {/* <h2 className="title">{cookies.language === "en" ? "Patient's data" : "Date pacient"}</h2>  */}
+                           
                         </>
                     ) : null}
                   
-                    <div className="go-back" onClick={() => navigation(-1)}>
+                    <div className="go-back" onClick={() => navigation("/patients")}>
                         <FontAwesomeIcon icon={faAngleLeft} />
                     </div>
 
@@ -414,11 +496,11 @@ const PatientAccount = ({ data }) => {
                 </div>}
 
                 {historicPage ? <div className="patient-historic">
-                    <h2 className="title">{cookies.language === "en" ? "Patient's appointments" : "Programarile pacientului"}</h2>
+                    {/* <h2 className="title">{cookies.language === "en" ? "Patient's appointments" : "Programarile pacientului"}</h2>
                     <div className="patient-name">
                         <FontAwesomeIcon icon={faUser} className="patient-icon" />
                         <h2>{initialFirstName} {initialLastName}</h2>
-                    </div>
+                    </div> */}
 
                     <div className="historic-options">
 
@@ -443,6 +525,7 @@ const PatientAccount = ({ data }) => {
                             <div className="col">{cookies.language === "en" ? "Date" : "Data"}</div>
                             <div className="col">{cookies.language === "en" ? "Interval": "Interval"}</div>
                             <div className="col">{cookies.language === "en" ? "Price": "Cost"}</div>
+                            {historicOption === 1 ? <div className="col">{cookies.language === "en" ? "Options" : "Optiuni"}</div> : null}
                         </div>
 
                         {historic && historic.length > 0 && historic.map(historicItem => (
@@ -451,6 +534,9 @@ const PatientAccount = ({ data }) => {
                                 <div className="col">{new Date(historicItem.date).getDate() < 10 ? `0${new Date(historicItem.date).getDate()}` : new Date(historicItem.date).getDate()}/{new Date(historicItem.date).getMonth() + 1 < 10 ? `0${new Date(historicItem.date).getMonth() + 1}` : new Date(historicItem.date).getMonth() + 1}/{new Date(historicItem.date).getFullYear()}</div>
                                 <div className="col">{historicItem.startHour < 10 ? `0${historicItem.startHour}` : historicItem.startHour}:{historicItem.startMinutes < 10 ? `0${historicItem.startMinutes}` : historicItem.startMinutes} - {historicItem.endHour < 10 ? `0${historicItem.endHour}` : historicItem.endHour}:{historicItem.endMinutes < 10 ? `0${historicItem.endMinutes}` : historicItem.endMinutes}</div>
                                 <div className="col">{historicItem?.price || "Nedefinit"} {historicItem?.price ? historicItem?.typePrice : ""}</div>
+                                {historicOption === 1 ? <div className="col column pressable">
+                                    <FontAwesomeIcon icon={faTrashCan} className="remove-icon" onClick={async () => await removeFutureAppointment(new Date(historicItem?.date), historicItem?.startHour, historicItem?.startMinutes, historicItem?.endHour, historicItem?.endMinutes)} />
+                                </div> : null}
                             </div>
                         ))}
                     </div>

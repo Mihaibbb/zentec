@@ -74,7 +74,7 @@
     width: 90%;
     margin: 1rem auto;
     border-radius: 16px;
-    background: var(--over-difference-color-3);
+    background: linear-gradient(90deg, var(--contrast-color) 70%, var(--contrast-color-highlight));
 }
 
 .doctor-schedule .schedule-container .days-name .day-name
@@ -97,7 +97,7 @@
 
 .doctor-schedule .schedule-container .days-name .day-name p 
 {
-    color: var(--text-color);
+    color: rgba(255, 255, 255, .85);
     font-size: 18px;
     text-align: center;
    

@@ -10,9 +10,10 @@
     color: var(--text-color-3);
     display: flex;
     width: 100%;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     gap: .5rem;
+    margin-left: 8rem;
 }
 
 .account-container .patient-name .patient-icon 
@@ -25,6 +26,83 @@
     
 }
 
+.account-container .patient-name .remove-icon 
+{
+    color: var(--error-color);
+    cursor: pointer;
+    width: 18px;
+    height: 18px;
+    border-radius: 50px;
+    padding: .5rem;
+
+    transition: all 350ms ease-in-out
+}
+
+.account-container .patient-name .patient-option-icon 
+{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    width: fit-content;
+
+}
+
+.account-container .patient-name .patient-option-icon > .label 
+{
+    position: absolute;
+    top: -60px;
+    
+    white-space: nowrap;
+    opacity: 0;
+    background: #000;
+    transition: all 350ms ease-in-out;
+}
+
+.account-container .patient-name .patient-option-icon > .label p
+{
+    color: #fff;
+}
+
+.account-container .patient-name .patient-option-icon > .option-icon:hover + .label 
+{
+    opacity: 1;
+    border-radius: 50px;
+    padding-inline: 1rem;
+}
+
+.content .historic-item .column 
+{
+    display: flex;
+    justify-content: center;
+}
+
+
+.content .historic-item .col .remove-icon
+{
+    width: 20px;
+    height: 20px;
+    color: var(--error-color);
+    cursor: pointer;
+    transition: all 350ms ease-in-out;
+}
+
+.content .historic-item .col .remove-icon:hover 
+{
+    background: var(--error-color);
+    color: rgba(255, 255, 255, .85);
+    padding: .5rem;
+    border-radius: 50%;
+}
+
+.account-container .patient-name .remove-icon:hover
+{
+    width: 22px;
+    height: 22px;
+    background: var(--error-color);
+    color:rgba(255, 255, 255, .85);
+}
+
 .patient-account-details 
 {
     margin-top: 10vh;
@@ -32,6 +110,26 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+
+.patient-account-details .go-back 
+{
+    top: calc(10vh + 17.5px);
+    left: 7.5px;
+    z-index: 10000;
+    width: 35px;
+    height: 35px;
+    border-width: 3px;
+}
+
+.patient-account-details .go-back svg 
+{
+    font-size: 20px;
+}
+
+.patient-account-details .options-bar 
+{
+    align-self: flex-start;
 }
 
 .patient-account-details h2.title 
@@ -120,7 +218,7 @@
 
 .patient-account-details .input-title .icon 
 {
-    color: rgba(255, 255, 255, .3);
+    color: var(--contrast-color);
     font-size: 18px;
 }
 
@@ -263,7 +361,7 @@
 .patient-historic .historic-container .first-row .col 
 {
     font-size: 20px;
-    color: var(--text-color-2);
+    color: rgba(255, 255, 255, .85);
     text-align: center;
     flex: 1;
     

@@ -27,7 +27,7 @@ html ::-webkit-scrollbar-track
 
 html.active ::-webkit-scrollbar-track
 {
-  background: var(--dark-color);
+  background: var(--over-difference-color-2);
 }
 
 /* Handle */

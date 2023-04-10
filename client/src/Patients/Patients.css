@@ -123,7 +123,7 @@ body.light .content .search-container
 
 body.light .content .patients-container 
 {
-    background: var(--over-difference-color-3);
+    background: var(--over-difference-color-2);
 }
 
 .content .patients-container .first-row 
@@ -137,6 +137,11 @@ body.light .content .patients-container
     
 }
 
+
+body.light .content .patients-container .first-row 
+{
+    background: linear-gradient(90deg, var(--contrast-color) 70%, var(--contrast-color-highlight));
+}
 
 .content .patients-container .row 
 {
@@ -157,7 +162,7 @@ body.light .content .patients-container .row
 
 .content .patients-container .first-row div p 
 {
-    color: var(--text-color);
+    color: rgba(255, 255, 255 , .85);
     font-family: "Inter";
     font-weight: 600;
 }
@@ -184,7 +189,7 @@ body.light .content .patients-container .row
 .content .patients-container .first-row .column .sort-icon 
 {
     font-size: 16px;
-    color: var(--text-color-2);
+    color: rgba(255, 255, 255 , .85);
     cursor: pointer;
     transition: all 350ms ease-in-out;
 }
@@ -333,6 +338,36 @@ body.light .content .patients-container .row
 }
 
 
+
+.content  .column > button 
+{
+    
+    border-radius: 50px;
+    border: 3px solid var(--contrast-color);
+    outline: none;
+    background: transparent;
+    cursor: pointer;
+    margin-bottom: 7.5px;
+    width: 90%;
+    transition: all 350ms ease-in-out;
+}
+
+.content .column > button p 
+{
+    margin-block: 10px;
+    transition: all 350ms ease-in-out;
+    
+}
+
+.content .column > button:hover 
+{
+    background: var(--contrast-color);
+}
+
+.content .column > button:hover p 
+{
+    color: rgba(255, 255, 255, .85);
+}
 
 .content .patients-container .row .column .options-container 
 {
