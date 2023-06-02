@@ -3,7 +3,8 @@ const axios = require("axios");
 const db = require("../db");
 const generateId = require("../functions/generateId");
 const logger = require("../logger");
-const schedule = require("node-schedule")
+const schedule = require("node-schedule");
+const fs = require("fs");
 
 let currentResponse;
 
@@ -450,8 +451,8 @@ exports.createPatient = async (req, res, next) => {
 
         const patientId = generateId(25);
 
-        sql = "INSERT INTO ?? (_id, firstname, lastname, username, email, phone, birthdate, cnp, gender, city, county, address, doctors, date, notes, fileNumber, historic, profileImage) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        const params = [`${process.env.DB_PREFIX}org_${_id}.patients`, patientId, firstname, lastname, username, email, phone, new Date(birthdate), cnp, gender, city, county, address, JSON.stringify(doctors), new Date(), notes, fileNumber, JSON.stringify([]), JSON.stringify([])];
+        sql = "INSERT INTO ?? (_id, firstname, lastname, username, email, phone, birthdate, cnp, gender, city, county, address, doctors, date, notes, fileNumber, historic, profileImage, documents) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        const params = [`${process.env.DB_PREFIX}org_${_id}.patients`, patientId, firstname, lastname, username, email, phone, new Date(birthdate), cnp, gender, city, county, address, JSON.stringify(doctors), new Date(), notes, fileNumber, JSON.stringify([]), JSON.stringify([]), JSON.stringify([])];
         const insertedPatient = await db.query(sql, params);
         if (!insertedPatient) return new ErrorResponse("An error occured!", 404);
         
@@ -1898,9 +1899,71 @@ exports.removeTreatmentPlan = async (req, res, next) => {
 
 };
 
-exports.createPatientDocument = async (req, res, next) => {
-    const { organisationId, notes, documents } = req.body;
+exports.uploadPatientDocument = async (req, res, next) => {
     try {
+
+        if (!req.file) return res.status(404).json({ success: false });
+        res.status(200).json({ success: true });
+
+        // upload(req, res, (err) => {
+        //     if(err) return res.status(200).json({ success: false, error: e, message: "An error occured!" });
+        //     return res.status(200).json({ success: true });
+        // });
+
+    } catch (e) {
+        console.log(e);
+        res.status(404).json({ success: false, error: e, message: "An error occured!" });
+    }
+};
+
+exports.createPatientDocument = async (req, res, next) => {
+    const { organisationId, patientId, fileSource, fileSize, notes, title } = req.body;
+    try {
+
+        const patients = await db.query("SELECT * FROM ?? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.patients`, patientId]);
+        if (!patients?.length) return res.status(404).json({ success: false, message: "An error occured!" });
+
+        const patient = patients[0];
+        const patientsDocuments = JSON.parse(patient.documents);
+        patientsDocuments.push({
+            size: fileSize,
+            source: fileSource,
+            notes: notes,
+            title: title
+        });
+
+        await db.query("UPDATE ?? SET documents = ? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.patients`, JSON.stringify(patientsDocuments), patientId]);
+        res.status(200).json({
+            success: true
+        });
+    } catch (e) {
+        console.log(e);
+        res.status(404).json({ success: false, error: e, message: "An error occured!" });
+    }
+};
+
+exports.editPatientDocument = async (req, res, next) => {
+    const { organisationId, patientId, source, notes, title } = req.body;
+    try {
+        const patients = await db.query("SELECT * FROM ?? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.patients`, patientId]);
+        if (!patients?.length) return res.status(404).json({ success: false, message: "An error occured!" });
+
+        const patient = patients[0];
+        const patientsDocuments = JSON.parse(patient.documents);
+        const newPatientsDocuments = patientsDocuments.map((currDocument) => {
+            if (currDocument.source === source) return {
+                ...currDocument, 
+                notes: notes,
+                title: title
+            };
+
+            return currDocument;
+        });
+
+        await db.query("UPDATE ?? SET documents = ? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.patients`, JSON.stringify(newPatientsDocuments), patientId]);
+        res.status(200).json({
+            success: true
+        });
 
     } catch (e) {
         console.log(e);
@@ -1909,7 +1972,28 @@ exports.createPatientDocument = async (req, res, next) => {
 };
 
 exports.removePatientDocument = async (req, res, next) => {
+    const { organisationId, patientId, fileName } = req.params; 
+    try {
+        const patients = await db.query("SELECT * FROM ?? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.patients`, patientId]);
+        if (!patients?.length) return res.status(404).json({ success: false, message: "An error occured!" });
 
+        const patient = patients[0];
+        const patientsDocuments = JSON.parse(patient.documents);
+        const newPatientsDocuments = patientsDocuments.filter((currDocument) => {
+            return currDocument.source !== fileName;
+        });
+
+        await db.query("UPDATE ?? SET documents = ? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.patients`, JSON.stringify(newPatientsDocuments), patientId]);
+        fs.unlinkSync(`../uploads/${organisationId}/${patientId}/${fileName}`);
+
+        res.status(200).json({
+            success: true
+        });
+
+    } catch (e) {
+        console.log(e);
+        res.status(404).json({ success: false, error: e, message: "An error occured!" });
+    }
 };
 
 exports.createPatientAdvancePayment = async (req, res, next) => {
@@ -1937,7 +2021,16 @@ exports.removePatientPayment = async (req, res, next) => {
 };
 
 exports.editDetails = async (req, res, next) => {
-
+    const { organisationId, startHour, endHour, organisationName } = req.body;
+    try {
+        await db.query("UPDATE ?? SET start_hour = ?, end_hour = ?, name = ? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.details`, startHour, endHour, organisationName, organisationId]);
+        res.status(200).json({
+            success: true,
+        });
+    } catch (e) {
+        console.log(e);
+        res.status(404).json({ success: false, error: e, message: "An error occured!" });
+    }
 };
 
 

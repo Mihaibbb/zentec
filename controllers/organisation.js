@@ -57,7 +57,8 @@ exports.createOrganisation = async (req, res, next) => {
         createTableSql += 'country varchar(56), ';
         createTableSql += 'date date not null, ';
         createTableSql += 'notes text, ';
-        createTableSql += 'historic json )';
+        createTableSql += 'historic json, ';
+        createTableSql += 'documents json );';
 
         await db.query(createTableSql, ['patients']);
 

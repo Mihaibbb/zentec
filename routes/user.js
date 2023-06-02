@@ -1,4 +1,5 @@
 const router = require("express").Router();
+const upload = require("../middleware/upload");
 const { 
     createAppointment,
     removeAppointment, 
@@ -60,7 +61,11 @@ const {
     searchTreatment,
     searchTreatmentCategory,
     removeFutureAppointment,
-    editDetails
+    editDetails,
+    uploadPatientDocument,
+    removePatientDocument,
+    createPatientDocument,
+    editPatientDocument
 } = require("../controllers/user");
 
 router.post("/create-appointment", createAppointment);
@@ -124,5 +129,9 @@ router.put("/edit-treatment-category", editTreatmentCategory);
 router.delete("/remove-treatment-category/:organisationId/:id", removeTreatmentCategory);
 router.post("/search-treatment-category", searchTreatmentCategory);
 router.put("/edit-details", editDetails);
+router.post("/upload-patient-document/:organisationId/:patientId/:fileName", upload.single('file'), uploadPatientDocument);
+router.post("/create-patient-document", createPatientDocument);
+router.put("/edit-patient-document", editPatientDocument);
+router.delete("/remove-patient-document/:organisationId/:patientId/:fileName", removePatientDocument);
 
 module.exports = router;

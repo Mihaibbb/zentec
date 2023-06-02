@@ -16,6 +16,7 @@ const Profile = ({ data }) => {
     const navigate = useNavigate();
     const [cookies, setCookie, removeCookie] = useCookies();
     const [theme, setTheme] = useState(cookies?.theme || "dark");
+    const [errorMessage, setErrorMessage] = useState(null);
 
     const [startHourProgram, setStartHourProgram] = useState(8);
     const [endHourProgram, setEndHourProgram] = useState(20);
@@ -506,6 +507,14 @@ const Profile = ({ data }) => {
     };
 
     const saveChanges = async () => {
+
+        if (Number(startHourProgram) >= Number(endHourProgram) || Number(startHourProgram) <= 0 || Number(startHourProgram) >= 22 || Number(endHourProgram) <= 1 || Number(endHourProgram) >= 23) 
+            return setErrorMessage(cookies?.language === "en" ? "Start Hour or End Hour are not well defined." : "Ora de inceput sau sfarsit a programului nu este bine definita!"); 
+
+        if (organisationName?.length < 3) 
+            return setErrorMessage(cookies?.language === "en" ? "Organisation's name must have at least 3 characters" : "Numele organizatiei trebuie sa aiba minimum 3 caractere.");
+
+        setErrorMessage();
         const options = {
             method: "PUT",
             headers: {
@@ -514,7 +523,8 @@ const Profile = ({ data }) => {
             body: JSON.stringify({
                 startHourProgram,
                 endHourProgram,
-                organisationName
+                organisationName,
+                organisationId: data.organisation._id
             })
         };
 
@@ -561,14 +571,16 @@ const Profile = ({ data }) => {
                                 <div className="account-flex">
                                     <div className="account-container input profile-input">
                                         <p>{cookies.language === "en" ? "Start Hour Schedule" : "Ora Inceput Program"}</p>
-                                        <input type="text" value={startHourProgram} onChange={e => setStartHourProgram(e.target.value)} />
+                                        <input type="number" value={startHourProgram} onChange={e => setStartHourProgram(e.target.value)} />
                                     </div>
 
                                     <div className="account-container input profile-input">
                                         <p>{cookies.language === "en" ? "End Hour Schedule" : "Ora Sfarsit Program"}</p>
-                                        <input type="text" value={endHourProgram} onChange={e => setEndHourProgram(e.target.value)} />
+                                        <input type="number" value={endHourProgram} onChange={e => setEndHourProgram(e.target.value)} />
                                     </div>
                                 </div>
+
+                                <p className="error">{errorMessage}</p>
 
                                 <button className="save" onClick={async () => await saveChanges()}>
                                     <p>{cookies.language === "en" ? "Save changes" : "Salveaza modificarile"}</p>
@@ -762,11 +774,7 @@ const Profile = ({ data }) => {
                             <div className="backup-details">
 
                             </div>
-                        ) : activeOption === 5 ? (
-                            <div className="hours-details">
-
-                            </div>
-                        ) : activeOption === 6 ? (
+                        ) :  activeOption === 5 ? (
                             <div className="treatment-categories-details">
                                 <div className="search-container">
                                     <input type="text" value={query} onChange={e => setQuery(e.target.value)} placeholder={cookies.language === "en" ? "Search category..." : "Cauta categorie..."} />
@@ -864,7 +872,7 @@ const Profile = ({ data }) => {
                                     <FontAwesomeIcon icon={faPlus} className="add-icon" />
                                 </div>
                             </div>
-                        ) : activeOption === 7 ? (
+                        ) : activeOption === 6 ? (
                             <div className="treatment-categories-details">
                                 <div className="search-container">
                                     <input type="text" value={query} onChange={e => setQuery(e.target.value)} placeholder={cookies.language === "en" ? "Search category..." : "Cauta categorie..."} />

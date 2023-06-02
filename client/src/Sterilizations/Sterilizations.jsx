@@ -111,6 +111,7 @@ const Sterilizations = ({ data }) => {
 
 
     useEffect(() => {
+        if (!instruments || ! totalInstruments) return;
         setInstrumentsPages(Math.floor(instruments.length / perPage) + (totalInstruments.length % perPage !== 0 ? 1 : 0));
 
     }, [totalInstruments]);
@@ -359,7 +360,7 @@ const Sterilizations = ({ data }) => {
                                 </div>
                             </div>}
     
-                            {sterilizationsList.length > 0 ? sterilizationsList.map((sterilization, idx) => (
+                            {sterilizationsList?.length > 0 ? sterilizationsList.map((sterilization, idx) => (
                                 <div className="row" key={idx}>
     
                                     {windowWidth >= 600 ? <div className="column">

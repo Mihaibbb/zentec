@@ -22,7 +22,7 @@ const PatientAccount = ({ data }) => {
     const [cookies, setCookie] = useCookies();
     const birthRef = useRef();
     const noVideoContentRef = useRef();
-    const options = cookies.language === "en" ? ["Patient's Data", "Appointments", "Documents", "Treatment Plan", "Treatments", "Advance Payments", "Payments", "Invoices"] : ["Datele Pacientului", "Programari", "Documente", "Plan Tratament", "Tratamente", "Plati in avans", "Plati", "Facturi"];
+    const options = cookies.language === "en" ? ["Patient's Data", "Appointments", "Documents", "Treatment Plan", "Treatments"] : ["Datele Pacientului", "Programari", "Documente", "Plan Tratament", "Tratamente"];
     
     if (!param?.id || !param?.historicPage) navigation(-1);
     console.log(param);                      
