@@ -34,6 +34,7 @@ import SterilizationFiles from "./SterilizationFiles/SterilizationFiles";
 import PatientsListFile from "./PatientsListFile/PatientsListFile";
 import CreateTreatmentCategory from "./CreateTreatmentCategory/CreatTreatmentCategory";
 import EditTreatmentCategory from "./EditTreatmentCategory/EditTreatmentCategory";
+import UploadPatientFile from "./UploadPatientFile/UploadPatientFile";
 
 
 const App = () => {
@@ -154,6 +155,7 @@ const App = () => {
                         {!isAdmin ? (
                             <>
                                 <Route path="patients" element={<Patients data={data} />} />
+                                <Route path="patient/:id/upload" element={<UploadPatientFile data={data} />} />
                                 <Route path="patient/:id/:historicPage" element={<PatientAccount data={data} />} />
                                 <Route path="doctors" element={<Users data={data} />} />
                                 <Route path="doctors-schedule" element={<DoctorSchedule data={data} />} />

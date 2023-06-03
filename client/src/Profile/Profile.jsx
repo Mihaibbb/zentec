@@ -10,6 +10,7 @@ import { faClockRotateLeft, faEllipsis, faFileArrowDown, faFileArrowUp, faMagnif
 import greenTick from "../imgs/green-tick.mp4";
 import greenTickWhiteTheme from "../imgs/green-tick-light-theme.mp4";
 import { useRef } from "react";
+import TickAnimation from "../utils/TickAnimation";
 
 const Profile = ({ data }) => {
 
@@ -176,6 +177,7 @@ const Profile = ({ data }) => {
 
 
     useEffect(() => {
+        
         setPages(Math.floor(totalAssistants.length / perPage) + (totalAssistants.length % perPage !== 0 ? 1 : 0));
 
     }, [totalAssistants]);
@@ -976,18 +978,8 @@ const Profile = ({ data }) => {
                     
                 </div>
                 : 
-                    <div className="video-content" style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
-                        <video
-                            src={theme === 'light' ? greenTickWhiteTheme : greenTick}
-                            controls={false}
-                            autoPlay
-                            playsInline
-                            onEnded={animationFinished}
-                            muted
-                            style={{ height: "40vh" }}
-                        />
-                        <h2 className="title title-video-content" style={{ margin: 0 }}>{videoStart}</h2>
-                    </div>
+                   
+                    <TickAnimation animationFinished={animationFinished} title={videoStart} />
                 }
 
             </div>

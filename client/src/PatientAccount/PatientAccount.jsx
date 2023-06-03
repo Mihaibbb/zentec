@@ -1,15 +1,16 @@
-import { faAddressBook, faAddressCard, faAngleLeft, faCalendar, faCheck, faCity, faDeleteLeft, faEnvelope, faIdBadge, faMars, faNoteSticky, faPhone, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faAddressBook, faAddressCard, faAngleLeft, faCalendar, faCheck, faCity, faDeleteLeft, faEnvelope, faIdBadge, faMars, faNoteSticky, faPhone, faPlus, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState, useEffect, useRef, useMemo } from "react";
 import { useCookies } from "react-cookie";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Header from "../Components/Header/Header";
 import Navigation from "../Components/Navigation/Navigation";
-import "./PatientAccount.css";
 import DateCustomInput from "../Components/DatePicker/DatePicker";
 import tickAnimationWhite from "../imgs/green-tick-light-theme.mp4";
 import tickAnimation from "../imgs/green-tick.mp4";
 import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
+import "./PatientAccount.css";
+import TickAnimation from "../utils/TickAnimation";
 
 
 const PatientAccount = ({ data }) => {
@@ -27,7 +28,7 @@ const PatientAccount = ({ data }) => {
     if (!param?.id || !param?.historicPage) navigation(-1);
     console.log(param);                      
     const historicPage = Number(param?.historicPage);
-   
+  
     const patient = location?.state?.patient;
     console.log(patient);
 
@@ -44,6 +45,7 @@ const PatientAccount = ({ data }) => {
     const initialPIC = patient.cnp || "";
     const initialNotes = patient.notes || "";
     const initialBirthdate = patient.birthdate || "";
+    const documents = JSON.parse(patient?.documents || "[]");
     
     const [firstName, setFirstName] = useState(initialFirstName);
     const [lastName, setLastName] = useState(initialLastName);
@@ -308,21 +310,9 @@ const PatientAccount = ({ data }) => {
             <div className="content" style={patientEdited ? { maxHeight: "100vh" } : {}}> 
                 <Header data={data} />
               
-                {patientEdited ? 
-                <div className="video-content" style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
-                    <video
-                        src={theme === "light" ? tickAnimationWhite : tickAnimation}
-                        controls={false}
-                        autoPlay
-                        playsInline
-                        onEnded={animationFinished}
-
-                        muted
-                        style={{ height: "40vh" }}
-                    
-                    />
-                    <h2 className="title title-video-content" style={{ margin: 0 }}>{videoMessage}</h2>
-                </div>  : 
+                {patientEdited ?
+                <TickAnimation animationFinished={animationFinished} title={videoMessage} />
+                : 
                 <div className="patient-account-details no-video-content" ref={noVideoContentRef}>
                      <div className="patient-name">
                         <FontAwesomeIcon icon={faUser} className="patient-icon" />
@@ -355,7 +345,7 @@ const PatientAccount = ({ data }) => {
                         <FontAwesomeIcon icon={faAngleLeft} />
                     </div>
 
-                    {!historicPage ? <div className="inputs-container">
+                    {historicPage === 0 ? <div className="inputs-container">
                         <div className="input">
                             <div className="input-title">
                                 <FontAwesomeIcon className="icon" icon={faUser} />
@@ -495,7 +485,7 @@ const PatientAccount = ({ data }) => {
                         
                 </div>}
 
-                {historicPage ? <div className="patient-historic">
+                {historicPage === 1 ? <div className="patient-historic">
                     {/* <h2 className="title">{cookies.language === "en" ? "Patient's appointments" : "Programarile pacientului"}</h2>
                     <div className="patient-name">
                         <FontAwesomeIcon icon={faUser} className="patient-icon" />
@@ -541,6 +531,56 @@ const PatientAccount = ({ data }) => {
                         ))}
                     </div>
                 </div> : null}
+
+                {/* { historicPage === 2 ? 
+                <>
+                    <h2 className="title">{cookies.language === "en" ? "Import Patients" : "Importa Pacienti"}</h2>
+
+                    <div className="go-back" onClick={() => navigation(-1)}>
+                        <FontAwesomeIcon icon={faAngleLeft} />
+                    </div>
+
+                    <input type="file" onChange={handleFile} className="file-input" ref={uploadFileInputRef} />
+                    
+                    <div className="drop-container" onClick={() => uploadFileInputRef.current.click()} onDragEnter={handleDrag}>
+                        <FontAwesomeIcon icon={faCloudArrowUp} className="cloud-icon" />
+                        <h2>{cookies.language === "en" ? "Select files here to upload" : "Selectati fisierele pe care doriti sa le incarcati!"}</h2>
+                        { dragActive && <div id="drag-file-element" onDragEnter={handleDrag} onDragLeave={handleDrag} onDragOver={handleDrag} onDrop={handleDrop}></div>}
+                    </div>
+
+                    {excelData && excelData.length > 0 && excelData.map((row, idx) => (
+                        <div className="row" key={idx}>
+                            <p>{row.firstname}</p>
+                        </div>
+                    ))}
+
+            
+                    <button type="button" className={`save-button ${success ? "show" : ""}`} onClick={async () => success && await uploadPatients()}>
+                        <h2>{cookies.language === "en" ? "Save Patients" : "Salveaza Pacientii"}</h2>
+                    </button>
+                </> : null } */}
+
+                {historicPage === 2 ? (
+                    <>
+                     {documents && documents.length ? (
+                        <div className="documents-container">
+                            {/* <h2 className="title">{options[historicPage]}</h2> */}
+
+                        </div>
+                    ) : (
+                        <div className="patients-container">
+                            <h2 className="center">{cookies?.language === "en" ? "No documens uploaded." : "Niciun document incarcat."}</h2>
+                        </div>
+                    )}
+
+                        <div className="add-button" onClick={() => navigation(`/patient/${param?.id}/upload`, { state: location?.state })}>
+                            <FontAwesomeIcon icon={faPlus} className="add-icon" />
+                            <p>{cookies?.language === "en" ? "Upload document" : "Incarca document"}</p>
+                        </div>
+                    </>
+                ) : null} 
+
+                
             </div>
         </div>
     );

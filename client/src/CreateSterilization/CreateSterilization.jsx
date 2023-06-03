@@ -10,6 +10,7 @@ import tickAnimationWhite from "../imgs/green-tick-light-theme.mp4";
 import DateCustomInput from "../Components/DatePicker/DatePicker";
 import "./CreateSterilization.css";
 import Select from "react-select";
+import TickAnimation from "../utils/TickAnimation";
 
 const CreateSterilization = ({ data }) => {
 
@@ -241,20 +242,7 @@ const CreateSterilization = ({ data }) => {
             <div className="content" style={assistantAdded ? {maxHeight: "100vh"} : {}}>
                 <Header data={data} />
                 {assistantAdded ? (
-                    <div className="video-content" style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
-                        <video
-                            src={theme === "light" ? tickAnimationWhite : tickAnimation}
-                            controls={false}
-                            autoPlay
-                            playsInline
-                            onEnded={animationFinished}
-
-                            muted
-                            style={{ height: "40vh" }}
-                        
-                        />
-                        <h2 className="title title-video-content" style={{ margin: 0 }}>{cookies.language === "en" ? "Sterilization created successfully!" : "Sterilizarea a fost creata cu succes!"}</h2>
-                    </div>
+                    <TickAnimation title={cookies.language === "en" ? "Sterilization created successfully!" : "Sterilizarea a fost creata cu succes!"} animationFinished={animationFinished} />
                 ) : (
                 <div className="no-video-content" ref={noVideoContentRef}>
                     <h2 className="title">{cookies.langauge === "en" ? "Add Sterilization" : "Adauga Sterilizare"}</h2>

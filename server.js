@@ -206,8 +206,6 @@ app.get("/test", (req, res) => {
             createTableSql += 'color varchar(20) not null );';
     
             await db.query(createTableSql, ['treatments']);
-        
-      
         }
     }); 
 })();

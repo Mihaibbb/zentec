@@ -129,8 +129,7 @@ router.put("/edit-treatment-category", editTreatmentCategory);
 router.delete("/remove-treatment-category/:organisationId/:id", removeTreatmentCategory);
 router.post("/search-treatment-category", searchTreatmentCategory);
 router.put("/edit-details", editDetails);
-router.post("/upload-patient-document/:organisationId/:patientId/:fileName", upload.single('file'), uploadPatientDocument);
-router.post("/create-patient-document", createPatientDocument);
+router.post("/create-patient-document/:organisationId/:patientId/:fileSize/:notes/:source/:fileName", upload.single('file'), uploadPatientDocument, createPatientDocument);
 router.put("/edit-patient-document", editPatientDocument);
 router.delete("/remove-patient-document/:organisationId/:patientId/:fileName", removePatientDocument);
 

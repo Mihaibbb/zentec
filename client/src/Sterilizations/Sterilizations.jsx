@@ -8,6 +8,7 @@ import { faEllipsis, faFilePdf, faMinus, faPlus, faSearch, faSortDown, faTimes, 
 import { useLocation, useNavigate } from "react-router-dom";
 import tickAnimation from "../imgs/green-tick.mp4";
 import tickAnimationWhite from "../imgs/green-tick-light-theme.mp4";
+import TickAnimation from "../utils/TickAnimation";
 
 const Sterilizations = ({ data }) => {
 
@@ -213,20 +214,7 @@ const Sterilizations = ({ data }) => {
             <div className="content" style={videoStart ? { maxHeight: "100vh" } : {}}>
                 <Header data={data} />
                 {videoStart ? (
-                     <div className="video-content" style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
-                        <video
-                            src={theme === "light" ? tickAnimationWhite : tickAnimation}
-                            controls={false}
-                            autoPlay
-                            playsInline
-                            onEnded={animationFinished}
-
-                            muted
-                            style={{ height: "40vh" }}
-                        
-                        />
-                        <h2 className="title title-video-content" style={{ margin: 0 }}>{videoStart}</h2>
-                    </div> 
+                    <TickAnimation title={videoStart} animationFinished={animationFinished} />
                 ) : (
                     <div className="no-video-content" ref={noVideoContentRef}>
                     <h2 className="title">{cookies?.language === "en" ? "Sterilizations" : "Sterilizari"}</h2>

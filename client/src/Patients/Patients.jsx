@@ -292,7 +292,7 @@ const Patients = ({ data }) => {
                     {patients.length > 0 ? patients.map((patient, idx) => (
                         <div className="row" key={idx}>
 
-                            {windowWidth >= 600 ? <div clqassName="column">
+                            {windowWidth >= 600 ? <div className="column">
                                 <p>{patient.fileNumber}</p>
                             </div> : null}
 

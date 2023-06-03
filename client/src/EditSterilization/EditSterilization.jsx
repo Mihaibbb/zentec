@@ -9,6 +9,7 @@ import tickAnimation from "../imgs/green-tick.mp4";
 import tickAnimationWhite from "../imgs/green-tick-light-theme.mp4";
 import DateCustomInput from "../Components/DatePicker/DatePicker";
 import Select from "react-select";
+import TickAnimation from "../utils/TickAnimation";
 
 const EditSterilization = ({ data }) => {
 
@@ -244,20 +245,7 @@ const EditSterilization = ({ data }) => {
             <div className="content" style={assistantAdded ? {maxHeight: "100vh"} : {}}>
                 <Header data={data} />
                 {assistantAdded ? (
-                    <div className="video-content" style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
-                        <video
-                            src={theme === "light" ? tickAnimationWhite : tickAnimation}
-                            controls={false}
-                            autoPlay
-                            playsInline
-                            onEnded={animationFinished}
-
-                            muted
-                            style={{ height: "40vh" }}
-                        
-                        />
-                        <h2 className="title title-video-content" style={{ margin: 0 }}>{cookies.language === "en" ? "Changes have been saved successfully!" : "Modificarile au fost salvate cu succes!"}</h2>
-                    </div>
+                    <TickAnimation title={cookies.language === "en" ? "Changes have been saved successfully!" : "Modificarile au fost salvate cu succes!"} animationFinished={animationFinished} />
                 ) : (
                 <div className="no-video-content" ref={noVideoContentRef}>
                     <h2 className="title">{cookies.langauge === "en" ? "Add Sterilization" : "Adauga Sterilizare"}</h2>

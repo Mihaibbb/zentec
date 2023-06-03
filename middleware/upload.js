@@ -1,17 +1,19 @@
 const fs = require("fs-extra");
 const multer = require("multer");
+const path = require('path');
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
+        console.log("PARAMS: ", req.params);
         const {organisationId, patientId} = req.params; 
-        const path = `../uploads/${organisationId}/${patientId}`;
+        const path = `./uploads/${organisationId}/${patientId}`;
+
         fs.mkdirsSync(path);
         cb(null, path);
     },
 
     filename: (req, file, cb) => {
-        const extension = file.originalname.split(".")[file.originalname.split(".").length - 1];
-        cb(null, `${req.params?.fileName}.${extension}`);
+        cb(null, req.params.source);
     }
 });
 
@@ -21,7 +23,7 @@ const upload = multer({
     storage: storage,
     limits: { fileSize: maxSize },
     fileFilter: (req, file, cb) => {
-    
+        console.log("HERE", req.file, req.params);
         // Set the filetypes, it is optional
         const filetypes = /jpeg|jpg|png|pdf/;
         // let mimetype = filetypes.test(file.mimetype);

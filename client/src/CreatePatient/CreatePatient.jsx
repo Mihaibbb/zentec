@@ -7,8 +7,7 @@ import Header from "../Components/Header/Header";
 import Navigation from "../Components/Navigation/Navigation";
 import "./CreatePatient.css";
 import DateCustomInput from "../Components/DatePicker/DatePicker";
-import tickAnimation from "../imgs/green-tick.mp4";
-import tickAnimationWhite from "../imgs/green-tick-light-theme.mp4";
+import TickAnimation from "../utils/TickAnimation";
 
 const CreatePatient = ({ data, fromAppointments, patientSaved }) => {
 
@@ -240,20 +239,7 @@ const CreatePatient = ({ data, fromAppointments, patientSaved }) => {
             <div className="content" style={patientAdded ? { maxHeight: "100vh" } : {}}>
                 <Header data={data} />
                 {patientAdded ? (
-                    <div className="video-content" style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
-                        <video
-                            src={theme === "light" ? tickAnimationWhite : tickAnimation}
-                            controls={false}
-                            autoPlay
-                            playsInline
-                            onEnded={animationFinished}
-
-                            muted
-                            style={{ height: "40vh" }}
-                        
-                        />
-                        <h2 className="title title-video-content" style={{ margin: 0 }}>{cookies.language === "en" ? "Patient added successfully!" : "Pacientul a fost adaugat cu succes!"}</h2>
-                    </div> 
+                    <TickAnimation title={cookies.language === "en" ? "Patient added successfully!" : "Pacientul a fost adaugat cu succes!"} animationFinished={animationFinished} />
                 ) : (
                     <div className="no-video-content" ref={noVideoContentRef}>
                          <h2 className="title">{cookies.language === "en" ? "Create new patient" : "Creeaza un nou pacient"}</h2>

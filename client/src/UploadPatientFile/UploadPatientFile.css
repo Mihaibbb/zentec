@@ -1,0 +1,17 @@
+.import-container button.save-button h2
+{
+    color: rgba(255, 255, 255, .85);
+    font-weight: bold;
+}
+
+.patinet-account-details .inputs-container 
+{
+    grid-template-columns: 1fr 1fr;
+    width: 90%;
+    margin: 0 auto;
+}
+
+.patient-account-details .inputs-container .input.one-row
+{
+    grid-column: 1 / -1;
+}

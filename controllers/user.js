@@ -1901,14 +1901,9 @@ exports.removeTreatmentPlan = async (req, res, next) => {
 
 exports.uploadPatientDocument = async (req, res, next) => {
     try {
-
-        if (!req.file) return res.status(404).json({ success: false });
-        res.status(200).json({ success: true });
-
-        // upload(req, res, (err) => {
-        //     if(err) return res.status(200).json({ success: false, error: e, message: "An error occured!" });
-        //     return res.status(200).json({ success: true });
-        // });
+        console.log("FILE: ", req?.file);
+        if (!req?.file) return res.status(404).json({ success: false });
+        next();
 
     } catch (e) {
         console.log(e);
@@ -1917,19 +1912,18 @@ exports.uploadPatientDocument = async (req, res, next) => {
 };
 
 exports.createPatientDocument = async (req, res, next) => {
-    const { organisationId, patientId, fileSource, fileSize, notes, title } = req.body;
+    const { organisationId, patientId, fileSize, notes, source, fileName } = req.params;
     try {
-
         const patients = await db.query("SELECT * FROM ?? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.patients`, patientId]);
         if (!patients?.length) return res.status(404).json({ success: false, message: "An error occured!" });
-
+         
         const patient = patients[0];
         const patientsDocuments = JSON.parse(patient.documents);
         patientsDocuments.push({
             size: fileSize,
-            source: fileSource,
+            source: source,
             notes: notes,
-            title: title
+            fileName: fileName
         });
 
         await db.query("UPDATE ?? SET documents = ? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.patients`, JSON.stringify(patientsDocuments), patientId]);
@@ -1943,8 +1937,10 @@ exports.createPatientDocument = async (req, res, next) => {
 };
 
 exports.editPatientDocument = async (req, res, next) => {
-    const { organisationId, patientId, source, notes, title } = req.body;
+    const { organisationId, patientId, notes, fileName } = req.body;
     try {
+        const source = `./uploads/${organisationId}/${patientId}/${fileName}`;
+
         const patients = await db.query("SELECT * FROM ?? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.patients`, patientId]);
         if (!patients?.length) return res.status(404).json({ success: false, message: "An error occured!" });
 
@@ -1954,7 +1950,7 @@ exports.editPatientDocument = async (req, res, next) => {
             if (currDocument.source === source) return {
                 ...currDocument, 
                 notes: notes,
-                title: title
+                fileName: fileName
             };
 
             return currDocument;
@@ -1973,6 +1969,8 @@ exports.editPatientDocument = async (req, res, next) => {
 
 exports.removePatientDocument = async (req, res, next) => {
     const { organisationId, patientId, fileName } = req.params; 
+    const source = `./uploads/${organisationId}/${patientId}/${fileName}`;
+
     try {
         const patients = await db.query("SELECT * FROM ?? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.patients`, patientId]);
         if (!patients?.length) return res.status(404).json({ success: false, message: "An error occured!" });
@@ -1980,11 +1978,11 @@ exports.removePatientDocument = async (req, res, next) => {
         const patient = patients[0];
         const patientsDocuments = JSON.parse(patient.documents);
         const newPatientsDocuments = patientsDocuments.filter((currDocument) => {
-            return currDocument.source !== fileName;
+            return currDocument.source !== source;
         });
 
         await db.query("UPDATE ?? SET documents = ? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.patients`, JSON.stringify(newPatientsDocuments), patientId]);
-        fs.unlinkSync(`../uploads/${organisationId}/${patientId}/${fileName}`);
+        fs.unlinkSync(`./uploads/${organisationId}/${patientId}/${fileName}`);
 
         res.status(200).json({
             success: true

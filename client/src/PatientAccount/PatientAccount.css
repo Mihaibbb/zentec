@@ -438,6 +438,32 @@ body.light .patient-historic .historic-options .historic-option.active
     border-top-right-radius: 10px;
 }
 
+.account-container .add-button 
+{
+    padding-inline: 10px 35px;
+    border-radius: 15px;
+    cursor: pointer;
+    right: 15px;
+    transition: all 350ms ease-in-out;
+}
+
+.account-container .add-button .add-icon 
+{
+    width: 24px;
+    height: 24px;
+}
+
+.account-container .add-button p 
+{
+    color: #fff;
+    font-weight: 600;
+}
+
+.account-container .add-button:hover 
+{
+    border-radius: 35px;
+}
+
 @keyframes update_btn {
     33% {
         transform: rotateZ(-2deg);
