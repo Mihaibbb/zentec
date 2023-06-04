@@ -37,14 +37,16 @@ const UploadPatientFile = ({ data }) => {
         if (!successUpload || !fileSize) return;
 
         try {
+
+
             const options = {
                 method: "POST",
-                body: file
+                body: file,
             };
 
-            const source = `./uploads/${data.organisation._id}/${id}/${new Date().getTime()}-${fileName}`;
+            const source = `${new Date().getTime()}-${fileName}`;
 
-            const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/create-patient-document/${data.organisation._id}/${id}/${fileSize}/${JSON.stringify(notes)}/${source}/${customFileName}`, options);
+            const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/create-patient-document/${data.organisation._id}/${id}/${fileSize}/${notes}/${source}/${customFileName}`, options);
             const response = await request.json();
             if (response.success) setSuccessfullyUploaded(true);
             console.log(response);
@@ -60,13 +62,13 @@ const UploadPatientFile = ({ data }) => {
         if (files.length > 1) return alert("Un singur fisier trebuie incarcat!");
         
         const currFormData = new FormData();
-        const file = e.target.files[0];
-        console.log(file);
-        currFormData.append("file", file, file.name);
+        const currFile = e.target.files[0];
+        console.log(currFile);
+        currFormData.append("file", currFile, currFile.name);
         setFile(currFormData);
         console.log(currFormData);
-        setFileSize(file.size);
-        setFileName(file.name);
+        setFileSize(currFile.size);
+        setFileName(currFile.name);
         document.body.style.background = theme === "light" ? "#fff" : "#000";
         noVideoContentRef.current.classList.add("invisible");
         setTimeout(() => setSuccessUpload(true), 300);
@@ -78,7 +80,6 @@ const UploadPatientFile = ({ data }) => {
         setSuccessUpload(false);
         setFileName("");
     };
-    
 
     const handleDrag = function(e) {
         e.preventDefault();
@@ -118,7 +119,7 @@ const UploadPatientFile = ({ data }) => {
             activeOption: 2, 
             success: true, 
         }, "");
-        window.location.replace(`/patient/${id}/2`);
+        navigate(`/patient/${id}/2`, { state: { ...location?.state, activeOption: 2 } });
     };
 
     return (
@@ -143,7 +144,12 @@ const UploadPatientFile = ({ data }) => {
                                     <p>{cookies.language === "en" ? "File's name" : "Nume fisier"}</p>
                                 </div>
                                 
-                                <input type="text" value={customFileName} onChange={e => setCustomFileName(e.target.value)}/>
+                                <input 
+                                    type="text" 
+                                    value={customFileName} 
+                                    onChange={e => setCustomFileName(e.target.value)} 
+                                    placeholder={cookies?.language === "en" ? "File's name" : "Nume fisier"}
+                                />
                             </div>   
 
                             <div className="input">
@@ -152,7 +158,7 @@ const UploadPatientFile = ({ data }) => {
                                     <p>{cookies.language === "en" ? "Notes" : "Observatii"}</p>
                                 </div>
                                 
-                                <textarea value={notes} onChange={e => setNotes(e.target.value)}/>
+                                <textarea value={notes} onChange={e => setNotes(e.target.value)} placeholder={cookies?.language === "en" ? "Notes" : "Observatii"}/>
                             </div>  
                         </div>
 

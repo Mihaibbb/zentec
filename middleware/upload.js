@@ -4,7 +4,7 @@ const path = require('path');
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        console.log("PARAMS: ", req.params);
+        // console.log("PARAMS: ", req.body.keywords);
         const {organisationId, patientId} = req.params; 
         const path = `./uploads/${organisationId}/${patientId}`;
 
@@ -13,6 +13,7 @@ const storage = multer.diskStorage({
     },
 
     filename: (req, file, cb) => {
+        console.log("BODY: ", req.query);
         cb(null, req.params.source);
     }
 });
@@ -23,7 +24,6 @@ const upload = multer({
     storage: storage,
     limits: { fileSize: maxSize },
     fileFilter: (req, file, cb) => {
-        console.log("HERE", req.file, req.params);
         // Set the filetypes, it is optional
         const filetypes = /jpeg|jpg|png|pdf/;
         // let mimetype = filetypes.test(file.mimetype);

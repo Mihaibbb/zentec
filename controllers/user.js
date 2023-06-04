@@ -1899,7 +1899,28 @@ exports.removeTreatmentPlan = async (req, res, next) => {
 
 };
 
+exports.searchTreatmentPlan = async (req, res, next) => {
+
+}
+
+exports.createPatientTreatment = async (req, res, next) => {
+
+};
+
+exports.editPatientTreatment = async (req, res, next) => {
+
+};
+
+exports.removePatientTreatment = async (req, res, next) => {
+
+};
+
+exports.searchPatientTreatment = async (req, res, next) => {
+
+};
+
 exports.uploadPatientDocument = async (req, res, next) => {
+    
     try {
         console.log("FILE: ", req?.file);
         if (!req?.file) return res.status(404).json({ success: false });
@@ -1913,6 +1934,7 @@ exports.uploadPatientDocument = async (req, res, next) => {
 
 exports.createPatientDocument = async (req, res, next) => {
     const { organisationId, patientId, fileSize, notes, source, fileName } = req.params;
+    console.log(req.params);
     try {
         const patients = await db.query("SELECT * FROM ?? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.patients`, patientId]);
         if (!patients?.length) return res.status(404).json({ success: false, message: "An error occured!" });
@@ -1921,7 +1943,7 @@ exports.createPatientDocument = async (req, res, next) => {
         const patientsDocuments = JSON.parse(patient.documents);
         patientsDocuments.push({
             size: fileSize,
-            source: source,
+            source: `/uploads/${organisationId}/${patientId}/${source}`,
             notes: notes,
             fileName: fileName
         });

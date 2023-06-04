@@ -4,11 +4,18 @@
     font-weight: bold;
 }
 
-.patinet-account-details .inputs-container 
+.patient-account-details .inputs-container 
 {
-    grid-template-columns: 1fr 1fr;
+    /* grid-template-columns: 1fr 1fr; */
     width: 90%;
     margin: 0 auto;
+    /* align-items: center; */
+    justify-content: flex-start;
+}
+
+.patient-account-details .inputs-container .input 
+{
+    align-items: flex-start;
 }
 
 .patient-account-details .inputs-container .input.one-row

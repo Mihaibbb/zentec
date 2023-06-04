@@ -565,7 +565,12 @@ const PatientAccount = ({ data }) => {
                      {documents && documents.length ? (
                         <div className="documents-container">
                             {/* <h2 className="title">{options[historicPage]}</h2> */}
-
+                            {documents.map((document, idx) => (
+                                <div className="document">
+                                    <img className="document-image" src={`${process.env.REACT_APP_BACKEND_URL}${document.source}`} alt="document" />
+                                    <h2 className="document-name">{document.fileName}</h2>
+                                </div>
+                            ))}
                         </div>
                     ) : (
                         <div className="patients-container">
