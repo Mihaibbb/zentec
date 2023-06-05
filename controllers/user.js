@@ -1938,14 +1938,15 @@ exports.createPatientDocument = async (req, res, next) => {
     try {
         const patients = await db.query("SELECT * FROM ?? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.patients`, patientId]);
         if (!patients?.length) return res.status(404).json({ success: false, message: "An error occured!" });
-         
+        const photoId = generateId(8);
         const patient = patients[0];
         const patientsDocuments = JSON.parse(patient.documents);
         patientsDocuments.push({
             size: fileSize,
             source: `/uploads/${organisationId}/${patientId}/${source}`,
             notes: notes,
-            fileName: fileName
+            fileName: fileName,
+            photoId
         });
 
         await db.query("UPDATE ?? SET documents = ? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.patients`, JSON.stringify(patientsDocuments), patientId]);
@@ -1959,9 +1960,9 @@ exports.createPatientDocument = async (req, res, next) => {
 };
 
 exports.editPatientDocument = async (req, res, next) => {
-    const { organisationId, patientId, notes, fileName } = req.body;
+    const { organisationId, patientId, notes, fileName, photoId } = req.body;
+    console.log(req.body);
     try {
-        const source = `./uploads/${organisationId}/${patientId}/${fileName}`;
 
         const patients = await db.query("SELECT * FROM ?? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.patients`, patientId]);
         if (!patients?.length) return res.status(404).json({ success: false, message: "An error occured!" });
@@ -1969,7 +1970,7 @@ exports.editPatientDocument = async (req, res, next) => {
         const patient = patients[0];
         const patientsDocuments = JSON.parse(patient.documents);
         const newPatientsDocuments = patientsDocuments.map((currDocument) => {
-            if (currDocument.source === source) return {
+            if (currDocument.photoId === photoId) return {
                 ...currDocument, 
                 notes: notes,
                 fileName: fileName
@@ -1990,8 +1991,7 @@ exports.editPatientDocument = async (req, res, next) => {
 };
 
 exports.removePatientDocument = async (req, res, next) => {
-    const { organisationId, patientId, fileName } = req.params; 
-    const source = `./uploads/${organisationId}/${patientId}/${fileName}`;
+    const { organisationId, patientId, photoId, source } = req.params; 
 
     try {
         const patients = await db.query("SELECT * FROM ?? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.patients`, patientId]);
@@ -2000,16 +2000,34 @@ exports.removePatientDocument = async (req, res, next) => {
         const patient = patients[0];
         const patientsDocuments = JSON.parse(patient.documents);
         const newPatientsDocuments = patientsDocuments.filter((currDocument) => {
-            return currDocument.source !== source;
+            return currDocument.photoId !== photoId;
         });
 
         await db.query("UPDATE ?? SET documents = ? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.patients`, JSON.stringify(newPatientsDocuments), patientId]);
-        fs.unlinkSync(`./uploads/${organisationId}/${patientId}/${fileName}`);
+        fs.unlinkSync(`${process.env.CLIENT_PATH}/uploads/${organisationId}/${patientId}/${source}`);
 
         res.status(200).json({
             success: true
         });
 
+    } catch (e) {
+        console.log(e);
+        res.status(404).json({ success: false, error: e, message: "An error occured!" });
+    }
+};
+
+exports.getPatientDocument = async (req, res) => {
+    const { organisationId, patientId, photoId } = req.params;
+    try {
+        const patients = await db.query("SELECT * FROM ?? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.patients`, patientId]);
+        if (!patients?.length) return res.status(404).json({ success: false, message: "An error occured!" });
+        const patient = patients[0];
+        const patientsDocuments = JSON.parse(patient.documents);
+
+        const foundDocument = patientsDocuments.find(document => document.photoId === photoId);
+        if (!foundDocument) return res.status(404).json({ success: false, message: "Document not found!" });
+
+        res.status(200).json({ success: true, document: foundDocument })
     } catch (e) {
         console.log(e);
         res.status(404).json({ success: false, error: e, message: "An error occured!" });

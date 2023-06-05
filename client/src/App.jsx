@@ -155,7 +155,8 @@ const App = () => {
                         {!isAdmin ? (
                             <>
                                 <Route path="patients" element={<Patients data={data} />} />
-                                <Route path="patient/:id/upload" element={<UploadPatientFile data={data} />} />
+                                <Route path="patient/:id/:photoId/edit" element={<UploadPatientFile data={data} editMode={true} />} />
+                                <Route path="patient/:id/upload" element={<UploadPatientFile data={data} editMode={false} />} />
                                 <Route path="patient/:id/:historicPage" element={<PatientAccount data={data} />} />
                                 <Route path="doctors" element={<Users data={data} />} />
                                 <Route path="doctors-schedule" element={<DoctorSchedule data={data} />} />

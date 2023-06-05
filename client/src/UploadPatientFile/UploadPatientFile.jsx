@@ -10,13 +10,14 @@ import axios from "axios";
 import TickAnimation from "../utils/TickAnimation";
 import { faNoteSticky } from "@fortawesome/free-regular-svg-icons";
 
-const UploadPatientFile = ({ data }) => {
+const UploadPatientFile = ({ data, editMode }) => {
 
     const navigate = useNavigate();
     const location = useLocation();
-    const state = location.state;
 
-    const { id } = useParams();
+    const params = useParams();
+    const id = params.id;
+    const photoId = params?.photoId;
     const [cookies, setCookie] = useCookies();
     const noVideoContentRef = useRef();
 
@@ -29,24 +30,37 @@ const UploadPatientFile = ({ data }) => {
     const [successUpload, setSuccessUpload] = useState(false);
     const [successfullyUploaded, setSuccessfullyUploaded] = useState(false);
     const [theme, setTheme] = useState(cookies?.theme || "dark");
+    const [fileData, setFileData] = useState(null);
 
     const uploadFileInputRef = useRef();
 
     const createFile = async () => {
-        console.log(successUpload, file, fileSize);
-        if (!successUpload || !fileSize) return;
+        console.log(successUpload, file, fileSize, editMode);
+        if ((!successUpload || !fileSize) && !editMode) return;
 
         try {
 
 
             const options = {
-                method: "POST",
-                body: file,
+                method: editMode ? "PUT" : "POST",
+                body: editMode && photoId ? JSON.stringify({
+                    organisationId: data.organisation._id,
+                    patientId: id, 
+                    photoId,
+                    notes: notes,
+                    fileName: customFileName
+                }) : file,
+                
             };
 
-            const source = `${new Date().getTime()}-${fileName}`;
-
-            const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/create-patient-document/${data.organisation._id}/${id}/${fileSize}/${notes}/${source}/${customFileName}`, options);
+            if (editMode) options.headers = { "Content-Type": "application/json" };
+            console.log(options);
+            
+            const source = `${new Date().getTime()}`;
+            const extension = fileName.split(".").at(-1);
+            const url = `${process.env.REACT_APP_BACKEND_URL}/api/user/${editMode ? "edit" : "create"}-patient-document${editMode ? "" : `/${data.organisation._id}/${id}/${fileSize}/${notes.length ? notes : "1"}/${source}.${extension}/${customFileName}`}`;
+            console.log(url)
+            const request = await fetch(url, options);
             const response = await request.json();
             if (response.success) setSuccessfullyUploaded(true);
             console.log(response);
@@ -113,13 +127,40 @@ const UploadPatientFile = ({ data }) => {
         
     }, [location]);
 
+    useEffect(() => {
+        if (!photoId || !editMode) return;
+
+        (async () => {
+            const options = {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            };
+
+            try {
+                const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/get-patient-document/${data.organisation._id}/${id}/${photoId}`, options);
+                const response = await request.json();
+                if (!response.success) console.log("Didn't get document from request!", response);
+                const document = response.document;
+                setCustomFileName(document.fileName);
+                setNotes(document.notes);
+            } catch (e) {   
+                console.log(e);
+            }
+        })();
+    }, []);
+
     const animationFinished = () => {
-        document.body.style.background = "var(--background)";
-        window.history.replaceState({ 
-            activeOption: 2, 
-            success: true, 
-        }, "");
-        navigate(`/patient/${id}/2`, { state: { ...location?.state, activeOption: 2 } });
+        setTimeout(() => {
+            document.body.style.background = "var(--background)";
+            window.history.replaceState({ 
+                activeOption: 2, 
+                success: true, 
+            }, "");
+            navigate(`/patient/${id}/2`, { state: {...location.state} });
+        }, 500);
+       
     };
 
     return (
@@ -128,10 +169,10 @@ const UploadPatientFile = ({ data }) => {
             <div className="content">
                 <Header data={data} />
                 {successfullyUploaded ? (
-                    <TickAnimation title={cookies?.language === "en" ? "Document uploaded successfully!" : "Documentul a fost incarcat cu succes!"} animationFinished={animationFinished} />
+                    <TickAnimation title={editMode ? (cookies.language === "en" ? "Changes have been saved successfully!" : "Modificarile au fost salvate cu succes!") : (cookies?.language === "en" ? "Document uploaded successfully!" : "Documentul a fost incarcat cu succes!")} animationFinished={animationFinished} />
                 ) : (
-                    <div className="no-video-content patient-account-details" ref={noVideoContentRef}>
-                        <h2 className="title">{cookies.language === "en" ? "Create Document" : "Creeati un document"}</h2>
+                    <div className="no-video-content patient-account-details upload" ref={noVideoContentRef}>
+                        <h2 className="title">{editMode ? (cookies.language === "en" ? "Edit Document" : "Modificati documentul") : (cookies.language === "en" ? "Create Document" : "Creeati un document")}</h2>
 
                         <div className="go-back" onClick={() => navigate(-1)}>
                             <FontAwesomeIcon icon={faAngleLeft} />
@@ -162,16 +203,19 @@ const UploadPatientFile = ({ data }) => {
                             </div>  
                         </div>
 
-                        <input type="file" onChange={handleUpload} className="file-input" ref={uploadFileInputRef} />
+                        {!editMode ? (
+                            <>
+                                <input type="file" onChange={handleUpload} className="file-input" ref={uploadFileInputRef} />
+                                <div className="drop-container" onClick={() => uploadFileInputRef.current.click()} onDragEnter={handleDrag}>
+                                    <FontAwesomeIcon icon={faCloudArrowUp} className="cloud-icon" />
+                                    <h2>{cookies.language === "en" ? "Select the file you want to upload" : "Selectati fisierul pe care doriti sa il incarcati!"}</h2>
+                                    { dragActive && <div id="drag-file-element" onDragEnter={handleDrag} onDragLeave={handleDrag} onDragOver={handleDrag} onDrop={handleDrop}></div>}
+                                </div>
+                            </>
+                        ) : null}
 
-                        <div className="drop-container" onClick={() => uploadFileInputRef.current.click()} onDragEnter={handleDrag}>
-                            <FontAwesomeIcon icon={faCloudArrowUp} className="cloud-icon" />
-                            <h2>{cookies.language === "en" ? "Select the file you want to upload" : "Selectati fisierul pe care doriti sa il incarcati!"}</h2>
-                            { dragActive && <div id="drag-file-element" onDragEnter={handleDrag} onDragLeave={handleDrag} onDragOver={handleDrag} onDrop={handleDrop}></div>}
-                        </div>
-
-                        <button type="button" className={`save-button show`} onClick={async () => successUpload && await createFile()}>
-                            <h2>{cookies.language === "en" ? "Upload document" : "Incarcati documentul"}</h2>
+                        <button type="button" className={`save-button ${!editMode && successUpload ? "show" : editMode ? "show" : ""}`} onClick={async () => await createFile()}>
+                            <h2>{editMode ? (cookies.language === "en" ? "Save changes" : "Salvati modificarile") : (cookies.language === "en" ? "Add document" : "Adaugati documentul")}</h2>
                         </button>
                     </div>
                 )}

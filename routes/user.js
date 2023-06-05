@@ -65,7 +65,8 @@ const {
     uploadPatientDocument,
     removePatientDocument,
     createPatientDocument,
-    editPatientDocument
+    editPatientDocument,
+    getPatientDocument
 } = require("../controllers/user");
 
 router.post("/create-appointment", createAppointment);
@@ -131,6 +132,7 @@ router.post("/search-treatment-category", searchTreatmentCategory);
 router.put("/edit-details", editDetails);
 router.post("/create-patient-document/:organisationId/:patientId/:fileSize/:notes/:source/:fileName", upload.single('file'), uploadPatientDocument, createPatientDocument);
 router.put("/edit-patient-document", editPatientDocument);
-router.delete("/remove-patient-document/:organisationId/:patientId/:fileName", removePatientDocument);
+router.delete("/remove-patient-document/:organisationId/:patientId/:photoId/:source", removePatientDocument);
+router.get("/get-patient-document/:organisationId/:patientId/:photoId", getPatientDocument);
 
 module.exports = router;

@@ -112,7 +112,7 @@
     align-items: center;
 }
 
-.patient-account-details .go-back 
+.patient-account-details:not(.upload) .go-back 
 {
     top: calc(10vh + 17.5px);
     left: 7.5px;
@@ -120,6 +120,11 @@
     width: 35px;
     height: 35px;
     border-width: 3px;
+}
+
+.patient-account-details.upload .go-back 
+{
+    top: calc(10vh + 20px);
 }
 
 .patient-account-details .go-back svg 
@@ -148,8 +153,12 @@
     display: grid;
     grid-column-gap: 2.5rem;
     grid-row-gap: 1.5rem;
-    margin-bottom: 2rem;
     grid-template-columns: 1fr 1fr;
+}
+
+.patient-account-details:not(.upload) .inputs-container 
+{
+    padding-bottom: 5rem;
 }
 
 .patient-account-details .inputs-container .input 
@@ -158,6 +167,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
 }
 
 .patient-account-details .inputs-container .input input 
@@ -463,6 +473,135 @@ body.light .patient-historic .historic-options .historic-option.active
 {
     border-radius: 35px;
 }
+
+.account-container .documents-container 
+{
+    width: 90%;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, 300px);
+    justify-content: flex-start;
+    align-items: center;
+    margin: 2rem auto;
+    gap: 2rem;
+}
+
+
+.account-container .documents-container .document 
+{
+    padding-bottom: 0;
+    background: var(--over-difference-color-2);
+    border: 3.5px solid var(--contrast-color);
+    border-radius: 25px;
+    position: relative;
+    position: relative;
+    z-index: 10;
+    cursor: pointer;
+    transition: all 350ms ease-in-out;
+}
+
+.account-container .documents-container .document img 
+{
+    width: 100%;
+    object-fit: cover;
+    height: 200px;
+    border-radius: 21.5px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+    position: relative;
+    z-index: -1;
+ 
+    transition: all 350ms ease-in-out;
+    
+
+}
+
+.account-container .documents-container .document h2 
+{
+    margin-block: 10px;
+    text-align: center;
+    font-size: 22px;
+    font-family: "Source Sans Pro";
+}
+
+.account-container .documents-container .document:hover 
+{
+    padding: .35rem;
+    
+}
+
+.account-container .documents-container .document:hover img 
+{
+    border-radius: 25px;
+   
+}
+
+.account-container .documents-container .document .edit-container,
+.account-container .documents-container .document .remove-container
+{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 20px;
+    opacity: 0;
+    user-select: none;
+    transition: all 350ms ease-in-out;
+}
+
+.account-container .documents-container .document .remove-container
+{
+    right: initial;
+    left: 10px;
+}
+
+.account-container .documents-container .document:hover .edit-container,
+.account-container .documents-container .document:hover .remove-container
+{
+    opacity: 1;
+    user-select: initial;
+}
+
+.account-container .documents-container .document .edit-container .edit-icon,
+.account-container .documents-container .document .remove-container .remove-icon
+{
+    width: 25px;
+    height: 25px;
+    padding: .6rem;
+}
+
+.account-container .documents-container .document:hover .edit-container
+{
+    background: var(--contrast-color);
+    border-radius: 50%;
+}
+
+.account-container .documents-container .document:hover .remove-container
+{
+    background: var(--error-color);
+    border-radius: 50%;
+}
+
+.account-container .documents-container .document:hover .remove-container:hover,
+.account-container .documents-container .document:hover .edit-container:hover
+{
+    filter: brightness(1.2);
+}
+
+
+
+.account-container .documents-container .document:hover .edit-container .edit-icon,
+.account-container .documents-container .document:hover .remove-container .remove-icon
+{
+    color: #fff;
+    transition: all 350ms ease-in-out;
+}
+
+.account-container .documents-container .document:hover .edit-container:hover .edit-icon,
+.account-container .documents-container .document:hover .remove-container:hover .remove-icon
+{
+    padding: .75rem;
+}
+
+
 
 @keyframes update_btn {
     33% {
