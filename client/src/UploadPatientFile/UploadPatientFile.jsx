@@ -158,7 +158,7 @@ const UploadPatientFile = ({ data, editMode }) => {
                 activeOption: 2, 
                 success: true, 
             }, "");
-            navigate(`/patient/${id}/2`, { state: {...location.state} });
+            window.location.replace(`/patient/${id}/2`);
         }, 500);
        
     };
@@ -174,7 +174,7 @@ const UploadPatientFile = ({ data, editMode }) => {
                     <div className="no-video-content patient-account-details upload" ref={noVideoContentRef}>
                         <h2 className="title">{editMode ? (cookies.language === "en" ? "Edit Document" : "Modificati documentul") : (cookies.language === "en" ? "Create Document" : "Creeati un document")}</h2>
 
-                        <div className="go-back" onClick={() => navigate(-1)}>
+                        <div className="go-back" onClick={() => !successUpload && navigate(-1)}>
                             <FontAwesomeIcon icon={faAngleLeft} />
                         </div>
 

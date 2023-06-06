@@ -779,7 +779,7 @@ const Profile = ({ data }) => {
                         ) :  activeOption === 5 ? (
                             <div className="treatment-categories-details">
                                 <div className="search-container">
-                                    <input type="text" value={query} onChange={e => setQuery(e.target.value)} placeholder={cookies.language === "en" ? "Search category..." : "Cauta categorie..."} />
+                                    <input type="text" value={query} onChange={e => setQuery(e.target.value)} placeholder={cookies.language === "en" ? "Search treatment..." : "Cauta tratament..."} />
                                     <FontAwesomeIcon icon={faSearch} className="search-icon" />
                                 </div>
 
@@ -870,7 +870,7 @@ const Profile = ({ data }) => {
                                     )}
                                 </div>
                                 
-                                <div className="add-button" onClick={() => navigate("/create-treatment-category")}>
+                                <div className="add-button" onClick={() => navigate("/create-treatment")}>
                                     <FontAwesomeIcon icon={faPlus} className="add-icon" />
                                 </div>
                             </div>

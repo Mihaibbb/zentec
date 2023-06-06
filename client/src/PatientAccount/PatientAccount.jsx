@@ -11,6 +11,7 @@ import tickAnimation from "../imgs/green-tick.mp4";
 import { faPenToSquare, faTrashCan } from "@fortawesome/free-regular-svg-icons";
 import "./PatientAccount.css";
 import TickAnimation from "../utils/TickAnimation";
+import { set } from "date-fns";
 
 
 const PatientAccount = ({ data }) => {
@@ -32,20 +33,20 @@ const PatientAccount = ({ data }) => {
     const [patient, setPatient] = useState(location?.state?.patient);
     console.log(patient);
 
-    const initialFirstName = patient.firstname;
-    const initialLastName = patient.lastname;
-    const initialUsername = patient.username || "";
-    const initialPhone = patient.phone;
-    const initialEmail = patient.email || "";
-    const initialCity = patient.city || "";
-    const initialCounty = patient.county || "";
-    const initialAddress = patient.address || "";
-    const initialGender = patient.gender || "";
-    const initialFileNumber = patient.fileNumber || "";
-    const initialPIC = patient.cnp || "";
-    const initialNotes = patient.notes || "";
-    const initialBirthdate = patient.birthdate || "";
-    const documents = JSON.parse(patient?.documents || "[]");
+    const initialFirstName = patient?.firstname;
+    const initialLastName = patient?.lastname;
+    const initialUsername = patient?.username || "";
+    const initialPhone = patient?.phone;
+    const initialEmail = patient?.email || "";
+    const initialCity = patient?.city || "";
+    const initialCounty = patient?.county || "";
+    const initialAddress = patient?.address || "";
+    const initialGender = patient?.gender || "";
+    const initialFileNumber = patient?.fileNumber || "";
+    const initialPIC = patient?.cnp || "";
+    const initialNotes = patient?.notes || "";
+    const initialBirthdate = patient?.birthdate || new Date();
+    const initialDocuments = JSON.parse(patient?.documents || "[]");
     
     const [firstName, setFirstName] = useState(initialFirstName);
     const [lastName, setLastName] = useState(initialLastName);
@@ -61,8 +62,8 @@ const PatientAccount = ({ data }) => {
     const [PIC, setPIC] = useState(initialPIC);
     const [notes, setNotes] = useState(initialNotes);
     const [showUpdate, setShowUpdate] = useState(false);
-    const [historic, setHistoric] = useState(JSON.parse(patient.historic));
-   
+    const [historic, setHistoric] = useState(JSON.parse(patient?.historic || "[]"));
+    const [documents, setDocuments] = useState(initialDocuments || []);
    
     console.log(historic);
     const [historicOption, setHistoricOption] = useState(0);
@@ -70,7 +71,7 @@ const PatientAccount = ({ data }) => {
     const [patientMessage, setPatientMessage] = useState("");
     const [patientEdited, setPatientEdited] = useState(false);
     const [videoMessage, setVideoMessage] = useState("");
-    const initialActiveOption = location?.state?.activeOption || 0;
+    const initialActiveOption = historicPage || location?.state?.activeOption || 0;
     const [activeOption, setActiveOption] = useState(initialActiveOption);
 
     const [documentMessage, setDocumentMessage] = useState("");
@@ -104,7 +105,24 @@ const PatientAccount = ({ data }) => {
             const response = await request.json();
             console.log(response);
             if (!response || !response.success) navigation(-1);
-            
+            const currPatient = response.patient[0];
+            setFirstName(currPatient.firstname);
+            setLastName(currPatient.lastname);
+            setUsername(currPatient.username || "");
+            setPhoneNumber(currPatient.phone);
+            setBirthDate(new Date(currPatient?.birthdate));
+            setEmail(currPatient?.email || "");
+            setCity(currPatient?.city || "");
+            setCounty(currPatient?.county || "");
+            setAddress(currPatient?.address || "");
+            setGender(currPatient?.gender || "");
+            setFileNumber(currPatient?.fileNumber || "");
+            setPIC(currPatient?.cnp || "");
+            setNotes(currPatient?.notes || "");
+            setDocuments(JSON.parse(currPatient?.documents || "[]"));
+            setHistoric(JSON.parse(currPatient?.historic || "[]"))
+
+            setPatient(response.patient[0]);
         } catch (e) {
             console.log(e)
         }
@@ -186,17 +204,13 @@ const PatientAccount = ({ data }) => {
    
     };
 
-    const getPatientData = async () => {
-
-    };
-    
+  
 
     useEffect(() => {
         (async () => {
             await checkId(param.id);
-            await getPatientData();
         })();
-    }, []);
+    }, [location]);
 
     useEffect(() => {
         if (
@@ -263,6 +277,7 @@ const PatientAccount = ({ data }) => {
 
 
     useEffect(() => {
+        if (activeOption !== 1) return;
         if (historicOption === 0) {
             
             setHistoric(currHistoric => currHistoric.filter(appointment => false));
@@ -290,6 +305,11 @@ const PatientAccount = ({ data }) => {
     const animationFinished = () => {
         document.body.style.background = "var(--background)";
         navigation("/patients", { state: patientMessage });
+    };
+
+    const documentAnimationFinished = () => {
+        document.body.style.background = "var(--background)";
+        window.location.reload();
     };
     
     const removeFutureAppointment = async (appointmentDate, appointmentStartHour, appointmentStartMinutes, appointmentEndHour, appointmentEndMinutes) => {
@@ -353,7 +373,7 @@ const PatientAccount = ({ data }) => {
                 <Header data={data} />
               
                 {patientEdited || documentRemoved ?
-                    <TickAnimation animationFinished={animationFinished} title={patientEdited ? videoMessage : documentMessage} />
+                    <TickAnimation animationFinished={patientEdited ? animationFinished : documentAnimationFinished} title={patientEdited ? videoMessage : documentMessage} />
                 : 
                 <>
                     <div className="patient-account-details no-video-content" ref={noVideoContentRef}>
@@ -612,7 +632,7 @@ const PatientAccount = ({ data }) => {
                                 {documents.map((document, idx) => (
                                     <>
                                         <div className="document">
-                                            <img className="document-image" src={`${process.env.REACT_APP_URL}${document.source}`} alt="document" />
+                                            <img className="document-image" src={`${process.env.REACT_APP_BACKEND_URL}${document.source}`} alt="document" />
                                             <h2 className="document-name">{document.fileName}</h2>
                                             <div className="edit-container" onClick={() => window.location.replace(`/patient/${param?.id}/${document.photoId}/edit`)}>
                                                 <FontAwesomeIcon icon={faPenToSquare} className="edit-icon" />

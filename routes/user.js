@@ -66,7 +66,43 @@ const {
     removePatientDocument,
     createPatientDocument,
     editPatientDocument,
-    getPatientDocument
+    getPatientDocument,
+    createTreatmentPlan,
+    editTreatmentPlan,
+    removeTreatmentPlan,
+    getTreatmentPlans,
+    searchTreatmentPlan,
+    createPatientTreatment,
+    editPatientTreatment,
+    removePatientTreatment,
+    getPatientTreatments,
+    searchPatientTreatment,
+    getTreatments,
+    getTreatmentCategories,
+    createConsulation,
+    editConsultation,
+    removeConsultation,
+    searchPatientConsulations,
+    getPatientConsulations,
+    createDiagnostic,
+    editDiagnostic,
+    removeDiagnostic,
+    searchDiagnostic,
+    createDiagnosticInitialStatus,
+    editDiagnosticInitialStatus,
+    removeDiagnosticInitialStatus,
+    searchDiagnosticInitialStatus,
+    getDiagnosticsInitialStatus,
+    createPatientCategory,
+    editPatientCategory,
+    removePatientCategory,
+    searchPatientCategory,
+    getPatientCategories,
+    createPatientType,
+    editPatientType,
+    removePatientType,
+    searchPatientType,
+    getPatientTypes
 } = require("../controllers/user");
 
 router.post("/create-appointment", createAppointment);
@@ -121,18 +157,88 @@ router.post("/create-sterilization-instrument", createSterilizationInstrument);
 router.put("/edit-sterilization-instrument", editSterilizationInstrument);
 router.delete("/remove-sterilization-instrument/:organisationId/:_id/:language", removeSterilizationInstrument);
 router.post("/search-sterilization-instrument", searchSterilizationInstrument);
-router.post("/create-treatment", createTreatment);
-router.put("/edit-treatment", editTreatment);
-router.delete("/remove-treatment/:organisationId/:treatmentId", removeTreatment);
-router.post("/search-treatment", searchTreatment);
-router.post("/create-treatment-category", createTreatmentCategory);
-router.put("/edit-treatment-category", editTreatmentCategory);
-router.delete("/remove-treatment-category/:organisationId/:id", removeTreatmentCategory);
-router.post("/search-treatment-category", searchTreatmentCategory);
+
+
 router.put("/edit-details", editDetails);
+
+// Documents routes
+
 router.post("/create-patient-document/:organisationId/:patientId/:fileSize/:notes/:source/:fileName", upload.single('file'), uploadPatientDocument, createPatientDocument);
 router.put("/edit-patient-document", editPatientDocument);
 router.delete("/remove-patient-document/:organisationId/:patientId/:photoId/:source", removePatientDocument);
 router.get("/get-patient-document/:organisationId/:patientId/:photoId", getPatientDocument);
+
+// Treatment plan routes
+
+router.post("/create-treatment-plan", createTreatmentPlan);
+router.put("/edit-treatment-plan", editTreatmentPlan);
+router.delete("/remove-treatment-plan/:organisationId/:treatmentPlanId", removeTreatmentPlan);
+router.get("/get-treatment-plans/:organisationId/:patientId", getTreatmentPlans);
+router.get("/search-treatment-plan/:organisationId/:patientId/:searchQuery", searchTreatmentPlan);
+
+// Treatments patients routes
+
+router.post("/create-patient-treatment", createPatientTreatment);
+router.put("/edit-patient-treatment", editPatientTreatment);
+router.delete("/remove-patient-treatment/:organisationId/:id", removePatientTreatment);
+router.get("/get-patient-treatments/:organisationId/:patientId", getPatientTreatments);
+router.get("/search-patient-treatment/:organisationId/:patientId/:searchQuery", searchPatientTreatment);
+
+
+// Treatment categories routes
+
+router.post("/create-treatment-category", createTreatmentCategory);
+router.put("/edit-treatment-category", editTreatmentCategory);
+router.delete("/remove-treatment-category/:organisationId/:id", removeTreatmentCategory);
+router.post("/search-treatment-category", searchTreatmentCategory);
+router.get("/get-treatment-categories/:organsiationId", getTreatmentCategories);
+
+// Treatments routes
+
+router.post("/create-treatment", createTreatment);
+router.put("/edit-treatment", editTreatment);
+router.delete("/remove-treatment/:organisationId/:treatmentId", removeTreatment);
+router.post("/search-treatment", searchTreatment);
+router.get("/get-treatments/:organisationId", getTreatments);
+
+// Consultation routes
+
+router.post("/create-consultation", createConsulation);
+router.put("/edit-consultation", editConsultation);
+router.delete("/remove-consultation/:organisationId/:id", removeConsultation);
+router.get("/search-consultation/:organisationId/:patientId/:searchQuery", searchPatientConsulations);
+router.get("/get-consultations/:organisationId/:patientId", getPatientConsulations);
+
+// Diagnostic routes
+
+router.post("/create-diagnostic", createDiagnostic);
+router.put("/edit-diagnostic", editDiagnostic);
+router.delete("/remove-diagnostic/:organisationId/:diagnosticId", removeDiagnostic);
+router.get("/search-diagnostic/:organisationId/:searchQuery", searchDiagnostic);
+router.get("/get-diagnostics/:organisationId", getPatientConsulations);
+
+// Initial status routes
+
+router.post("/create-diagnostic-initial-status", createDiagnosticInitialStatus);
+router.put("/edit-diagnostic-initialStatus", editDiagnosticInitialStatus);
+router.delete("/remove-diagnostic-initial-status/:organisationId/:patientId/:id", removeDiagnosticInitialStatus);
+router.get("/search-diagnostic-initial-status/:organisationId/:patientId/:searchQuery", searchDiagnosticInitialStatus);
+router.get("/get-diagnostics-initial-status/:organisationId/:patientId", getDiagnosticsInitialStatus);
+
+// Patient category
+
+router.post("/create-patient-category", createPatientCategory);
+router.put("/edit-patient-category", editPatientCategory);
+router.delete("/remove-patient-category/:organisationId/:patientCategoryId", removePatientCategory);
+router.get("/search-patient-category/:organisationId/:searchQuery", searchPatientCategory);
+router.get("/get-patient-categories/:organisationId", getPatientCategories);
+
+// Patient type
+
+router.post("/create-patient-type", createPatientType);
+router.put("/edit-patient-type", editPatientType);
+router.delete("/remove-patient-type/:organisationId/:patinetTypeId", removePatientType);
+router.get("/search-patient-type/:organisationId/:searchQuery", searchPatientType);
+router.get("/get-patient-types/:organisationId", getPatientTypes);
 
 module.exports = router;

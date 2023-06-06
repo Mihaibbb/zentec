@@ -38,7 +38,7 @@ exports.createOrganisation = async (req, res, next) => {
         
         // Patients Table
 
-         createTableSql = 'CREATE TABLE ?? ( ';
+        createTableSql = 'CREATE TABLE ?? ( ';
         createTableSql += '_id varchar(25) primary key not null, ';
         createTableSql += 'firstname varchar(256) not null, ';
         createTableSql += 'lastname varchar(256) not null, ';
@@ -58,7 +58,11 @@ exports.createOrganisation = async (req, res, next) => {
         createTableSql += 'date date not null, ';
         createTableSql += 'notes text, ';
         createTableSql += 'historic json, ';
-        createTableSql += 'documents json );';
+        createTableSql += 'documents json, ';
+        createTableSql += 'category varchar(128), ';
+        createTableSql += 'type varchar(128), ';
+        createTableSql += 'current_status json, ';
+        createTableSql += 'initial_status json );';
 
         await db.query(createTableSql, ['patients']);
 
@@ -158,9 +162,75 @@ exports.createOrganisation = async (req, res, next) => {
         createTableSql += 'price int not null, ';
         createTableSql += 'pricePer varchar(64) not null, ';
         createTableSql += 'type varchar(64) not null, ';
+        createTableSql += 'picture varchar(128), ';
         createTableSql += 'color varchar(20) not null );';
 
+        console.log(createTableSql);
+
         await db.query(createTableSql, ['treatments']);
+
+        // Patients' treatments
+
+        createTableSql = 'CREATE TABLE ?? ( ';
+        createTableSql += 'treatmentId varchar(26) not null, ';
+        createTableSql += 'treatmentPlanId varchar(25), ';
+        createTableSql += 'patientId varchar(25) not null, ';
+        createTableSql += 'doctorId varchar(25) not null, ';
+        createTableSql += 'status varchar(128) not null, ';
+        createTableSql += 'teeth json not null, ';
+        createTableSql += 'teethSurfaces varchar(32), ';
+        createTableSql += 'date date not null, ';
+        createTableSql += 'totalPrice float not null, ';
+        createTableSql += 'totalNegotiated float not null, ';
+        createTableSql += 'materialPrice float not null, ';
+        createTableSql += 'notes text not null );';
+
+        await db.query(createTableSql, ['treatments_patients']);
+
+        createTableSql = 'CREATE TABLE ?? ( ';
+        createTableSql += '_id varchar(25) not null, ';
+        createTableSql += 'patientId varchar(25) not null, '
+        createTableSql += 'name varchar(128) not null, ';
+        createTableSql += 'treatments json not null, ';
+        createTableSql += 'status varchar(32) not null, ';
+        createTableSql += 'totalPrice float not null, ';
+        createTableSql += 'totalNegotiated float not null, ';
+        createTableSql += 'initial_status varchar(64) not null, ';
+        createTableSql += 'date date not null );';
+
+        await db.query(createTableSql, ['treatments_plan_patients']);
+
+        createTableSql = 'CREATE TABLE ?? ( ';
+        createTableSql += 'id int primary key auto_increment not null, ';
+        createTableSql += 'name varchar(128) not null );';
+
+        await db.query(createTableSql, ['patient_types']);
+
+        createTableSql = 'CREATE TABLE ?? ( ';
+        createTableSql += 'id int primary key auto_increment not null, ';
+        createTableSql += 'category varchar(128) not null );';
+
+        await db.query(createTableSql, ['patient_categories']);
+
+        createTableSql = 'CREATE TABLE ?? ( ';
+        createTableSql += 'id int primary key auto_increment not null, ';
+        createTableSql += 'name varchar(128) not null, ';
+        createTableSql += 'color varchar(16) not null, ';
+        createTableSql += 'picture varchar(128) not null );';
+
+        await db.query(createTableSql, ['diagnostics']);
+
+        createTableSql = 'CREATE TABLE ?? ( ';
+        createTableSql += 'id int primary key auto_increment not null, ';
+        createTableSql += 'diagnosticId int not null, ';
+        createTableSql += 'patientId varchar(26) not null, ';
+        createTableSql += 'date date not null, ';
+        createTableSql += 'teeth json not null, ';
+        createTableSql += 'teethSurfaces varchar(32), ';
+        createTableSql += 'notes text not null );';
+
+        await db.query(createTableSql, ['consultations']);
+
 
         let sql = 'INSERT INTO ?? (name, date, sms_limit, sms_message, sms_modem_id, inbox, _id, start_hour, end_hour) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
         const result = await db.query(sql, ['details', name, new Date(), smsLimit, JSON.stringify(smsMessage), modemId, JSON.stringify([]), orgId, 8, 20]);

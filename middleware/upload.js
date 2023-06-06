@@ -6,7 +6,7 @@ const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         // console.log("PARAMS: ", req.body.keywords);
         const {organisationId, patientId} = req.params; 
-        const currPath = `${process.env.CLIENT_PATH}/uploads/${organisationId}/${patientId}`;
+        const currPath = `uploads/${organisationId}/${patientId}`;
         
         fs.mkdirsSync(currPath);
         cb(null, currPath);
