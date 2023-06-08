@@ -37,6 +37,10 @@ import EditTreatmentCategory from "./EditTreatmentCategory/EditTreatmentCategory
 import UploadPatientFile from "./UploadPatientFile/UploadPatientFile";
 import CreateTreatment from "./Treatments/CreateTreatment/CreateTreatment";
 import EditTreatment from "./Treatments/EditTreatment/EditTreatment";
+import CreateDiagnostic from "./Diagnostics/CreateDiagnostic/CreateDiagnostic";
+import EditDiagnostic from "./Diagnostics/EditDiagnostic/EditDiagnostic";
+import CreatePatientType from "./PatientType/CreatePatientType/CreatePatientType";
+import EditPatientTypes from "./PatientType/EditPatientType/EditPatientType";
 
 
 const App = () => {
@@ -183,6 +187,10 @@ const App = () => {
                                 <Route path="edit-treatment/:id" element={<EditTreatment data={data} />} />
                                 <Route path="create-treatment-category" element={<CreateTreatmentCategory data={data} />} />
                                 <Route path="edit-treatment-category/:id" element={<EditTreatmentCategory data={data} />} />
+                                <Route path="create-diagnostic" element={<CreateDiagnostic data={data} />} />
+                                <Route path="edit-diagnostic/:id" element={<EditDiagnostic data={data} />} />
+                                <Route path="create-patient-type/:pageName" element={<CreatePatientType data={data} />} />
+                                <Route path="edit-patient-type/:pageName/:id" element={<EditPatientTypes data={data} />} />
                             </>
                         ) : (
                             <>

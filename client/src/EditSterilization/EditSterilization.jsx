@@ -55,7 +55,7 @@ const EditSterilization = ({ data }) => {
         };
     }), []);
 
-    const sterilizationOptions = useMemo(() => data.organisation?.instruments.map(instrument => {
+    const sterilizationOptions = useMemo(() => data.organisation?.sterilization_instruments.map(instrument => {
         return {
             value: `${instrument._id}`,
             label: `${instrument.name}`,

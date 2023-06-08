@@ -22,7 +22,7 @@ const Profile = ({ data }) => {
     const [startHourProgram, setStartHourProgram] = useState(8);
     const [endHourProgram, setEndHourProgram] = useState(20);
     
-    const options = cookies.language === "en" ? ["Details", "Assistants", "Services", "Scheduled SMS", "Backups", "Treatments", "Treatments Categories"] : ["Detalii", "Personal", "Servicii", "SMS-uri Programate", "Backup-uri", "Tratamente", "Categorii Tratamente"];
+    const options = cookies.language === "en" ? ["Details", "Assistants", "Services", "Scheduled SMS", "Backups", "Treatments", "Treatments Categories", "Diagnostics", "Patients' Types (dental status)", "Patient Categories"] : ["Detalii", "Personal", "Servicii", "SMS-uri Programate", "Backup-uri", "Tratamente", "Categorii Tratamente", "Diagnostice", "Tipuri pacienti (status dentar)", "Categorii pacienti"];
     const optionsTitle = cookies.language === "en" ? ["", "", "", ""] : ["", "", ""];
     const [activeOption, setActiveOption] = useState(window?.history?.state?.activeOption || 0);
     const [sideMenuOption, setSideMenuOption] = useState(window?.history?.state?.sideMenuOption || 0);
@@ -47,11 +47,21 @@ const Profile = ({ data }) => {
 
     const [assistants, setAssistants] = useState(data.organisation?.assistants || []);
     const [assistantsQuery, setAssistantsQuery] = useState("");
-    const [categories, setCategories] = useState(data.organisation?.treatmentCategories || []);
+    const [categories, setCategories] = useState(data.organisation?.treatment_categories || []);
     const [treatments, setTreatments] = useState(data.organisation?.treatments);
+    const [totalTreatments, setTotalTreatments] = useState(data.organisation?.treatments);
+    const [diagnostics, setDiagnostics] = useState(data.organisation?.diagnostics);
+    const [totalDiagnostics, setTotalDiagnostics] = useState(data.organisation.diagnostics);
+    const [patientTypes, setPatientTypes] = useState(data.organisation.patient_types);
+    const [totalPatientTypes, setTotalPatientTypes] = useState(data.organisation.patient_types);
+    const [patientCategories, setPatientCategories] = useState(data.organisation.patient_categories);
+    const [totalPatientCategories, setTotalPatientCategories] = useState(data.organisation.patient_categories);
+    const [treatmentsQuery, setTreatmentsQuery] = useState("");
+    const [diagnosticsQuery, setDiagnosticsQuery] = useState("");
+    const [patientTypesQuery, setPatientTypesQuery] = useState("");
+    const [patientCategoriesQuery, setPatientCategoriesQuery] = useState("");
 
     const [videoStart, setVideoStart] = useState(false);
-
     const [patients, setPatients] = useState([]);
 
     const [query, setQuery] = useState("");
@@ -60,6 +70,10 @@ const Profile = ({ data }) => {
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
     const [totalAssistants, setTotalAssistants] = useState(data.organisation?.assistants);
 
+    const [currentPageTreatments, setCurrentPageTreatments] = useState(1);
+    const [currentPageDiagnostics, setCurrentPageDiagnostics] = useState(1);
+    const [currentPagePatientTypes, setCurrentPagePatientTypes] = useState(1);
+    const [currentPagePatientCategories, setCurrentPagePatientCategories] = useState(1);
 
     const perPage = 10;
     const [pages, setPages] = useState();
@@ -175,12 +189,145 @@ const Profile = ({ data }) => {
         })();
     }, [assistantsQuery]);
 
+    useEffect(() => {
+        (async () => {
+            const options = {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    organisationId: data.organisation._id,
+                    searchQuery: treatmentsQuery
+                })
+            };
+
+            const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/search-treatment`, options);
+            const response = await request.json();
+          
+            if (response.success) {
+                setTreatments(currTreatments => {
+                    return response.treatments.filter((treatment, idx) => {
+                        return (idx + 1) > perPage * (currentPageTreatments - 1) && (idx + 1) <= perPage * currentPageTreatments;
+                    });
+                });
+                setTotalTreatments(response.treatments || []);
+            } else {
+                setTreatments([]);
+                setTotalTreatments([]);
+            }
+        })();
+    }, [treatmentsQuery]);
 
     useEffect(() => {
-        
-        setPages(Math.floor(totalAssistants.length / perPage) + (totalAssistants.length % perPage !== 0 ? 1 : 0));
+        (async () => {
+            const options = {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    searchQuery: diagnosticsQuery,
+                    organisationId: data.organisation._id
+                })
+            };
 
+            const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/search-diagnostic`, options);
+            const response = await request.json();
+          
+            if (response.success) {
+                setDiagnostics(currTreatments => {
+                    return response.diagnostics.filter((treatment, idx) => {
+                        return (idx + 1) > perPage * (currentPageDiagnostics - 1) && (idx + 1) <= perPage * currentPageDiagnostics;
+                    });
+                });
+                setTotalDiagnostics(response.diagnostics || []);
+            } else {
+                setDiagnostics([]);
+                setTotalDiagnostics([]);
+            }
+        })();
+    }, [diagnosticsQuery]);
+
+    useEffect(() => {
+        (async () => {
+            const options = {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    searchQuery: patientTypesQuery,
+                    organisationId: data.organisation._id
+                })
+            };
+
+            const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/search-patient-type`, options);
+            const response = await request.json();
+          
+            if (response.success) {
+                setPatientTypes(currTreatments => {
+                    return response.patientTypes.filter((treatment, idx) => {
+                        return (idx + 1) > perPage * (currentPagePatientTypes - 1) && (idx + 1) <= perPage * currentPagePatientTypes;
+                    });
+                });
+                setTotalPatientTypes(response.patientTypes || []);
+            } else {
+                setPatientTypes([]);
+                setTotalPatientTypes([]);
+            }
+        })();
+    }, [patientTypesQuery]);
+
+    useEffect(() => {
+        (async () => {
+            const options = {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    searchQuery: patientCategoriesQuery,
+                    organisationId: data.organisation._id
+                })
+            };
+
+            const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/search-patient-category`, options);
+            const response = await request.json();
+            console.log(response);
+            if (response.success) {
+                setPatientCategories(currTreatments => {
+                    return response.patientCategories.filter((treatment, idx) => {
+                        return (idx + 1) > perPage * (currentPagePatientCategories - 1) && (idx + 1) <= perPage * currentPagePatientCategories;
+                    });
+                });
+                setTotalPatientCategories(response.patientCategories || []);
+            } else {
+                setPatientCategories([]);
+                setTotalPatientCategories([]);
+            }
+        })();
+    }, [patientCategoriesQuery]);
+
+    useEffect(() => {
+        setPages(Math.floor(totalAssistants.length / perPage) + (totalAssistants.length % perPage !== 0 ? 1 : 0));
     }, [totalAssistants]);
+
+    useEffect(() => {
+        setPages(Math.floor(totalTreatments.length / perPage) + (totalTreatments.length % perPage !== 0 ? 1 : 0));
+    }, [totalTreatments]);
+
+    useEffect(() => {
+        setPages(Math.floor(totalDiagnostics.length / perPage) + (totalDiagnostics.length % perPage !== 0 ? 1 : 0));
+    }, [totalDiagnostics]);
+    
+    useEffect(() => {
+        setPages(Math.floor(totalPatientTypes.length / perPage) + (totalPatientTypes.length % perPage !== 0 ? 1 : 0));
+    }, [totalPatientTypes]);
+
+    useEffect(() => {
+        setPages(Math.floor(totalPatientCategories.length / perPage) + (totalPatientCategories.length % perPage !== 0 ? 1 : 0));
+    }, [totalPatientCategories]);
 
     useEffect(() => {
       
@@ -198,8 +345,8 @@ const Profile = ({ data }) => {
     useEffect(() => {
         const resizeEvent = () => {
             setWindowWidth(window.innerWidth);
-
         }
+
         window.addEventListener("resize", resizeEvent);
         return () => window.removeEventListener("resize", resizeEvent);
     }, [location]);
@@ -508,6 +655,70 @@ const Profile = ({ data }) => {
         }
     };
 
+    const removeDiagnostic = async (id) => {
+
+        const options = {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        };
+
+        try {
+            const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/remove-diagnostic/${data.organisation._id}/${id}`, options);
+            const response = await request.json();
+
+            if (response.success) {
+                document.body.style.background = theme === "light" ? "#fff" : "#000";
+                setTimeout(() => setVideoStart(cookies?.language === "en" ? "Diagnose removed successfully!" : "Diagnosticul a fost sters cu succes!"), 350);
+            } else console.log(response);
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
+    const removePatientType = async (id) => {
+        const options = {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        };
+
+        try {
+            const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/remove-patient-type/${data.organisation._id}/${id}`, options);
+            const response = await request.json();
+
+            if (response.success) {
+                document.body.style.background = theme === "light" ? "#fff" : "#000";
+                setTimeout(() => setVideoStart(cookies?.language === "en" ? "Patient type removed successfully!" : "Tipul de pacient a fost sters cu succes!"), 350);
+            } else console.log(response);
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
+    const removePatientCategory = async (id) => {
+        const options = {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        };
+
+        try {
+            const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/remove-patient-category/${data.organisation._id}/${id}`, options);
+            const response = await request.json();
+
+            if (response.success) {
+                document.body.style.background = theme === "light" ? "#fff" : "#000";
+                setTimeout(() => setVideoStart(cookies?.language === "en" ? "Patient category removed successfully!" : "Categoria de pacient a fost stearsa cu succes!"), 350);
+            } else console.log(response);
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
     const saveChanges = async () => {
 
         if (Number(startHourProgram) >= Number(endHourProgram) || Number(startHourProgram) <= 0 || Number(startHourProgram) >= 22 || Number(endHourProgram) <= 1 || Number(endHourProgram) >= 23) 
@@ -779,7 +990,7 @@ const Profile = ({ data }) => {
                         ) :  activeOption === 5 ? (
                             <div className="treatment-categories-details">
                                 <div className="search-container">
-                                    <input type="text" value={query} onChange={e => setQuery(e.target.value)} placeholder={cookies.language === "en" ? "Search treatment..." : "Cauta tratament..."} />
+                                    <input type="text" value={treatmentsQuery} onChange={e => setTreatmentsQuery(e.target.value)} placeholder={cookies.language === "en" ? "Search treatment..." : "Cauta tratament..."} />
                                     <FontAwesomeIcon icon={faSearch} className="search-icon" />
                                 </div>
 
@@ -803,14 +1014,6 @@ const Profile = ({ data }) => {
                                         </div>
 
                                         <div className="column">
-                                            <p>{cookies.language === "en" ? "Price Per" : "Pret Per"}</p>
-                                        </div>
-
-                                        <div className="column">
-                                            <p>{cookies.language === "en" ? "Picture" : "Pictograma"}</p>
-                                        </div>
-
-                                        <div className="column">
                                             <p>{cookies?.language === "en" ? "Color" : "Culoare"}</p>
                                         </div>
 
@@ -831,19 +1034,11 @@ const Profile = ({ data }) => {
                                             </div>
 
                                             <div className="column">
-                                                <p>{treatment.category}</p>
+                                                <p>{data.organisation.treatment_categories.find(category => category.id === Number(treatment.category))?.name || ""}</p>
                                             </div>
 
                                             <div className="column">
-                                                <p>{treatment.price}</p>
-                                            </div>
-
-                                            <div className="column">
-                                                <p>{treatment.pricePer}</p>
-                                            </div>
-
-                                            <div className="column">
-                                                <p>{treatment.type}</p>
+                                                <p>{treatment.price} Lei</p>
                                             </div>
 
                                             <div className="column">
@@ -868,6 +1063,37 @@ const Profile = ({ data }) => {
                                     )) : (
                                         <h2 className="center">{cookies.language === "en" ? "No treatment found." : "Niciun tratament gasit."}</h2>
                                     )}
+
+                                    {pages > 1 ? <div className="pages-container">
+                                        <div className="page-container" onClick={() => setCurrentPageTreatments(1)}>
+                                            <p>1</p>
+                                        </div>
+                                        <div className="page-input">
+                                            <div 
+                                                className="value-container"
+                                                onClick={() => currentPageTreatments > 1 ? setCurrentPageTreatments(currValue => currValue - 1) : null}
+                                            >
+                                                <FontAwesomeIcon icon={faMinus} className="value-icon" />
+                                            </div>
+                                            
+                                            <input 
+                                                type="number" 
+                                                placeholder={cookies.language === "en" ? "Page's number" : "Numarul paginii"}
+                                                value={currentPageTreatments}
+                                                onChange={e => Number(e.target.value) ? setCurrentPageTreatments(Number(e.target.value)) : setCurrentPageTreatments("")}
+                                            />
+
+                                            <div 
+                                                className="value-container"
+                                                onClick={() => currentPageTreatments < pages ? setCurrentPageTreatments(currValue => currValue + 1) : null}
+                                            >
+                                                <FontAwesomeIcon icon={faPlus} className="value-icon" />
+                                            </div>
+                                        </div>
+                                        <div className="page-container" onClick={() => setCurrentPageTreatments(pages)}>
+                                            <p>{pages}</p>
+                                        </div>
+                                    </div> : null}
                                 </div>
                                 
                                 <div className="add-button" onClick={() => navigate("/create-treatment")}>
@@ -882,7 +1108,7 @@ const Profile = ({ data }) => {
                                 </div>
 
                                 <div className="patients-container">
-                                {treatments.length > 0 && <div className="first-row">
+                                {categories.length > 0 && <div className="first-row">
                                     {windowWidth >= 600 ? <div className="column">
                                         <p>{cookies.language === "en" ? "No." : "Nr."}</p>
                                         
@@ -973,7 +1199,290 @@ const Profile = ({ data }) => {
                                     <FontAwesomeIcon icon={faPlus} className="add-icon" />
                                 </div>
                             </div>
-                        ) : null}
+                        ) : activeOption === 7 ? <div className="treatment-categories-details">
+                        <div className="search-container">
+                            <input type="text" value={diagnosticsQuery} onChange={e => setDiagnosticsQuery(e.target.value)} placeholder={cookies.language === "en" ? "Search diagnose..." : "Cauta diagnostic..."} />
+                            <FontAwesomeIcon icon={faSearch} className="search-icon" />
+                        </div>
+
+                        <div className="patients-container">
+                            {diagnostics.length > 0 && <div className="first-row">
+                                {windowWidth >= 600 ? <div className="column">
+                                    <p>{cookies.language === "en" ? "No." : "Nr."}</p>
+                                    
+                                </div> : null}
+
+                                <div className="column">
+                                    <p>{cookies.language === "en" ? "Name" : "Nume"}</p>
+                                </div>
+
+                                <div className="column">
+                                    <p>{cookies?.language === "en" ? "Color" : "Culoare"}</p>
+                                </div>
+
+                                <div className="column">
+                                    <p>{cookies.language === "en" ? "Options" : "Optiuni"}</p>
+                                </div>
+                            </div>}
+
+                            {diagnostics?.length > 0 ? diagnostics.map((diagnose, idx) => (
+                                <div className="row" key={idx}>
+
+                                    {windowWidth >= 600 ? <div className="column">
+                                        <p>{idx + 1}</p>
+                                    </div> : null}
+
+                                    <div className="column">
+                                        <p>{diagnose.name}</p>
+                                    </div>
+
+                                    <div className="column">
+                                        <div className="square" style={{ width: '50px', height: '20px', borderRadius: '10px', backgroundColor: diagnose.color }} />
+                                    </div>
+
+                                    <div className="column pressable">
+                                        <FontAwesomeIcon className="column-icon" icon={faEllipsis} onClick={() => triggerOptions(idx, optionsTreatmentsRef.current)}/>
+                                        <div className="options-container" ref={ref => optionsTreatmentsRef.current[idx] = ref}>
+                                            <div className="option" onClick={async () => optionsTreatmentsRef.current[idx].classList.contains("show") ? await removeDiagnostic(diagnose.id) : null}>
+                                                <FontAwesomeIcon icon={faTimes} className="option-icon" /> 
+                                                <p>{cookies.language === "en" ? "Remove" : "Sterge"}</p>
+                                            </div>
+
+                                            <div className="option" onClick={() => navigation(`/edit-diagnostic/${diagnose.id}`, { state: { diagnose: diagnose } })}>
+                                                <FontAwesomeIcon icon={faUser} className="option-icon" />
+                                                <p>{cookies.language === "en" ? "Edit" : "Editeaza"}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )) : (
+                                <h2 className="center">{cookies.language === "en" ? "No diagnose found." : "Niciun diagnostic gasit."}</h2>
+                            )}
+
+                            {pages > 1 ? <div className="pages-container">
+
+                                <div className="page-container" onClick={() => setCurrentPageDiagnostics(1)}>
+                                    <p>1</p>
+                                </div>
+
+                                <div className="page-input">
+                                    <div 
+                                        className="value-container"
+                                        onClick={() => currentPageDiagnostics > 1 ? setCurrentPageDiagnostics(currValue => currValue - 1) : null}
+                                    >
+                                        <FontAwesomeIcon icon={faMinus} className="value-icon" />
+                                    </div>
+                                    
+                                    <input 
+                                        type="number" 
+                                        placeholder={cookies.language === "en" ? "Page's number" : "Numarul paginii"}
+                                        value={currentPageDiagnostics}
+                                        onChange={e => Number(e.target.value) ? setCurrentPageDiagnostics(Number(e.target.value)) : setCurrentPageDiagnostics("")}
+                                    />
+
+                                    <div 
+                                        className="value-container"
+                                        onClick={() => currentPageDiagnostics < pages ? setCurrentPageDiagnostics(currValue => currValue + 1) : null}
+                                    >
+                                        <FontAwesomeIcon icon={faPlus} className="value-icon" />
+                                    </div>
+                                </div>
+                                <div className="page-container" onClick={() => setCurrentPageDiagnostics(pages)}>
+                                    <p>{pages}</p>
+                                </div>
+                            </div> : null}
+                        </div>
+                        
+                        
+                    
+                        <div className="add-button" onClick={() => navigate("/create-diagnostic")}>
+                            <FontAwesomeIcon icon={faPlus} className="add-icon" />
+                        </div>
+                    </div> : activeOption === 8 ? (
+                         <div className="treatment-categories-details">
+                            <div className="search-container">
+                                <input type="text" value={patientTypesQuery} onChange={e => setPatientTypesQuery(e.target.value)} placeholder={cookies.language === "en" ? "Search patient type..." : "Cauta tip de pacient..."} />
+                                <FontAwesomeIcon icon={faSearch} className="search-icon" />
+                            </div>
+    
+                            <div className="patients-container">
+                                {patientTypes.length > 0 && <div className="first-row">
+                                    {windowWidth >= 600 ? <div className="column">
+                                        <p>{cookies.language === "en" ? "No." : "Nr."}</p>
+                                        
+                                    </div> : null}
+    
+                                    <div className="column">
+                                        <p>{cookies.language === "en" ? "Name" : "Nume"}</p>
+                                    </div>
+    
+                                    <div className="column">
+                                        <p>{cookies.language === "en" ? "Options" : "Optiuni"}</p>
+                                    </div>
+                                </div>}
+    
+                                {patientTypes?.length > 0 ? patientTypes.map((patientType, idx) => (
+                                    <div className="row" key={idx}>
+    
+                                        {windowWidth >= 600 ? <div className="column">
+                                            <p>{idx + 1}</p>
+                                        </div> : null}
+    
+                                        <div className="column">
+                                            <p>{patientType.name}</p>
+                                        </div>
+    
+    
+                                        <div className="column pressable">
+                                            <FontAwesomeIcon className="column-icon" icon={faEllipsis} onClick={() => triggerOptions(idx, optionsTreatmentsRef.current)}/>
+                                            <div className="options-container" ref={ref => optionsTreatmentsRef.current[idx] = ref}>
+                                                <div className="option" onClick={async () => optionsTreatmentsRef.current[idx].classList.contains("show") ? await removePatientType(patientType.id) : null}>
+                                                    <FontAwesomeIcon icon={faTimes} className="option-icon" /> 
+                                                    <p>{cookies.language === "en" ? "Remove" : "Sterge"}</p>
+                                                </div>
+    
+                                                <div className="option" onClick={() => navigation(`/edit-patient-type/type/${patientType.id}`, { state: { patientType } })}>
+                                                    <FontAwesomeIcon icon={faUser} className="option-icon" />
+                                                    <p>{cookies.language === "en" ? "Edit" : "Editeaza"}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )) : (
+                                    <h2 className="center">{cookies.language === "en" ? "No patient type found." : "Niciun tip de pacient gasit."}</h2>
+                                )}
+    
+                                {pages > 1 ? <div className="pages-container">
+    
+                                    <div className="page-container" onClick={() => setCurrentPagePatientTypes(1)}>
+                                        <p>1</p>
+                                    </div>
+    
+                                    <div className="page-input">
+                                        <div 
+                                            className="value-container"
+                                            onClick={() => currentPagePatientTypes > 1 ? setCurrentPagePatientTypes(currValue => currValue - 1) : null}
+                                        >
+                                            <FontAwesomeIcon icon={faMinus} className="value-icon" />
+                                        </div>
+                                        
+                                        <input 
+                                            type="number" 
+                                            placeholder={cookies.language === "en" ? "Page's number" : "Numarul paginii"}
+                                            value={currentPagePatientTypes}
+                                            onChange={e => Number(e.target.value) ? setCurrentPagePatientTypes(Number(e.target.value)) : setCurrentPagePatientTypes("")}
+                                        />
+    
+                                        <div 
+                                            className="value-container"
+                                            onClick={() => currentPagePatientTypes < pages ? setCurrentPagePatientTypes(currValue => currValue + 1) : null}
+                                        >
+                                            <FontAwesomeIcon icon={faPlus} className="value-icon" />
+                                        </div>
+                                    </div>
+                                    <div className="page-container" onClick={() => setCurrentPagePatientTypes(pages)}>
+                                        <p>{pages}</p>
+                                    </div>
+                                </div> : null}
+                            </div>
+                            
+                            <div className="add-button" onClick={() => navigate("/create-patient-type/type")}>
+                                <FontAwesomeIcon icon={faPlus} className="add-icon" />
+                            </div>
+                         </div>
+                    ) : activeOption === 9 ? (
+                        <div className="treatment-categories-details">
+                            <div className="search-container">
+                                <input type="text" value={patientCategoriesQuery} onChange={e => setPatientCategoriesQuery(e.target.value)} placeholder={cookies.language === "en" ? "Search patient category..." : "Cauta categorie de pacient..."} />
+                                <FontAwesomeIcon icon={faSearch} className="search-icon" />
+                            </div>
+    
+                            <div className="patients-container">
+                                {patientTypes.length > 0 && <div className="first-row">
+                                    {windowWidth >= 600 ? <div className="column">
+                                        <p>{cookies.language === "en" ? "No." : "Nr."}</p>
+                                        
+                                    </div> : null}
+    
+                                    <div className="column">
+                                        <p>{cookies.language === "en" ? "Name" : "Nume"}</p>
+                                    </div>
+    
+                                    <div className="column">
+                                        <p>{cookies.language === "en" ? "Options" : "Optiuni"}</p>
+                                    </div>
+                                </div>}
+    
+                                {patientCategories?.length > 0 ? patientCategories.map((patientCategory, idx) => (
+                                    <div className="row" key={idx}>
+    
+                                        {windowWidth >= 600 ? <div className="column">
+                                            <p>{idx + 1}</p>
+                                        </div> : null}
+    
+                                        <div className="column">
+                                            <p>{patientCategory.category}</p>
+                                        </div>
+    
+    
+                                        <div className="column pressable">
+                                            <FontAwesomeIcon className="column-icon" icon={faEllipsis} onClick={() => triggerOptions(idx, optionsTreatmentsRef.current)}/>
+                                            <div className="options-container" ref={ref => optionsTreatmentsRef.current[idx] = ref}>
+                                                <div className="option" onClick={async () => optionsTreatmentsRef.current[idx].classList.contains("show") ? await removePatientCategory(patientCategory.id) : null}>
+                                                    <FontAwesomeIcon icon={faTimes} className="option-icon" /> 
+                                                    <p>{cookies.language === "en" ? "Remove" : "Sterge"}</p>
+                                                </div>
+    
+                                                <div className="option" onClick={() => navigation(`/edit-patient-type/category/${patientCategory.id}`, { state: { patientCategory } })}>
+                                                    <FontAwesomeIcon icon={faUser} className="option-icon" />
+                                                    <p>{cookies.language === "en" ? "Edit" : "Editeaza"}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )) : (
+                                    <h2 className="center">{cookies.language === "en" ? "No patient category found." : "Nicio categorie de pacient gasita."}</h2>
+                                )}
+    
+                                {pages > 1 ? <div className="pages-container">
+    
+                                    <div className="page-container" onClick={() => setCurrentPagePatientCategories(1)}>
+                                        <p>1</p>
+                                    </div>
+    
+                                    <div className="page-input">
+                                        <div 
+                                            className="value-container"
+                                            onClick={() => currentPagePatientCategories > 1 ? setCurrentPagePatientCategories(currValue => currValue - 1) : null}
+                                        >
+                                            <FontAwesomeIcon icon={faMinus} className="value-icon" />
+                                        </div>
+                                        
+                                        <input 
+                                            type="number" 
+                                            placeholder={cookies.language === "en" ? "Page's number" : "Numarul paginii"}
+                                            value={currentPagePatientCategories}
+                                            onChange={e => Number(e.target.value) ? setCurrentPagePatientCategories(Number(e.target.value)) : setCurrentPagePatientCategories("")}
+                                        />
+    
+                                        <div 
+                                            className="value-container"
+                                            onClick={() => currentPagePatientCategories < pages ? setCurrentPagePatientCategories(currValue => currValue + 1) : null}
+                                        >
+                                            <FontAwesomeIcon icon={faPlus} className="value-icon" />
+                                        </div>
+                                    </div>
+                                    <div className="page-container" onClick={() => setCurrentPagePatientCategories(pages)}>
+                                        <p>{pages}</p>
+                                    </div>
+                                </div> : null}
+                            </div>
+                            
+                            <div className="add-button" onClick={() => navigate("/create-patient-type/category")}>
+                                <FontAwesomeIcon icon={faPlus} className="add-icon" />
+                            </div>
+                         </div>
+                    ) : null}
                     </div>
                     
                 </div>

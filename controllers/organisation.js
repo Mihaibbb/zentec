@@ -161,11 +161,11 @@ exports.createOrganisation = async (req, res, next) => {
         createTableSql += 'category varchar(128) not null, ';
         createTableSql += 'price int not null, ';
         createTableSql += 'pricePer varchar(64) not null, ';
+        createTableSql += 'materialPrice int not null, ';
+        createTableSql += 'doctorPrice int not null, ';
         createTableSql += 'type varchar(64) not null, ';
         createTableSql += 'picture varchar(128), ';
         createTableSql += 'color varchar(20) not null );';
-
-        console.log(createTableSql);
 
         await db.query(createTableSql, ['treatments']);
 
@@ -284,17 +284,7 @@ exports.getOrganisationsData = async (req, res, next) => {
             const schedules = await db.query("SELECT * FROM ??", [`${org.Database}.schedules`]);
             const patients = await db.query("SELECT * FROM ??", [`${org.Database}.patients`]);
             const doctors = await db.query("SELECT * FROM ??", [`${org.Database}.doctors`]);
-            console.log("THIS ONE", {
-                users: await users,
-                _id: await _id,
-                name: await name,
-                date: await date,
-                smsMessage: await smsMessage,
-                apiKey: await apiKey,
-                schedules: await schedules,
-                patients: await patients,
-                doctors: await doctors
-            });
+            
 
             return {
                 users: await users,

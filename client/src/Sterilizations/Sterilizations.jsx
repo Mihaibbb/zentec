@@ -18,11 +18,11 @@ const Sterilizations = ({ data }) => {
 
     const [sterilizationsList, setSterilizationsList] = useState(data.organisation?.sterilizations || []);
 
-    const [instruments, setInstruments] = useState(data.organisation?.instruments || []);
+    const [instruments, setInstruments] = useState(data.organisation?.sterilization_instruments || []);
     const [instrumentsQuery, setInstrumentsQuery] = useState("");
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
-    const [totalInstruments, setTotalInstruments] = useState(data.organisation?.instruments);
+    const [totalInstruments, setTotalInstruments] = useState(data.organisation?.sterilization_instruments);
     const [videoStart, setVideoStart] = useState(false);
     const [theme, setTheme] = useState(cookies?.theme || "dark");
 
@@ -48,12 +48,12 @@ const Sterilizations = ({ data }) => {
     const getInstruments = async () => {
      
         setInstruments(_ => {
-            return data.organisation?.instruments && data.organisation?.instruments?.length && data.organisation?.instruments.filter((__, idx) => {
+            return data.organisation?.sterilization_instruments && data.organisation?.sterilization_instruments?.length && data.organisation?.sterilization_instruments.filter((__, idx) => {
                 return (idx + 1) > perPage * (currentPageInstruments - 1) && (idx + 1) <= perPage * currentPageInstruments;
             });
         });
         
-        setTotalInstruments(data.organisation?.instruments || []);
+        setTotalInstruments(data.organisation?.sterilization_instruments || []);
     };
 
 
@@ -98,11 +98,11 @@ const Sterilizations = ({ data }) => {
           
             if (response.success) {
                 setInstruments(_ => {
-                    return response.instruments.filter((__, idx) => {
+                    return response.sterilization_instruments.filter((__, idx) => {
                         return (idx + 1) > perPage * (currentPageInstruments - 1) && (idx + 1) <= perPage * currentPageInstruments;
                     });
                 });
-                setTotalInstruments(response.instruments || []);
+                setTotalInstruments(response.sterilization_instruments || []);
             } else {
                 setInstruments([]);
                 setTotalInstruments([]);

@@ -146,7 +146,7 @@ const CreatePatient = ({ data, fromAppointments, patientSaved }) => {
 
             if (!fromAppointments) {
                 noVideoContentRef.current.classList.add("invisible");
-                document.body.style.background = theme === "white" ? "#fff" : "#000";
+                document.body.style.background = theme === "light" ? "#fff" : "#000";
                 setTimeout(() => setPatientAdded(true), 300);
             }
             else patientSaved();

@@ -85,19 +85,26 @@ exports.loginRemember = async (req, res, next) => {
 
         await organisations && await organisations.length > 0 && await organisations.forEach(organisation => {
             (async () => {
+                const tables = await db.query("SELECT table_name FROM information_schema.tables WHERE table_schema = ?", [organisation]);
+                console.log(tables);
+                const organisationData = {};
+
+                const data = await Promise.all(tables.map(async tableRaw => {
+                    const table = Object.values(tableRaw)[0];
+                    const rows = await db.query("SELECT * FROM ??", [`${organisation}.${table}`]);
+                    organisationData[table] = rows;
+                    return 0;
+                }));
+
                 const users = await db.query("SELECT * FROM ??", [`${organisation}.users`]);
                 const details = await db.query("SELECT * FROM ??", [`${organisation}.details`]);
                 const row1 = await details[0];
                 console.log("heree", details);
                 const { _id, name, date } = await row1;
-                const schedules = await db.query("SELECT * FROM ??", [`${organisation}.schedules`]);
-                const patients = await db.query("SELECT * FROM ??", [`${organisation}.patients`]);
-                const doctors = await db.query("SELECT * FROM ??", [`${organisation}.doctors`]);
-                const assistants = await db.query("SELECT * FROM ??", [`${organisation}.assistants`]);
-                const instruments = await db.query("SELECT * FROM ??", [`${organisation}.sterilization_instruments`]);
-                const sterilizations = await db.query("SELECT * FROM ??", [`${organisation}.sterilizations`]);
-                const treatmentCategories = await db.query("SELECT * FROM ??", [`${organisation}.treatment_categories`]);
-                const treatments = await db.query("SELECT * FROM ??", [`${organisation}.treatments`]);
+                organisationData["_id"] = _id;
+                organisationData["name"] = name;
+                organisationData["date"] = date;
+               
                 const currUser = users && users.length && users.find(user => {
                     return user.userId.toString() === userId.toString() && user.password === hashedPassword;
                 });
@@ -109,21 +116,7 @@ exports.loginRemember = async (req, res, next) => {
                         username: currUser.username, 
                         userId
                     };
-    
-                    const organisationData = {
-                        name: name,
-                        schedules: schedules || [],
-                        patients: patients,
-                        users: users,
-                        doctors: doctors,
-                        details: details,
-                        assistants: assistants,
-                        instruments: instruments,
-                        sterilizations: sterilizations,
-                        treatmentCategories: treatmentCategories,
-                        treatments: treatments,
-                        _id: _id
-                    };
+
     
                     return res.status(200).json({ organisation: organisationData, user: userData, success: true, admin: false });
                   

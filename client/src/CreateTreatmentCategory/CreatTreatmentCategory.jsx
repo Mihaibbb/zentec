@@ -6,8 +6,7 @@ import { useCookies } from "react-cookie";
 import { useLocation, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleLeft, faCheck } from "@fortawesome/free-solid-svg-icons";
-import tickAnimation from "../imgs/green-tick.mp4";
-import tickAnimationWhite from "../imgs/green-tick-light-theme.mp4";
+
 import InputColor from "react-input-color";
 import TickAnimation from "../utils/TickAnimation";
 
@@ -94,7 +93,7 @@ const CreateTreatmentCategory = ({ data }) => {
 
     return (
         <div className="create-doctor">
-            <Navigation page="sterilizations" />
+            <Navigation page="" />
             <div className="content" style={assistantAdded ? {maxHeight: "100vh"} : {}}>
                 <Header data={data} />
                 {assistantAdded ? (

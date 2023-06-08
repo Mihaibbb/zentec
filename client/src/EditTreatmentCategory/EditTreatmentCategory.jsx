@@ -97,7 +97,7 @@ const EditTreatmentCategory = ({ data }) => {
 
     return (
         <div className="create-doctor">
-            <Navigation page="sterilizations" />
+            <Navigation page="" />
             <div className="content" style={assistantAdded ? {maxHeight: "100vh"} : {}}>
                 <Header data={data} />
                 {assistantAdded ? (

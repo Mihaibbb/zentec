@@ -77,7 +77,7 @@ const CreateDoctor = ({ data }) => {
             const response = await request.json();
             if (response.success) {
                 noVideoContentRef.current.classList.add("invisible");
-                document.body.style.background = theme === "white" ? "#fff" : "#000";
+                document.body.style.background = theme === "light" ? "#fff" : "#000";
                 setTimeout(() => setDoctorAdded(true), 300);
             
              

@@ -9,7 +9,7 @@ import { faWhatsapp } from "@fortawesome/free-brands-svg-icons"
 import iphoneMockup from "../imgs/iphone_mockup.webp";
 //import macbookMockup from "../imgs/mockup_macbook_test.png";
 import Footer from '../Components/Footer_Home/Footer';
-import { useState } from 'react';
+import { useCallback, useLayoutEffect, useState } from 'react';
 import { useRef } from 'react';
 import zenAnimation from "../imgs/Zentec_Animation.mp4";
 import zenAnimationMobile from "../imgs/Zentec_Animation_Mobile.mp4";
@@ -38,6 +38,10 @@ const Home = ({ data }) => {
     const [videosStatus, setVideosStatus] = useState([]);
 
     const navigate = useNavigate();
+
+    const isTouchDevice = useCallback(() => {
+        return (('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0));
+    }, []);
 
 
     useEffect(() => {
@@ -108,6 +112,15 @@ const Home = ({ data }) => {
             await userConnected();
         })();
     }, []);
+
+    useEffect(() => {
+        if (!tutorialVideosRef?.current) return;
+        // console.log(tutorialVideosRef.current);
+        // tutorialVideosRef.current.forEach(video => {
+        //     video.load();
+        // });
+
+    }, [tutorialVideosRef]);
 
 
     
@@ -274,16 +287,15 @@ const Home = ({ data }) => {
                             <h2>{cookies.language === "en" ? "Add doctor's schedule" : "Adaugare program doctor"}</h2>
                             <div className="video-container">
                                 <video 
-                                    src={doctorScheduleVideo} 
-                                     
+                                    src={`${doctorScheduleVideo}#t=1`} 
                                     onEnded={() => setVideosStatus(currStatuses => {
                                         return currStatuses.map((currStatus, idx) => {
                                             if (idx === 3) return "ended";
                                             return currStatus;
                                         });
                                     })}
-                                    playsInline 
-                                    controls={false}
+                                    playsInline
+                                    controls={isTouchDevice() ? true : false}
                                     muted
                                     style={{ width: "100%", height: "100%", borderRadius: '20px' }}
                                     ref={ref => tutorialVideosRef.current[3] = ref}
@@ -298,11 +310,10 @@ const Home = ({ data }) => {
                                             });
                                         });
                                     }}
-
                                     
                                 />
 
-                                {<div className="play-button" onClick={(e) => {
+                                {isTouchDevice() ? null : <div className="play-button" onClick={(e) => {
                                     if (videosStatus[3] === "paused") tutorialVideosRef.current[3].pause(); 
                                     else if(videosStatus[3] === "playing") tutorialVideosRef.current[3].play();
                                     else {
@@ -330,7 +341,7 @@ const Home = ({ data }) => {
                                     <FontAwesomeIcon icon={videosStatus?.[3] === "paused" ? faPause : videosStatus?.[3] === "playing" ? faPlay : faUndo} className="play-icon" />
                                 </div>}
 
-                                <div className="fullscreen-button" onClick={() => {
+                                {isTouchDevice() ? null : <div className="fullscreen-button" onClick={() => {
                                     if (tutorialVideosRef.current[3].requestFullscreen) {
                                         tutorialVideosRef.current[3].requestFullscreen();
                                       } else if (tutorialVideosRef.current[3].webkitRequestFullscreen) { /* Safari */
@@ -341,7 +352,7 @@ const Home = ({ data }) => {
 
                                 }}>
                                     <FontAwesomeIcon icon={faExpand} className="fullscreen-icon" />
-                                </div>
+                                </div>}
                             </div>
                         </div>
 
@@ -351,7 +362,7 @@ const Home = ({ data }) => {
                             <h2>{cookies.language === "en" ? "Add patient" : "Adaugare pacient"}</h2>
                             <div className="video-container">
                                 <video 
-                                    src={patientVideo} 
+                                    src={`${patientVideo}#t=1`} 
                                     onEnded={() => setVideosStatus(currStatuses => {
                                         return currStatuses.map((currStatus, idx) => {
                                             if (idx === 1) return "ended";
@@ -359,7 +370,7 @@ const Home = ({ data }) => {
                                         });
                                     })}
                                     playsInline 
-                                    controls={false}
+                                    controls={isTouchDevice() ? true : false}
                                     muted
                                     style={{ width: "100%", height: "100%", borderRadius: '20px' }}
                                     ref={ref => tutorialVideosRef.current[1] = ref}
@@ -377,7 +388,7 @@ const Home = ({ data }) => {
                                    
                                 />
 
-                                {<div className="play-button" onClick={(e) => {
+                                {isTouchDevice() ? null : <div className="play-button" onClick={(e) => {
                                     if (videosStatus[1] === "paused") tutorialVideosRef.current[1].pause(); 
                                     else if(videosStatus[1] === "playing") tutorialVideosRef.current[1].play();
                                     else {
@@ -405,7 +416,7 @@ const Home = ({ data }) => {
                                     <FontAwesomeIcon icon={videosStatus?.[1] === "paused" ? faPause : videosStatus?.[1] === "playing" ? faPlay : faUndo} className="play-icon" />
                                 </div>}
 
-                                <div className="fullscreen-button" onClick={() => {
+                                {isTouchDevice() ? null : <div className="fullscreen-button" onClick={() => {
                                     if (tutorialVideosRef.current[1].requestFullscreen) {
                                         tutorialVideosRef.current[1].requestFullscreen();
                                       } else if (tutorialVideosRef.current[1].webkitRequestFullscreen) { /* Safari */
@@ -416,7 +427,7 @@ const Home = ({ data }) => {
 
                                 }}>
                                     <FontAwesomeIcon icon={faExpand} className="fullscreen-icon" />
-                                </div>
+                                </div>}
                             </div>
                         </div>
 
@@ -425,9 +436,9 @@ const Home = ({ data }) => {
                             <h2>{cookies.language === "en" ? "Add appointment" : "Adaugare programare"}</h2>
                             <div className="video-container">
                                 <video 
-                                    src={appointmentVideo} 
+                                    src={`${appointmentVideo}#t=1`} 
                                     
-                                    controls={false}
+                                    controls={isTouchDevice() ? true : false}
                                     muted
                                     style={{ width: "100%", height: "100%", borderRadius: '20px' }}
                                     ref={ref => tutorialVideosRef.current[0] = ref}
@@ -452,7 +463,7 @@ const Home = ({ data }) => {
                                     
                                 />
 
-                                {<div className="play-button" onClick={(e) => {
+                                {isTouchDevice() ? null : <div className="play-button" onClick={(e) => {
                                     if (videosStatus[0] === "paused") tutorialVideosRef.current[0].pause(); 
                                     else if(videosStatus[0] === "playing") tutorialVideosRef.current[0].play();
                                     else {
@@ -480,7 +491,7 @@ const Home = ({ data }) => {
                                     <FontAwesomeIcon icon={videosStatus?.[0] === "paused" ? faPause : videosStatus?.[0] === "playing" ? faPlay : faUndo} className="play-icon" />
                                 </div>}
 
-                                <div className="fullscreen-button" onClick={() => {
+                                {isTouchDevice() ? null : <div className="fullscreen-button" onClick={() => {
                                     if (tutorialVideosRef.current[0].requestFullscreen) {
                                         tutorialVideosRef.current[0].requestFullscreen();
                                       } else if (tutorialVideosRef.current[0].webkitRequestFullscreen) { /* Safari */
@@ -488,10 +499,9 @@ const Home = ({ data }) => {
                                       } else if (tutorialVideosRef.current[0].msRequestFullscreen) { /* IE11 */
                                         tutorialVideosRef.current[0].msRequestFullscreen();
                                       }
-
                                 }}>
                                     <FontAwesomeIcon icon={faExpand} className="fullscreen-icon" />
-                                </div>
+                                </div>}
                             </div>
                         </div>
 
@@ -500,8 +510,8 @@ const Home = ({ data }) => {
                             <h2>{cookies.language === "en" ? "Add doctor" : "Adaugare doctor"}</h2>
                             <div className="video-container">
                                 <video 
-                                    src={doctorVideo} 
-                                     
+                                    src={`${doctorVideo}#t=1`} 
+                                    
                                     onEnded={() => setVideosStatus(currStatuses => {
                                         return currStatuses.map((currStatus, idx) => {
                                             if (idx === 2) return "ended";
@@ -509,7 +519,7 @@ const Home = ({ data }) => {
                                         });
                                     })}
                                     playsInline 
-                                    controls={false}
+                                    controls={isTouchDevice() ? true : false}
                                     muted
                                     style={{ width: "100%", height: "100%", borderRadius: '20px' }}
                                     ref={ref => tutorialVideosRef.current[2] = ref}
@@ -527,7 +537,7 @@ const Home = ({ data }) => {
                                   
                                 />
 
-                                {<div className="play-button" onClick={(e) => {
+                                {isTouchDevice() ? null : <div className="play-button" onClick={(e) => {
                                     if (videosStatus[2] === "paused") tutorialVideosRef.current[2].pause(); 
                                     else if(videosStatus[2] === "playing") tutorialVideosRef.current[2].play();
                                     else {
@@ -555,22 +565,22 @@ const Home = ({ data }) => {
                                     <FontAwesomeIcon icon={videosStatus?.[2] === "paused" ? faPause : videosStatus?.[2] === "playing" ? faPlay : faUndo} className="play-icon" />
                                 </div>}
 
-                                <div className="fullscreen-button" onClick={() => {
+                                {isTouchDevice() ? null : <div className="fullscreen-button" onClick={() => {
                                     if (tutorialVideosRef.current[2].requestFullscreen) {
                                         tutorialVideosRef.current[2].requestFullscreen();
-                                      } else if (tutorialVideosRef.current[2].webkitRequestFullscreen) { /* Safari */
+                                      } 
+                                      if (tutorialVideosRef.current[2].webkitRequestFullscreen) { /* Safari */
                                         tutorialVideosRef.current[2].webkitRequestFullscreen();
-                                      } else if (tutorialVideosRef.current[2].msRequestFullscreen) { /* IE11 */
+                                      } 
+                                      if (tutorialVideosRef.current[2].msRequestFullscreen) { /* IE11 */
                                         tutorialVideosRef.current[2].msRequestFullscreen();
                                       }
 
                                 }}>
                                     <FontAwesomeIcon icon={faExpand} className="fullscreen-icon" />
-                                </div>
+                                </div>}
                             </div>
                         </div>
-
-                        
 
                     </div>
 

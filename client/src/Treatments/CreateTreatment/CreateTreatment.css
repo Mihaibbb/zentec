@@ -1,0 +1,74 @@
+.input .picture-options 
+{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    justify-content: center;
+    align-items: center;
+    grid-gap: 1.5rem;
+}
+
+.input .picture-options .treatment 
+{
+    width: 100%;
+    border: 2.5px solid var(--text-color);
+    border-radius: 25px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: border-color 300ms ease-in-out;
+}
+
+.input .picture-options .treatment.active 
+{
+    border-color: var(--contrast-color);
+    border-width: 3px;
+}
+
+.input .picture-options .treatment > div 
+{
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: .5rem;
+}
+
+.input .picture-options .treatment > div .circle 
+{
+    width: 10px;
+    height: 10px;
+    padding: .5rem;
+    border-radius: 50%;
+    border: 2px solid var(--text-color-2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+   
+}
+
+.input .picture-options .treatment > div p 
+{
+    font-weight: bold;
+    color: var(--text-color);
+}
+
+.input .picture-options .treatment > div .circle .check-icon
+{
+    opacity: 0;
+    transition: all 350ms ease-in-out;
+}
+
+.input .picture-options .treatment.active > div .circle .check-icon
+{
+    color: var(--contrast-color);
+    font-size: 18px;
+    opacity: 1;
+}
+
+
+.input .picture-options .treatment img 
+{
+    width: 100%;
+    max-width: 55px;
+}
