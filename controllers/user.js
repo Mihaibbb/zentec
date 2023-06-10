@@ -2211,8 +2211,13 @@ exports.createDiagnosticInitialStatus = async (req, res) => {
         const initialStatus = JSON.parse(patients[0].initial_status);
         let id = generateId(8);
         while (inArrId(initialStatus, id, "id")) id = generateId(8);
+        
+        const diagnostics = await db.query("SELECT * FROM ?? WHERE id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.diagnostics`, diagnosticId]);
+        const diagnosticPicture = diagnostics[0].picture;
+
         initialStatus.push({
             diagnosticId,
+            diagnosticPicture,
             teeth,
             teethSurfaces,
             notes,
@@ -2236,15 +2241,18 @@ exports.editDiagnosticInitialStatus = async (req, res) => {
         const patients = await db.query("SELECT * FROM ?? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.patients`, patientId]);
         if (patients?.length !== 1) return res.status(404).json({ success: false, reason: "invalid-patient" });
         const initialStatus = JSON.parse(patients[0].initial_status);
-        const newInitialStatus = initialStatus.map(diagnostic => {
+        const newInitialStatus = await Promise.all(initialStatus.map(async diagnostic => {
             if (diagnostic.id !== id) return diagnostic;
+            const diagnostics = await db.query("SELECT * FROM ?? WHERE id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.diagnostics`, diagnostic.id]);
+            const diagnosticPicture = diagnostics[0].picture;
             return {...diagnostic,
                 diagnosticId,
+                diagnosticPicture,
                 teeth,
                 teethSurfaces,
                 notes
             };
-        });
+        }));
 
         await db.query("UPDATE ?? SET initial_status = ? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.patients`, JSON.stringify(newInitialStatus), patientId])
         res.status(200).json({ success: true });
@@ -2723,12 +2731,68 @@ exports.editDetails = async (req, res) => {
     const { organisationId, startHour, endHour, organisationName } = req.body;
     try {
         await db.query("UPDATE ?? SET start_hour = ?, end_hour = ?, name = ? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.details`, startHour, endHour, organisationName, organisationId]);
+        
         res.status(200).json({
             success: true,
         });
+
     } catch (e) {
         console.log(e);
         res.status(404).json({ success: false, error: e, message: "An error occured!" });
+    }
+};
+
+// Teeth initial status
+
+exports.getToothImageInitialStatus = async (req, res) => {
+    const { organisationId, patientId, toothNumber } = req.params;
+    try {
+        const patients = await db.query("SELECT * FROM ?? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.patients`, patientId]);
+        if (patients?.length !== 1) return res.status(404).json({
+            success: false, 
+            message: "Invalid patient!"
+        });
+
+        const patient = patients[0];
+        const diagnostics = JSON.parse(patient.initial_status);
+        const toothDiagnostics = diagnostics.filter(diagnostic => diagnostic.teeth.includes(Number(toothNumber)));
+        if (!toothDiagnostics.length) return res.status(200).json({ success: true, tooth: '' }); // Represents the normal tooth
+        if (toothDiagnostics.find(diagnostic => diagnostic.diagnosticPicture === "coroana.png") && toothDiagnostics.find(diagnostic => diagnostic.diagnosticPicture === "implant.png")) 
+            return res.status(200).json({ success: true, tooth: 'coroana_implant' });
+        
+        if (toothDiagnostics.find(diagnostic => diagnostic.diagnosticPicture === "implant.png")) 
+            return res.status(200).json({ success: true, tooth: 'implant' });
+        
+        if (toothDiagnostics.find(diagnostic => diagnostic.diagnosticPicture === "coroana.png") && toothDiagnostics.find(diagnostic => diagnostic.diagnosticPicture === "extractie.png")) 
+            return res.status(200).json({ success: true, tooth: 'coroana_extractie' });
+
+        if (toothDiagnostics.find(diagnostic => diagnostic.diagnosticPicture === "extractie.png")) 
+            return res.status(200).json({ success: true, tooth: 'extractie' });
+
+        
+
+    } catch (e) {
+        console.log(e);
+        res.status(404).json({ success: false, message: "An error occured!", error: e });
+    }
+};
+
+exports.getToothImageCurrentStatus = async (req, res) => {
+    const { organisationId, patientId, toothNumber } = req.params;
+    try {
+        
+    } catch (e) {
+        console.log(e);
+        res.status(404).json({ success: false, message: "An error occured!", error: e });
+    }
+};
+
+exports.getToothImageTreatmentPlan = async (req, res) => {
+    const { organisationId, patientId, treatmentPlanId, toothNumber } = req.params;
+    try {
+
+    } catch (e) {
+        
     }
 };
 

@@ -1900,7 +1900,7 @@ const Appointments = ({ data }) => {
                     </div>
                 </div>
             
-                {doctors && doctors.length <= 2 && window.innerWidth > 800 && <div className="scheduler">
+                {doctors && doctors.length <= 3 && window.innerWidth > 800 && <div className="scheduler">
                     {filterActive !== 3 && filterActive !== 4 && 
                         <div className="hours" filterid={filterActive.toString()}>
                             {hours.map((hour, hourIdx) => (
@@ -1957,7 +1957,7 @@ const Appointments = ({ data }) => {
                     
                 </div>}
 
-                {doctors && (doctors.length > 2 || window.innerWidth <= 800) && 
+                {doctors && (doctors.length > 3 || window.innerWidth <= 800) && 
                      <div className="scheduler flex-column">
                     
                      <div className="schedules flex-column" style={{ marginTop: hourContainerHeight }}>
