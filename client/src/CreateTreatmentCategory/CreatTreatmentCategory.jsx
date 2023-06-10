@@ -6,7 +6,6 @@ import { useCookies } from "react-cookie";
 import { useLocation, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleLeft, faCheck } from "@fortawesome/free-solid-svg-icons";
-
 import InputColor from "react-input-color";
 import TickAnimation from "../utils/TickAnimation";
 

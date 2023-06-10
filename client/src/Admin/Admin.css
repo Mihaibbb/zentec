@@ -47,7 +47,7 @@
 .admin .create-user
 {
     width: calc(92.5%);
-    background: var(--dark-color);
+    background: var(--over-difference-color-2);
     height: 50px;
     display: flex;
     padding-left: 1rem;
@@ -84,7 +84,7 @@
     width: 100%;
     max-width: 90%;
     margin: 2rem auto;
-    background: var(--dark-color);
+    background: var(--over-difference-color-2);
     border-radius: 20px;
     padding: 1rem;
     position: relative;

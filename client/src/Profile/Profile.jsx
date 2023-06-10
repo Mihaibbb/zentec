@@ -19,10 +19,10 @@ const Profile = ({ data }) => {
     const [theme, setTheme] = useState(cookies?.theme || "dark");
     const [errorMessage, setErrorMessage] = useState(null);
 
-    const [startHourProgram, setStartHourProgram] = useState(8);
-    const [endHourProgram, setEndHourProgram] = useState(20);
+    const [startHourProgram, setStartHourProgram] = useState(data.organisation.details[0].start_hour);
+    const [endHourProgram, setEndHourProgram] = useState(data.organisation.details[0].end_hour);
     
-    const options = cookies.language === "en" ? ["Details", "Assistants", "Services", "Scheduled SMS", "Backups", "Treatments", "Treatments Categories", "Diagnostics", "Patients' Types (dental status)", "Patient Categories"] : ["Detalii", "Personal", "Servicii", "SMS-uri Programate", "Backup-uri", "Tratamente", "Categorii Tratamente", "Diagnostice", "Tipuri pacienti (status dentar)", "Categorii pacienti"];
+    const options = cookies.language === "en" ? ["Details", "Assistants", "Scheduled SMS", "Treatments", "Treatments Categories", "Diagnostics", "Patients' Types (dental status)", "Patient Categories"] : ["Detalii", "Personal", "SMS-uri Programate", "Tratamente", "Categorii Tratamente", "Diagnostice", "Tipuri pacienti (status dentar)", "Categorii pacienti"];
     const optionsTitle = cookies.language === "en" ? ["", "", "", ""] : ["", "", ""];
     const [activeOption, setActiveOption] = useState(window?.history?.state?.activeOption || 0);
     const [sideMenuOption, setSideMenuOption] = useState(window?.history?.state?.sideMenuOption || 0);
@@ -734,8 +734,8 @@ const Profile = ({ data }) => {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                startHourProgram,
-                endHourProgram,
+                startHour: startHourProgram,
+                endHour: endHourProgram,
                 organisationName,
                 organisationId: data.organisation._id
             })
@@ -979,15 +979,7 @@ const Profile = ({ data }) => {
                             <div className="services-details">
 
                             </div>
-                        ) : activeOption === 3 ? (
-                            <div className="sms-details">
-
-                            </div>
-                        ) : activeOption === 4 ? (
-                            <div className="backup-details">
-
-                            </div>
-                        ) :  activeOption === 5 ? (
+                        ) :  activeOption === 3 ? (
                             <div className="treatment-categories-details">
                                 <div className="search-container">
                                     <input type="text" value={treatmentsQuery} onChange={e => setTreatmentsQuery(e.target.value)} placeholder={cookies.language === "en" ? "Search treatment..." : "Cauta tratament..."} />
@@ -1100,7 +1092,7 @@ const Profile = ({ data }) => {
                                     <FontAwesomeIcon icon={faPlus} className="add-icon" />
                                 </div>
                             </div>
-                        ) : activeOption === 6 ? (
+                        ) : activeOption === 4 ? (
                             <div className="treatment-categories-details">
                                 <div className="search-container">
                                     <input type="text" value={query} onChange={e => setQuery(e.target.value)} placeholder={cookies.language === "en" ? "Search category..." : "Cauta categorie..."} />
@@ -1199,7 +1191,7 @@ const Profile = ({ data }) => {
                                     <FontAwesomeIcon icon={faPlus} className="add-icon" />
                                 </div>
                             </div>
-                        ) : activeOption === 7 ? <div className="treatment-categories-details">
+                        ) : activeOption === 5 ? <div className="treatment-categories-details">
                         <div className="search-container">
                             <input type="text" value={diagnosticsQuery} onChange={e => setDiagnosticsQuery(e.target.value)} placeholder={cookies.language === "en" ? "Search diagnose..." : "Cauta diagnostic..."} />
                             <FontAwesomeIcon icon={faSearch} className="search-icon" />
@@ -1298,7 +1290,7 @@ const Profile = ({ data }) => {
                         <div className="add-button" onClick={() => navigate("/create-diagnostic")}>
                             <FontAwesomeIcon icon={faPlus} className="add-icon" />
                         </div>
-                    </div> : activeOption === 8 ? (
+                    </div> : activeOption === 6 ? (
                          <div className="treatment-categories-details">
                             <div className="search-container">
                                 <input type="text" value={patientTypesQuery} onChange={e => setPatientTypesQuery(e.target.value)} placeholder={cookies.language === "en" ? "Search patient type..." : "Cauta tip de pacient..."} />
@@ -1390,7 +1382,7 @@ const Profile = ({ data }) => {
                                 <FontAwesomeIcon icon={faPlus} className="add-icon" />
                             </div>
                          </div>
-                    ) : activeOption === 9 ? (
+                    ) : activeOption === 7 ? (
                         <div className="treatment-categories-details">
                             <div className="search-container">
                                 <input type="text" value={patientCategoriesQuery} onChange={e => setPatientCategoriesQuery(e.target.value)} placeholder={cookies.language === "en" ? "Search patient category..." : "Cauta categorie de pacient..."} />

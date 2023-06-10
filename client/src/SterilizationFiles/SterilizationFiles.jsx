@@ -60,7 +60,7 @@ const SterilizationFiles = ({ data : currData }) => {
         const barWidth = barCodeData.encodings[0].options.width;
         const barHeight = barCodeData.encodings[0].options.height;
         const barWidthRatio = barWidth / barHeight;
-        const realHeight = 10;
+        const realHeight = 40;
         const heightRatio = barHeight / realHeight;
         return (
           <View
@@ -71,7 +71,7 @@ const SterilizationFiles = ({ data : currData }) => {
               height: `${realHeight}px`,
               width: `100%`,
               justifyContent: "center",
-              marginTop: 2,
+              marginTop: 5,
               marginHorizontal: "auto",
         
             }}
@@ -98,10 +98,10 @@ const SterilizationFiles = ({ data : currData }) => {
       
       const MyDocument = ({ barCode, instrument, iso, assistant, sarja, addDate, expireDate, barCodeData }) => (
          
-              <Page size={{ width: 45, height: 45 }}>
+              <Page size={{ width: 170, height: 170 }}>
                 <View style={{ width: "90%", marginHorizontal: "auto" }}>
                   <MyBarcode barCodeData={barCodeData} />
-                  <Text style={{ fontSize: 3, marginHorizontal: "auto", letterSpacing: .5 }}>{barCode}</Text>
+                  <Text style={{ fontSize: 10, marginHorizontal: "auto", letterSpacing: 2 }}>{barCode}</Text>
 
                   <View 
                     style={{
@@ -109,10 +109,10 @@ const SterilizationFiles = ({ data : currData }) => {
                         flexDirection: "row", 
                         alignItems: "center", 
                         marginLeft: 3.5, 
-                        marginTop: .5
+                        marginTop: 5
                     }}>
-                    <Text style={{ fontSize: 3 }}>Instrument: </Text>
-                    <Text style={{ fontSize: 3, fontWeight: 700 }}>{instrument}</Text>
+                    <Text style={{ fontSize: 10 }}>Instrument: </Text>
+                    <Text style={{ fontSize: 10, fontWeight: 700 }}>{instrument}</Text>
                   </View>
 
                   <View 
@@ -121,11 +121,11 @@ const SterilizationFiles = ({ data : currData }) => {
                         flexDirection: "row",  
                         alignItems: "center", 
                         marginLeft: 3.5, 
-                        marginTop: .5
+                        marginTop: 5
                     }}
                 >
-                    <Text style={{ fontSize: 3 }}>Cod ISO: </Text>
-                    <Text style={{ fontSize: 3 }}>{iso}</Text>
+                    <Text style={{ fontSize: 10 }}>Cod ISO: </Text>
+                    <Text style={{ fontSize: 10 }}>{iso}</Text>
                   </View>
 
                   <View 
@@ -134,10 +134,10 @@ const SterilizationFiles = ({ data : currData }) => {
                         flexDirection: "row", 
                         alignItems: "center", 
                         marginLeft: 3.5, 
-                        marginTop: .5
+                        marginTop: 5
                     }}>
-                    <Text style={{ fontSize: 3 }}>Sarja: </Text>
-                    <Text style={{ fontSize: 3 }}>{sarja}</Text>
+                    <Text style={{ fontSize: 10 }}>Sarja: </Text>
+                    <Text style={{ fontSize: 10 }}>{sarja}</Text>
                   </View>
                   <View 
                     style={{
@@ -145,10 +145,10 @@ const SterilizationFiles = ({ data : currData }) => {
                         flexDirection: "row", 
                         alignItems: "center", 
                         marginLeft: 3.5, 
-                        marginTop: .5
+                        marginTop: 5
                     }}>
-                    <Text style={{ fontSize: 3 }}>Data adaugare: </Text>
-                    <Text style={{ fontSize: 3 }}>{addDate}</Text>
+                    <Text style={{ fontSize: 10 }}>Data adaugare: </Text>
+                    <Text style={{ fontSize: 10 }}>{addDate}</Text>
                   </View>
                   <View 
                     style={{
@@ -156,10 +156,10 @@ const SterilizationFiles = ({ data : currData }) => {
                         flexDirection: "row", 
                         alignItems: "center", 
                         marginLeft: 3.5, 
-                        marginTop: .5
+                        marginTop: 5
                     }}>
-                    <Text style={{ fontSize: 3 }}>Data expirare: </Text>
-                    <Text style={{ fontSize: 3 }}>{expireDate}</Text>
+                    <Text style={{ fontSize: 10 }}>Data expirare: </Text>
+                    <Text style={{ fontSize: 10 }}>{expireDate}</Text>
                   </View>
                   <View 
                     style={{
@@ -167,10 +167,10 @@ const SterilizationFiles = ({ data : currData }) => {
                         flexDirection: "row", 
                         alignItems: "center", 
                         marginLeft: 3.5,                         
-                        marginTop: .5
+                        marginTop: 5
                     }}>
-                    <Text style={{ fontSize: 3 }}>Personal: </Text>
-                    <Text style={{ fontSize: 3 }}>{assistant}</Text>
+                    <Text style={{ fontSize: 10 }}>Personal: </Text>
+                    <Text style={{ fontSize: 10 }}>{assistant}</Text>
                   </View>
                 </View>
               </Page>

@@ -1,4 +1,4 @@
-import { faAddressBook, faAddressCard, faAngleLeft, faCalendar, faCheck, faCity, faDeleteLeft, faEnvelope, faIdBadge, faMars, faNoteSticky, faPhone, faPlus, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faAddressBook, faAddressCard, faAngleLeft, faCalendar, faCheck, faCity, faDeleteLeft, faEllipsis, faEnvelope, faIdBadge, faMars, faMinus, faNoteSticky, faPhone, faPlus, faSearch, faTimes, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState, useEffect, useRef, useMemo } from "react";
 import { useCookies } from "react-cookie";
@@ -6,16 +6,11 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Header from "../Components/Header/Header";
 import Navigation from "../Components/Navigation/Navigation";
 import DateCustomInput from "../Components/DatePicker/DatePicker";
-import tickAnimationWhite from "../imgs/green-tick-light-theme.mp4";
-import tickAnimation from "../imgs/green-tick.mp4";
 import { faPenToSquare, faTrashCan } from "@fortawesome/free-regular-svg-icons";
 import "./PatientAccount.css";
 import TickAnimation from "../utils/TickAnimation";
-import { set } from "date-fns";
-
 
 const PatientAccount = ({ data }) => {
-
 
     const navigation = useNavigate();
     const param = useParams();
@@ -24,7 +19,7 @@ const PatientAccount = ({ data }) => {
     const [cookies, setCookie] = useCookies();
     const birthRef = useRef();
     const noVideoContentRef = useRef();
-    const options = cookies.language === "en" ? ["Patient's Data", "Appointments", "Documents", "Treatment Plan", "Treatments"] : ["Datele Pacientului", "Programari", "Documente", "Plan Tratament", "Tratamente"];
+    const options = cookies.language === "en" ? ["Patient's Data", "Appointments", "Documents", "Treatment Plan", "Treatments", "Anamnesis"] : ["Datele Pacientului", "Programari", "Documente", "Plan Tratament", "Tratamente", "Anamneza"];
     
     if (!param?.id || !param?.historicPage) navigation(-1);
     console.log(param, location.state);                      
@@ -76,12 +71,25 @@ const PatientAccount = ({ data }) => {
 
     const [documentMessage, setDocumentMessage] = useState("");
     const [documentRemoved, setDocumentRemoved] = useState(false);
+    const [diagnostics, setDiagnostics] = useState(JSON.parse(patient.initial_status));
+    const [totalDiagnostics, setTotalDiagnostics] = useState(JSON.parse(patient.initial_status));
+    const [currentPageDiagnostics, setCurrentPageDiagnostics] = useState(1);
+    const [diagnosticsQuery, setDiagnosticsQuery] = useState("");
+    const [diagnoseRemoved, setDiagnoseRemoved] = useState(false);
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+    
+    const statusOptions = cookies?.language === "en" ? ["Initial Status", "Current Status"] : ["Status initial", "Status Actual"];
+    const [activeStatusOption, setActiveStatusOption] = useState(0);
+
+    const perPage = 10;
+    const [pages, setPages] = useState();
 
     const theme = useMemo(() => cookies?.theme || "dark", [cookies]);
 
     const currGenders = cookies.language === "en" ? ['Male', 'Female', 'Not mentioned'] : ['Masculin', 'Feminin', 'Nespecificat'];
 
     const gendersRef = useRef([]);
+    const optionsTreatmentsRef = useRef([]);
 
     const toggleGender = (idx) => {
         gendersRef.current[idx].classList.toggle("active");
@@ -121,7 +129,6 @@ const PatientAccount = ({ data }) => {
             setNotes(currPatient?.notes || "");
             setDocuments(JSON.parse(currPatient?.documents || "[]"));
             setHistoric(JSON.parse(currPatient?.historic || "[]"))
-
             setPatient(response.patient[0]);
         } catch (e) {
             console.log(e)
@@ -243,11 +250,15 @@ const PatientAccount = ({ data }) => {
     }, [location]);
 
     useEffect(() => {
-        window.addEventListener("beforeunload", e => {
-            return "Any string value here forces a dialog box to \n" + 
-             "appear before closing the window.";
-        }); 
+        // window.addEventListener("beforeunload", e => {
+        //     return "Any string value here forces a dialog box to \n" + 
+        //      "appear before closing the window.";
+        // }); 
     }, []);
+    
+    useEffect(() => {
+        setPages(Math.floor(totalDiagnostics.length / perPage) + (totalDiagnostics.length % perPage !== 0 ? 1 : 0));
+    }, [totalDiagnostics]);
 
     useEffect(() => {
         if (!birthRef.current) return;
@@ -360,10 +371,73 @@ const PatientAccount = ({ data }) => {
 
     useEffect(() => {
         if (activeOption === initialActiveOption) return;
-        if (activeOption === 0) navigation(`/patient/${param?.id}/0`, { state: { ...location?.state, activeOption } });
-        if (activeOption === 1) navigation(`/patient/${param?.id}/1`, { state: { ...location?.state, activeOption } });
-        else if (activeOption === 2) navigation(`/patient/${param?.id}/2`, { state: {...location?.state, activeOption} });
+        navigation(`/patient/${param?.id}/${activeOption}`, { state: { ...location?.state, activeOption } });
     }, [activeOption]);
+
+    useEffect(() => {
+        (async () => {
+            const options = {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    searchQuery: diagnosticsQuery,
+                    organisationId: data.organisation._id
+                })
+            };
+
+            const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/search-diagnostic-initial-status`, options);
+            const response = await request.json();
+          
+            if (response.success) {
+                setDiagnostics(currTreatments => {
+                    return response.initialStatus.filter((treatment, idx) => {
+                        return (idx + 1) > perPage * (currentPageDiagnostics - 1) && (idx + 1) <= perPage * currentPageDiagnostics;
+                    });
+                });
+                setTotalDiagnostics(response.initialStatus || []);
+            } else {
+                setDiagnostics([]);
+                setTotalDiagnostics([]);
+            }
+        })();
+    }, [diagnosticsQuery]);
+
+    const removeDiagnostic = async (id) => {
+        try {
+            const options = {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            };
+
+            const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/remove-diagnostic-initial-status/${data.organisation._id}/${param?.id}/${id}`, options);
+            const response = await request.json();
+            if (response.success) setDiagnoseRemoved(true);
+            else console.log(response);
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
+    useEffect(() => {
+      
+        const navigationElement = document.querySelector(".navigation");
+        if (!navigationElement || !navigationElement?.classList?.contains("active")) return;
+        setWindowWidth(window.innerWidth);
+        if (window.innerWidth >= 1200) return;
+        navigationElement.classList.remove("active");
+        document.querySelector(".header").classList.add("no-navigation");
+        document.querySelector(".content").classList.add("no-navigation");
+        
+    }, [location]);
+
+    const triggerOptions = (idx, element) => {
+        element?.length && element[idx]?.classList?.toggle("show");
+        element?.length && element.forEach((option, currIdx) => currIdx !== idx && option?.classList?.remove("show"));
+    };
     
     return (
         <div className="account-container"> 
@@ -372,8 +446,8 @@ const PatientAccount = ({ data }) => {
             <div className="content" style={patientEdited ? { maxHeight: "100vh" } : {}}> 
                 <Header data={data} />
               
-                {patientEdited || documentRemoved ?
-                    <TickAnimation animationFinished={patientEdited ? animationFinished : documentAnimationFinished} title={patientEdited ? videoMessage : documentMessage} />
+                {patientEdited || documentRemoved || diagnoseRemoved ?
+                    <TickAnimation animationFinished={patientEdited ? animationFinished : documentAnimationFinished} title={patientEdited ? videoMessage : documentRemoved ? documentMessage : diagnoseRemoved} />
                 : 
                 <>
                     <div className="patient-account-details no-video-content" ref={noVideoContentRef}>
@@ -658,6 +732,126 @@ const PatientAccount = ({ data }) => {
                                 <p>{cookies?.language === "en" ? "Upload document" : "Incarca document"}</p>
                             </div>
                         </>
+                    ) : historicPage === 3 ? (
+                        <div>
+
+                        </div>
+                    ) : historicPage === 4 ? (
+                        <div>
+
+                        </div>
+                    ) : historicPage === 5 ? (
+                        <div className="treatment-categories-details">
+
+                            {statusOptions && statusOptions.length ? <div class="splitter">
+                                {statusOptions.map((statusOption, idx) => (
+                                    <div className={`splitter-container ${activeStatusOption === idx ? "selected" : ""}`} key={idx} onClick={() => setActiveStatusOption(idx)}>
+                                        <h3>{statusOption}</h3>
+                                    </div>
+                                ))}
+                              
+                            </div> : null}
+
+
+                            <div className="search-container">
+                                <input type="text" value={diagnosticsQuery} onChange={e => setDiagnosticsQuery(e.target.value)} placeholder={cookies.language === "en" ? "Search diagnose..." : "Cauta diagnostic..."} />
+                                <FontAwesomeIcon icon={faSearch} className="search-icon" />
+                            </div>
+
+                        <div className="patients-container">
+                            {diagnostics.length > 0 && <div className="first-row">
+                                {windowWidth >= 600 ? <div className="column">
+                                    <p>{cookies.language === "en" ? "No." : "Nr."}</p>
+                                    
+                                </div> : null}
+
+                                <div className="column">
+                                    <p>{cookies.language === "en" ? "Name" : "Nume"}</p>
+                                </div>
+
+                                <div className="column">
+                                    <p>{cookies?.language === "en" ? "Color" : "Culoare"}</p>
+                                </div>
+
+                                <div className="column">
+                                    <p>{cookies.language === "en" ? "Options" : "Optiuni"}</p>
+                                </div>
+                            </div>}
+
+                            {diagnostics?.length > 0 ? diagnostics.map((diagnose, idx) => (
+                                <div className="row" key={idx}>
+
+                                    {windowWidth >= 600 ? <div className="column">
+                                        <p>{idx + 1}</p>
+                                    </div> : null}
+
+                                    <div className="column">
+                                        <p>{diagnose.name}</p>
+                                    </div>
+
+                                    <div className="column">
+                                        <div className="square" style={{ width: '50px', height: '20px', borderRadius: '10px', backgroundColor: diagnose.color }} />
+                                    </div>
+
+                                    <div className="column pressable">
+                                        <FontAwesomeIcon className="column-icon" icon={faEllipsis} onClick={() => triggerOptions(idx, optionsTreatmentsRef.current)}/>
+                                        <div className="options-container" ref={ref => optionsTreatmentsRef.current[idx] = ref}>
+                                            <div className="option" onClick={async () => optionsTreatmentsRef.current[idx].classList.contains("show") ? await removeDiagnostic(diagnose.id) : null}>
+                                                <FontAwesomeIcon icon={faTimes} className="option-icon" /> 
+                                                <p>{cookies.language === "en" ? "Remove" : "Sterge"}</p>
+                                            </div>
+
+                                            <div className="option" onClick={() => navigation(`/patient/${param?.id}/edit-diagnose-initial-status/${diagnose.id}`, { state: { diagnose: diagnose } })}>
+                                                <FontAwesomeIcon icon={faUser} className="option-icon" />
+                                                <p>{cookies.language === "en" ? "Edit" : "Editeaza"}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )) : (
+                                <h2 className="center">{cookies.language === "en" ? "No diagnose found." : "Niciun diagnostic gasit."}</h2>
+                            )}
+
+                            {pages > 1 ? <div className="pages-container">
+
+                                <div className="page-container" onClick={() => setCurrentPageDiagnostics(1)}>
+                                    <p>1</p>
+                                </div>
+
+                                <div className="page-input">
+                                    <div 
+                                        className="value-container"
+                                        onClick={() => currentPageDiagnostics > 1 ? setCurrentPageDiagnostics(currValue => currValue - 1) : null}
+                                    >
+                                        <FontAwesomeIcon icon={faMinus} className="value-icon" />
+                                    </div>
+                                    
+                                    <input 
+                                        type="number" 
+                                        placeholder={cookies.language === "en" ? "Page's number" : "Numarul paginii"}
+                                        value={currentPageDiagnostics}
+                                        onChange={e => Number(e.target.value) ? setCurrentPageDiagnostics(Number(e.target.value)) : setCurrentPageDiagnostics("")}
+                                    />
+
+                                    <div 
+                                        className="value-container"
+                                        onClick={() => currentPageDiagnostics < pages ? setCurrentPageDiagnostics(currValue => currValue + 1) : null}
+                                    >
+                                        <FontAwesomeIcon icon={faPlus} className="value-icon" />
+                                    </div>
+                                </div>
+                                <div className="page-container" onClick={() => setCurrentPageDiagnostics(pages)}>
+                                    <p>{pages}</p>
+                                </div>
+                            </div> : null}
+                        </div>
+                        
+                        <div className="add-button" onClick={() => navigation("/create-diagnostic")}>
+                            <FontAwesomeIcon icon={faPlus} className="add-icon" />
+                            <p>{cookies?.language === "en" ? "Add diagnose" : "Adauga diagnostic"}</p>
+
+                        </div>
+                    </div>
                     ) : null} 
                 </>
                 

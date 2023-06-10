@@ -324,7 +324,7 @@ const EditDoctorSchedule = ({ data }) => {
     useEffect(() => {
         window.addEventListener("click", e => {
             if (e.target.classList.contains("time-input")) return;
-            if (startHourActiveMenu.any(menu => !menu) && endHourActiveMenu.any(menu => menu)) return;
+            if (startHourActiveMenu && endHourActiveMenu && startHourActiveMenu.any(menu => !menu) && endHourActiveMenu.any(menu => menu)) return;
 
             setStartHourActiveMenu(currMenus => {
                 return [...currMenus].map(() => false);

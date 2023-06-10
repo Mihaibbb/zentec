@@ -88,10 +88,10 @@ const CreateSterilization = ({ data }) => {
             
             maxHeight: "300px",
             overflowX: "auto",
-            background: cookies?.theme === "light" ? "var(--dark-color)" : "var(--dark-color)",
+            background: cookies?.theme === "light" ? "var(--over-difference-color-2)" : "var(--over-difference-color-2)",
             border: "none",
             borderRadius: 10,
-            boxShadow: "0 0 15px var(--dark-color)"
+            boxShadow: "0 0 15px var(--over-differene-color-2)"
         }),
 
         singleValue: (provided) => ({

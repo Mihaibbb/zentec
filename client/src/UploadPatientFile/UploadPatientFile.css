@@ -13,7 +13,7 @@
     justify-content: flex-start;
 }
 
-.patient-account-details .inputs-container .input 
+.patient-account-details .inputs-container.upload-patient-file .input 
 {
     align-items: flex-start;
 }

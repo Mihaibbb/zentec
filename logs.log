@@ -68435,3 +68435,2056 @@
 [2023-06-08T20:19:54.369] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
 [2023-06-08T20:20:24.364] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
 [2023-06-08T20:20:54.366] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T20:21:24.367] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T20:21:54.370] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T20:22:24.371] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T20:22:54.367] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T20:23:24.369] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T20:23:54.372] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T20:24:24.369] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T20:26:00.838] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T20:27:26.924] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T20:27:56.930] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T20:28:26.933] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T20:28:56.947] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T20:46:07.297] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T21:08:44.259] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T21:19:08.423] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T21:28:03.578] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T22:11:48.769] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T22:27:41.495] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T22:28:11.488] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T22:28:41.490] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T22:29:11.491] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T22:29:41.492] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T22:39:36.673] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T22:40:06.587] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T22:40:36.587] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T22:41:06.590] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T22:41:36.586] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T22:42:06.588] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T22:42:36.593] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T22:43:06.588] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T22:43:36.591] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T22:44:06.591] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T22:44:36.586] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:08:53.394] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:09:23.331] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:09:53.330] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:10:23.330] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:10:53.332] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:11:23.329] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:11:53.329] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:12:23.331] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:12:53.330] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:13:23.330] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:13:53.329] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:14:23.335] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:14:53.331] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:15:23.336] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:15:53.329] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:16:23.330] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:16:53.331] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:17:23.333] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:17:53.332] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:18:23.331] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:18:53.337] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:19:23.332] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:19:53.332] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:20:23.332] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:20:53.332] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:21:23.334] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:21:53.333] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:22:23.347] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:22:53.345] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:23:23.342] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:23:53.343] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:24:23.345] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:24:53.349] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:25:23.349] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:25:53.344] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:26:23.344] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:26:53.347] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:27:23.345] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:27:53.347] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:28:23.351] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:28:53.347] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:29:23.347] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:29:53.351] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:30:23.347] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:30:53.350] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:31:23.351] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:31:53.382] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:32:23.349] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:32:53.352] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:33:02.451] [DEBUG] default - Filter:  day
+[2023-06-08T23:33:02.469] [DEBUG] default - Filter:  day
+[2023-06-08T23:33:02.509] [DEBUG] default - Filter:  day
+[2023-06-08T23:33:02.518] [DEBUG] default - Filter:  day
+[2023-06-08T23:33:03.341] [DEBUG] default - Filter:  day
+[2023-06-08T23:33:03.347] [DEBUG] default - Filter:  day
+[2023-06-08T23:33:03.369] [DEBUG] default - Filter:  day
+[2023-06-08T23:33:03.373] [DEBUG] default - Filter:  day
+[2023-06-08T23:33:15.618] [DEBUG] default - Filter:  day
+[2023-06-08T23:33:15.622] [DEBUG] default - Filter:  day
+[2023-06-08T23:33:15.642] [DEBUG] default - Filter:  day
+[2023-06-08T23:33:15.646] [DEBUG] default - Filter:  day
+[2023-06-08T23:33:17.650] [DEBUG] default - Filter:  week
+[2023-06-08T23:33:18.084] [DEBUG] default - Filter:  month
+[2023-06-08T23:33:18.565] [DEBUG] default - Filter:  year
+[2023-06-08T23:33:19.265] [DEBUG] default - Filter:  month
+[2023-06-08T23:33:19.880] [DEBUG] default - Filter:  week
+[2023-06-08T23:33:20.409] [DEBUG] default - Filter:  day
+[2023-06-08T23:33:23.349] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:33:53.367] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:34:23.349] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:34:53.347] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:35:23.347] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:35:53.349] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:36:23.354] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:36:53.350] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:37:23.352] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:37:53.353] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:38:23.350] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:38:53.350] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:39:23.350] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:39:53.352] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:40:23.352] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:40:53.349] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:41:23.348] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:41:53.347] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:42:23.350] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:42:53.347] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:43:23.349] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:43:53.346] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:44:23.349] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:44:53.351] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:45:23.367] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:45:53.378] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:46:23.381] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:46:53.377] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:47:23.379] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:47:53.378] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:48:23.378] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:48:53.379] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:49:23.380] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:49:53.378] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:50:23.380] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:50:53.387] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:51:23.391] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:51:53.392] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:52:23.386] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:52:53.387] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:53:23.386] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:53:53.385] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:54:23.389] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:54:53.388] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:55:23.391] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:55:53.390] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:56:23.393] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:56:53.393] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:57:23.402] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:57:53.399] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:58:23.405] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:58:53.400] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:59:23.410] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-08T23:59:53.402] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:00:23.416] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:00:53.404] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:01:23.407] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:01:53.420] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:02:23.405] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:02:53.405] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:03:23.408] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:03:53.408] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:04:23.408] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:04:53.409] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:05:23.418] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:05:53.412] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:06:23.414] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:06:53.413] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:07:23.426] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:07:53.425] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:08:23.429] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:08:53.429] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:09:23.431] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:09:36.448] [DEBUG] default - Filter:  day
+[2023-06-09T00:09:36.452] [DEBUG] default - Filter:  day
+[2023-06-09T00:09:36.483] [DEBUG] default - Filter:  day
+[2023-06-09T00:09:36.487] [DEBUG] default - Filter:  day
+[2023-06-09T00:09:53.428] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:09:54.874] [DEBUG] default - Filter:  day
+[2023-06-09T00:09:54.876] [DEBUG] default - Filter:  day
+[2023-06-09T00:09:54.907] [DEBUG] default - Filter:  day
+[2023-06-09T00:09:54.914] [DEBUG] default - Filter:  day
+[2023-06-09T00:10:23.431] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:10:53.431] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:11:23.432] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:11:53.433] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:12:23.438] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:12:53.435] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:13:23.438] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:13:53.438] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:14:23.437] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:14:53.438] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:15:23.439] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:15:53.442] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:16:23.454] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:16:53.443] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:17:23.445] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:17:53.454] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:18:23.446] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:18:38.216] [DEBUG] default - Filter:  day
+[2023-06-09T00:18:38.219] [DEBUG] default - Filter:  day
+[2023-06-09T00:18:38.257] [DEBUG] default - Filter:  day
+[2023-06-09T00:18:38.267] [DEBUG] default - Filter:  day
+[2023-06-09T00:18:41.237] [DEBUG] default - Filter:  day
+[2023-06-09T00:18:41.242] [DEBUG] default - Filter:  day
+[2023-06-09T00:18:41.275] [DEBUG] default - Filter:  day
+[2023-06-09T00:18:41.281] [DEBUG] default - Filter:  day
+[2023-06-09T00:18:42.373] [DEBUG] default - Filter:  week
+[2023-06-09T00:18:43.072] [DEBUG] default - Filter:  month
+[2023-06-09T00:18:53.450] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:19:09.390] [DEBUG] default - Filter:  day
+[2023-06-09T00:19:09.395] [DEBUG] default - Filter:  day
+[2023-06-09T00:19:09.432] [DEBUG] default - Filter:  day
+[2023-06-09T00:19:09.439] [DEBUG] default - Filter:  day
+[2023-06-09T00:19:23.449] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:19:53.451] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:20:23.454] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:20:53.450] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:21:23.518] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:21:53.454] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:22:23.457] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:22:53.458] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:23:23.459] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:23:53.456] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:24:23.455] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:24:53.460] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:25:23.459] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:25:53.458] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:26:23.464] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:26:53.462] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:27:23.461] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:27:53.463] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:28:23.464] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:28:53.436] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:29:23.427] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:29:53.426] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:30:23.430] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:30:53.430] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:31:23.430] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:31:53.427] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:32:23.431] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:32:53.430] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:33:23.429] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:33:53.427] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:34:23.432] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:34:53.427] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:35:23.429] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:35:53.430] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:36:23.433] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:36:53.431] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:37:23.433] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:37:53.494] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:38:23.438] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:38:53.435] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:39:23.441] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:39:53.442] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:40:23.440] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:40:53.442] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:41:23.442] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:41:53.440] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:42:23.447] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:42:53.441] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:43:23.442] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:43:53.445] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:44:23.446] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:44:53.445] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:45:23.446] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:45:53.446] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:46:23.453] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:46:53.451] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:47:23.451] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:47:53.469] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:48:23.459] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:48:53.455] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:49:23.460] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:49:53.465] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:50:23.461] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:50:53.460] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:51:23.463] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:51:53.472] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:52:23.470] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:52:53.523] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:53:23.468] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:53:53.465] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:54:23.465] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:54:53.464] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:55:23.465] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:55:53.466] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:56:23.478] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:56:53.495] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:57:23.489] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:57:53.491] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:58:23.492] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:58:53.500] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:59:23.499] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T00:59:53.495] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T01:00:23.503] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T01:00:53.502] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T01:01:23.498] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T01:01:53.498] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T01:02:23.500] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T01:02:53.504] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T01:03:23.501] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T01:03:53.503] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T01:04:23.504] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T01:04:53.511] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T01:05:23.506] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T01:05:53.504] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T01:06:23.506] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T01:06:53.510] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T01:07:23.507] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T01:07:53.506] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T01:08:23.507] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T01:09:03.625] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T01:09:58.882] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T01:10:28.774] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T01:15:56.440] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T01:16:26.442] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T01:21:55.134] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T01:22:25.123] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T01:27:53.517] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T01:28:23.511] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T01:28:53.514] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T01:34:21.566] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T01:34:51.581] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T01:35:21.577] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T01:35:51.578] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T01:36:21.579] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T01:41:50.101] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T01:42:20.102] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T01:47:48.075] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T01:48:18.077] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T01:48:48.074] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T01:49:18.077] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T01:49:48.078] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T01:56:50.111] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T01:57:20.076] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T01:57:50.068] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:03:17.971] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:08:45.753] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:09:15.761] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:09:45.763] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:10:15.764] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:10:45.766] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:11:15.766] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:11:45.769] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:12:15.769] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:12:45.770] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:13:15.771] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:13:45.772] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:14:15.773] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:14:45.774] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:15:15.775] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:15:45.776] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:16:15.785] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:16:45.778] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:17:15.780] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:17:45.781] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:18:15.782] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:18:45.783] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:19:15.783] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:19:45.784] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:20:15.793] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:20:45.787] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:21:15.790] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:21:45.789] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:22:15.791] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:22:45.791] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:23:15.792] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:23:45.793] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:24:15.794] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:24:45.796] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:25:15.805] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:25:45.798] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:26:15.800] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:26:45.801] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:27:15.803] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:27:45.805] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:28:15.809] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:28:45.807] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:29:15.808] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:29:45.809] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:30:15.811] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:30:45.812] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:31:15.815] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:31:45.815] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:32:15.815] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:32:45.817] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:33:15.817] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:33:45.818] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:34:15.819] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:34:45.821] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:35:15.830] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:35:45.824] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:36:15.812] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:36:45.810] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:37:15.809] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:37:45.811] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:38:15.819] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:38:45.813] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:39:15.813] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:39:45.814] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:40:15.816] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:40:45.821] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:41:15.821] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:41:45.821] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:42:15.822] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T02:58:58.442] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T03:16:25.858] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T03:16:55.863] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T03:32:30.440] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T03:33:00.456] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T03:48:54.945] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T03:49:24.945] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T03:49:54.947] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T03:50:24.948] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T03:50:54.963] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T03:51:24.951] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T04:07:18.384] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T04:24:32.120] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T04:25:02.122] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T04:40:43.425] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T04:41:13.431] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T04:58:12.788] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T05:08:26.591] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T05:08:56.588] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T05:25:52.545] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T05:26:22.523] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T05:26:52.522] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T05:42:56.877] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T06:00:22.195] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T06:00:52.210] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T06:16:19.628] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T06:32:32.473] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T06:33:02.466] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T06:49:49.808] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T06:50:19.812] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T07:06:38.268] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T07:07:08.269] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T07:24:11.409] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T07:24:41.412] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T07:31:43.493] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T07:34:56.001] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T07:35:26.014] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T07:36:14.942] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T07:36:44.952] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T07:54:04.883] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T08:10:03.307] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T08:10:33.312] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T08:26:03.015] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T08:26:32.998] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T08:36:04.092] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T08:36:34.098] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T08:52:05.829] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T08:52:35.836] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T08:53:30.755] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T08:54:00.761] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T09:09:27.961] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T09:26:16.439] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T09:26:46.469] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T09:42:45.372] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T09:43:15.350] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T09:59:18.360] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T09:59:48.349] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T10:15:49.868] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T10:31:53.513] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T10:32:23.525] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T10:34:06.618] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T10:34:36.631] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T10:50:28.754] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T10:50:58.764] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T10:51:28.761] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T10:51:58.759] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T10:52:28.762] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T10:54:02.592] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T10:54:57.512] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T10:55:27.504] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T11:12:49.972] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T11:13:19.970] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T11:13:49.972] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T11:14:19.973] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T11:14:49.974] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T11:15:19.984] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T11:15:49.979] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T11:16:19.987] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T11:16:49.982] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T11:17:19.983] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T11:17:49.984] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T11:18:19.986] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T11:18:49.988] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T11:19:19.996] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T11:19:49.991] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T11:20:19.993] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T11:20:49.993] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T11:21:19.994] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T11:21:49.994] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T11:22:19.996] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T11:22:49.995] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T11:23:20.005] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T11:23:49.997] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T11:24:20.000] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T11:41:13.805] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T11:51:50.576] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T11:52:20.569] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T12:08:00.411] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T12:08:30.416] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T12:09:00.412] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T12:09:55.335] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T12:10:25.346] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T12:22:40.887] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T12:23:10.886] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T12:23:49.604] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T12:24:19.611] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T12:40:29.940] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T12:41:16.933] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T12:41:46.905] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T12:42:38.569] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T12:43:08.572] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T12:43:50.297] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T12:44:20.308] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T12:45:11.404] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T12:46:04.060] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T12:46:34.065] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T12:47:12.265] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T12:47:42.259] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T12:48:19.384] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T12:48:49.384] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T12:49:38.857] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T12:50:27.187] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T12:50:57.190] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T12:51:44.562] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T12:52:33.710] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T12:53:03.711] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T12:53:53.961] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T12:54:23.957] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T12:55:11.421] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T12:55:58.922] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T12:56:28.932] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T12:57:16.892] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T12:58:05.782] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T12:58:35.788] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T12:59:24.571] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T13:00:12.955] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T13:00:42.953] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T13:01:31.664] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T13:02:01.664] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T13:02:47.659] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T13:03:29.348] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T13:03:59.349] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T13:04:44.623] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T13:05:29.976] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T13:05:59.977] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T13:06:46.870] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T13:07:16.872] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T13:08:03.164] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T13:08:42.265] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T13:09:12.268] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T13:09:58.696] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T13:10:28.700] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T13:11:16.044] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T13:12:00.204] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T13:12:30.205] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T13:13:13.525] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T13:13:59.101] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T13:14:29.090] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T13:15:10.590] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T13:15:40.580] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T13:16:25.941] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T13:17:10.110] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T13:17:40.108] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T13:18:23.532] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T13:19:06.282] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T13:19:36.309] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T13:36:31.940] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T13:37:01.931] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T13:37:31.933] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T13:54:06.556] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T13:54:36.548] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T13:55:06.547] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T13:55:36.549] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T13:56:06.548] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T13:56:36.548] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T13:57:06.549] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:13:03.750] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:13:33.755] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:26:08.886] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:26:38.853] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:27:08.853] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:27:38.851] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:27:43.070] [DEBUG] default - Filter:  day
+[2023-06-09T14:27:43.075] [DEBUG] default - Filter:  day
+[2023-06-09T14:27:43.108] [DEBUG] default - Filter:  day
+[2023-06-09T14:27:43.112] [DEBUG] default - Filter:  day
+[2023-06-09T14:28:08.852] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:28:38.852] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:29:08.855] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:29:38.851] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:30:08.851] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:30:38.850] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:31:08.850] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:31:38.852] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:32:08.850] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:32:38.849] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:33:08.850] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:33:38.854] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:34:08.849] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:34:38.853] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:35:08.849] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:35:38.852] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:36:08.849] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:36:38.848] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:37:08.848] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:37:38.847] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:38:08.859] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:38:38.849] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:39:08.852] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:39:38.847] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:40:08.919] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:40:38.854] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:41:08.854] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:41:38.859] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:42:08.855] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:42:38.852] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:43:08.854] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:43:38.851] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:44:08.851] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:44:38.851] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:45:08.851] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:45:38.851] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:46:08.848] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:46:38.853] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:47:08.848] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:47:38.853] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:48:08.848] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:48:38.849] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:49:08.851] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:49:38.849] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:50:08.847] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:50:38.878] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:51:08.889] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:51:38.894] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:52:08.889] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:52:38.890] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:53:08.895] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:53:38.890] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:54:08.889] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:54:38.893] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:55:08.891] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:55:38.894] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:56:08.893] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:56:38.894] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:57:08.894] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T14:57:38.895] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:12:35.319] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:13:05.336] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:13:35.332] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:14:05.333] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:14:35.334] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:15:05.338] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:15:35.331] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:17:17.507] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:17:47.528] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:18:17.508] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:18:47.508] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:19:17.511] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:19:47.511] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:20:17.510] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:20:47.511] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:21:17.510] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:21:47.511] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:22:17.510] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:22:47.512] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:23:17.518] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:23:47.513] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:24:17.513] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:24:47.512] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:25:17.513] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:25:47.513] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:26:17.513] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:26:47.520] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:27:17.517] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:27:47.516] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:28:17.516] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:28:47.518] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:29:17.517] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:29:47.518] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:30:17.518] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:30:47.521] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:31:17.521] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:31:47.521] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:32:17.521] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:32:47.522] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:33:17.522] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:33:47.523] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:34:17.525] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:34:47.524] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:35:17.525] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:35:47.523] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:36:17.531] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:36:47.528] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:37:17.533] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:37:47.535] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:38:17.586] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:38:47.541] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:39:17.538] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:39:47.533] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:40:17.535] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:40:47.533] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:41:17.538] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:41:47.536] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:42:17.542] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:42:47.539] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:43:17.539] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:43:47.539] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:44:17.548] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:44:47.555] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:45:17.556] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:45:47.557] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:46:17.565] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:46:47.562] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:47:17.562] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:47:47.571] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:48:17.562] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:48:47.566] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:49:17.570] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:49:47.565] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:50:17.572] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:50:47.579] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:51:17.570] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:51:47.580] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:52:17.572] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:52:47.579] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:53:17.577] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:53:47.574] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:54:17.573] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:54:47.582] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:55:17.580] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:55:47.586] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:56:17.585] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:56:47.581] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:57:17.583] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:57:47.581] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:58:17.582] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:58:47.583] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:59:17.590] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T15:59:47.587] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:00:17.586] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:00:47.587] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:01:17.586] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:01:47.605] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:02:17.608] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:02:47.594] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:03:17.589] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:03:47.596] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:04:17.628] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:04:47.593] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:05:17.596] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:05:47.592] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:06:17.591] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:06:47.556] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:07:17.554] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:07:47.559] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:08:17.560] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:08:47.562] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:09:17.566] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:09:47.566] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:10:17.565] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:10:47.565] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:11:17.562] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:11:47.562] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:12:17.567] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:12:47.643] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:13:17.640] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:13:47.565] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:14:17.570] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:14:47.568] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:15:17.570] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:15:47.567] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:16:17.571] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:16:47.567] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:17:17.567] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:17:47.569] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:18:17.570] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:18:47.571] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:19:17.570] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:19:47.570] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:20:17.576] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:20:47.571] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:21:17.571] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:21:47.570] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:22:17.572] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:22:47.572] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:23:17.571] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:23:47.573] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:24:17.573] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:24:47.574] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:25:17.573] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:25:47.572] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:26:17.582] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:26:47.600] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:27:17.604] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:27:47.615] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:28:17.607] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:28:47.619] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:29:17.608] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:29:47.608] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:30:17.610] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:30:47.610] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:31:17.610] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:31:47.613] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:32:17.616] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:32:47.613] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:33:17.614] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:33:47.615] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:34:17.615] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:34:47.614] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:35:17.615] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:35:47.615] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:36:17.615] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:36:47.616] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:37:17.618] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:37:47.621] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:38:17.617] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:38:47.618] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:39:17.616] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:39:47.615] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:40:17.616] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:40:47.617] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:41:17.617] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:41:47.618] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:42:17.622] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:42:47.623] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:43:17.623] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:43:47.626] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:44:17.622] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:44:47.622] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:45:17.625] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:45:47.628] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:46:17.634] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:46:47.639] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:47:17.637] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:47:47.639] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:48:17.637] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:48:47.640] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T16:49:17.639] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T17:08:02.792] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T17:24:59.425] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T17:38:37.045] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T17:56:19.262] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T18:00:01.395] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T18:35:08.824] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T18:47:26.757] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T18:47:56.675] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T18:48:26.674] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T18:48:56.672] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T18:49:26.673] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T18:50:17.704] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T18:53:35.794] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T18:54:05.793] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T18:54:35.796] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T18:55:05.799] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T18:55:35.801] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T18:56:05.795] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T18:56:10.681] [DEBUG] default - Filter:  day
+[2023-06-09T18:56:10.682] [DEBUG] default - Filter:  day
+[2023-06-09T18:56:10.712] [DEBUG] default - Filter:  day
+[2023-06-09T18:56:10.717] [DEBUG] default - Filter:  day
+[2023-06-09T18:56:12.000] [DEBUG] default - Filter:  week
+[2023-06-09T18:56:12.481] [DEBUG] default - Filter:  month
+[2023-06-09T18:56:13.299] [DEBUG] default - Filter:  year
+[2023-06-09T18:56:20.908] [DEBUG] default - Filter:  day
+[2023-06-09T18:56:20.912] [DEBUG] default - Filter:  day
+[2023-06-09T18:56:20.937] [DEBUG] default - Filter:  day
+[2023-06-09T18:56:20.941] [DEBUG] default - Filter:  day
+[2023-06-09T18:56:33.539] [DEBUG] default - Filter:  day
+[2023-06-09T18:56:33.542] [DEBUG] default - Filter:  day
+[2023-06-09T18:56:33.563] [DEBUG] default - Filter:  day
+[2023-06-09T18:56:33.569] [DEBUG] default - Filter:  day
+[2023-06-09T18:56:35.797] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T18:57:05.803] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T18:57:35.804] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T18:58:05.800] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T18:58:35.799] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T18:59:05.803] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T18:59:35.801] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:00:05.803] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:00:35.799] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:01:05.800] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:01:35.806] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:02:05.800] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:02:35.800] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:03:05.800] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:03:35.802] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:04:05.805] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:04:35.802] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:05:05.803] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:05:27.831] [DEBUG] default - Filter:  day
+[2023-06-09T19:05:27.837] [DEBUG] default - Filter:  day
+[2023-06-09T19:05:27.878] [DEBUG] default - Filter:  day
+[2023-06-09T19:05:27.891] [DEBUG] default - Filter:  day
+[2023-06-09T19:05:35.805] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:06:05.803] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:06:35.845] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:06:39.752] [DEBUG] default - Filter:  day
+[2023-06-09T19:06:39.770] [DEBUG] default - Filter:  day
+[2023-06-09T19:06:39.799] [DEBUG] default - Filter:  day
+[2023-06-09T19:06:39.826] [DEBUG] default - Filter:  day
+[2023-06-09T19:06:48.248] [DEBUG] default - Filter:  day
+[2023-06-09T19:06:48.250] [DEBUG] default - Filter:  day
+[2023-06-09T19:06:48.288] [DEBUG] default - Filter:  day
+[2023-06-09T19:06:48.300] [DEBUG] default - Filter:  day
+[2023-06-09T19:07:05.804] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:07:35.834] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:08:05.808] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:08:14.741] [DEBUG] default - Filter:  day
+[2023-06-09T19:08:14.747] [DEBUG] default - Filter:  day
+[2023-06-09T19:08:14.775] [DEBUG] default - Filter:  day
+[2023-06-09T19:08:14.779] [DEBUG] default - Filter:  day
+[2023-06-09T19:08:35.803] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:09:05.802] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:09:35.807] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:10:05.808] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:10:35.833] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:10:50.770] [DEBUG] default - Filter:  day
+[2023-06-09T19:10:50.773] [DEBUG] default - Filter:  day
+[2023-06-09T19:10:50.805] [DEBUG] default - Filter:  day
+[2023-06-09T19:10:50.808] [DEBUG] default - Filter:  day
+[2023-06-09T19:11:05.813] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:11:35.814] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:12:05.819] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:12:35.812] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:12:49.915] [DEBUG] default - Filter:  day
+[2023-06-09T19:12:49.917] [DEBUG] default - Filter:  day
+[2023-06-09T19:12:49.952] [DEBUG] default - Filter:  day
+[2023-06-09T19:12:49.957] [DEBUG] default - Filter:  day
+[2023-06-09T19:13:03.049] [DEBUG] default - Filter:  day
+[2023-06-09T19:13:03.052] [DEBUG] default - Filter:  day
+[2023-06-09T19:13:03.080] [DEBUG] default - Filter:  day
+[2023-06-09T19:13:03.086] [DEBUG] default - Filter:  day
+[2023-06-09T19:13:05.814] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:13:35.812] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:13:37.130] [DEBUG] default - Filter:  week
+[2023-06-09T19:14:05.816] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:14:35.815] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:14:41.084] [DEBUG] default - Filter:  day
+[2023-06-09T19:14:41.086] [DEBUG] default - Filter:  day
+[2023-06-09T19:14:41.140] [DEBUG] default - Filter:  day
+[2023-06-09T19:14:41.152] [DEBUG] default - Filter:  day
+[2023-06-09T19:15:05.821] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:15:35.816] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:15:37.392] [DEBUG] default - Filter:  day
+[2023-06-09T19:15:37.397] [DEBUG] default - Filter:  day
+[2023-06-09T19:15:37.427] [DEBUG] default - Filter:  day
+[2023-06-09T19:15:37.432] [DEBUG] default - Filter:  day
+[2023-06-09T19:16:05.820] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:16:07.645] [DEBUG] default - Filter:  day
+[2023-06-09T19:16:07.649] [DEBUG] default - Filter:  day
+[2023-06-09T19:16:07.678] [DEBUG] default - Filter:  day
+[2023-06-09T19:16:07.681] [DEBUG] default - Filter:  day
+[2023-06-09T19:16:35.821] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:17:05.824] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:17:35.844] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:18:05.848] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:18:35.843] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:19:05.846] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:19:35.844] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:20:05.834] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:20:35.828] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:20:47.027] [DEBUG] default - Filter:  day
+[2023-06-09T19:20:47.030] [DEBUG] default - Filter:  day
+[2023-06-09T19:20:47.068] [DEBUG] default - Filter:  day
+[2023-06-09T19:20:47.076] [DEBUG] default - Filter:  day
+[2023-06-09T19:21:05.827] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:21:30.390] [DEBUG] default - Filter:  day
+[2023-06-09T19:21:30.399] [DEBUG] default - Filter:  day
+[2023-06-09T19:21:30.443] [DEBUG] default - Filter:  day
+[2023-06-09T19:21:30.451] [DEBUG] default - Filter:  day
+[2023-06-09T19:21:35.826] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:22:05.826] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:22:35.826] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:23:05.825] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:23:35.825] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:24:05.826] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:24:35.825] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:25:05.829] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:25:35.826] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:26:05.826] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:26:35.828] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:27:05.832] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:27:35.828] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:28:05.829] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:28:35.829] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:29:05.830] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:29:35.827] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:30:05.826] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:30:35.828] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:31:05.827] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:31:35.834] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:32:05.828] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:32:35.836] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:33:54.559] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:38:50.926] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:39:20.981] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:39:50.919] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:40:20.914] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:40:50.915] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:41:20.918] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:41:50.915] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:42:20.916] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:42:50.924] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:43:20.929] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:43:50.924] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:44:20.925] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:44:50.926] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:45:20.926] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:45:50.931] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:46:20.927] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:46:50.931] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:47:20.928] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:47:50.928] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:48:20.928] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:48:50.929] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:49:20.928] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:49:50.932] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:50:20.930] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:50:50.930] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:51:20.931] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:51:50.930] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:52:20.930] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:52:50.931] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:53:20.935] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:53:50.932] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:54:20.933] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:54:50.934] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:55:20.934] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:55:50.934] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:56:20.939] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:56:50.935] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:57:20.936] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:57:50.940] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:58:20.939] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:58:50.939] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:59:20.939] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T19:59:50.941] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:00:20.938] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:00:50.943] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:01:20.941] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:01:50.940] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:02:20.939] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:02:50.940] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:03:20.938] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:03:50.938] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:04:20.938] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:04:50.937] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:05:20.942] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:05:50.938] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:06:20.941] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:06:50.937] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:07:20.942] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:07:50.939] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:08:20.942] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:08:50.939] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:09:20.940] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:09:50.940] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:10:20.939] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:10:50.944] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:11:20.944] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:11:50.940] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:12:20.941] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:12:50.944] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:13:20.940] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:13:50.942] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:14:20.941] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:14:50.942] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:15:20.942] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:15:50.946] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:16:20.947] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:16:50.946] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:17:20.948] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:17:50.943] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:18:20.951] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:18:50.946] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:19:20.948] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:19:50.946] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:20:20.948] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:20:50.947] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:21:20.947] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:21:50.949] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:22:20.948] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:22:50.956] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:27:22.365] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:35:29.422] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:35:59.412] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:36:29.413] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:37:10.531] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:37:40.538] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:38:10.538] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:38:40.534] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:39:10.540] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:39:40.541] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:40:10.538] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:40:40.541] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:41:10.539] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:41:40.540] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:42:10.546] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:42:40.541] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:43:10.541] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:43:40.543] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:44:10.545] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:44:40.543] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:45:10.544] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:45:40.543] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:46:10.545] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:46:40.546] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:47:10.547] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:47:40.547] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:48:10.549] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:48:40.551] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:49:10.552] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:49:40.552] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:50:10.552] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:50:40.554] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:51:10.555] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:51:40.556] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:52:10.561] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:52:40.564] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:53:10.561] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:53:40.568] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:54:10.570] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:54:40.565] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:55:10.568] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:55:40.565] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:56:10.570] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:56:40.635] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:57:10.571] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:57:40.573] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:58:10.574] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:58:40.580] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:59:10.581] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T20:59:40.582] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:00:10.578] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:00:40.579] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:01:10.579] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:01:40.583] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:02:10.581] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:02:40.582] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:03:10.583] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:03:40.583] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:04:10.588] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:04:40.585] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:05:10.589] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:05:40.593] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:06:10.595] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:06:40.592] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:07:10.582] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:07:40.572] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:08:10.564] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:08:40.563] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:09:10.565] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:09:40.564] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:10:10.567] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:10:40.565] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:11:10.568] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:11:40.574] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:12:10.569] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:12:40.570] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:13:10.568] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:13:40.569] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:14:10.576] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:14:40.582] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:15:10.573] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:15:40.574] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:16:10.576] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:16:40.577] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:17:10.573] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:17:40.575] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:18:10.645] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:18:40.581] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:19:10.579] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:19:40.576] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:20:10.577] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:20:40.584] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:21:10.580] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:21:40.579] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:22:10.581] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:22:40.583] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:23:10.581] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:23:40.583] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:24:10.589] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:24:40.584] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:25:10.592] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:25:40.584] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:26:10.588] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:26:40.587] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:27:10.584] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:27:40.599] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:28:02.991] [DEBUG] default - Filter:  day
+[2023-06-09T21:28:02.996] [DEBUG] default - Filter:  day
+[2023-06-09T21:28:03.054] [DEBUG] default - Filter:  day
+[2023-06-09T21:28:03.071] [DEBUG] default - Filter:  day
+[2023-06-09T21:28:10.587] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:28:40.586] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:28:57.599] [DEBUG] default - Filter:  day
+[2023-06-09T21:28:57.603] [DEBUG] default - Filter:  day
+[2023-06-09T21:28:57.642] [DEBUG] default - Filter:  day
+[2023-06-09T21:28:57.648] [DEBUG] default - Filter:  day
+[2023-06-09T21:29:03.943] [DEBUG] default - Filter:  day
+[2023-06-09T21:29:03.946] [DEBUG] default - Filter:  day
+[2023-06-09T21:29:03.979] [DEBUG] default - Filter:  day
+[2023-06-09T21:29:03.980] [DEBUG] default - Filter:  day
+[2023-06-09T21:29:05.163] [DEBUG] default - Filter:  week
+[2023-06-09T21:29:05.533] [DEBUG] default - Filter:  month
+[2023-06-09T21:29:05.894] [DEBUG] default - Filter:  year
+[2023-06-09T21:29:06.686] [DEBUG] default - Filter:  month
+[2023-06-09T21:29:07.057] [DEBUG] default - Filter:  week
+[2023-06-09T21:29:07.459] [DEBUG] default - Filter:  day
+[2023-06-09T21:29:10.586] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:29:40.589] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:30:10.589] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:30:40.593] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:31:10.605] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:31:40.607] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:32:10.609] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:32:40.607] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:33:10.611] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:33:40.611] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:34:10.610] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:34:40.613] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:35:10.616] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:35:40.610] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:36:10.612] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:36:40.613] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:37:10.612] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:37:40.614] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:38:10.613] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:39:34.196] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:40:04.417] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:40:34.404] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:41:04.407] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:41:16.304] [DEBUG] default - Filter:  day
+[2023-06-09T21:41:16.307] [DEBUG] default - Filter:  day
+[2023-06-09T21:41:16.334] [DEBUG] default - Filter:  day
+[2023-06-09T21:41:16.338] [DEBUG] default - Filter:  day
+[2023-06-09T21:41:19.268] [DEBUG] default - Filter:  day
+[2023-06-09T21:41:19.271] [DEBUG] default - Filter:  day
+[2023-06-09T21:41:19.298] [DEBUG] default - Filter:  day
+[2023-06-09T21:41:19.303] [DEBUG] default - Filter:  day
+[2023-06-09T21:41:21.363] [DEBUG] default - Filter:  day
+[2023-06-09T21:41:21.365] [DEBUG] default - Filter:  day
+[2023-06-09T21:41:21.391] [DEBUG] default - Filter:  day
+[2023-06-09T21:41:21.395] [DEBUG] default - Filter:  day
+[2023-06-09T21:41:34.403] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:41:39.884] [DEBUG] default - Filter:  day
+[2023-06-09T21:41:39.890] [DEBUG] default - Filter:  day
+[2023-06-09T21:41:39.913] [DEBUG] default - Filter:  day
+[2023-06-09T21:41:39.917] [DEBUG] default - Filter:  day
+[2023-06-09T21:41:42.245] [DEBUG] default - Filter:  day
+[2023-06-09T21:41:42.249] [DEBUG] default - Filter:  day
+[2023-06-09T21:41:42.293] [DEBUG] default - Filter:  day
+[2023-06-09T21:41:42.297] [DEBUG] default - Filter:  day
+[2023-06-09T21:41:50.236] [DEBUG] default - Filter:  day
+[2023-06-09T21:41:50.241] [DEBUG] default - Filter:  day
+[2023-06-09T21:41:50.259] [DEBUG] default - Filter:  day
+[2023-06-09T21:41:50.262] [DEBUG] default - Filter:  day
+[2023-06-09T21:42:04.403] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:42:17.046] [DEBUG] default - Filter:  day
+[2023-06-09T21:42:17.051] [DEBUG] default - Filter:  day
+[2023-06-09T21:42:17.074] [DEBUG] default - Filter:  day
+[2023-06-09T21:42:17.081] [DEBUG] default - Filter:  day
+[2023-06-09T21:42:20.214] [DEBUG] default - Filter:  day
+[2023-06-09T21:42:20.219] [DEBUG] default - Filter:  day
+[2023-06-09T21:42:20.252] [DEBUG] default - Filter:  day
+[2023-06-09T21:42:20.256] [DEBUG] default - Filter:  day
+[2023-06-09T21:42:34.403] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:42:56.262] [DEBUG] default - Filter:  day
+[2023-06-09T21:42:56.265] [DEBUG] default - Filter:  day
+[2023-06-09T21:42:56.295] [DEBUG] default - Filter:  day
+[2023-06-09T21:42:56.298] [DEBUG] default - Filter:  day
+[2023-06-09T21:43:04.403] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:43:07.592] [DEBUG] default - Filter:  day
+[2023-06-09T21:43:07.594] [DEBUG] default - Filter:  day
+[2023-06-09T21:43:07.618] [DEBUG] default - Filter:  day
+[2023-06-09T21:43:07.625] [DEBUG] default - Filter:  day
+[2023-06-09T21:43:32.145] [DEBUG] default - Filter:  day
+[2023-06-09T21:43:32.146] [DEBUG] default - Filter:  day
+[2023-06-09T21:43:32.174] [DEBUG] default - Filter:  day
+[2023-06-09T21:43:32.178] [DEBUG] default - Filter:  day
+[2023-06-09T21:43:33.540] [DEBUG] default - Filter:  day
+[2023-06-09T21:43:33.543] [DEBUG] default - Filter:  day
+[2023-06-09T21:43:33.563] [DEBUG] default - Filter:  day
+[2023-06-09T21:43:33.566] [DEBUG] default - Filter:  day
+[2023-06-09T21:43:34.404] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:43:34.426] [DEBUG] default - Filter:  month
+[2023-06-09T21:43:35.482] [DEBUG] default - Filter:  week
+[2023-06-09T21:44:04.404] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:44:34.408] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:45:04.405] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:45:34.407] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:46:04.410] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:46:34.408] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:47:04.408] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:47:34.409] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:47:51.769] [DEBUG] default - Filter:  day
+[2023-06-09T21:47:51.774] [DEBUG] default - Filter:  day
+[2023-06-09T21:47:51.800] [DEBUG] default - Filter:  day
+[2023-06-09T21:47:51.805] [DEBUG] default - Filter:  day
+[2023-06-09T21:47:55.841] [DEBUG] default - Filter:  day
+[2023-06-09T21:47:55.844] [DEBUG] default - Filter:  day
+[2023-06-09T21:47:55.877] [DEBUG] default - Filter:  day
+[2023-06-09T21:47:55.882] [DEBUG] default - Filter:  day
+[2023-06-09T21:48:04.412] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:48:10.528] [DEBUG] default - Filter:  day
+[2023-06-09T21:48:10.531] [DEBUG] default - Filter:  day
+[2023-06-09T21:48:10.592] [DEBUG] default - Filter:  day
+[2023-06-09T21:48:10.597] [DEBUG] default - Filter:  day
+[2023-06-09T21:48:34.411] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:49:04.428] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:49:34.412] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:50:04.415] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:50:34.415] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:51:04.413] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:51:34.412] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:52:04.416] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:52:34.413] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:53:04.415] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:53:34.413] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:54:04.415] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:54:34.423] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:55:04.416] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:55:34.422] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:56:04.418] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:56:34.425] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:57:04.420] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:57:34.420] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:58:04.424] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:58:34.423] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:59:04.426] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T21:59:34.427] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:00:04.431] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:00:34.425] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:01:04.426] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:01:34.434] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:02:04.441] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:02:34.432] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:03:04.433] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:03:34.433] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:04:04.434] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:04:34.435] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:05:04.434] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:05:34.435] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:06:04.439] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:06:34.436] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:07:04.435] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:07:34.436] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:08:04.442] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:08:34.438] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:09:04.444] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:09:34.439] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:10:04.435] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:10:34.428] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:11:04.431] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:11:34.426] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:12:04.427] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:12:34.425] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:13:04.425] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:13:34.424] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:14:04.432] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:14:34.429] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:14:52.190] [DEBUG] default - Filter:  day
+[2023-06-09T22:14:52.193] [DEBUG] default - Filter:  day
+[2023-06-09T22:14:52.228] [DEBUG] default - Filter:  day
+[2023-06-09T22:14:52.228] [DEBUG] default - Filter:  day
+[2023-06-09T22:15:04.438] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:15:11.342] [DEBUG] default - Filter:  day
+[2023-06-09T22:15:11.344] [DEBUG] default - Filter:  day
+[2023-06-09T22:15:11.383] [DEBUG] default - Filter:  day
+[2023-06-09T22:15:11.387] [DEBUG] default - Filter:  day
+[2023-06-09T22:15:16.756] [DEBUG] default - Filter:  day
+[2023-06-09T22:15:16.761] [DEBUG] default - Filter:  day
+[2023-06-09T22:15:16.810] [DEBUG] default - Filter:  day
+[2023-06-09T22:15:16.811] [DEBUG] default - Filter:  day
+[2023-06-09T22:15:34.428] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:16:04.433] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:16:23.455] [DEBUG] default - Filter:  day
+[2023-06-09T22:16:23.472] [DEBUG] default - Filter:  day
+[2023-06-09T22:16:23.516] [DEBUG] default - Filter:  day
+[2023-06-09T22:16:23.523] [DEBUG] default - Filter:  day
+[2023-06-09T22:16:34.428] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:17:04.429] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:17:24.101] [DEBUG] default - Filter:  day
+[2023-06-09T22:17:24.111] [DEBUG] default - Filter:  day
+[2023-06-09T22:17:24.149] [DEBUG] default - Filter:  day
+[2023-06-09T22:17:24.157] [DEBUG] default - Filter:  day
+[2023-06-09T22:17:34.429] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:18:04.429] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:18:34.429] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:19:04.429] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:19:34.436] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:20:04.430] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:20:34.430] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:21:04.430] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:21:34.435] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:22:04.430] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:22:34.430] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:23:04.438] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:23:34.435] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:24:00.301] [DEBUG] default - Filter:  day
+[2023-06-09T22:24:00.304] [DEBUG] default - Filter:  day
+[2023-06-09T22:24:00.340] [DEBUG] default - Filter:  day
+[2023-06-09T22:24:00.347] [DEBUG] default - Filter:  day
+[2023-06-09T22:24:01.526] [DEBUG] default - Filter:  day
+[2023-06-09T22:24:01.530] [DEBUG] default - Filter:  day
+[2023-06-09T22:24:01.568] [DEBUG] default - Filter:  day
+[2023-06-09T22:24:01.573] [DEBUG] default - Filter:  day
+[2023-06-09T22:24:04.433] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:24:34.433] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:25:04.433] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:25:31.752] [DEBUG] default - Filter:  day
+[2023-06-09T22:25:31.754] [DEBUG] default - Filter:  day
+[2023-06-09T22:25:31.786] [DEBUG] default - Filter:  day
+[2023-06-09T22:25:31.786] [DEBUG] default - Filter:  day
+[2023-06-09T22:25:33.562] [DEBUG] default - Filter:  week
+[2023-06-09T22:25:34.074] [DEBUG] default - Filter:  month
+[2023-06-09T22:25:34.433] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:25:34.732] [DEBUG] default - Filter:  year
+[2023-06-09T22:25:35.446] [DEBUG] default - Filter:  month
+[2023-06-09T22:26:04.440] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:26:34.433] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:27:04.441] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:27:34.435] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:27:50.246] [DEBUG] default - Filter:  day
+[2023-06-09T22:27:50.247] [DEBUG] default - Filter:  day
+[2023-06-09T22:27:50.271] [DEBUG] default - Filter:  day
+[2023-06-09T22:27:50.271] [DEBUG] default - Filter:  day
+[2023-06-09T22:28:04.435] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:28:34.442] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:29:04.436] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:29:34.438] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:30:04.437] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:30:34.437] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:31:04.437] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:31:34.438] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:32:04.444] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:32:34.439] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:32:38.234] [DEBUG] default - Filter:  day
+[2023-06-09T22:32:38.239] [DEBUG] default - Filter:  day
+[2023-06-09T22:32:38.273] [DEBUG] default - Filter:  day
+[2023-06-09T22:32:38.281] [DEBUG] default - Filter:  day
+[2023-06-09T22:32:39.424] [DEBUG] default - Filter:  day
+[2023-06-09T22:32:39.427] [DEBUG] default - Filter:  day
+[2023-06-09T22:32:39.456] [DEBUG] default - Filter:  day
+[2023-06-09T22:32:39.463] [DEBUG] default - Filter:  day
+[2023-06-09T22:33:04.439] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:33:28.207] [DEBUG] default - Filter:  day
+[2023-06-09T22:33:28.215] [DEBUG] default - Filter:  day
+[2023-06-09T22:33:28.274] [DEBUG] default - Filter:  day
+[2023-06-09T22:33:28.275] [DEBUG] default - Filter:  day
+[2023-06-09T22:33:34.439] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:34:04.446] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:34:34.284] [DEBUG] default - Filter:  day
+[2023-06-09T22:34:34.286] [DEBUG] default - Filter:  day
+[2023-06-09T22:34:34.316] [DEBUG] default - Filter:  day
+[2023-06-09T22:34:34.322] [DEBUG] default - Filter:  day
+[2023-06-09T22:34:34.441] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:34:35.412] [DEBUG] default - Filter:  week
+[2023-06-09T22:34:36.471] [DEBUG] default - Filter:  month
+[2023-06-09T22:35:04.440] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:35:34.444] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:36:04.459] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:36:34.461] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:36:56.179] [DEBUG] default - Filter:  day
+[2023-06-09T22:36:56.185] [DEBUG] default - Filter:  day
+[2023-06-09T22:36:56.213] [DEBUG] default - Filter:  day
+[2023-06-09T22:36:56.222] [DEBUG] default - Filter:  day
+[2023-06-09T22:36:58.501] [DEBUG] default - Filter:  day
+[2023-06-09T22:36:58.505] [DEBUG] default - Filter:  day
+[2023-06-09T22:36:58.533] [DEBUG] default - Filter:  day
+[2023-06-09T22:36:58.534] [DEBUG] default - Filter:  day
+[2023-06-09T22:37:04.461] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:37:34.465] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:37:43.467] [DEBUG] default - Filter:  day
+[2023-06-09T22:37:43.479] [DEBUG] default - Filter:  day
+[2023-06-09T22:37:43.523] [DEBUG] default - Filter:  day
+[2023-06-09T22:37:43.525] [DEBUG] default - Filter:  day
+[2023-06-09T22:38:04.464] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:38:34.463] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:39:04.462] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:39:34.462] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:40:04.465] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:40:34.468] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:41:04.469] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:41:34.465] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:41:55.245] [DEBUG] default - Filter:  day
+[2023-06-09T22:41:55.252] [DEBUG] default - Filter:  day
+[2023-06-09T22:41:55.300] [DEBUG] default - Filter:  day
+[2023-06-09T22:41:55.305] [DEBUG] default - Filter:  day
+[2023-06-09T22:42:04.467] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:42:34.466] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:43:04.466] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:43:34.467] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:44:04.474] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:44:16.313] [DEBUG] default - Filter:  day
+[2023-06-09T22:44:16.318] [DEBUG] default - Filter:  day
+[2023-06-09T22:44:16.367] [DEBUG] default - Filter:  day
+[2023-06-09T22:44:16.372] [DEBUG] default - Filter:  day
+[2023-06-09T22:44:34.470] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:44:35.834] [DEBUG] default - Filter:  day
+[2023-06-09T22:44:35.839] [DEBUG] default - Filter:  day
+[2023-06-09T22:44:35.906] [DEBUG] default - Filter:  day
+[2023-06-09T22:44:35.912] [DEBUG] default - Filter:  day
+[2023-06-09T22:44:36.870] [DEBUG] default - Filter:  week
+[2023-06-09T22:44:37.259] [DEBUG] default - Filter:  month
+[2023-06-09T22:44:37.722] [DEBUG] default - Filter:  year
+[2023-06-09T22:45:04.471] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:45:34.471] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:45:51.006] [DEBUG] default - Filter:  day
+[2023-06-09T22:45:51.010] [DEBUG] default - Filter:  day
+[2023-06-09T22:45:51.032] [DEBUG] default - Filter:  day
+[2023-06-09T22:45:51.041] [DEBUG] default - Filter:  day
+[2023-06-09T22:46:04.473] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:46:33.285] [DEBUG] default - Filter:  day
+[2023-06-09T22:46:33.288] [DEBUG] default - Filter:  day
+[2023-06-09T22:46:33.315] [DEBUG] default - Filter:  day
+[2023-06-09T22:46:33.316] [DEBUG] default - Filter:  day
+[2023-06-09T22:46:34.473] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:47:04.473] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:47:25.684] [DEBUG] default - Filter:  day
+[2023-06-09T22:47:25.687] [DEBUG] default - Filter:  day
+[2023-06-09T22:47:25.744] [DEBUG] default - Filter:  day
+[2023-06-09T22:47:25.751] [DEBUG] default - Filter:  day
+[2023-06-09T22:47:34.474] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:48:04.473] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:48:34.481] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:48:40.755] [DEBUG] default - Filter:  day
+[2023-06-09T22:48:40.760] [DEBUG] default - Filter:  day
+[2023-06-09T22:48:40.790] [DEBUG] default - Filter:  day
+[2023-06-09T22:48:40.791] [DEBUG] default - Filter:  day
+[2023-06-09T22:49:04.484] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:49:34.476] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:50:04.478] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:50:34.477] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:51:04.479] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:51:34.477] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:52:04.478] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:52:34.478] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:53:04.482] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:53:34.479] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:54:04.527] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T22:54:34.769] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T23:15:46.353] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T23:47:19.275] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T23:47:49.181] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T23:48:19.174] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-09T23:48:49.176] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:07:35.493] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:08:05.471] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:08:35.540] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:09:05.459] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:09:35.462] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:10:05.467] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:10:35.460] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:11:05.460] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:11:35.460] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:12:05.460] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:12:35.464] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:13:05.465] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:13:35.473] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:14:05.462] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:14:35.461] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:15:05.461] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:15:35.463] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:16:05.463] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:16:35.468] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:17:05.464] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:17:35.463] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:18:05.465] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:18:35.466] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:19:05.476] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:19:35.471] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:20:05.471] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:20:35.471] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:21:05.470] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:21:35.472] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:22:05.471] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:22:35.473] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:23:05.472] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:23:35.473] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:24:05.478] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:24:35.474] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:25:05.475] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:25:35.475] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:26:05.474] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:26:35.480] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:27:05.480] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:27:35.482] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:28:05.481] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:28:35.482] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:29:05.478] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:29:35.478] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:30:05.478] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:30:35.481] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:31:05.481] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:31:35.480] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:32:05.481] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:32:35.483] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:33:05.480] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:33:35.482] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:34:05.484] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:34:39.810] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:50:53.662] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:51:23.662] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:51:53.653] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:52:23.659] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:52:53.658] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:53:23.664] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:53:53.656] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:54:23.657] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:54:53.658] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:55:23.668] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:55:53.661] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:56:23.662] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:56:53.662] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:57:23.663] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:57:53.664] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:58:23.665] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:58:53.663] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:59:23.672] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T00:59:53.665] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T01:00:23.667] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T01:00:53.667] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T01:01:23.668] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T01:01:53.671] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T01:02:23.677] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T01:02:53.671] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T01:03:23.672] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T01:03:53.672] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T01:04:23.673] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T01:04:53.675] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T01:05:23.684] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T01:05:53.676] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T01:06:23.678] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T01:06:53.680] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T01:24:03.254] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T01:24:33.253] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T01:25:03.254] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T01:25:33.265] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T01:43:22.950] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T01:43:52.949] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T02:00:37.891] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T02:01:07.884] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T02:16:43.491] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T02:17:13.479] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T02:17:43.470] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T02:18:13.472] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T02:18:43.478] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T02:19:13.477] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T02:19:43.478] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T02:20:13.481] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T02:20:43.481] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T02:21:13.480] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T02:21:43.482] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T02:22:13.483] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T02:22:43.486] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T02:23:13.486] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T02:38:47.780] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T02:54:38.405] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T02:55:08.422] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T03:12:07.397] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T03:12:37.388] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T03:29:35.772] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T03:30:05.762] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T03:30:35.758] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T03:46:13.112] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T03:46:43.120] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T03:47:13.116] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T04:02:51.830] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T04:18:30.765] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T04:19:00.735] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T04:35:03.694] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T04:35:33.703] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T04:52:54.005] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T04:53:23.992] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T04:53:53.993] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T04:54:24.003] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T04:54:53.996] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T04:55:24.000] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T04:55:53.999] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T04:56:24.000] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T04:56:54.001] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T04:57:24.002] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T04:57:54.003] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T04:58:24.012] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T04:58:54.006] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T04:59:24.005] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T04:59:54.007] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T05:00:24.007] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T05:00:54.008] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T05:01:24.020] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T05:01:54.012] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T05:02:24.014] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T05:02:54.014] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T05:03:24.020] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T05:03:54.017] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T05:04:24.017] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T05:04:54.018] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T05:05:24.028] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T05:05:54.022] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T05:06:24.023] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T05:06:54.023] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T05:07:24.025] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T05:07:54.026] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T05:09:29.567] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T05:09:59.560] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T05:10:29.571] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T05:26:10.398] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T05:26:40.403] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T05:43:34.310] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T05:44:04.319] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T06:01:09.511] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T06:01:39.522] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T06:17:16.348] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T06:34:12.831] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T06:34:42.817] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T06:50:23.344] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T06:50:53.349] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T07:07:38.250] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T07:08:08.257] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T07:08:38.258] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T07:24:15.914] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T07:24:45.907] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T07:40:42.497] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T07:56:18.846] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T07:56:48.845] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T07:57:43.765] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T07:58:13.776] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T08:14:24.174] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T08:31:39.450] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T08:32:09.448] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T08:40:45.037] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T08:41:15.048] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T08:41:45.040] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T08:42:15.042] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T08:42:45.047] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T08:43:15.041] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T08:43:45.036] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T08:44:15.037] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T08:44:45.040] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T08:45:15.038] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T08:45:45.039] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T08:46:15.038] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T08:46:45.127] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T08:47:15.050] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T08:47:45.041] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T08:48:15.046] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T08:48:45.050] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T08:49:15.042] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T08:49:45.051] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T08:50:15.048] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T08:50:45.051] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T08:51:15.055] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T08:51:45.051] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T08:52:15.051] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T08:52:45.047] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T08:53:15.050] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T08:53:42.905] [DEBUG] default - Filter:  day
+[2023-06-10T08:53:42.908] [DEBUG] default - Filter:  day
+[2023-06-10T08:53:42.937] [DEBUG] default - Filter:  day
+[2023-06-10T08:53:42.942] [DEBUG] default - Filter:  day
+[2023-06-10T08:53:43.774] [DEBUG] default - Filter:  month
+[2023-06-10T08:53:44.189] [DEBUG] default - Filter:  week
+[2023-06-10T08:53:45.047] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T08:54:10.341] [DEBUG] default - Filter:  day
+[2023-06-10T08:54:10.345] [DEBUG] default - Filter:  day
+[2023-06-10T08:54:10.373] [DEBUG] default - Filter:  day
+[2023-06-10T08:54:10.377] [DEBUG] default - Filter:  day
+[2023-06-10T08:54:15.047] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T08:54:45.047] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T08:55:15.044] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T08:55:15.314] [DEBUG] default - Filter:  day
+[2023-06-10T08:55:15.316] [DEBUG] default - Filter:  day
+[2023-06-10T08:55:15.334] [DEBUG] default - Filter:  day
+[2023-06-10T08:55:15.338] [DEBUG] default - Filter:  day
+[2023-06-10T08:55:17.700] [DEBUG] default - Filter:  day
+[2023-06-10T08:55:17.703] [DEBUG] default - Filter:  day
+[2023-06-10T08:55:17.727] [DEBUG] default - Filter:  day
+[2023-06-10T08:55:17.731] [DEBUG] default - Filter:  day
+[2023-06-10T08:55:19.369] [DEBUG] default - Filter:  day
+[2023-06-10T08:55:19.371] [DEBUG] default - Filter:  day
+[2023-06-10T08:55:19.399] [DEBUG] default - Filter:  day
+[2023-06-10T08:55:19.403] [DEBUG] default - Filter:  day
+[2023-06-10T08:55:26.582] [DEBUG] default - Filter:  week
+[2023-06-10T08:55:27.102] [DEBUG] default - Filter:  month
+[2023-06-10T08:55:27.633] [DEBUG] default - Filter:  year
+[2023-06-10T08:55:29.799] [DEBUG] default - Filter:  day
+[2023-06-10T08:55:30.270] [DEBUG] default - Filter:  week
+[2023-06-10T08:55:30.868] [DEBUG] default - Filter:  month
+[2023-06-10T08:55:31.436] [DEBUG] default - Filter:  year
+[2023-06-10T08:55:32.652] [DEBUG] default - Filter:  month
+[2023-06-10T08:55:45.045] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T08:55:55.841] [DEBUG] default - Filter:  day
+[2023-06-10T08:55:55.844] [DEBUG] default - Filter:  day
+[2023-06-10T08:55:55.863] [DEBUG] default - Filter:  day
+[2023-06-10T08:55:55.866] [DEBUG] default - Filter:  day
+[2023-06-10T08:56:06.405] [DEBUG] default - Filter:  day
+[2023-06-10T08:56:06.408] [DEBUG] default - Filter:  day
+[2023-06-10T08:56:06.431] [DEBUG] default - Filter:  day
+[2023-06-10T08:56:06.436] [DEBUG] default - Filter:  day
+[2023-06-10T08:56:15.046] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T08:56:45.055] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T08:57:15.047] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T08:57:45.116] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T08:58:15.049] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T08:58:45.048] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T08:59:15.051] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T08:59:17.112] [DEBUG] default - Filter:  day
+[2023-06-10T08:59:17.115] [DEBUG] default - Filter:  day
+[2023-06-10T08:59:17.137] [DEBUG] default - Filter:  day
+[2023-06-10T08:59:17.141] [DEBUG] default - Filter:  day
+[2023-06-10T08:59:20.764] [DEBUG] default - Filter:  day
+[2023-06-10T08:59:20.764] [DEBUG] default - Filter:  day
+[2023-06-10T08:59:20.838] [DEBUG] default - Filter:  day
+[2023-06-10T08:59:20.847] [DEBUG] default - Filter:  day
+[2023-06-10T08:59:45.055] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:00:15.054] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:00:45.048] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:01:12.898] [DEBUG] default - Filter:  day
+[2023-06-10T09:01:12.903] [DEBUG] default - Filter:  day
+[2023-06-10T09:01:12.939] [DEBUG] default - Filter:  day
+[2023-06-10T09:01:12.941] [DEBUG] default - Filter:  day
+[2023-06-10T09:01:15.046] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:01:45.060] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:02:15.051] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:02:39.496] [DEBUG] default - Filter:  day
+[2023-06-10T09:02:39.513] [DEBUG] default - Filter:  day
+[2023-06-10T09:02:45.052] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:02:58.518] [DEBUG] default - Filter:  day
+[2023-06-10T09:02:58.536] [DEBUG] default - Filter:  day
+[2023-06-10T09:03:15.050] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:03:32.497] [DEBUG] default - Filter:  day
+[2023-06-10T09:03:32.515] [DEBUG] default - Filter:  day
+[2023-06-10T09:03:45.048] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:04:01.127] [DEBUG] default - Filter:  week
+[2023-06-10T09:04:01.765] [DEBUG] default - Filter:  month
+[2023-06-10T09:04:02.263] [DEBUG] default - Filter:  week
+[2023-06-10T09:04:02.714] [DEBUG] default - Filter:  month
+[2023-06-10T09:04:03.146] [DEBUG] default - Filter:  year
+[2023-06-10T09:04:03.779] [DEBUG] default - Filter:  week
+[2023-06-10T09:04:04.126] [DEBUG] default - Filter:  day
+[2023-06-10T09:04:15.048] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:04:43.603] [DEBUG] default - Filter:  day
+[2023-06-10T09:04:43.605] [DEBUG] default - Filter:  day
+[2023-06-10T09:04:43.640] [DEBUG] default - Filter:  day
+[2023-06-10T09:04:43.643] [DEBUG] default - Filter:  day
+[2023-06-10T09:04:45.046] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:04:45.990] [DEBUG] default - Filter:  day
+[2023-06-10T09:04:45.993] [DEBUG] default - Filter:  day
+[2023-06-10T09:04:46.024] [DEBUG] default - Filter:  day
+[2023-06-10T09:04:46.028] [DEBUG] default - Filter:  day
+[2023-06-10T09:04:49.036] [DEBUG] default - Filter:  day
+[2023-06-10T09:04:49.038] [DEBUG] default - Filter:  day
+[2023-06-10T09:04:49.066] [DEBUG] default - Filter:  day
+[2023-06-10T09:04:49.072] [DEBUG] default - Filter:  day
+[2023-06-10T09:04:56.703] [DEBUG] default - Filter:  day
+[2023-06-10T09:04:56.708] [DEBUG] default - Filter:  day
+[2023-06-10T09:04:56.723] [DEBUG] default - Filter:  day
+[2023-06-10T09:04:56.735] [DEBUG] default - Filter:  day
+[2023-06-10T09:05:03.254] [DEBUG] default - Filter:  week
+[2023-06-10T09:05:03.939] [DEBUG] default - Filter:  month
+[2023-06-10T09:05:04.912] [DEBUG] default - Filter:  year
+[2023-06-10T09:05:15.068] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:05:45.048] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:06:15.044] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:06:45.049] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:07:15.065] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:07:45.065] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:08:15.066] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:08:45.064] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:09:15.073] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:09:45.068] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:10:15.074] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:10:45.072] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:11:15.066] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:11:45.067] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:12:15.065] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:12:45.066] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:12:59.569] [DEBUG] default - Filter:  day
+[2023-06-10T09:12:59.570] [DEBUG] default - Filter:  day
+[2023-06-10T09:12:59.592] [DEBUG] default - Filter:  day
+[2023-06-10T09:12:59.596] [DEBUG] default - Filter:  day
+[2023-06-10T09:13:00.806] [DEBUG] default - Filter:  week
+[2023-06-10T09:13:12.680] [DEBUG] default - Filter:  day
+[2023-06-10T09:13:12.685] [DEBUG] default - Filter:  day
+[2023-06-10T09:13:12.746] [DEBUG] default - Filter:  day
+[2023-06-10T09:13:12.751] [DEBUG] default - Filter:  day
+[2023-06-10T09:13:15.067] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:13:26.917] [DEBUG] default - Filter:  day
+[2023-06-10T09:13:26.921] [DEBUG] default - Filter:  day
+[2023-06-10T09:13:26.947] [DEBUG] default - Filter:  day
+[2023-06-10T09:13:26.951] [DEBUG] default - Filter:  day
+[2023-06-10T09:13:45.069] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:14:01.104] [DEBUG] default - Filter:  day
+[2023-06-10T09:14:01.107] [DEBUG] default - Filter:  day
+[2023-06-10T09:14:01.142] [DEBUG] default - Filter:  day
+[2023-06-10T09:14:01.144] [DEBUG] default - Filter:  day
+[2023-06-10T09:14:05.598] [DEBUG] default - Filter:  day
+[2023-06-10T09:14:05.602] [DEBUG] default - Filter:  day
+[2023-06-10T09:14:05.639] [DEBUG] default - Filter:  day
+[2023-06-10T09:14:05.643] [DEBUG] default - Filter:  day
+[2023-06-10T09:14:15.067] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:14:25.131] [DEBUG] default - Filter:  day
+[2023-06-10T09:14:25.133] [DEBUG] default - Filter:  day
+[2023-06-10T09:14:25.149] [DEBUG] default - Filter:  day
+[2023-06-10T09:14:25.152] [DEBUG] default - Filter:  day
+[2023-06-10T09:14:45.071] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:15:15.068] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:15:45.068] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:16:15.067] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:16:45.071] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:16:54.522] [DEBUG] default - Filter:  day
+[2023-06-10T09:16:54.526] [DEBUG] default - Filter:  day
+[2023-06-10T09:16:54.556] [DEBUG] default - Filter:  day
+[2023-06-10T09:16:54.562] [DEBUG] default - Filter:  day
+[2023-06-10T09:17:15.071] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:17:45.068] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:18:15.074] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:18:45.073] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:19:15.074] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:19:45.100] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:20:15.078] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:20:45.080] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:21:15.080] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:21:23.573] [DEBUG] default - Filter:  day
+[2023-06-10T09:21:23.575] [DEBUG] default - Filter:  day
+[2023-06-10T09:21:23.595] [DEBUG] default - Filter:  day
+[2023-06-10T09:21:23.598] [DEBUG] default - Filter:  day
+[2023-06-10T09:21:24.768] [DEBUG] default - Filter:  week
+[2023-06-10T09:21:25.187] [DEBUG] default - Filter:  year
+[2023-06-10T09:21:25.998] [DEBUG] default - Filter:  month
+[2023-06-10T09:21:45.073] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:22:15.122] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:22:45.081] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:23:15.075] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:23:36.487] [DEBUG] default - Filter:  day
+[2023-06-10T09:23:36.490] [DEBUG] default - Filter:  day
+[2023-06-10T09:23:36.511] [DEBUG] default - Filter:  day
+[2023-06-10T09:23:36.512] [DEBUG] default - Filter:  day
+[2023-06-10T09:23:45.074] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:24:15.076] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:24:45.075] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:25:03.330] [DEBUG] default - Filter:  day
+[2023-06-10T09:25:03.345] [DEBUG] default - Filter:  day
+[2023-06-10T09:25:03.406] [DEBUG] default - Filter:  day
+[2023-06-10T09:25:03.411] [DEBUG] default - Filter:  day
+[2023-06-10T09:25:15.122] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:25:45.116] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:26:15.119] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:26:45.110] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:27:15.116] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:27:45.120] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:28:15.115] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:28:45.114] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:29:15.116] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:29:45.120] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:30:15.118] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:30:45.120] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:31:15.118] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:31:45.137] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:32:15.117] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:32:45.120] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:33:15.119] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:33:45.120] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:34:15.123] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:34:45.120] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:35:15.119] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:35:45.122] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:36:15.119] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:36:45.120] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:37:15.130] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:37:45.136] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:38:15.128] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:38:45.128] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:39:02.535] [DEBUG] default - Filter:  day
+[2023-06-10T09:39:02.537] [DEBUG] default - Filter:  day
+[2023-06-10T09:39:02.558] [DEBUG] default - Filter:  day
+[2023-06-10T09:39:02.562] [DEBUG] default - Filter:  day
+[2023-06-10T09:39:08.128] [DEBUG] default - Filter:  day
+[2023-06-10T09:39:08.131] [DEBUG] default - Filter:  day
+[2023-06-10T09:39:08.181] [DEBUG] default - Filter:  day
+[2023-06-10T09:39:08.189] [DEBUG] default - Filter:  day
+[2023-06-10T09:39:12.941] [DEBUG] default - Filter:  week
+[2023-06-10T09:39:13.812] [DEBUG] default - Filter:  month
+[2023-06-10T09:39:14.343] [DEBUG] default - Filter:  year
+[2023-06-10T09:39:14.810] [DEBUG] default - Filter:  month
+[2023-06-10T09:39:15.128] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:39:15.259] [DEBUG] default - Filter:  week
+[2023-06-10T09:39:16.443] [DEBUG] default - Filter:  day
+[2023-06-10T09:39:45.134] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:40:15.130] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:40:45.131] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:41:15.136] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:41:45.134] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:42:15.136] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:42:45.136] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:43:15.132] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:43:45.149] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:44:15.174] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:44:43.349] [DEBUG] default - Filter:  day
+[2023-06-10T09:44:43.363] [DEBUG] default - Filter:  day
+[2023-06-10T09:44:43.376] [DEBUG] default - Filter:  day
+[2023-06-10T09:44:43.380] [DEBUG] default - Filter:  day
+[2023-06-10T09:44:45.178] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:44:45.690] [DEBUG] default - Filter:  day
+[2023-06-10T09:44:45.693] [DEBUG] default - Filter:  day
+[2023-06-10T09:44:45.712] [DEBUG] default - Filter:  day
+[2023-06-10T09:44:45.715] [DEBUG] default - Filter:  day
+[2023-06-10T09:45:15.191] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:45:45.182] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:46:15.182] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:46:45.183] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:47:15.184] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:47:45.197] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:48:15.248] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:48:45.234] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:49:15.237] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:49:45.238] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:50:15.240] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:50:45.243] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:51:15.242] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:51:45.243] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:52:15.243] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:52:45.241] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:54:00.631] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:54:30.620] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:55:00.626] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:55:30.621] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:56:00.639] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:56:30.632] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:57:00.626] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:57:30.628] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:57:46.898] [DEBUG] default - Filter:  day
+[2023-06-10T09:57:46.901] [DEBUG] default - Filter:  day
+[2023-06-10T09:57:46.936] [DEBUG] default - Filter:  day
+[2023-06-10T09:57:46.941] [DEBUG] default - Filter:  day
+[2023-06-10T09:58:00.629] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:58:30.628] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:59:00.629] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T09:59:30.629] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T10:00:00.630] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T10:18:53.595] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T10:24:41.834] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T10:25:11.823] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T10:25:41.887] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]
+[2023-06-10T10:26:11.825] [DEBUG] default - [ RowDataPacket { Database: 'org_IZ32bTrtti' } ]

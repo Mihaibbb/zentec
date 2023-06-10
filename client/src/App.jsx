@@ -191,6 +191,7 @@ const App = () => {
                                 <Route path="edit-diagnostic/:id" element={<EditDiagnostic data={data} />} />
                                 <Route path="create-patient-type/:pageName" element={<CreatePatientType data={data} />} />
                                 <Route path="edit-patient-type/:pageName/:id" element={<EditPatientTypes data={data} />} />
+                                
                             </>
                         ) : (
                             <>

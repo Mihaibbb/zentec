@@ -58,7 +58,7 @@
 
 .dashboard .left-container .new-appointments
 {
-    background: var(--dark-color);
+    background: var(--over-difference-color-2);
     width: 100%;
     border-radius: 14px;
     padding: 2rem 0 0 0rem;

@@ -164,7 +164,7 @@ const DoctorAccount = ({ data }) => {
                 {doctorAdded ? (
                     <TickAnimation title={cookies.language === "en" ? "Changes have been saved successfully!" : "Modificarile au fost salvate cu succes!"} animationFinished={animationFinished} />
                 ) : (
-                    <div className="no-video-content" ref={noVideoContentRef}>
+                    <div className="no-video-content doctor-historic" ref={noVideoContentRef}>
                         {!historicPage ? <h2 className="title">{cookies.language === "en" ? "Edit doctor" : "Editare medic"}</h2> : null}
                 
                         <div className="go-back" onClick={() => navigate(-1)}>

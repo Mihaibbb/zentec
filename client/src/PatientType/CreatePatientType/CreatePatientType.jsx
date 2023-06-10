@@ -89,7 +89,7 @@ const CreatePatientType = ({ data }) => {
             <div className="content" style={assistantAdded ? {maxHeight: "100vh"} : {}}>
                 <Header data={data} />
                 {assistantAdded ? (
-                    <TickAnimation title={cookies.language === "en" ? `Patient ${pageName} created successfully!` : `${pageName === "category" ? "Categoria" : "Tipul"} de pacient a fost creat cu succes!`} animationFinished={animationFinished} />
+                    <TickAnimation title={cookies.language === "en" ? `Patient ${pageName} created successfully!` : `${pageName === "category" ? "Categoria" : "Tipul"} de pacient a fost creat${pageName === "category" ? "a" : ""} cu succes!`} animationFinished={animationFinished} />
                 ) : (
                 <div className="no-video-content" ref={noVideoContentRef}>
                     <h2 className="title">{cookies.langauge === "en" ? `Add patient ${pageName}` : `Adauga ${pageName === "category" ? "Categoria" : "Tipul"} de pacient`}</h2>
@@ -98,7 +98,7 @@ const CreatePatientType = ({ data }) => {
                         <FontAwesomeIcon icon={faAngleLeft} />
                     </div>
                     
-                    <div className="form">
+                    <div className="form patient-type">
                         <div className="input">
                             <p>{cookies.langauge === "en" ? "Name *" : "Nume *"}</p>
                             <input type="text" value={patientType} onChange={e => setPatientType(e.target.value)} />

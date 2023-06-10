@@ -116,6 +116,15 @@ p.error
     opacity: 0;
 }
 
+.no-video-content.doctor-historic 
+{
+    transition: all 300ms ease-in-out;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
 
 
 @media only screen and (max-width: 600px) 

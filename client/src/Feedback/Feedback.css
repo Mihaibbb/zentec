@@ -25,13 +25,13 @@
     border-radius: 20px;
     color: var(--text-color);
     border: 1.5px solid var(--contrast-color);
-    background: var(--dark-color);
+    background: var(--over-difference-color-2);
     
 }
 
 body.light .feedback-container textarea 
 {
-    background: var(--over-difference-color-3);
+    background: var(--over-difference-color-2);
 }
 
 .feedback-container .question
@@ -60,7 +60,7 @@ body.light .feedback-container textarea
     align-items: center;
     gap: 1.5rem;
     padding-left: 1.5rem;
-    background: var(--dark-color);
+    background: var(--over-difference-color-2);
     border-radius: 24px;
     cursor: pointer;
     transition: all 350ms ease-in-out;
@@ -98,7 +98,7 @@ body.light .feedback-container .categories .category .category-icon
 
 body.light .feedback-container .categories .category:not(.active)
 {
-    background: var(--over-difference-color-3);
+    background: var(--over-difference-color-2);
 
 }
 
@@ -119,7 +119,7 @@ body.light .feedback-container .categories .category.active p
     position: absolute;
     top: -150px;
     right: -200%;
-    background: var(--dark-color);
+    background: var(--over-difference-color-2);
     color: var(--text-color);
     border-radius: 20px;
     width: 45%;

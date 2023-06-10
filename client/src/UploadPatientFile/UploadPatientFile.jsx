@@ -178,7 +178,7 @@ const UploadPatientFile = ({ data, editMode }) => {
                             <FontAwesomeIcon icon={faAngleLeft} />
                         </div>
 
-                        <div className="inputs-container">
+                        <div className="inputs-container upload-patient-file">
                             <div className="input one-row">
                                 <div className="input-title">
                                     <FontAwesomeIcon className="icon" icon={faFile} />

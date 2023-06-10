@@ -272,7 +272,7 @@ body.light .appointments .filter div.active p
 {
     top: 175px;
     backdrop-filter: blur(6px);
-    background: var(--over-difference-color);
+    background: var(--over-difference-color-2);
     width: 100.5%;
 }
 
@@ -381,7 +381,7 @@ body.light .appointments .filter div.active p
     width: 100%;
     margin-bottom: 30px;
     z-index: 1000;
-    background: var(--over-difference-color);
+    background: var(--over-difference-color-2);
     backdrop-filter: blur(10px);
     transition: all 350ms ease-in-out;
 }

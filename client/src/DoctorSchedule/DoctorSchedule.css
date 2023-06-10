@@ -124,7 +124,7 @@
     width: 200px;
     height: 100%;
     cursor: pointer;
-    background: var(--over-difference-color-3);
+    background: var(--over-difference-color-2);
     transition: all 400ms ease-in-out;
 }
 
