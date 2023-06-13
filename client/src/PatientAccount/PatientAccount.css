@@ -601,7 +601,81 @@ body.light .patient-historic .historic-options .historic-option.active
     padding: .75rem;
 }
 
+.teeth-container 
+{
+    display: grid;
+    grid-template-columns: repeat(16, auto);
+    width: 90%;
+    align-items: center;
+    margin: 2rem auto;
+}
 
+.teeth-container.kids-teeth
+{
+    grid-template-columns: repeat(10, auto);
+}
+
+.teeth-container .tooth-container
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 50ms ease-in-out;
+}
+
+.teeth-container .tooth-container.active
+{
+    border: 2px solid var(--contrast-color);
+    border-radius: 15px;
+}
+
+.teeth-container .tooth-container:not(.active):hover
+{
+    border: 2px solid var(--text-color);
+}
+
+.teeth-container .tooth-container:hover
+{
+    border-radius: 15px;
+}
+
+.teeth-container .tooth-container p
+{
+    font-size: 18px;
+    color: var(--text-color);
+    text-align: center;
+    font-weight: bold;
+}
+
+.patients-container.mg-bottom
+{
+    margin-bottom: 5rem;
+}
+
+.patient-account-details.teeth-surfaces
+{
+    margin-top: 0;
+}
+
+.patient-account-details.teeth-surfaces .inputs-container 
+{
+    grid-template-columns: 1fr;
+    padding-bottom: 0;
+}
+
+.patient-account-details.teeth-surfaces .input-title
+{
+    justify-content: center;
+}
+
+.patient-account-details.teeth-surfaces .input .options
+{
+    grid-template-columns: auto auto auto;
+    grid-gap: 1.5rem;
+}
 
 @keyframes update_btn {
     33% {

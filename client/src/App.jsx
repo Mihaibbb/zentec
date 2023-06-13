@@ -41,6 +41,8 @@ import CreateDiagnostic from "./Diagnostics/CreateDiagnostic/CreateDiagnostic";
 import EditDiagnostic from "./Diagnostics/EditDiagnostic/EditDiagnostic";
 import CreatePatientType from "./PatientType/CreatePatientType/CreatePatientType";
 import EditPatientTypes from "./PatientType/EditPatientType/EditPatientType";
+import CreateDiagnosticPatient from "./DiagnosticPatient/CreateDiagnosticPatient/CreateDiagnostc";
+import EditDiagnosticPatient from "./DiagnosticPatient/EditDiagnosticPatient/EditDiagnostic";
 
 
 const App = () => {
@@ -191,7 +193,8 @@ const App = () => {
                                 <Route path="edit-diagnostic/:id" element={<EditDiagnostic data={data} />} />
                                 <Route path="create-patient-type/:pageName" element={<CreatePatientType data={data} />} />
                                 <Route path="edit-patient-type/:pageName/:id" element={<EditPatientTypes data={data} />} />
-                                
+                                <Route path="create-diagnostic-patient/:id" element={<CreateDiagnosticPatient data={data} />} />
+                                <Route path="edit-diagnostic-patient/:id/:diagnosticId" element={<EditDiagnosticPatient data={data} />} />
                             </>
                         ) : (
                             <>

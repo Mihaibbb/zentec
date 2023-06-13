@@ -26,7 +26,7 @@
     background: var(--over-color-2);
     border-radius: 45px;
     padding: .25rem 1rem;
-
+    border: 2px solid var(--contrast-color);
 }
 
 body.light .content .search-container 
@@ -113,7 +113,7 @@ body.light .content .search-container
    
     display: flex;
     justify-content: center;
-    background: var(--over-color);
+    background: var(--over-difference-color-3);
     align-items: center;
     flex-direction: column;
     margin: 0 5rem 0;
