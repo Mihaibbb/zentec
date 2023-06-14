@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useMemo, useCallback } from "react";
+import { useState, useEffect, useRef, useMemo, useLayoutEffect } from "react";
 import Navigation from "../../Components/Navigation/Navigation";
 import Header from "../../Components/Header/Header";
 import "./CreateDiagnostic.css";
@@ -6,23 +6,21 @@ import { useCookies } from "react-cookie";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleLeft, faCheck, faTooth } from "@fortawesome/free-solid-svg-icons";
-import InputColor from "react-input-color";
 import TickAnimation from "../../utils/TickAnimation";
 import Select from "react-select";
-import DIAGNOSTICS from "../../utils/Diagnostics";
 import MultiSelect from "../../Components/MultiSelect/MultiSelect";
-import getTeethSurfaces from "../../utils/TeethSurfaces";
 import GetToothSurfaces from "../../utils/TeethSurfaces";
 import { TEETH, TEETH_KIDS, TEETH_KIDS_NUMBERS } from "../../utils/TeethOrder";
 
 const CreateDiagnosticPatient = ({ data }) => {
 
     const { id } = useParams();
+
+    if (!id) navigate(-1);
+
+
     const navigate = useNavigate();
     const [cookies, setCookie] = useCookies();
-
-
-    const [color, setColor] = useState({});
 
 
     const [errorMessage, setErrorMessage] = useState("");
@@ -31,17 +29,18 @@ const CreateDiagnosticPatient = ({ data }) => {
     const [notes, setNotes] = useState("");
     const [diagnosticNameValue, setDiagnosticNameValue] = useState("");
     const [diagnosticValue, setDiagnosticValue] = useState("");
-    const pricePersRef = useRef([]);
-    const typesRef = useRef([]);
-    const picturesRef = useRef([]);
+    
     const noVideoContentRef = useRef();
 
-    const pricePers = cookies.language === "en" ? ["Tooth", "Dental Arch", "Session"] : ["Dinte", "Arcada", "Sedinta"];
-    const types = cookies?.language === "en" ? ["General", "Specialized"] : ["General", "Specializat"];
-
+  
     const [toothSelected, setToothSelected] = useState([]);
     const [toothSurfaces, setToothSurfaces] = useState("");
+    const [activeTooth, setActiveTooth] = useState("");
+
     
+    const currTeethTypes = cookies.language === "en" ? ['Temporary', 'Permanently', 'Mix'] : ['Temporara', 'Permanenta', 'Mixta'];
+    const [teethType, setTeethType] = useState(cookies?.language === "en" ? "Permanently" : "Permanenta");
+    const currTeethTypeRef = useRef([]);
     const location = useLocation();
 
     const diagnosticOptions = useMemo(() => data.organisation?.diagnostics.map(diagnostic => {
@@ -50,7 +49,7 @@ const CreateDiagnosticPatient = ({ data }) => {
             label: `${diagnostic.name}`,
             color: diagnostic.color
         };
-    }), []);
+    }));
 
     const customStyles = useMemo(() => {
         return {
@@ -93,11 +92,11 @@ const CreateDiagnosticPatient = ({ data }) => {
         })
     }}, []);
 
-    const isTouchDevice = useCallback(() => {
+    const isTouchDevice = () => {
         return (('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0));
-    }, []);
+    };
 
-    useEffect(() => {
+    useLayoutEffect(() => {
       
         const navigationElement = document.querySelector(".navigation");
         if (!navigationElement || !navigationElement?.classList?.contains("active")) return;
@@ -134,7 +133,7 @@ const CreateDiagnosticPatient = ({ data }) => {
     const createTreatmentCategoryRequest = async () => {
 
         if (!diagnosticValue.length) return setErrorMessage(cookies.language === "en" ? "Fill each required field!" : "Completeaza toate campurile obligatorii!");
-
+        if (!activeTooth.length) return setErrorMessage(cookies?.language === "en" ? "Select minimum a teeth!" : "Selecteaza cel putin un dinte!");
         const options = {
             method: "POST",
             headers: {
@@ -143,7 +142,7 @@ const CreateDiagnosticPatient = ({ data }) => {
             body: JSON.stringify({
                 organisationId: data.organisation._id,
                 notes,
-                teethSelected: toothSelected,
+                teeth: toothSelected,
                 teethSurfaces: toothSurfaces,
                 patientId: id,
                 diagnosticId: diagnosticValue
@@ -157,7 +156,11 @@ const CreateDiagnosticPatient = ({ data }) => {
             if (response.success) {
                 noVideoContentRef.current.classList.add("invisible");
                 document.body.style.background = theme === "light" ? "#fff" : "#000";
-                setTimeout(() => setAssistantAdded(true), 300);
+
+                return window.location.replace(`/patient/${id}/5`);
+
+         
+
             } else console.log(errorMessage);
         } catch (e) {
             console.log(e);
@@ -166,37 +169,22 @@ const CreateDiagnosticPatient = ({ data }) => {
     };
 
     const animationFinished = () => {
-        document.body.style.background = "var(--background)";
-        navigate("/profile", { state: { refresh: true, activeOption: 6 } });
+        try {
+            document.body.style.background = "var(--background)";
+            window.location.replace(`/patient/${id}/5`);
+        } catch (e) {
+            console.log(e);
+        }
+      
     };
-
-    useEffect(() => {
-        if (!Object.keys(color)?.length) return;
-        const elem = document?.querySelector(".input-color .option > div");
-        const notDisplayableDiv =  document.querySelector(".input-color .option > div div:last-child > div:last-child")?.lastChild;
-        if (!elem || !notDisplayableDiv) return;
-
-        elem.style.left='-50px';
-        notDisplayableDiv.style.display = 'none';
-    }, [color]);
-
-    const currTeethTypes = cookies.language === "en" ? ['Temporary', 'Permanently', 'Mix'] : ['Temporara', 'Permanenta', 'Mixta'];
-    const [teethType, setTeethType] = useState(cookies?.language === "en" ? "Permanently" : "Permanenta");
-
-    const currTeethTypeRef = useRef([]);
 
  
     const toggleTeethType = (idx) => {
-        currTeethTypeRef.current[idx].classList.toggle("active");
+        currTeethTypeRef.current[idx].classList.add("active");
         currTeethTypeRef.current.forEach((currTeethType, currIdx) => currIdx !== idx && currTeethType.classList.remove("active"));
-        console.log(currTeethTypeRef.current[idx].classList.contains("active") ? currTeethTypes[idx] : "");
         setTeethType(currTeethTypeRef.current[idx].classList.contains("active") ? currTeethTypes[idx] : "");    
     };
 
-    if (!id) return navigate(-1);
-
-    const diagnosticsColors = data.organisation.diagnostics.map(diagnose => diagnose.color);
-    console.log(diagnosticsColors);
 
     const triggerToothSelected = (idx) => {
         if (toothSelected.find(teeth => teeth === idx)) 
@@ -211,10 +199,18 @@ const CreateDiagnosticPatient = ({ data }) => {
         setToothSurfaces(word);
     };
 
+    useEffect(() => {
+        let currStr = "";
+        toothSelected && toothSelected.length && toothSelected.forEach((tooth, idx) => idx === 0 ? currStr += tooth : currStr = currStr + ", " + tooth);
+   
+        setActiveTooth(currStr);
+    }, [toothSelected]);
+
+
     return (
         <div className="patients-account-details">
             <Navigation page="" />
-            <div className="content" style={assistantAdded ? {maxHeight: "100vh"} : {}}>
+            <div className="content" style={assistantAdded ? { maxHeight: "100vh" } : {}}>
                 <Header data={data} />
                 {assistantAdded ? (
                     <TickAnimation title={cookies.language === "en" ? "Diagnose created successfully!" : "Diagnosticul a fost creat cu succes!"} animationFinished={animationFinished} />
@@ -232,7 +228,7 @@ const CreateDiagnosticPatient = ({ data }) => {
                             <Select 
                                 options={diagnosticOptions} 
                                 placeholder={diagnosticNameValue} 
-                                value={{ label: diagnosticNameValue && diagnosticNameValue.length ? diagnosticNameValue : cookies.language === "en" ? "Select diagnose..." : "Selecteaza diagnosticul...", value: diagnosticValue }}
+                                value={{ label: diagnosticNameValue && diagnosticNameValue.length ? diagnosticNameValue : (cookies.language === "en" ? "Select diagnose..." : "Selecteaza diagnosticul..."), value: diagnosticValue }}
                                 styles={customStyles} 
                                 onChange={e => {
                                     setDiagnosticValue(e.value);
@@ -249,12 +245,15 @@ const CreateDiagnosticPatient = ({ data }) => {
                         </div>
 
                         <div className="input">
+                            <p>{cookies?.language === "en" ? "Selected tooth" : "Dintii selectati"}</p>
+                            <input type="text" value={activeTooth} disabled />
+                        </div>
+
+                        <div className="input">
                             <p>{cookies.language === "en" ? "Notes" : "Observatii"}</p>
                             <textarea placeholder={cookies.language === "en" ? "Notes" : "Observatii"} value={notes || ""} onChange={e => setNotes(e.target.value)} />
                         </div>
 
-
-                       
                     </div>
 
                     <div className="patient-account-details teeth-surfaces">
@@ -277,6 +276,7 @@ const CreateDiagnosticPatient = ({ data }) => {
                                                 </div>
                                             ))}
                                         </div>
+
                                     </div>
                                 </div>
                             </div>

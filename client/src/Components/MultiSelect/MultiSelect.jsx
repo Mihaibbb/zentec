@@ -15,12 +15,11 @@ import { useCookies } from "react-cookie";
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 
 
-const MultiSelect = ({ options, colors, label, handleChanges }) => {
+const MultiSelect = ({ options, colors, label, handleChanges, defaultValue }) => {
 
     const [cookies, setCookie] = useCookies();
-
+    const [defaultValueState, setDefaultValueState] = useState(defaultValue);
     let idx = -1;
-
     return (
             <Autocomplete
                 sx={{ 
@@ -44,7 +43,7 @@ const MultiSelect = ({ options, colors, label, handleChanges }) => {
                 id="tags-standard"
                 options={options}
                 getOptionLabel={(option) => option}
-                defaultValue={[]}
+                defaultValue={defaultValueState || []}
                 disableCloseOnSelect
                 onChange={(e, values) => handleChanges(values)}
                 renderOption={(props, option, { selected }) => {

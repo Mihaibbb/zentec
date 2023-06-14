@@ -43,6 +43,7 @@ const PatientAccount = ({ data }) => {
     const initialNotes = patient?.notes || "";
     const initialBirthdate = patient?.birthdate || new Date();
     const initialDocuments = JSON.parse(patient?.documents || "[]");
+    const initialInitialStatus = JSON.parse(patient?.initial_status || "[]");
     
     const [firstName, setFirstName] = useState(initialFirstName);
     const [lastName, setLastName] = useState(initialLastName);
@@ -72,8 +73,8 @@ const PatientAccount = ({ data }) => {
 
     const [documentMessage, setDocumentMessage] = useState("");
     const [documentRemoved, setDocumentRemoved] = useState(false);
-    const [diagnostics, setDiagnostics] = useState(JSON.parse(patient.initial_status));
-    const [totalDiagnostics, setTotalDiagnostics] = useState(JSON.parse(patient.initial_status));
+    const [diagnostics, setDiagnostics] = useState(initialInitialStatus);
+    const [totalDiagnostics, setTotalDiagnostics] = useState(initialInitialStatus);
     const [currentPageDiagnostics, setCurrentPageDiagnostics] = useState(1);
     const [diagnosticsQuery, setDiagnosticsQuery] = useState("");
     const [diagnoseRemoved, setDiagnoseRemoved] = useState(false);
@@ -81,11 +82,11 @@ const PatientAccount = ({ data }) => {
     
     const statusOptions = cookies?.language === "en" ? ["Initial Status", "Current Status"] : ["Status initial", "Status Actual"];
     const [activeStatusOption, setActiveStatusOption] = useState(0);
-    const [toothImage, setToothImage] = useState([]);
-    const [toothImageCurrentStatus, setToothImageCurrentStatus] = useState([]);
-    const [toothImageInitialStatusKids, setToothImageInitialStatusKids] = useState([]);
-    const [toothImageCurrentStatusKids, setToothImageCurrentStatusKids] = useState([]);
-
+    const [toothImage, setToothImage] = useState({});
+    const [toothImageCurrentStatus, setToothImageCurrentStatus] = useState({});
+    const [toothImageInitialStatusKids, setToothImageInitialStatusKids] = useState({});
+    const [toothImageCurrentStatusKids, setToothImageCurrentStatusKids] = useState({});
+    const [diagnoseMessage, setDiagnoseMessage] = useState("");
 
     const perPage = 10;
     const [pages, setPages] = useState();
@@ -106,7 +107,7 @@ const PatientAccount = ({ data }) => {
     };
 
     const toggleTeethType = (idx) => {
-        currTeethTypeRef.current[idx].classList.toggle("active");
+        currTeethTypeRef.current[idx].classList.add("active");
         currTeethTypeRef.current.forEach((currTeethType, currIdx) => currIdx !== idx && currTeethType.classList.remove("active"));
         console.log(currTeethTypeRef.current[idx].classList.contains("active") ? currTeethTypes[idx] : "");
         setTeethType(currTeethTypeRef.current[idx].classList.contains("active") ? currTeethTypes[idx] : "");    
@@ -145,6 +146,9 @@ const PatientAccount = ({ data }) => {
             setDocuments(JSON.parse(currPatient?.documents || "[]"));
             setHistoric(JSON.parse(currPatient?.historic || "[]"))
             setPatient(response.patient[0]);
+            setDiagnostics(JSON.parse(response.patient[0]?.initial_status || "[]"));
+            setTotalDiagnostics(JSON.parse(response.patient[0]?.initial_status || "[]"));
+
         } catch (e) {
             console.log(e)
         }
@@ -392,12 +396,16 @@ const PatientAccount = ({ data }) => {
             }
         };
 
+
         TEETH.forEach(async tooth => {
             try {
                 const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/get-tooth-image-initial-status/${data.organisation._id}/${param?.id}/${tooth}`, options);
                 const response = await request.json();
-
-                if (response.success) setToothImage(currImages => [...currImages, response.tooth]);
+                console.log(response);
+                if (response.success) setToothImage(currImages => {
+                    currImages[tooth] = response.tooth;
+                    return currImages;
+                });
             } catch (e) {
                 console.log(e);
             }
@@ -418,7 +426,10 @@ const PatientAccount = ({ data }) => {
                 const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/get-tooth-image-current-status/${data.organisation._id}/${param?.id}/${tooth}`, options);
                 const response = await request.json();
 
-                if (response.success) setToothImageCurrentStatus(currImages => [...currImages, response.tooth]);
+                if (response.success) setToothImageCurrentStatus(currImages => {
+                    currImages[tooth] = response.tooth;
+                    return currImages;
+                });
             } catch (e) {
                 console.log(e);
             }
@@ -435,12 +446,15 @@ const PatientAccount = ({ data }) => {
             }
         };
 
-        TEETH_KIDS_NUMBERS.forEach(async tooth => {
+        TEETH_KIDS_NUMBERS.forEach(async (tooth, idx) => {
             try {
                 const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/get-tooth-image-initial-status/${data.organisation._id}/${param?.id}/${tooth}`, options);
                 const response = await request.json();
                 
-                if (response.success) setToothImageInitialStatusKids(currImages => [...currImages, response.tooth]);
+                if (response.success) setToothImageInitialStatusKids(currImages => {
+                    currImages[TEETH_KIDS[idx]] = response.tooth;
+                    return currImages;
+                });
             } catch (e) {
                 console.log(e);
             }
@@ -456,12 +470,16 @@ const PatientAccount = ({ data }) => {
             }
         };
 
-        TEETH_KIDS_NUMBERS.forEach(async tooth => {
+        TEETH_KIDS_NUMBERS.forEach(async (tooth, idx) => {
             try {
                 const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/get-tooth-image-current-status/${data.organisation._id}/${param?.id}/${tooth}`, options);
                 const response = await request.json();
                 
-                if (response.success) setToothImageCurrentStatusKids(currImages => [...currImages, response.tooth]);
+                if (response.success) setToothImageCurrentStatusKids(currImages => {
+                    currImages[TEETH_KIDS[idx]] = response.tooth;
+                    return currImages;
+                });
+                
             } catch (e) {
                 console.log(e);
             }
@@ -488,6 +506,7 @@ const PatientAccount = ({ data }) => {
                 const response = await request.json();
                 console.log(response);
                 if (response.success) {
+                    console.log(response.initialStatus);
                     setDiagnostics(currTreatments => {
                         return response.initialStatus.filter((treatment, idx) => {
                             return (idx + 1) > perPage * (currentPageDiagnostics - 1) && (idx + 1) <= perPage * currentPageDiagnostics;
@@ -505,6 +524,10 @@ const PatientAccount = ({ data }) => {
         })();
     }, [diagnosticsQuery]);
 
+    useEffect(() => {
+        console.log(diagnostics);
+    }, [diagnostics]);
+
     const removeDiagnostic = async (id) => {
         try {
             const options = {
@@ -516,7 +539,12 @@ const PatientAccount = ({ data }) => {
 
             const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/remove-diagnostic-initial-status/${data.organisation._id}/${param?.id}/${id}`, options);
             const response = await request.json();
-            if (response.success) setDiagnoseRemoved(true);
+            if (response.success) {
+                noVideoContentRef.current.classList.add("invisible");
+                document.body.style.background = theme === "light" ? "#fff" : "#000";
+                setDiagnoseMessage(cookies?.language === "en" ? `Diagnose was removed successfully!` : `Diagnosticul a fost sters cu succes!`);
+                setTimeout(() => setDiagnoseRemoved(true), 300);
+            }
             else console.log(response);
         } catch (e) {
             console.log(e);
@@ -535,20 +563,40 @@ const PatientAccount = ({ data }) => {
         
     }, [location]);
 
+    useEffect(() => {
+        console.log(toothImage);
+    }, [toothImage]);
+
+    useEffect(() => {
+        setDiagnostics(currPatients => {
+            return [...totalDiagnostics].filter((_, idx) => {
+                return (idx + 1) > perPage * (currentPageDiagnostics - 1) && (idx + 1) <= perPage * currentPageDiagnostics;
+            });
+        });
+    }, [currentPageDiagnostics]);
+
     const triggerOptions = (idx, element) => {
         element?.length && element[idx]?.classList?.toggle("show");
         element?.length && element.forEach((option, currIdx) => currIdx !== idx && option?.classList?.remove("show"));
     };
+
+    const printTeeth = (teeth) => {
+        console.log(teeth);
+        let str = "";
+        teeth && teeth.length && teeth.forEach(tooth => str = str + tooth + ", ");
+        if (teeth && teeth.length) return str.slice(0, str.length - 2);
+        return str;
+    };
     
     return (
-        <div className="account-container"> 
+        <div className="account-container patients"> 
             <Navigation />
 
             <div className="content" style={patientEdited ? { maxHeight: "100vh" } : {}}> 
                 <Header data={data} />
               
                 {patientEdited || documentRemoved || diagnoseRemoved ?
-                    <TickAnimation animationFinished={patientEdited ? animationFinished : documentAnimationFinished} title={patientEdited ? videoMessage : documentRemoved ? documentMessage : diagnoseRemoved} />
+                    <TickAnimation animationFinished={patientEdited ? animationFinished : documentAnimationFinished} title={patientEdited ? videoMessage : documentRemoved ? documentMessage : diagnoseRemoved ? diagnoseMessage : ""} />
                 : 
                 <>
                     <div className="patient-account-details no-video-content" ref={noVideoContentRef}>
@@ -835,7 +883,80 @@ const PatientAccount = ({ data }) => {
                         </>
                     ) : historicPage === 3 ? (
                         <div>
+                            {activeStatusOption === 0 ? <div className="search-container">
+                            <input type="text" value={diagnosticsQuery} onChange={e => setDiagnosticsQuery(e.target.value)} placeholder={cookies.language === "en" ? "Search diagnose..." : "Cauta diagnostic..."} />
+                            <FontAwesomeIcon icon={faSearch} className="search-icon" />
+                            </div> : null}
 
+
+                     <div className="patients-container mg-bottom">
+                        {diagnostics.length > 0 && <div className="first-row">
+                            {windowWidth >= 600 ? <div className="column">
+                                <p>{cookies.language === "en" ? "No." : "Nr."}</p>
+                                
+                            </div> : null}
+
+                            <div className="column">
+                                <p>{cookies.language === "en" ? "Name" : "Nume"}</p>
+                            </div>
+
+                            <div className="column">
+                                <p>{cookies?.language === "en" ? "Color" : "Culoare"}</p>
+                            </div>
+
+                            <div className="column">
+                                <p>{cookies?.language === "en" ? "Teeth" : "Dintii"}</p>
+                            </div>
+
+                            <div className="column">
+                                <p>{cookies.language === "en" ? "Options" : "Optiuni"}</p>
+                            </div>
+                        </div>}
+
+                        {diagnostics?.length > 0 ? diagnostics.map((diagnose, idx) => (
+                           <div className="row" key={idx}>
+
+                                {windowWidth >= 600 ? <div className="column">
+                                    <p>{(currentPageDiagnostics - 1) * perPage + idx + 1}</p>
+                                </div> : null}
+
+                                <div className="column">
+                                    <p>{diagnose.name}</p>
+                                </div>
+
+                                <div className="column">
+                                    <div className="square" style={{ width: '50px', height: '20px', borderRadius: '10px', backgroundColor: diagnose.color }} />
+                                </div>
+
+                                <div className="column">
+                                    <p>{printTeeth(diagnose.teeth)}</p>
+                                </div>
+
+                                <div className="column pressable">
+                                    <FontAwesomeIcon className="column-icon" icon={faEllipsis} onClick={() => triggerOptions(idx, optionsTreatmentsRef.current)}/>
+                                    <div className="options-container" ref={ref => optionsTreatmentsRef.current[idx] = ref}>
+                                        <div className="option" onClick={async () => optionsTreatmentsRef.current[idx].classList.contains("show") ? await removeDiagnostic(diagnose.id) : null}>
+                                            <FontAwesomeIcon icon={faTimes} className="option-icon" /> 
+                                            <p>{cookies.language === "en" ? "Remove" : "Sterge"}</p>
+                                        </div>
+
+                                        <div className="option" onClick={() => navigation(`/edit-diagnostic-patient/${param?.id}/${diagnose.id}`, { state: { diagnose: diagnose } })}>
+                                            <FontAwesomeIcon icon={faUser} className="option-icon" />
+                                            <p>{cookies.language === "en" ? "Edit" : "Editeaza"}</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        )) : (
+                            <h2 className="center">{cookies.language === "en" ? "No diagnose found." : "Niciun diagnostic gasit."}</h2>
+                        )}
+
+                            <div className="add-button" onClick={() => navigation(`/patient/${param?.id}/create-treatment-plan`, { state: location?.state })}>
+                                <FontAwesomeIcon icon={faPlus} className="add-icon" />
+                                <p>{cookies?.language === "en" ? "Upload document" : "Incarca document"}</p>
+                            </div>
+                        </div>
                         </div>
                     ) : historicPage === 4 ? (
                         <div>
@@ -883,7 +1004,7 @@ const PatientAccount = ({ data }) => {
                                     {TEETH.map((tooth, idx) => (
                                         <div className="tooth-container" key={idx}>
                                             {idx <= 15 ? <p>{tooth}</p> : null}
-                                            <img src={`${process.env.REACT_APP_BACKEND_URL}/teeth/pictograme_terminate_dinti/${tooth}/${tooth}${toothImage[idx] || ""}.png`} />
+                                            <img src={`${process.env.REACT_APP_BACKEND_URL}/teeth/pictograme_terminate_dinti/${tooth}/${tooth}${toothImage[tooth] || ""}.png`} />
                                             {idx > 15 ? <p>{tooth}</p> : null}
                                         </div>
                                     ))}
@@ -895,7 +1016,56 @@ const PatientAccount = ({ data }) => {
                                     {TEETH_KIDS.map((tooth, idx) => (
                                         <div className="tooth-container" key={idx}>
                                             {idx <= 9 ? <p>{TEETH_KIDS_NUMBERS[idx]}</p> : null}
-                                            <img src={`${process.env.REACT_APP_BACKEND_URL}/teeth/pictograme_terminate_dinti/${tooth}/${tooth}${toothImageInitialStatusKids[idx] || ""}.png`} />
+                                            <img src={`${process.env.REACT_APP_BACKEND_URL}/teeth/pictograme_terminate_dinti/${tooth}/${tooth}${toothImageInitialStatusKids[tooth] || ""}.png`} />
+                                            {idx > 9 ? <p>{TEETH_KIDS_NUMBERS[idx]}</p> : null}
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : null}
+
+                            {activeStatusOption === 1 ? <div className="patient-account-details teeth-surfaces">
+                                <div className="inputs-container">
+                                    <div className="input">
+                                        <div className="input-title">
+                                            <FontAwesomeIcon className="icon" icon={faTooth} />
+                                            <p>{cookies.language === "en" ? "Dentition Type: " : "Tipul dentitiei: "}</p>
+                                        </div>
+                                        
+                                        <div className="options">
+                                            {currTeethTypes.map((currTeethType, idx) => (
+                                                <div className={`option ${currTeethType === teethType ? "active" : ""}`} key={idx} ref={ref => currTeethTypeRef.current[idx] = ref}>
+                                                    <div className="circle" onClick={() => toggleTeethType(idx)}>
+                                                        
+                                                        <FontAwesomeIcon icon={faCheck} className={`active-icon`} />
+                                                        
+                                                    </div>
+                                                    <p className="patient-gender">{currTeethType}</p>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> : null }
+                         
+                            
+                            {activeStatusOption === 1 && (teethType === currTeethTypes[1] || teethType === currTeethTypes[2]) ? (
+                                <div className="teeth-container">
+                                    {TEETH.map((tooth, idx) => (
+                                        <div className="tooth-container" key={idx}>
+                                            {idx <= 15 ? <p>{tooth}</p> : null}
+                                            <img src={`${process.env.REACT_APP_BACKEND_URL}/teeth/pictograme_terminate_dinti/${tooth}/${tooth}${toothImageCurrentStatus[tooth] || ""}.png`} />
+                                            {idx > 15 ? <p>{tooth}</p> : null}
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : null}
+
+                            {activeStatusOption === 1 && (teethType === currTeethTypes[0] || teethType === currTeethTypes[2]) ? (
+                                <div className="teeth-container kids-teeth">
+                                    {TEETH_KIDS.map((tooth, idx) => (
+                                        <div className="tooth-container" key={idx}>
+                                            {idx <= 9 ? <p>{TEETH_KIDS_NUMBERS[idx]}</p> : null}
+                                            <img src={`${process.env.REACT_APP_BACKEND_URL}/teeth/pictograme_terminate_dinti/${tooth}/${tooth}${toothImageCurrentStatusKids[tooth] || ""}.png`} />
                                             {idx > 9 ? <p>{TEETH_KIDS_NUMBERS[idx]}</p> : null}
                                         </div>
                                     ))}
@@ -924,6 +1094,10 @@ const PatientAccount = ({ data }) => {
                                     </div>
 
                                     <div className="column">
+                                        <p>{cookies?.language === "en" ? "Teeth" : "Dintii"}</p>
+                                    </div>
+
+                                    <div className="column">
                                         <p>{cookies.language === "en" ? "Options" : "Optiuni"}</p>
                                     </div>
                                 </div>}
@@ -932,7 +1106,7 @@ const PatientAccount = ({ data }) => {
                                     <div className="row" key={idx}>
 
                                         {windowWidth >= 600 ? <div className="column">
-                                            <p>{idx + 1}</p>
+                                            <p>{(currentPageDiagnostics - 1) * perPage + idx + 1}</p>
                                         </div> : null}
 
                                         <div className="column">
@@ -943,6 +1117,10 @@ const PatientAccount = ({ data }) => {
                                             <div className="square" style={{ width: '50px', height: '20px', borderRadius: '10px', backgroundColor: diagnose.color }} />
                                         </div>
 
+                                        <div className="column">
+                                            <p>{printTeeth(diagnose.teeth)}</p>
+                                        </div>
+
                                         <div className="column pressable">
                                             <FontAwesomeIcon className="column-icon" icon={faEllipsis} onClick={() => triggerOptions(idx, optionsTreatmentsRef.current)}/>
                                             <div className="options-container" ref={ref => optionsTreatmentsRef.current[idx] = ref}>
@@ -951,12 +1129,13 @@ const PatientAccount = ({ data }) => {
                                                     <p>{cookies.language === "en" ? "Remove" : "Sterge"}</p>
                                                 </div>
 
-                                                <div className="option" onClick={() => navigation(`/patient/${param?.id}/edit-diagnose-initial-status/${diagnose.id}`, { state: { diagnose: diagnose } })}>
+                                                <div className="option" onClick={() => navigation(`/edit-diagnostic-patient/${param?.id}/${diagnose.id}`, { state: { diagnose: diagnose } })}>
                                                     <FontAwesomeIcon icon={faUser} className="option-icon" />
                                                     <p>{cookies.language === "en" ? "Edit" : "Editeaza"}</p>
                                                 </div>
                                             </div>
                                         </div>
+
                                     </div>
                                 )) : (
                                     <h2 className="center">{cookies.language === "en" ? "No diagnose found." : "Niciun diagnostic gasit."}</h2>

@@ -223,7 +223,7 @@ router.get("/get-diagnostics/:organisationId", getPatientConsulations);
 // Initial status routes
 
 router.post("/create-diagnostic-initial-status", createDiagnosticInitialStatus);
-router.put("/edit-diagnostic-initialStatus", editDiagnosticInitialStatus);
+router.put("/edit-diagnostic-initial-status", editDiagnosticInitialStatus);
 router.delete("/remove-diagnostic-initial-status/:organisationId/:patientId/:id", removeDiagnosticInitialStatus);
 router.post("/search-diagnostic-initial-status", searchDiagnosticInitialStatus);
 router.get("/get-diagnostics-initial-status/:organisationId/:patientId", getDiagnosticsInitialStatus);
