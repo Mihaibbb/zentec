@@ -78,7 +78,7 @@ const DateCustomInput = ({ changeDate, initialDate, future, past, label, opening
 
 
         "& .MuiPaper-root": {
-            background: "var(--over-difference-color-2)",
+            background: "var(--dark-color)",
             top: headerOpen === "desktop_active" ? '250px' : '180px',
             left: headerOpen === "desktop_active" ? `${0.175 * window.innerWidth + 32}px` : headerOpen === "desktop_inactive" ? "32px" : `${(window.innerWidth - document?.querySelectorAll(".MuiPaper-root")[0]?.clientWidth) / 2}px`,
             position: inputHidden ? 'absolute' : 'initial',

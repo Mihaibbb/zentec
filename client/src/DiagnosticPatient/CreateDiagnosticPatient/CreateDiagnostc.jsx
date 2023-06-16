@@ -206,6 +206,8 @@ const CreateDiagnosticPatient = ({ data }) => {
         setActiveTooth(currStr);
     }, [toothSelected]);
 
+    
+
 
     return (
         <div className="patients-account-details">

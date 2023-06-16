@@ -1,0 +1,71 @@
+.schedule.treatment-plan
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 90%;
+    margin: 2rem auto;
+    gap: 1rem;
+    max-width: 600px;
+    position: relative;
+    padding: 3.5rem 3.5rem 2rem 2rem;
+    background: var(--over-difference-color-2);
+    border-radius: 20px;
+
+    transition: all 350ms ease-in-out;
+}
+
+.schedule.treatment-plan .input input, .schedule .input textarea
+{
+    background: var(--over-difference-color-2);
+    border: .5px solid var(--text-color-3);
+}
+
+.schedule .input textarea
+{
+    width: calc(100% - 2rem);
+    padding: 1rem;
+}
+
+.schedule.selected
+{
+    background: var(--over-difference-color-3);
+}
+
+.schedule.treatment-plan .input 
+{
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    grid-template-columns: 1fr 3fr;
+    gap: 1rem;
+}
+
+.schedule.treatment-plan .input p
+{
+    white-space: nowrap;
+}
+
+.schedule .remove-button
+{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 25px;
+    height: 25px;
+    color: var(--error-color);
+    cursor: pointer;
+    padding: .5rem;
+    transition: all 350ms ease-in-out;
+}
+
+.schedule .remove-button:hover
+{
+    background: var(--error-color);
+    border-radius: 25px;
+    color: rgba(255, 255, 255, .8);
+}

@@ -15,7 +15,7 @@ import { useCookies } from "react-cookie";
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 
 
-const MultiSelect = ({ options, colors, label, handleChanges, defaultValue }) => {
+const MultiSelect = ({ options, colors, label, handleChanges, defaultValue, width }) => {
 
     const [cookies, setCookie] = useCookies();
     const [defaultValueState, setDefaultValueState] = useState(defaultValue);
@@ -24,7 +24,7 @@ const MultiSelect = ({ options, colors, label, handleChanges, defaultValue }) =>
             <Autocomplete
                 sx={{ 
                     m: 1, 
-                    width: 500,
+                    width: width || 500,
                     '& .MuiButtonBase-root': {
                         backgroundColor: "var(--over-difference-color)",
                         color: "var(--text-color-2)"

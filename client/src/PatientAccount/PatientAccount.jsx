@@ -1,6 +1,6 @@
 import { faAddressBook, faAddressCard, faAngleLeft, faCalendar, faCheck, faCity, faDeleteLeft, faEllipsis, faEnvelope, faIdBadge, faMars, faMinus, faNoteSticky, faPhone, faPlus, faSearch, faTimes, faTooth, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef, useMemo, useLayoutEffect } from "react";
 import { useCookies } from "react-cookie";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Header from "../Components/Header/Header";
@@ -61,8 +61,10 @@ const PatientAccount = ({ data }) => {
     const [showUpdate, setShowUpdate] = useState(false);
     const [historic, setHistoric] = useState(JSON.parse(patient?.historic || "[]"));
     const [documents, setDocuments] = useState(initialDocuments || []);
-   
-    console.log(historic);
+    const [treatmentPlans, setTreatmentPlans] = useState([]);
+    const [totalTreatmentPlans, setTotalTreatmentPlans] = useState([]);
+    const [treatmentPlansQuery, setTreatmentPlansQuery] = useState("");
+
     const [historicOption, setHistoricOption] = useState(0);
     const [errorMessage, setErrorMessage] = useState();
     const [patientMessage, setPatientMessage] = useState("");
@@ -76,6 +78,7 @@ const PatientAccount = ({ data }) => {
     const [diagnostics, setDiagnostics] = useState(initialInitialStatus);
     const [totalDiagnostics, setTotalDiagnostics] = useState(initialInitialStatus);
     const [currentPageDiagnostics, setCurrentPageDiagnostics] = useState(1);
+    const [currentPageTreatmentPlans, setCurrentPageTreatmentPlans] = useState(1);
     const [diagnosticsQuery, setDiagnosticsQuery] = useState("");
     const [diagnoseRemoved, setDiagnoseRemoved] = useState(false);
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -272,9 +275,13 @@ const PatientAccount = ({ data }) => {
         // }); 
     }, []);
     
-    useEffect(() => {
+    useLayoutEffect(() => {
         setPages(Math.floor(totalDiagnostics.length / perPage) + (totalDiagnostics.length % perPage !== 0 ? 1 : 0));
     }, [totalDiagnostics]);
+
+    useLayoutEffect(() => {
+        setPages(Math.floor(totalTreatmentPlans.length / perPage) + (totalTreatmentPlans.length % perPage !== 0 ? 1 : 0));
+    }, [totalTreatmentPlans]);
 
     useEffect(() => {
         if (!birthRef.current) return;
@@ -487,7 +494,7 @@ const PatientAccount = ({ data }) => {
     }, []);
 
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         (async () => {
             try {
                 const options = {
@@ -507,8 +514,8 @@ const PatientAccount = ({ data }) => {
                 console.log(response);
                 if (response.success) {
                     console.log(response.initialStatus);
-                    setDiagnostics(currTreatments => {
-                        return response.initialStatus.filter((treatment, idx) => {
+                    setDiagnostics(_ => {
+                        return response.initialStatus.filter((__, idx) => {
                             return (idx + 1) > perPage * (currentPageDiagnostics - 1) && (idx + 1) <= perPage * currentPageDiagnostics;
                         });
                     });
@@ -523,6 +530,112 @@ const PatientAccount = ({ data }) => {
           
         })();
     }, [diagnosticsQuery]);
+
+
+    useLayoutEffect(() => {
+        (async () => {
+            try {
+                const options = {
+                    method: 'POST',
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        searchQuery: treatmentPlansQuery,
+                        organisationId: data.organisation._id,
+                        patientId: param?.id
+                    })
+                };
+    
+                const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/search-treatment-plan`, options);
+                const response = await request.json();
+                console.log(response);
+                if (response.success) {
+                    console.log(response.treatmentPlans);
+                    setDiagnostics(_ => {
+                        return response.treatmentPlans.filter((__, idx) => {
+                            return (idx + 1) > perPage * (currentPageTreatmentPlans - 1) && (idx + 1) <= perPage * currentPageTreatmentPlans;
+                        });
+                    });
+                    setTotalDiagnostics(response.treatmentPlans || []);
+                } else {
+                    setTreatmentPlans([]);
+                    setTotalTreatmentPlans([]);
+                }
+            } catch (e) {
+                console.log(e);
+            }
+          
+        })();
+    }, [treatmentPlansQuery]);
+
+    const getDiagnostics = async () => {
+        try {
+            const options = {
+                method: 'GET',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                
+            };
+
+            const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/get-diagnostics-initial-status/${data.organisation._id}/${param?.id}`, options);
+            const response = await request.json();
+            console.log(response);
+            if (response.success) {
+                setDiagnostics(currTreatments => {
+                    return response.initialStatus.filter((treatment, idx) => {
+                        return (idx + 1) > perPage * (currentPageDiagnostics - 1) && (idx + 1) <= perPage * currentPageDiagnostics;
+                    });
+                });
+                setTotalDiagnostics(response.initialStatus || []);
+            } else {
+                setDiagnostics([]);
+                setTotalDiagnostics([]);
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
+    const getTreatmentPlans = async () => {
+        try {
+            const options = {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            };
+
+            const request = await fetch(`${process.env.DB_PREFIX}/api/user/get-treatment-plans/${data.organisation._id}/${param?.id}`, options);
+            const response = await request.json();
+
+            if (response.success) {
+                console.log(response.initialStatus);
+                setTreatmentPlans(_ => {
+                    return response.treatmentPlans.filter((__, idx) => {
+                        return (idx + 1) > perPage * (currentPageTreatmentPlans - 1) && (idx + 1) <= perPage * currentPageTreatmentPlans;
+                    });
+                });
+                setTotalTreatmentPlans(response.treatmentPlans || []);
+            } else {
+                console.log(response);
+                setTreatmentPlans([]);
+                setTotalTreatmentPlans([]);
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
+    useEffect(() => {
+        (async () => {
+            await getDiagnostics();
+            await getTreatmentPlans();
+        })();
+    }, [location]);
+
+    
 
     useEffect(() => {
         console.log(diagnostics);
@@ -543,6 +656,29 @@ const PatientAccount = ({ data }) => {
                 noVideoContentRef.current.classList.add("invisible");
                 document.body.style.background = theme === "light" ? "#fff" : "#000";
                 setDiagnoseMessage(cookies?.language === "en" ? `Diagnose was removed successfully!` : `Diagnosticul a fost sters cu succes!`);
+                setTimeout(() => setDiagnoseRemoved(true), 300);
+            }
+            else console.log(response);
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
+    const removeTreatmentPlan = async (id) => {
+        try {
+            const options = {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            };
+
+            const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/remove-treatment-plan/${data.organisation._id}/${id}`, options);
+            const response = await request.json();
+            if (response.success) {
+                noVideoContentRef.current.classList.add("invisible");
+                document.body.style.background = theme === "light" ? "#fff" : "#000";
+                setDiagnoseMessage(cookies?.language === "en" ? `Treatment plan was removed successfully!` : `Planul de tratament a fost sters cu succes!`);
                 setTimeout(() => setDiagnoseRemoved(true), 300);
             }
             else console.log(response);
@@ -574,6 +710,15 @@ const PatientAccount = ({ data }) => {
             });
         });
     }, [currentPageDiagnostics]);
+
+
+    useEffect(() => {
+        setTreatmentPlans(_ => {
+            return [...totalTreatmentPlans].filter((__, idx) => {
+                return (idx + 1) > perPage * (currentPageTreatmentPlans - 1) && (idx + 1) <= perPage * currentPageTreatmentPlans;
+            });
+        });
+    }, [currentPageTreatmentPlans]);
 
     const triggerOptions = (idx, element) => {
         element?.length && element[idx]?.classList?.toggle("show");
@@ -884,13 +1029,13 @@ const PatientAccount = ({ data }) => {
                     ) : historicPage === 3 ? (
                         <div>
                             {activeStatusOption === 0 ? <div className="search-container">
-                            <input type="text" value={diagnosticsQuery} onChange={e => setDiagnosticsQuery(e.target.value)} placeholder={cookies.language === "en" ? "Search diagnose..." : "Cauta diagnostic..."} />
-                            <FontAwesomeIcon icon={faSearch} className="search-icon" />
+                                <input type="text" value={treatmentPlansQuery} onChange={e => setTreatmentPlansQuery(e.target.value)} placeholder={cookies.language === "en" ? "Search treatment plan..." : "Cauta plan de tratament..."} />
+                                <FontAwesomeIcon icon={faSearch} className="search-icon" />
                             </div> : null}
 
 
                      <div className="patients-container mg-bottom">
-                        {diagnostics.length > 0 && <div className="first-row">
+                        {treatmentPlans.length > 0 && <div className="first-row">
                             {windowWidth >= 600 ? <div className="column">
                                 <p>{cookies.language === "en" ? "No." : "Nr."}</p>
                                 
@@ -901,46 +1046,64 @@ const PatientAccount = ({ data }) => {
                             </div>
 
                             <div className="column">
-                                <p>{cookies?.language === "en" ? "Color" : "Culoare"}</p>
+                                <p>{cookies?.language === "en" ? "Date" : "Data"}</p>
                             </div>
 
                             <div className="column">
-                                <p>{cookies?.language === "en" ? "Teeth" : "Dintii"}</p>
+                                <p>{cookies?.language === "en" ? "Status" : "Status"}</p>
+                            </div>
+
+                            <div className="column">
+                                <p>{cookies.language === "en" ? "Total" : "Total"}</p>
+                            </div>
+
+                            <div className="column">
+                                <p>{cookies.language === "en" ? "Negotiated Total" : "Total negociat"}</p>
                             </div>
 
                             <div className="column">
                                 <p>{cookies.language === "en" ? "Options" : "Optiuni"}</p>
                             </div>
+
                         </div>}
 
-                        {diagnostics?.length > 0 ? diagnostics.map((diagnose, idx) => (
+                        {treatmentPlans?.length > 0 ? treatmentPlans.map((treatmentPlan, idx) => (
                            <div className="row" key={idx}>
 
                                 {windowWidth >= 600 ? <div className="column">
-                                    <p>{(currentPageDiagnostics - 1) * perPage + idx + 1}</p>
+                                    <p>{(currentPageTreatmentPlans - 1) * perPage + idx + 1}</p>
                                 </div> : null}
 
                                 <div className="column">
-                                    <p>{diagnose.name}</p>
+                                    <p>{treatmentPlan.name}</p>
+                                </div>
+
+                           
+                                <div className="column">
+                                    <p>{new Date(treatmentPlan.date).getDate() < 10 ? `0${new Date(treatmentPlan.date).getDate()}` : new Date(treatmentPlan.date).getDate()}.${new Date(treatmentPlan.date).getMonth() + 1 < 10 ? `0${new Date(treatmentPlan.date).getMonth() + 1}` : new Date(treatmentPlan.date).getMonth() + 1}.${new Date(treatmentPlan.date).getFullYear()}</p>
                                 </div>
 
                                 <div className="column">
-                                    <div className="square" style={{ width: '50px', height: '20px', borderRadius: '10px', backgroundColor: diagnose.color }} />
+                                    <p>{treatmentPlan.status}</p>
                                 </div>
 
                                 <div className="column">
-                                    <p>{printTeeth(diagnose.teeth)}</p>
+                                    <p>{treatmentPlan.total}</p>
+                                </div>
+
+                                <div className="column">
+                                    <p>{treatmentPlan.totalNegotiated}</p>
                                 </div>
 
                                 <div className="column pressable">
                                     <FontAwesomeIcon className="column-icon" icon={faEllipsis} onClick={() => triggerOptions(idx, optionsTreatmentsRef.current)}/>
                                     <div className="options-container" ref={ref => optionsTreatmentsRef.current[idx] = ref}>
-                                        <div className="option" onClick={async () => optionsTreatmentsRef.current[idx].classList.contains("show") ? await removeDiagnostic(diagnose.id) : null}>
+                                        <div className="option" onClick={async () => optionsTreatmentsRef.current[idx].classList.contains("show") ? await removeTreatmentPlan(treatmentPlan.id) : null}>
                                             <FontAwesomeIcon icon={faTimes} className="option-icon" /> 
                                             <p>{cookies.language === "en" ? "Remove" : "Sterge"}</p>
                                         </div>
 
-                                        <div className="option" onClick={() => navigation(`/edit-diagnostic-patient/${param?.id}/${diagnose.id}`, { state: { diagnose: diagnose } })}>
+                                        <div className="option" onClick={() => navigation(`/edit-treatment-plan-patient/${param?.id}/${treatmentPlan.id}`, { state: { treatmentPlan: treatmentPlan } })}>
                                             <FontAwesomeIcon icon={faUser} className="option-icon" />
                                             <p>{cookies.language === "en" ? "Edit" : "Editeaza"}</p>
                                         </div>
@@ -949,12 +1112,12 @@ const PatientAccount = ({ data }) => {
 
                             </div>
                         )) : (
-                            <h2 className="center">{cookies.language === "en" ? "No diagnose found." : "Niciun diagnostic gasit."}</h2>
+                            <h2 className="center">{cookies.language === "en" ? "No treatment plan found." : "Niciun plan de tratament gasit."}</h2>
                         )}
 
-                            <div className="add-button" onClick={() => navigation(`/patient/${param?.id}/create-treatment-plan`, { state: location?.state })}>
+                            <div className="add-button" onClick={() => navigation(`/create-treatment-plan-patient/${param?.id}`, { state: location?.state })}>
                                 <FontAwesomeIcon icon={faPlus} className="add-icon" />
-                                <p>{cookies?.language === "en" ? "Upload document" : "Incarca document"}</p>
+                                <p>{cookies?.language === "en" ? "Add treatment plan" : "Adauga plan de tratament"}</p>
                             </div>
                         </div>
                         </div>

@@ -70,10 +70,9 @@
    
 }
 
-.form .input:not(.no-bg) input:not(.MuiInputBase-input)
+.form .input:not(.no-bg) input
 {
-
-   width: 300px;
+    width: 300px;
  
    border: 1px solid rgba(255, 255, 255, .1);
    outline: none;
@@ -85,7 +84,28 @@
    padding-left: 1rem;
 }
 
-body.light .form .input:not(.no-bg) input:not(.MuiInputBase-input)
+.form .input:not(.no-bg) .MuiAutocomplete-root input
+{
+
+   width: initial;
+ 
+   border: initial;
+   outline: initial;
+   background: initial;
+   height: initial;
+   border-radius: initial;
+   font-family: initial;
+   color: initial;
+   padding-left: initial;
+}
+
+body.light .form .input:not(.no-bg) input
+{
+    background: var(--over-difference-color-2);
+
+}
+
+body.light .form .input:not(.no-bg) .MuiAutocomplete-root input
 {
     /*border: 1px solid var(--text-color-3);*/
     background: var(--over-difference-color-2);
@@ -115,6 +135,7 @@ body.light .form .input:not(.no-bg) input:not(.MuiInputBase-input)
     border-radius: 10px;
     padding: 1rem;
     font-size: 16px;
+    max-width: 350px;
 }
 
 .form button.confirm-button

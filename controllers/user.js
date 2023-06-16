@@ -2298,8 +2298,17 @@ exports.getDiagnosticsInitialStatus = async (req, res) => {
         const patients = await db.query("SELECT * FROM ?? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.patients`, patientId]);
         if (patients?.length !== 1) return res.status(404).json({ success: false, reason: "invalid-patient" });
         const initialStatus = JSON.parse(patients[0].initial_status);
+        const results = await Promise.all(await initialStatus.map(async (diagnostic, idx) => {
+            const diagnostics = await db.query("SELECT * FROM ?? WHERE id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.diagnostics`, diagnostic.diagnosticId]);
 
-        res.status(200).json({ success: true, initialStatus });
+            const diagnosticName = diagnostics[0]?.name;
+            if (!diagnosticName) return null;
+            return {...diagnostics[0], teeth: diagnostic.teeth, id: diagnostic.id, diagnosticId: diagnostic.diagnosticId};
+        }));
+
+        const filteredDiagnostics = results.filter(result => result !== null);
+        console.log("DIAG: ", filteredDiagnostics);
+        res.status(200).json({ success: true, initialStatus: filteredDiagnostics });
     } catch (e) {
         console.log(e);
         res.status(404).json({
