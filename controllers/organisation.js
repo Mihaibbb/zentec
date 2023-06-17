@@ -196,6 +196,7 @@ exports.createOrganisation = async (req, res, next) => {
         createTableSql += 'totalPrice float not null, ';
         createTableSql += 'totalNegotiated float not null, ';
         createTableSql += 'initial_status varchar(64) not null, ';
+        createTableSql += 'initialState varchar(64) not null, ';
         createTableSql += 'date date not null );';
 
         await db.query(createTableSql, ['treatments_plan_patients']);

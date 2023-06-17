@@ -1933,7 +1933,7 @@ exports.createTreatmentPlan = async (req, res) => {
         let treatmentPlanId = generateId(25);
         while (inArrId(treatmentPlans, treatmentPlanId, "_id")) treatmentPlanId = generateId(25);
 
-        await db.query("INSERT INTO ?? (_id, patientId, name, treatments, status, totalPrice, totalNegotiated, initial_state, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", [`${process.env.DB_PREFIX}org_${organisationId}.treatments_plan_patients`, treatmentPlanId, patientId, name, JSON.stringify(treatments), status, totalPrice, totalNegotiated, initialState, new Date(date)]);
+        await db.query("INSERT INTO ?? (_id, patientId, name, treatments, status, totalPrice, totalNegotiated, initial_status, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", [`${process.env.DB_PREFIX}org_${organisationId}.treatments_plan_patients`, treatmentPlanId, patientId, name, JSON.stringify(treatments), status, totalPrice, totalNegotiated, initialState, new Date(date)]);
         res.status(200).json({ 
             success: true
         });
@@ -1947,7 +1947,7 @@ exports.editTreatmentPlan = async (req, res) => {
     const { organisationId, treatmentPlanId, name, treatments, status, totalPrice, totalNegotiated, initialState, date } = req.body;
 
     try {
-        await db.query("UPDATE ?? SET name = ?, treatments = ?, status = ?, totalPrice = ?, totalNegotiated = ?, initialState = ?, date = ? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.treatments_plan_patients`, name, JSON.stringify(treatments), status, totalPrice, totalNegotiated, initialState, new Date(date), treatmentPlanId]);
+        await db.query("UPDATE ?? SET name = ?, treatments = ?, status = ?, totalPrice = ?, totalNegotiated = ?, initial_status = ?, date = ? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.treatments_plan_patients`, name, JSON.stringify(treatments), status, totalPrice, totalNegotiated, initialState, new Date(date), treatmentPlanId]);
         res.status(200).json({ 
             success: true
         });
@@ -2826,14 +2826,13 @@ exports.getToothImageCurrentStatus = async (req, res) => {
         const patient = patients[0];
         const diagnostics = JSON.parse(patient.initial_status);
         const filteredDiagnostics = diagnostics.filter(diagnostic => diagnostic.teeth.includes(toothNumber));
-        const treatmentPlans = await db.query("SELECT * FROM ?? WHERE patientId = ?", [`${process.env.DB_PREFIX}org_${organisationId}.treatments_plan_patients`, patientId]);
+        const treatmentPlans = await db.query("SELECT * FROM ?? WHERE patientId = ?", [`${process.env.DB_PREFIX}org_${organisationId}.treatments_patients`, patientId]);
         
         const treatments = treatmentPlans.map(treatmentPlan => {
-            const currentTreatments = JSON.parse(treatmentPlan.treatments);
-            return currentTreatments.filter(treatment => treatment.status === 'finished');
+            return treatmentPlan.status.toLowerCase() === 'realizat' || treatmentPlan.status.toLowerCase() === 'finished';
         });
 
-        const filteredTreatments = treatments.filter(treatment => treatment.teeth.includes(toothNumber));
+        const filteredTreatments = treatments?.filter(treatment => treatment?.teeth?.includes(toothNumber));
         if (filteredTreatments?.length === 0 && filteredDiagnostics?.length === 0) 
             return res.status(200).json({ success: true, tooth: '' });
 

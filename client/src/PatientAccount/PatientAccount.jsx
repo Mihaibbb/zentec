@@ -336,7 +336,7 @@ const PatientAccount = ({ data }) => {
 
     const animationFinished = () => {
         document.body.style.background = "var(--background)";
-        navigation("/patients", { state: patientMessage });
+        diagnoseRemoved ? window.location.reload() : navigation("/patients", { state: patientMessage });
     };
 
     const documentAnimationFinished = () => {
@@ -601,13 +601,13 @@ const PatientAccount = ({ data }) => {
     const getTreatmentPlans = async () => {
         try {
             const options = {
-                method: "POST",
+                method: "GET",
                 headers: {
                     "Content-Type": "application/json"
                 }
             };
 
-            const request = await fetch(`${process.env.DB_PREFIX}/api/user/get-treatment-plans/${data.organisation._id}/${param?.id}`, options);
+            const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/get-treatment-plans/${data.organisation._id}/${param?.id}`, options);
             const response = await request.json();
 
             if (response.success) {
@@ -1080,7 +1080,7 @@ const PatientAccount = ({ data }) => {
 
                            
                                 <div className="column">
-                                    <p>{new Date(treatmentPlan.date).getDate() < 10 ? `0${new Date(treatmentPlan.date).getDate()}` : new Date(treatmentPlan.date).getDate()}.${new Date(treatmentPlan.date).getMonth() + 1 < 10 ? `0${new Date(treatmentPlan.date).getMonth() + 1}` : new Date(treatmentPlan.date).getMonth() + 1}.${new Date(treatmentPlan.date).getFullYear()}</p>
+                                    <p>{new Date(treatmentPlan.date).getDate() < 10 ? `0${new Date(treatmentPlan.date).getDate()}` : new Date(treatmentPlan.date).getDate()}.{new Date(treatmentPlan.date).getMonth() + 1 < 10 ? `0${new Date(treatmentPlan.date).getMonth() + 1}` : new Date(treatmentPlan.date).getMonth() + 1}.{new Date(treatmentPlan.date).getFullYear()}</p>
                                 </div>
 
                                 <div className="column">
@@ -1088,7 +1088,7 @@ const PatientAccount = ({ data }) => {
                                 </div>
 
                                 <div className="column">
-                                    <p>{treatmentPlan.total}</p>
+                                    <p>{treatmentPlan.totalPrice}</p>
                                 </div>
 
                                 <div className="column">
@@ -1098,12 +1098,12 @@ const PatientAccount = ({ data }) => {
                                 <div className="column pressable">
                                     <FontAwesomeIcon className="column-icon" icon={faEllipsis} onClick={() => triggerOptions(idx, optionsTreatmentsRef.current)}/>
                                     <div className="options-container" ref={ref => optionsTreatmentsRef.current[idx] = ref}>
-                                        <div className="option" onClick={async () => optionsTreatmentsRef.current[idx].classList.contains("show") ? await removeTreatmentPlan(treatmentPlan.id) : null}>
+                                        <div className="option" onClick={async () => optionsTreatmentsRef.current[idx].classList.contains("show") ? await removeTreatmentPlan(treatmentPlan._id) : null}>
                                             <FontAwesomeIcon icon={faTimes} className="option-icon" /> 
                                             <p>{cookies.language === "en" ? "Remove" : "Sterge"}</p>
                                         </div>
 
-                                        <div className="option" onClick={() => navigation(`/edit-treatment-plan-patient/${param?.id}/${treatmentPlan.id}`, { state: { treatmentPlan: treatmentPlan } })}>
+                                        <div className="option" onClick={() => navigation(`/edit-treatment-plan-patient/${param?.id}/${treatmentPlan._id}`, { state: { treatmentPlan: treatmentPlan } })}>
                                             <FontAwesomeIcon icon={faUser} className="option-icon" />
                                             <p>{cookies.language === "en" ? "Edit" : "Editeaza"}</p>
                                         </div>
