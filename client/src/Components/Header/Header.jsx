@@ -49,6 +49,7 @@ const Header = ({ data }) => {
             document.documentElement.style.setProperty("--over-difference-color-3", "linear-gradient(135deg, rgba(125, 125, 255, 0.18), rgba(125, 125, 255, .45))");
             document.documentElement.style.setProperty("--error-color", "crimson");
             document.documentElement.style.setProperty("--success-color", "#589858");
+            document.documentElement.style.setProperty("--warning-color", "#ff9966");
             document.documentElement.style.setProperty("--selected-color", "rgba(96, 61, 128, .973)");
             document.body.classList.add("light");
         } else {
@@ -73,6 +74,7 @@ const Header = ({ data }) => {
             document.documentElement.style.setProperty("--over-difference-color-3", "linear-gradient(-135deg, rgba(125, 125, 255, 0.13), rgba(125, 125, 255, 0.4))");
             document.documentElement.style.setProperty("--error-color", "crimson");
             document.documentElement.style.setProperty("--success-color", "#589858");
+            document.documentElement.style.setProperty("--warning-color", "#ff9966");
             document.documentElement.style.setProperty("--selected-color", "rgba(95, 61, 128, 0.973)");
             document.body.classList.remove("light");
         }

@@ -172,6 +172,7 @@ exports.createOrganisation = async (req, res, next) => {
         // Patients' treatments
 
         createTableSql = 'CREATE TABLE ?? ( ';
+        createTableSql += 'id varchar(26) not null, ';
         createTableSql += 'treatmentId varchar(26) not null, ';
         createTableSql += 'treatmentPlanId varchar(25), ';
         createTableSql += 'patientId varchar(25) not null, ';

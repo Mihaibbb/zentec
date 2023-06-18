@@ -45,6 +45,9 @@ import CreateDiagnosticPatient from "./DiagnosticPatient/CreateDiagnosticPatient
 import EditDiagnosticPatient from "./DiagnosticPatient/EditDiagnosticPatient/EditDiagnostic";
 import CreateTreatmentPlanPatient from "./TreatmentPlanPatient/CreateTreatmentPlanPatient/CreateTreatmentPlanPatient";
 import EditTreatmentPlanPatient from "./TreatmentPlanPatient/EditTreatmentPlanPatient/EditTreatmentPlanPatient";
+import DocumentPatientTreatment from "./DocumentPatientTreatmentPlan/DocumentPatientTreatmentPlan";
+import CreateTreatmentPatient from "./TreatmentsPatient/CreateTreatmentPatient/CreateTreatmentPatient";
+import EditTreatmentPatient from "./TreatmentsPatient/EditTreatmentPatient/EditTreatmetnPatient";
 
 
 const App = () => {
@@ -120,6 +123,7 @@ const App = () => {
                 document.documentElement.style.setProperty("--over-difference-color-3", "linear-gradient(135deg, rgba(125, 125, 255, 0.18), rgba(125, 125, 255, .45))");
                 document.documentElement.style.setProperty("--error-color", "crimson");
                 document.documentElement.style.setProperty("--success-color", "#589858");
+                document.documentElement.style.setProperty("--warning-color", "#ff9966");
                 document.documentElement.style.setProperty("--selected-color", "rgba(96, 61, 128, .973)");
                 document.body.classList.add("light");
             }
@@ -199,6 +203,9 @@ const App = () => {
                                 <Route path="edit-diagnostic-patient/:id/:diagnosticId" element={<EditDiagnosticPatient data={data} />} />
                                 <Route path="create-treatment-plan-patient/:id" element={<CreateTreatmentPlanPatient data={data} />} />
                                 <Route path="edit-treatment-plan-patient/:id/:treatmentPlanId" element={<EditTreatmentPlanPatient data={data} />} />
+                                <Route path="document-treatment-plan-patient/:id/:treatmentPlanId" element={<DocumentPatientTreatment data={data} />} />
+                                <Route path="create-treatment-patient/:id" element={<CreateTreatmentPatient data={data} />} />
+                                <Route path="edit-treatment-patient/:id/:treatmentId" element={<EditTreatmentPatient data={data} />} />
                             </>
                         ) : (
                             <>

@@ -17,11 +17,11 @@ const DocumentPatientTreatment = ({ data : currData }) => {
 
     const { id, treatmentPlanId } = useParams();
     const location = useLocation();
-    const treatmentPlanData = useMemo(() => {
+    const treatmentPlan = useMemo(() => {
         return currData.organisation.treatments_plan_patients.find(treatmentPlan => treatmentPlan._id === treatmentPlanId);
     }, []);
 
-    const patientId = treatmentPlanData.patientId;
+    const patientId = treatmentPlan.patientId;
     const patientData = useMemo(() => {
         return currData.organisation.patients.find(patient => patient._id === patientId);
     }, []);
@@ -42,13 +42,13 @@ const DocumentPatientTreatment = ({ data : currData }) => {
 
 
     useEffect(() => {
-        if (!treatmentPlanData || initialize) return;
+        if (!treatmentPlan || initialize) return;
    
 
 
         setInitialize(true);
   
-    }, [treatmentPlanData]);
+    }, [treatmentPlan]);
 
 
     useEffect(() => {
@@ -62,7 +62,7 @@ const DocumentPatientTreatment = ({ data : currData }) => {
 
         TEETH.forEach(async tooth => {
             try {
-                const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/get-tooth-image-initial-status/${data.organisation._id}/${param?.id}/${tooth}`, options);
+                const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/get-tooth-image-initial-status/${data.organisation._id}/${id}/${tooth}`, options);
                 const response = await request.json();
                 console.log(response);
                 if (response.success) setToothImage(currImages => {
@@ -87,7 +87,7 @@ const DocumentPatientTreatment = ({ data : currData }) => {
 
         TEETH_KIDS_NUMBERS.forEach(async (tooth, idx) => {
             try {
-                const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/get-tooth-image-initial-status/${data.organisation._id}/${param?.id}/${tooth}`, options);
+                const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/get-tooth-image-initial-status/${data.organisation._id}/${id}/${tooth}`, options);
                 const response = await request.json();
                 
                 if (response.success) setToothImageInitialStatusKids(currImages => {
@@ -155,8 +155,112 @@ const DocumentPatientTreatment = ({ data : currData }) => {
                 <Document>
                 <Page size="A4"> 
                     <View style={{ width: "90%", marginHorizontal: "auto" }}>
-                        <Text style={{ textAlign: "center" }}></Text>
-                    
+                        <Text style={{ textAlign: "center" }}>{cookies?.language === "en" ? "Treatment Plan" : "Plan de tratament"}</Text>
+                        <Text>Pacient: {patientData.firstname} {patientData.lastname}</Text>
+                        <Text style={{ textAlign: "center" }}>{new Date(treatmentPlan.date).getDate() < 10 ? `0${new Date(treatmentPlan.date).getDate()}` : new Date(treatmentPlan.date).getDate()}.{new Date(treatmentPlan.date).getMonth() + 1 < 10 ? `0${new Date(treatmentPlan.date).getMonth() + 1}` : new Date(treatmentPlan.date).getMonth() + 1}.{new Date(treatmentPlan.date).getFullYear()}</Text>
+
+                        <View>
+                            <Text style={{ color: "var(--contrast-color)" }}>{cookies?.language === "en" ? "Initial Status" : "Status initial"}</Text>
+                            <View style={{ flexDirection: "row", flex: 1 }}>
+                                {TEETH.map((tooth, idx) => {
+                                    if (idx >= TEETH.length / 2) return null;
+                                    return (
+                                        <View>
+                                            <Text>{tooth}</Text>
+                                            <Image source={`${process.env.REACT_APP_BACKEND_URL}/teeth/pictograme_terminate_dinti/${tooth}/${tooth}${toothImage[tooth] || ""}.png`} />
+                                        </View>
+                                    );
+                                })}
+                            </View>
+
+                            <View style={{ flexDirection: "row", flex: 1 }}>
+                                {TEETH.map((tooth, idx) => {
+                                    if (idx < TEETH.length / 2) return null;
+                                    return (
+                                        <View>
+                                            <Image source={`${process.env.REACT_APP_BACKEND_URL}/teeth/pictograme_terminate_dinti/${tooth}/${tooth}${toothImage[tooth] || ""}.png`} />
+                                            <Text>{tooth}</Text>
+                                        </View>
+                                    );
+                                })}
+                            </View>
+
+                            <View style={{ flexDirection: "row", flex: 1 }}>
+                                {TEETH_KIDS.map((tooth, idx) => {
+                                    if (idx >= TEETH_KIDS.length / 2) return null;
+                                    return (
+                                        <View>
+                                            <Text>{TEETH_KIDS_NUMBERS[idx]}</Text>
+                                            <Image source={`${process.env.REACT_APP_BACKEND_URL}/teeth/pictograme_terminate_dinti/${tooth}/${tooth}${toothImageInitialStatusKids[tooth] || ""}.png`} />
+                                        </View>
+                                    );
+                                })}
+                            </View>
+
+                            <View style={{ flexDirection: "row", flex: 1 }}>
+                                {TEETH_KIDS.map((tooth, idx) => {
+                                    if (idx < TEETH_KIDS.length / 2) return null;
+                                    return (
+                                        <View>
+                                            <Image source={`${process.env.REACT_APP_BACKEND_URL}/teeth/pictograme_terminate_dinti/${tooth}/${tooth}${toothImageInitialStatusKids[tooth] || ""}.png`} />
+                                            <Text>{TEETH_KIDS_NUMBERS[idx]}</Text>
+                                        </View>
+                                    );
+                                })}
+                            </View>
+                            
+                        </View>
+
+                        <View>
+                            <Text style={{ color: "var(--contrast-color)" }}>{cookies?.language === "en" ? "Final Status" : "Status Final"}</Text>
+                            <View style={{ flexDirection: "row", flex: 1 }}>
+                                {TEETH.map((tooth, idx) => {
+                                    if (idx >= TEETH.length / 2) return null;
+                                    return (
+                                        <View>
+                                            <Text>{tooth}</Text>
+                                            <Image source={`${process.env.REACT_APP_BACKEND_URL}/teeth/pictograme_terminate_dinti/${tooth}/${tooth}${toothImageCurrentStatus[tooth] || ""}.png`} />
+                                        </View>
+                                    );
+                                })}
+                            </View>
+
+                            <View style={{ flexDirection: "row", flex: 1 }}>
+                                {TEETH.map((tooth, idx) => {
+                                    if (idx < TEETH.length / 2) return null;
+                                    return (
+                                        <View>
+                                            <Image source={`${process.env.REACT_APP_BACKEND_URL}/teeth/pictograme_terminate_dinti/${tooth}/${tooth}${toothImageCurrentStatus[tooth] || ""}.png`} />
+                                            <Text>{tooth}</Text>
+                                        </View>
+                                    );
+                                })}
+                            </View>
+
+                            <View style={{ flexDirection: "row", flex: 1 }}>
+                                {TEETH_KIDS.map((tooth, idx) => {
+                                    if (idx >= TEETH_KIDS.length / 2) return null;
+                                    return (
+                                        <View>
+                                            <Text>{TEETH_KIDS_NUMBERS[idx]}</Text>
+                                            <Image source={`${process.env.REACT_APP_BACKEND_URL}/teeth/pictograme_terminate_dinti/${tooth}/${tooth}${toothImageCurrentStatusKids[tooth] || ""}.png`} />
+                                        </View>
+                                    );
+                                })}
+                            </View>
+
+                            <View style={{ flexDirection: "row", flex: 1 }}>
+                                {TEETH_KIDS.map((tooth, idx) => {
+                                    if (idx < TEETH_KIDS.length / 2) return null;
+                                    return (
+                                        <View>
+                                            <Image source={`${process.env.REACT_APP_BACKEND_URL}/teeth/pictograme_terminate_dinti/${tooth}/${tooth}${toothImageCurrentStatusKids[tooth] || ""}.png`} />
+                                            <Text>{TEETH_KIDS_NUMBERS[idx]}</Text>
+                                        </View>
+                                    );
+                                })}
+                            </View>
+                        </View>
                     </View>
                 </Page>
                        

@@ -405,8 +405,13 @@ const EditTreatmentPlanPatient = ({ data }) => {
     }, [totalValue]);
 
 
-    const handleChanges = () => {
-
+    const handleChanges = (idx, values) => {
+        setTeethSurfacesValue(currTeethSurfaces => {
+            return currTeethSurfaces.map((teethSurface, currIdx) => {
+                if (currIdx !== idx) return teethSurface;
+                return values;
+            })
+        });
     };
 
     useEffect(() => {
@@ -764,7 +769,7 @@ const EditTreatmentPlanPatient = ({ data }) => {
 
                                 <div className="input">
                                     <p className="title">{cookies.language === "en" ? "Teeth Surfaces" : "Suprafete Dinti"}</p>
-                                    <MultiSelect options={currentToothSurfaces} handleChanges={handleChanges} defaultValue={[]} width={"100%"} />
+                                    <MultiSelect options={currentToothSurfaces} handleChanges={(values) => handleChanges(idx, values)} defaultValue={[]} width={"100%"} />
                                 </div>
                             
 

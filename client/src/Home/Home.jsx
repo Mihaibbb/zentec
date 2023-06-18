@@ -1,3 +1,4 @@
+import { useCallback, useLayoutEffect, useState, useEffect, lazy, useRef } from 'react';
 import { useCookies } from 'react-cookie';
 import HeaderHome from '../Components/Header_Home/Header_Home';
 import './Home.css';
@@ -9,11 +10,9 @@ import { faWhatsapp } from "@fortawesome/free-brands-svg-icons"
 import iphoneMockup from "../imgs/iphone_mockup.webp";
 //import macbookMockup from "../imgs/mockup_macbook_test.png";
 import Footer from '../Components/Footer_Home/Footer';
-import { useCallback, useLayoutEffect, useState } from 'react';
-import { useRef } from 'react';
+
 import zenAnimation from "../imgs/Zentec_Animation.mp4";
 import zenAnimationMobile from "../imgs/Zentec_Animation_Mobile.mp4";
-import { useEffect } from 'react';
 import bell3d from "../imgs/bell3d.png";
 import backup3d from "../imgs/backup3d.png";
 import calendar3d from "../imgs/calendar3d.png";
@@ -23,7 +22,6 @@ import doctorVideo from "../imgs/videos/doctor.mp4";
 import patientVideo from "../imgs/videos/pacient.mp4";
 import doctorScheduleVideo from "../imgs/videos/program_doctori.mp4";
 import appointmentVideo from "../imgs/videos/programare.mp4";
-import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const Home = ({ data }) => {
@@ -127,20 +125,17 @@ const Home = ({ data }) => {
     return !videoEnded ? (
         <div style={{ width: "100%", minHeight: "100vh", display: "flex", justifyContent: "center", alignItems: "center" }}>
             <video
-            src={currentVideoSource}
-            controls={false}
-            autoPlay
-            playsInline
-            onEnded={handleVideoEnded}
-            onCanPlay={startVideo}
-            ref={videoRef}
-            muted
-            style={{ width: "100%", height: "100%" }}
-        
+                src={currentVideoSource}
+                controls={false}
+                autoPlay
+                playsInline
+                onEnded={handleVideoEnded}
+                onCanPlay={startVideo}
+                ref={videoRef}
+                muted
+                style={{ width: "100%", height: "100%" }}
             />
         </div>
-      
-        
     ) : (
         <div className="home-container">
             <HeaderHome data={data} activePage="home"/>
@@ -165,7 +160,7 @@ const Home = ({ data }) => {
                 <div className="block-2">
                     {/* Videoclip cu prezentare Zentec / 3 ecrane laptop, mobil, tableta cu screenshot din aplicatie */}
 
-                    <img src={mockup} className="mockup" alt="zentec on all devices" width={100} height="auto" />
+                    <img loading='lazy' src={mockup} className="mockup" alt="zentec on all devices" width={100} height="auto" />
                 </div>
 
                 <div className="block-3">

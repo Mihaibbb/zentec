@@ -2019,7 +2019,11 @@ exports.createPatientTreatment = async (req, res) => {
     const { organisationId, treatmentPlanId, treatmentId, doctorId, patientId, status, teeth, teethSurfaces, date, totalPrice, totalNegotiated, materialPrice, notes } = req.body;
 
     try {
-        await db.query("INSERT INTO ?? (treatmentId, treatmentPlanId, doctorId, patientId, status, teeth, teethSurfaces, date, totalPrice, totalNegotiated, materialPrice, notes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [`${process.env.DB_PREFIX}org_${organisationId}.treatments_patients`, treatmentId, treatmentPlanId, doctorId, patientId, status, JSON.stringify(teeth), teethSurfaces, new Date(date), totalPrice, totalNegotiated, materialPrice, notes]);
+        const treatmentsPatients = await db.query("SELECT * FROM ??", [`${process.env.DB_PREFIX}org_${organisationId}.treatments_patients`]);
+        let id = generateId(25);
+        while (inArrId(treatmentsPatients, id, "id")) id = generateId(25);
+        
+        await db.query("INSERT INTO ?? (id, treatmentId, treatmentPlanId, doctorId, patientId, status, teeth, teethSurfaces, date, totalPrice, totalNegotiated, materialPrice, notes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [`${process.env.DB_PREFIX}org_${organisationId}.treatments_patients`, id, treatmentId, treatmentPlanId, doctorId, patientId, status, JSON.stringify(teeth), teethSurfaces, new Date(date), totalPrice, totalNegotiated, materialPrice, notes]);
         res.status(200).json({ success: true });
     } catch (e) {
         console.log(e);
@@ -2090,7 +2094,7 @@ exports.searchPatientTreatment = async (req, res) => {
 
         const filteredTreatments = results.filter(result => result !== null);
         if (!filteredTreatments || !filteredTreatments.length) return res.status(200).json({ success: false, message: { en: "No results found!", ro: "Nu a fost gasit niciun rezultat!" } });
-        res.status(200).json({ success: true, treatmentPlans: filteredTreatments });
+        res.status(200).json({ success: true, treatments: filteredTreatments });
 
     } catch (e) {
         console.log(e);

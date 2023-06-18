@@ -82,6 +82,13 @@
    font-family: 'Inter';
    color: var(--text-color);
    padding-left: 1rem;
+   border: 2px solid transparent;
+   transition: all 350ms ease-in-out;
+}
+
+.form .input:not(.no-bg) input:focus
+{
+    border: 2px solid var(--contrast-color);
 }
 
 .form .input:not(.no-bg) .MuiAutocomplete-root input
@@ -136,6 +143,13 @@ body.light .form .input:not(.no-bg) .MuiAutocomplete-root input
     padding: 1rem;
     font-size: 16px;
     max-width: 350px;
+    border: 2px solid transparent;
+    transition: all 350ms ease-in-out;
+}
+
+.form .input textarea:focus 
+{
+    border: 2px solid var(--contrast-color);
 }
 
 .form button.confirm-button

@@ -386,6 +386,16 @@ body.light .content .patients-container .row
     border-radius: 14px;
 }
 
+.content .patients-container .row .column .status-icon
+{
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    padding: 8px;
+    color: rgba(255, 255, 255, .85);
+    
+}
+
 body.light .content .patients-container .row .column .options-container 
 {
     background: var(--over-difference-color-3);
