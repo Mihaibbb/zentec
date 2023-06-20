@@ -196,7 +196,7 @@ const CreateTreatmentPatient = ({ data }) => {
                 totalNegotiated: totalNegotiated,
                 materialPrice: materialPrice,
                 notes: notes,
-                date: new Date(date)
+                date: new Date(date),
             })
         };
 

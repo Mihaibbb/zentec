@@ -206,7 +206,8 @@ const CreateTreatmentPlanPatient = ({ data }) => {
                 notes: notes[idx],
                 name: treatmentNameValue[idx],
                 totalNegotiated: totalNegotiatedValue[idx],
-                total: totalValue[idx]
+                total: totalValue[idx],
+                treatmentPicture: data.organisation.treatments.find(treatment => treatment._id === currTreatmentValue)?.picture || "dinte.png"
             });
         });
         
@@ -226,7 +227,8 @@ const CreateTreatmentPlanPatient = ({ data }) => {
                 totalPrice: total, 
                 totalNegotiated: totalNegotiated, 
                 initialState: initialStatusValue, 
-                date: new Date(dateValue)
+                date: new Date(dateValue),
+                
             })
         };
 

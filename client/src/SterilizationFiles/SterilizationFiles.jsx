@@ -3,17 +3,20 @@ import React, { useEffect, useMemo, useState } from "react";
 import ReactDOM from "react-dom";
 import {
   PDFViewer,
-  Image,
   Page,
   Text,
   View,
-  Document
+  Document,
+  StyleSheet,
+  Font
 } from "@react-pdf/renderer";
 import { useLocation, useParams } from "react-router-dom";
 
 
 
 const SterilizationFiles = ({ data : currData }) => {
+
+    // Font.register({ family: "Source-Sans-Pro", src:  })
 
     const { id } = useParams();
     const location = useLocation();
@@ -25,6 +28,12 @@ const SterilizationFiles = ({ data : currData }) => {
 
     const sterilizationAssistant = useMemo(() => currData.organisation.assistants.find((assistant => assistant._id === sterilizationData.assistant)), [location]);
     
+    const styles = StyleSheet.create({
+      boldText: {
+        fontSize: 10,
+        fontWeight: 700
+      }
+    });
 
     const [data, setData] = useState([]);
     const [blobs, setBlobs] = useState([]);
@@ -105,14 +114,14 @@ const SterilizationFiles = ({ data : currData }) => {
 
                   <View 
                     style={{
-                         display: "flex",
+                        display: "flex",
                         flexDirection: "row", 
                         alignItems: "center", 
                         marginLeft: 3.5, 
                         marginTop: 5
                     }}>
                     <Text style={{ fontSize: 10 }}>Instrument: </Text>
-                    <Text style={{ fontSize: 10, fontWeight: 700 }}>{instrument}</Text>
+                    <Text style={styles.boldText}>{instrument}</Text>
                   </View>
 
                   <View 
@@ -266,6 +275,8 @@ const SterilizationFiles = ({ data : currData }) => {
         </div>
     ) : <h1>Hello</h1>;
 };
+
+
 
 
 export default SterilizationFiles;

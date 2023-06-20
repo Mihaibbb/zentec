@@ -203,7 +203,7 @@ const App = () => {
                                 <Route path="edit-diagnostic-patient/:id/:diagnosticId" element={<EditDiagnosticPatient data={data} />} />
                                 <Route path="create-treatment-plan-patient/:id" element={<CreateTreatmentPlanPatient data={data} />} />
                                 <Route path="edit-treatment-plan-patient/:id/:treatmentPlanId" element={<EditTreatmentPlanPatient data={data} />} />
-                                <Route path="document-treatment-plan-patient/:id/:treatmentPlanId" element={<DocumentPatientTreatment data={data} />} />
+                                <Route path="document-patient-treatment-plan/:id/:treatmentPlanId" element={<DocumentPatientTreatment data={data} />} />
                                 <Route path="create-treatment-patient/:id" element={<CreateTreatmentPatient data={data} />} />
                                 <Route path="edit-treatment-patient/:id/:treatmentId" element={<EditTreatmentPatient data={data} />} />
                             </>

@@ -1,4 +1,4 @@
-import { faAddressBook, faAddressCard, faAngleLeft, faCalendar, faCheck, faCity, faDeleteLeft, faEllipsis, faEnvelope, faIdBadge, faList, faMars, faMinus, faNoteSticky, faPhone, faPlus, faQrcode, faSearch, faTimes, faTooth, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faAddressBook, faAddressCard, faAngleLeft, faCalendar, faCheck, faCity, faDeleteLeft, faEllipsis, faEnvelope, faFilePdf, faIdBadge, faList, faMars, faMinus, faNoteSticky, faPhone, faPlus, faQrcode, faSearch, faTimes, faTooth, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState, useEffect, useRef, useMemo, useLayoutEffect } from "react";
 import { useCookies } from "react-cookie";
@@ -107,6 +107,7 @@ const PatientAccount = ({ data }) => {
     const gendersRef = useRef([]);
     const currTeethTypeRef = useRef([]);
     const optionsTreatmentsRef = useRef([]);
+    const optionsTreatmentPlansRef = useRef([]);
 
     const toggleGender = (idx) => {
         gendersRef.current[idx].classList.toggle("active");
@@ -1155,17 +1156,24 @@ const PatientAccount = ({ data }) => {
                                 </div>
 
                                 <div className="column pressable">
-                                    <FontAwesomeIcon className="column-icon" icon={faEllipsis} onClick={() => triggerOptions(idx, optionsTreatmentsRef.current)}/>
-                                    <div className="options-container" ref={ref => optionsTreatmentsRef.current[idx] = ref}>
-                                        <div className="option" onClick={async () => optionsTreatmentsRef.current[idx].classList.contains("show") ? await removeTreatmentPlan(treatmentPlan._id) : null}>
-                                            <FontAwesomeIcon icon={faTimes} className="option-icon" /> 
-                                            <p>{cookies.language === "en" ? "Remove" : "Sterge"}</p>
-                                        </div>
+                                    <FontAwesomeIcon className="column-icon" icon={faEllipsis} onClick={() => triggerOptions(idx, optionsTreatmentPlansRef.current)}/>
+                                    <div className="options-container" ref={ref => optionsTreatmentPlansRef.current[idx] = ref}>
 
                                         <div className="option" onClick={() => navigation(`/edit-treatment-plan-patient/${param?.id}/${treatmentPlan._id}`, { state: { treatmentPlan: treatmentPlan } })}>
                                             <FontAwesomeIcon icon={faUser} className="option-icon" />
                                             <p>{cookies.language === "en" ? "Edit" : "Editeaza"}</p>
                                         </div>
+                                        
+                                        <div className="option" onClick={() => navigation(`/document-patient-treatment-plan/${param?.id}/${treatmentPlan._id}`, { state: {treatmentPlan: treatmentPlan} })}>
+                                            <FontAwesomeIcon icon={faFilePdf} className="option-icon" />
+                                            <p>{cookies?.language === "en" ? "Document" : "Document"}</p>
+                                        </div>
+
+                                        <div className="option" onClick={async () => optionsTreatmentPlansRef.current[idx].classList.contains("show") ? await removeTreatmentPlan(treatmentPlan._id) : null}>
+                                            <FontAwesomeIcon icon={faTimes} className="option-icon" /> 
+                                            <p>{cookies.language === "en" ? "Remove" : "Sterge"}</p>
+                                        </div>
+
                                     </div>
                                 </div>
 

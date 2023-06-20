@@ -247,6 +247,11 @@ const SINGLE_DIAGNOSTICS = [
         originalName: 'pulpita.png',
         fileName: '_pulpita'
     },
+
+    {
+        originalName: 'proteza.png',
+        fileName: '_proteza'
+    },
     
 
     {

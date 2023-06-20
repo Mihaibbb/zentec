@@ -203,7 +203,8 @@ const EditTreatmentPlanPatient = ({ data }) => {
                 notes: notes[idx],
                 name: treatmentNameValue[idx],
                 totalNegotiated: totalNegotiatedValue[idx],
-                total: totalValue[idx]
+                total: totalValue[idx],
+                treatmentPicture: data.organisation.treatments.find(treatment => treatment._id === currTreatmentValue)?.picture || "dinte.png"
             });
         });
         
@@ -224,7 +225,7 @@ const EditTreatmentPlanPatient = ({ data }) => {
                 totalNegotiated: totalNegotiated, 
                 initialState: initialStatusValue, 
                 date: new Date(dateValue),
-                treatmentPlanId: param?.treatmentPlanId
+                treatmentPlanId: param?.treatmentPlanId,
             })
         };
 

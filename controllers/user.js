@@ -461,7 +461,7 @@ exports.createPatient = async (req, res) => {
         res.status(200).json({ success: true, message: { en: "Patient added successfully!", ro: "Pacient a fost adaugat cu succes!" } });
     } catch (e) {
         console.log(e);
-        res.status(404).json({ success: false, message: "An error occured." });
+        res.status(404).json({ success: false, message: "An error occured.", error: e });
     }
 };
 
@@ -2071,7 +2071,7 @@ exports.searchPatientTreatment = async (req, res) => {
         let sql = "SELECT * FROM ?? WHERE patientId = ?";
         const treatments = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.treatments_patients`, patientId]);
 
-        const results = await Promise.all(await treatments && await treatments.length > 0 && await treatments.map(async (treatment, idx) => {
+        const results = await treatments && await treatments.length > 0 && await Promise.all(await treatments.map(async (treatment, idx) => {
             const doctors = await db.query("SELECT * FROM ?? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.doctors`, treatment.doctorId]);
             const doctorName = `${doctors[0].firstName} ${doctors[0].lastName}`;
             const doctorNameReversed = `${doctors[0].lastName} ${doctors[0].firstName}`;
@@ -2831,54 +2831,75 @@ exports.getToothImageCurrentStatus = async (req, res) => {
         const diagnostics = JSON.parse(patient.initial_status);
         const filteredDiagnostics = diagnostics.filter(diagnostic => diagnostic.teeth.includes(toothNumber));
         const treatmentPlans = await db.query("SELECT * FROM ?? WHERE patientId = ?", [`${process.env.DB_PREFIX}org_${organisationId}.treatments_patients`, patientId]);
-        
-        const treatments = treatmentPlans.map(treatmentPlan => {
+        const initialTreatments = await db.query("SELECT * FROM ??", [`${process.env.DB_PREFIX}org_${organisationId}.treatments`]);
+        const treatments = treatmentPlans.filter(treatmentPlan => {
             return treatmentPlan.status.toLowerCase() === 'realizat' || treatmentPlan.status.toLowerCase() === 'finished';
         });
 
-        const filteredTreatments = treatments?.filter(treatment => treatment?.teeth?.includes(toothNumber));
+        const filteredTreatments = treatments?.filter(treatment => JSON.parse(treatment?.teeth)?.includes(toothNumber));
+
         if (filteredTreatments?.length === 0 && filteredDiagnostics?.length === 0) 
             return res.status(200).json({ success: true, tooth: '' });
 
-        if (filteredTreatments.length === 0)            
+        if (filteredTreatments.length === 0) {
             return res.status(200).json({ success: true, tooth: await getToothInitialStatus(organisationId, patientId, toothNumber) });
+        }        
 
         // Coroana extractie
 
-        if (filteredDiagnostics.find(diagnostic => diagnostic.diagnosticPicture === 'extractie.png') && filteredTreatments.find(treatment => treatment.treatmentPicture === 'coroana.png'))
+        if (filteredDiagnostics.find(diagnostic => diagnostic.diagnosticPicture === 'extractie.png') && filteredTreatments.find(treatment => {
+            const currentTreatment = initialTreatments.find(trt => trt._id === treatment.treatmentId);
+            return currentTreatment?.picture === 'coroana.png';
+        }))
             return res.status(200).json({ success: true, tooth: '_coroana_extractie' });
 
-        if (filteredDiagnostics.find(diagnostic => diagnostic.diagnosticPicture === 'coroana.png') && filteredTreatments.find(treatment => treatment.treatmentPicture === 'extractie.png'))
+        if (filteredDiagnostics.find(diagnostic => diagnostic.diagnosticPicture === 'coroana.png') && filteredTreatments.find(treatment => {
+            const currentTreatment = initialTreatments.find(trt => trt._id === treatment.treatmentId);
+            return currentTreatment?.picture === 'extractie.png'
+        }))
             return res.status(200).json({ success: true, tooth: '_coroana_extractie' });
 
         // Extractie
 
-        if (filteredTreatments.find(treatment => treatment.treatmentPicture === 'extractie.png')) 
-            return res.status(200).json({ success: true, tooth: '_extractie' });
+        if (filteredTreatments.find(treatment => {
+            const currentTreatment = initialTreatments.find(trt => trt._id === treatment.treatmentId);
+            return currentTreatment?.picture === 'extractie.png';
+        })) return res.status(200).json({ success: true, tooth: '_extractie' });
 
         // Coroana implant
 
-        if (filteredTreatments.find(treatment => treatment.treatmentPicture === 'implant.png') && filteredDiagnostics.find(diagnostic => diagnostic.diagnosticPicture === 'coroana.png'))
+        if (filteredTreatments.find(treatment => {
+            const currentTreatment = initialTreatments.find(trt => trt._id === treatment.treatmentId);
+            return currentTreatment?.picture === 'implant.png';
+        }) && filteredDiagnostics.find(diagnostic => diagnostic.diagnosticPicture === 'coroana.png'))
             return res.status(200).json({ success: true, tooth: '_coroana_implant' });
 
-        if (filteredTreatments.find(treatment => treatment.treatmentPicture === 'coroana.png') && filteredDiagnostics.find(diagnostic => diagnostic.diagnosticPicture === 'implant.png'))
+        if (filteredTreatments.find(treatment => {
+            const currentTreatment = initialTreatments.find(trt => trt._id === treatment.treatmentId);
+            return currentTreatment?.picture === 'coroana.png';
+        }) && filteredDiagnostics.find(diagnostic => diagnostic.diagnosticPicture === 'implant.png'))
             return res.status(200).json({ success: true, tooth: '_coroana_implant' });
 
         // Implant
             
-        if (filteredTreatments.find(treatment => treatment.treatmentPicture === 'implant.png')) 
+        if (filteredTreatments.find(treatment => {
+            const currentTreatment = initialTreatments.find(trt => trt._id === treatment.treatmentId);
+            return currentTreatment?.picture === 'implant.png';
+        })) 
             return res.status(200).json({ success: true, tooth: '_implant' });
 
         const lastTreatment = filteredTreatments[filteredTreatments?.length - 1];
-        const filteredCompatibleDiagnostics = COMPATIBLE_DIAGNOSTICS.filter(diagnostic => diagnostic.some(obj => obj?.originalName === lastTreatment?.treatmentPicture));
+        const lastTreatmentPicture = initialTreatments.find(trt => trt._id === lastTreatment.treatmentId)?.picture;
+        const filteredCompatibleDiagnostics = COMPATIBLE_DIAGNOSTICS.filter(diagnostic => diagnostic.some(obj => obj?.originalName === lastTreatmentPicture));
 
         for (let treatmentIdx = filteredTreatments.length - 2; treatmentIdx >= 0; treatmentIdx--) {
             const currentTreatment = filteredTreatments[treatmentIdx];
-            const foundTreatment = filteredCompatibleDiagnostics.find(diagnostic => diagnostic?.originalName === currentTreatment?.treatmentPicture);
+            const currentTreatmentPicture = initialTreatments.find(trt => trt._id === currentTreatment.treatmentId)?.picture;
+            const foundTreatment = filteredCompatibleDiagnostics.find(diagnostic => diagnostic?.originalName === currentTreatmentPicture);
             
-            if (foundTreatment) return res.status(200).json({ success: true, tooth: `${SINGLE_DIAGNOSTICS.find(diagnostic => diagnostic?.originalName === lastTreatment?.treatmentPicture)?.fileName || ""}${foundTreatment?.fileName || ""}` });
+            if (foundTreatment) return res.status(200).json({ success: true, tooth: `${SINGLE_DIAGNOSTICS.find(diagnostic => diagnostic?.originalName === lastTreatmentPicture)?.fileName || ""}${foundTreatment?.fileName || ""}` });
         }
-        return res.status(200).json({ success: true, tooth: `${SINGLE_DIAGNOSTICS.find(diagnostic => diagnostic?.originalName === lastTreatment?.treatmentPicture)?.fileName || ""}`});
+        return res.status(200).json({ success: true, tooth: `${SINGLE_DIAGNOSTICS.find(diagnostic => diagnostic?.originalName === lastTreatmentPicture)?.fileName || ""}`});
 
     } catch (e) {
         console.log(e);
@@ -2901,12 +2922,12 @@ exports.getToothImageTreatmentPlan = async (req, res) => {
         const treatmentPlans = await db.query("SELECT * FROM ?? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.treatments_plan_patients`, treatmentPlanId]);
         const treatmentPlan = treatmentPlans[0];
         const treatments = JSON.parse(treatmentPlan.treatments);
-        const filteredTreatments = treatments.find(treatment => treatment.teeth.includes(toothNumber));
+        const filteredTreatments = treatments.filter(treatment => treatment.teeth.includes(toothNumber));
         if (filteredTreatments.length === 0 && filteredDiagnostics.length === 0) 
             return res.status(200).json({ success: true, tooth: '' });
 
         if (filteredTreatments.length === 0)            
-            return res.status(200).json({ success: true, tooth: getToothInitialStatus(organisationId, patientId, toothNumber) });
+            return res.status(200).json({ success: true, tooth: await getToothInitialStatus(organisationId, patientId, toothNumber) });
 
 
         // Coroana extractie
@@ -2938,14 +2959,14 @@ exports.getToothImageTreatmentPlan = async (req, res) => {
 
         const lastTreatment = filteredTreatments[filteredTreatments?.length - 1];
         const filteredCompatibleDiagnostics = COMPATIBLE_DIAGNOSTICS.filter(diagnostic => diagnostic.some(obj => obj?.originalName === lastTreatment?.treatmentPicture));
-
+        console.log("Treatment plan", toothNumber, filteredCompatibleDiagnostics, lastTreatment);
         for (let treatmentIdx = filteredTreatments.length - 2; treatmentIdx >= 0; treatmentIdx--) {
             const currentTreatment = filteredTreatments[treatmentIdx];
             const foundTreatment = filteredCompatibleDiagnostics.find(diagnostic => diagnostic?.originalName === currentTreatment?.treatmentPicture);
-            if (foundTreatment) return res.status(200).json({ success: true, tooth: `${SINGLE_DIAGNOSTICS.find(diagnostic => diagnostic?.originalName === lastTreatment?.treatmentPicture)?.fileName}${foundTreatment?.fileName}` });
+            if (foundTreatment) return res.status(200).json({ success: true, tooth: `${SINGLE_DIAGNOSTICS.find(diagnostic => diagnostic?.originalName === lastTreatment?.treatmentPicture)?.fileName || ""}${foundTreatment?.fileName || ""}` });
         }
 
-        return res.status(200).json({ success: true, tooth: `${SINGLE_DIAGNOSTICS.find(diagnostic => diagnostic?.originalName === lastTreatment?.treatmentPicture)?.fileName}`});
+        return res.status(200).json({ success: true, tooth: `${SINGLE_DIAGNOSTICS.find(diagnostic => diagnostic?.originalName === lastTreatment?.treatmentPicture)?.fileName || ""}`});
 
     } catch (e) {
         console.log(e);
@@ -3033,7 +3054,7 @@ const getToothInitialStatus = async (organisationId, patientId, toothNumber) => 
         for (let diagnosticIdx = toothDiagnostics.length - 2; diagnosticIdx >= 0; diagnosticIdx--) {
             const currentDiagnostic = toothDiagnostics[diagnosticIdx];
             const foundDiagnostic = filteredCompatibleDiagnostics.find(diagnostic => diagnostic?.originalName === currentDiagnostic?.diagnosticPicture);
-            if (foundDiagnostic) return `${SINGLE_DIAGNOSTICS.find(diagnostic => diagnostic?.originalName === lastDiagnostic?.diagnosticPicture)?.fileName}${foundDiagnostic?.fileName}`;
+            if (foundDiagnostic) return `${SINGLE_DIAGNOSTICS.find(diagnostic => diagnostic?.originalName === lastDiagnostic?.diagnosticPicture)?.fileName || ""}${foundDiagnostic?.fileName || ""}`;
         }
 
         return `${SINGLE_DIAGNOSTICS.find(diagnostic => diagnostic?.originalName === lastDiagnostic?.diagnosticPicture)?.fileName || ""}`;

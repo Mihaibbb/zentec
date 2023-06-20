@@ -221,7 +221,7 @@ const EditTreatmentPatient = ({ data }) => {
                 materialPrice: materialPrice,
                 notes: notes,
                 date: new Date(date),
-                id: treatmentId
+                id: treatmentId,
             })
         };
 
