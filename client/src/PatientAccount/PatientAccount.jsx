@@ -282,12 +282,19 @@ const PatientAccount = ({ data }) => {
     }, []);
     
     useLayoutEffect(() => {
+        if (activeOption !== 5) return;
         setPages(Math.floor(totalDiagnostics.length / perPage) + (totalDiagnostics.length % perPage !== 0 ? 1 : 0));
-    }, [totalDiagnostics]);
+    }, [totalDiagnostics, activeOption]);
 
     useLayoutEffect(() => {
+        if (activeOption !== 3) return;
         setPages(Math.floor(totalTreatmentPlans.length / perPage) + (totalTreatmentPlans.length % perPage !== 0 ? 1 : 0));
-    }, [totalTreatmentPlans]);
+    }, [totalTreatmentPlans, activeOption]);
+
+    useLayoutEffect(() => {
+        if (activeOption !== 4) return;
+        setPages(Math.floor(totalTreatments.length / perPage) + (totalTreatments.length % perPage !== 0 ? 1 : 0));
+    }, [totalTreatments, activeOption]);
 
     useEffect(() => {
         if (!birthRef.current) return;
@@ -517,9 +524,8 @@ const PatientAccount = ({ data }) => {
     
                 const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/search-diagnostic-initial-status`, options);
                 const response = await request.json();
-                console.log(response);
                 if (response.success) {
-                    console.log(response.initialStatus);
+
                     setDiagnostics(_ => {
                         return response.initialStatus.filter((__, idx) => {
                             return (idx + 1) > perPage * (currentPageDiagnostics - 1) && (idx + 1) <= perPage * currentPageDiagnostics;
@@ -555,9 +561,9 @@ const PatientAccount = ({ data }) => {
     
                 const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/search-treatment-plan`, options);
                 const response = await request.json();
-                console.log(response);
+
                 if (response.success) {
-                    console.log(response.treatmentPlans);
+
                     setTreatmentPlans(_ => {
                         return response.treatmentPlans.filter((__, idx) => {
                             return (idx + 1) > perPage * (currentPageTreatmentPlans - 1) && (idx + 1) <= perPage * currentPageTreatmentPlans;
@@ -622,7 +628,6 @@ const PatientAccount = ({ data }) => {
 
             const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/get-diagnostics-initial-status/${data.organisation._id}/${param?.id}`, options);
             const response = await request.json();
-            console.log(response);
             if (response.success) {
                 setDiagnostics(currTreatments => {
                     return response.initialStatus.filter((treatment, idx) => {
@@ -730,10 +735,6 @@ const PatientAccount = ({ data }) => {
         document.querySelector(".content").classList.add("no-navigation");
         
     }, [location]);
-
-    useEffect(() => {
-        console.log(toothImage);
-    }, [toothImage]);
 
     useEffect(() => {
         setDiagnostics(currPatients => {

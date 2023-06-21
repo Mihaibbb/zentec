@@ -22,13 +22,13 @@
     border: .5px solid var(--text-color-3);
 }
 
-.schedule .input textarea
+.schedule.treatment-plan .input textarea
 {
     width: calc(100% - 2rem);
     padding: 1rem;
 }
 
-.schedule.selected
+.schedule.treatment-plan.selected
 {
     background: var(--over-difference-color-3);
 }
@@ -50,7 +50,7 @@
     white-space: nowrap;
 }
 
-.schedule .remove-button
+.schedule.treatment-plan .remove-button
 {
     position: absolute;
     top: 10px;
@@ -63,7 +63,7 @@
     transition: all 350ms ease-in-out;
 }
 
-.schedule .remove-button:hover
+.schedule.treatment-plan .remove-button:hover
 {
     background: var(--error-color);
     border-radius: 25px;

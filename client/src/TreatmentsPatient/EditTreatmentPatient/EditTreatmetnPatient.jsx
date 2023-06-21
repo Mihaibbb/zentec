@@ -478,7 +478,7 @@ const EditTreatmentPatient = ({ data }) => {
                         </div>
 
                         <div className="input">
-                            <p>{cookies?.language === "en" ? "Pret Material" : "Material Price"}</p>
+                            <p>{cookies?.language === "en" ? "Material Price" : "Pret Material"}</p>
                             <input type="number" value={materialPrice} onChange={(e) => setMaterialPrice(e.target.value)} onBlur={() => setMaterialPrice(currValue => parseFloat(currValue).toFixed(2))} />
                         </div>
 
@@ -495,7 +495,7 @@ const EditTreatmentPatient = ({ data }) => {
 
 
                         <div className="input">
-                            <p>{cookies?.language === "en" ? "" : ""}</p>
+                            <p>{cookies?.language === "en" ? "Treatment Status" : "Status Tratament"}</p>
                             <Select 
                                 options={statusTypes.map((status, idx) => {
                                     return { value: idx, label: status };
@@ -513,7 +513,7 @@ const EditTreatmentPatient = ({ data }) => {
                         </div>
 
                         <div className="input">
-                            <p></p>
+                            <p>{cookies?.language === "en" ? "Date" : "Data"}</p>
                             <DateCustomInput initialDate={date} changeDate={(newDate) => setDate(new Date(newDate))} future={true} past={false} />
                         </div>
 

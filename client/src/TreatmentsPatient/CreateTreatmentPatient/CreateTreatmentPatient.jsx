@@ -40,7 +40,7 @@ const CreateTreatmentPatient = ({ data }) => {
     const [treatmentPlanTreatmentActive, setTreatmentPlanActive] = useState();
     const [total, setTotal] = useState("");
     const [totalNegotiated, setTotalNegotiated] = useState("");
-    const [materialPrice, setMaterialPrice] = useState("");
+    const [materialPrice, setMaterialPrice] = useState(0);
     const [treatmentType, setTreatmentType] = useState(cookies?.language === "en" ? "Treatment" : "Tratament");
     const [activeToothSurfaces, setActiveToothSurfaces] = useState(false);
     const [date, setDate] = useState(new Date());
@@ -453,7 +453,7 @@ const CreateTreatmentPatient = ({ data }) => {
                         </div>
 
                         <div className="input">
-                            <p>{cookies?.language === "en" ? "Pret Material" : "Material Price"}</p>
+                            <p>{cookies?.language === "en" ? "Material Price" : "Pret Material"}</p>
                             <input type="number" value={materialPrice} onChange={(e) => setMaterialPrice(e.target.value)} onBlur={() => setMaterialPrice(currValue => parseFloat(currValue).toFixed(2))} />
                         </div>
 

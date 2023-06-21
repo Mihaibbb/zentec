@@ -53,7 +53,7 @@ const EditTreatmentPlanPatient = ({ data }) => {
     const [errorMessages, setErrorMessages] = useState([]);
     const [toothImage, setToothImage] = useState({});
     const [toothImageCurrentStatus, setToothImageCurrentStatus] = useState({});
-    const [treatmentSelected, setTreatmentSelected] = useState();
+    const [treatmentSelected, setTreatmentSelected] = useState(0);
     const [toothImageInitialStatusKids, setToothImageInitialStatusKids] = useState({});
     const [toothImageCurrentStatusKids, setToothImageCurrentStatusKids] = useState({});
     const currTeethTypes = cookies.language === "en" ? ['Temporary', 'Permanently', 'Mix'] : ['Temporara', 'Permanenta', 'Mixta'];
@@ -164,7 +164,6 @@ const EditTreatmentPlanPatient = ({ data }) => {
         setTreatmentPriceValue(currTreatments => currTreatments.filter((_, currIdx) => currIdx !== idx));
         setTreatmentPricePerValue(currTreatments => currTreatments.filter((_, currIdx) => currIdx !== idx))
         setProfliaxionValue(currTreatments => currTreatments.filter((_, currIdx) => currIdx !== idx));
-        setTreatmentValue(currTreatments => currTreatments.filter((_, currIdx) => currIdx !== idx));
         setNotes(currTreatments => currTreatments.filter((_, currIdx) => currIdx !== idx));
         setTeethValue(currTreatments => currTreatments.filter((_, currIdx) => currIdx !== idx));
         setTeethSelected(currTreatments => currTreatments.filter((_, currIdx) => currIdx !== idx));
@@ -177,7 +176,7 @@ const EditTreatmentPlanPatient = ({ data }) => {
     const saveChanges = async () => {
         console.log(treatmentValue);
 
-        if (treatmentValue && treatmentValue.length && treatmentValue.some(treatment => treatment === "")) return;
+        if (treatmentValue && treatmentValue.length && treatmentValue.filter(treatment => treatment === "").length >= 2) return;
         console.log("past");
         const appearedTreatments = {};
         treatmentValue.forEach((treatmentId, idx) => {
@@ -193,7 +192,10 @@ const EditTreatmentPlanPatient = ({ data }) => {
 
         const currTreatments = [];
 
-        treatmentValue.forEach((currTreatmentValue, idx) => {
+        const treatmentValueFiltered = treatmentValue.filter(trt => trt !== "");
+
+
+        treatmentValueFiltered.forEach((currTreatmentValue, idx) => {
             currTreatments.push({
                 organisationId: data.organisation._id,
                 treatmentId: currTreatmentValue,
@@ -272,17 +274,18 @@ const EditTreatmentPlanPatient = ({ data }) => {
         // setNotes([]);
         // setErrorMessages([]);
         setTreatments(currTreatments => [...currTreatments, {}]);
+        console.log("here");
 
         treatments.forEach((treatment, idx) => {
             setTreatmentValue(currValues => [...currValues, treatment?.treatmentId || ""]);
             setTreatmentNameValue(currValues => [...currValues, treatment?.name || ""]);
             setTreatmentPriceValue(currValues => [...currValues, treatment?.priceValue || ""])
             setTreatmentPricePerValue(currValues => [...currValues, treatment?.pricePerValue || ""]);
-
             setProfliaxionValue(currValues => [...currValues, treatment?.profilaxionValue || false]);
             setNotes(currValue => [...currValue, treatment?.notes || ""]);
             setTeethValue(currValue => [...currValue, treatment?.teethValue || ""]);
             setTeethSelected(currValue => [...currValue, treatment?.teeth || []]);
+            setTeethValue(currValue => [...currValue, ""]);
             setTeethSurfacesValue(currValue => [...currValue, treatment?.teethSurfaces || []]);
             setTotalValue(currValue => [...currValue, treatment?.total || ""]);
             setTotalNegotiatedValue(currValue => [...currValue, treatment?.totalNegotiated || ""]);
@@ -290,6 +293,10 @@ const EditTreatmentPlanPatient = ({ data }) => {
         });
 
     }, [addedTreatment]);
+
+    useEffect(() => {
+        
+    }, []);
     
     useEffect(() => {
         setTotal(totalValue.reduce((currTotal, currValue) => currTotal + Number(currValue), 0));
@@ -297,31 +304,34 @@ const EditTreatmentPlanPatient = ({ data }) => {
     }, [totalValue, totalNegotiatedValue]);
 
     useEffect(() => {
-        if (treatmentSelected == null) return;
-        let str = "";
-        const currTeeth = teethSelected?.[treatmentSelected]?.sort((trt1, trt2) => Number(trt1) - Number(trt2));
-        currTeeth.forEach(tooth => str = str + tooth + ", ");
-        console.log(pricePerCategories?.[Number(treatmentPricePerValue?.[0])]?.toLowerCase(), teethSelected[0].length, Number(treatmentPriceValue[0]));
-        setTeethValue(currValues => {
-            return currValues.map((currValue, idx) => {
-                if (idx !== treatmentSelected) return currValue;
-                return str.slice(0, str.length - 2);
+        if (!teethSelected?.length) return;
+        treatments.forEach((trt, currIdx) => {
+            let str = "";
+            const currTeeth = teethSelected?.[currIdx]?.sort((trt1, trt2) => Number(trt1) - Number(trt2));
+            currTeeth.forEach(tooth => str = str + tooth + ", ");
+            console.log(str, teethSelected);
+            setTeethValue(currValues => {
+                return currValues.map((currValue, idx) => {
+                    if (Number(idx) !== Number(currIdx)) return currValue;
+                    return str.slice(0, str.length - 2);
+                });
+            });
+    
+            setTotalNegotiatedValue(currValues => {
+                return currValues.map((currValue, idx) => {
+                    if (pricePerCategories?.[Number(treatmentPricePerValue?.[idx])]?.toLowerCase() === "tooth" || pricePerCategories?.[Number(treatmentPricePerValue?.[idx])]?.toLowerCase() === "dinte") return teethSelected[idx].length * Number(treatmentPriceValue[idx]);
+                    return Number(treatmentPriceValue[idx]) || 0;
+                });
+            });
+    
+            setTotalValue(currValues => {
+                return currValues.map((currValue, idx) => {
+                    if (pricePerCategories?.[Number(treatmentPricePerValue?.[idx])]?.toLowerCase() === "tooth" || pricePerCategories?.[Number(treatmentPricePerValue?.[idx])]?.toLowerCase() === "dinte") return teethSelected[idx].length * Number(treatmentPriceValue[idx]);
+                    return Number(treatmentPriceValue[idx]) || 0;
+                });
             });
         });
-
-        setTotalNegotiatedValue(currValues => {
-            return currValues.map((currValue, idx) => {
-                if (pricePerCategories?.[Number(treatmentPricePerValue?.[idx])]?.toLowerCase() === "tooth" || pricePerCategories?.[Number(treatmentPricePerValue?.[idx])]?.toLowerCase() === "dinte") return teethSelected[idx].length * Number(treatmentPriceValue[idx]);
-                return Number(treatmentPriceValue[idx]) || 0;
-            });
-        });
-
-        setTotalValue(currValues => {
-            return currValues.map((currValue, idx) => {
-                if (pricePerCategories?.[Number(treatmentPricePerValue?.[idx])]?.toLowerCase() === "tooth" || pricePerCategories?.[Number(treatmentPricePerValue?.[idx])]?.toLowerCase() === "dinte") return teethSelected[idx].length * Number(treatmentPriceValue[idx]);
-                return Number(treatmentPriceValue[idx]) || 0;
-            });
-        });
+       
 
     }, [teethSelected]);
 
@@ -391,7 +401,7 @@ const EditTreatmentPlanPatient = ({ data }) => {
             
             setProfliaxionValue(currValues => [...currValues, treatment?.profilaxion || false]);
             setNotes(currValue => [...currValue, treatment?.notes || ""]);
-            // setTeethValue(currValue => [...currValue, treatment?.teeth || ""]);
+            setTeethValue(currValue => [...currValue, ""]);
             setTeethSelected(currValue => [...currValue, treatment?.teeth || []]);
             setTeethSurfacesValue(currValue => [...currValue, treatment?.teethSurfaces || []]);
             setTotalValue(currValue => [...currValue, treatment?.total || ""]);
@@ -399,11 +409,21 @@ const EditTreatmentPlanPatient = ({ data }) => {
             setErrorMessages(currValue => [...currValue, treatment?.errorMessages || ""]);
             setTreatments(currTreatments => [...currTreatments, {}]);
         });
-    }, [location]);
+    }, []);
 
     useEffect(() => {
         console.log(totalValue);
     }, [totalValue]);
+
+    useEffect(() => {
+        console.log(treatmentValue);
+    }, [treatmentValue]);
+
+
+
+    useEffect(() => {
+        console.log(treatments);
+    }, [treatments]);
 
 
     const handleChanges = (idx, values) => {
@@ -429,8 +449,9 @@ const EditTreatmentPlanPatient = ({ data }) => {
                 const response = await request.json();
                 console.log(response);
                 if (response.success) setToothImage(currImages => {
-                    currImages[tooth] = response.tooth;
-                    return currImages;
+                    return {...currImages,
+                        [tooth]: response.tooth
+                    };
                 });
             } catch (e) {
                 console.log(e);
@@ -453,8 +474,9 @@ const EditTreatmentPlanPatient = ({ data }) => {
                 const response = await request.json();
 
                 if (response.success) setToothImageCurrentStatus(currImages => {
-                    currImages[tooth] = response.tooth;
-                    return currImages;
+                    return {...currImages,
+                        [tooth]: response.tooth
+                    };
                 });
             } catch (e) {
                 console.log(e);
@@ -478,8 +500,9 @@ const EditTreatmentPlanPatient = ({ data }) => {
                 const response = await request.json();
                 
                 if (response.success) setToothImageInitialStatusKids(currImages => {
-                    currImages[TEETH_KIDS[idx]] = response.tooth;
-                    return currImages;
+                    return {...currImages,
+                        [TEETH_KIDS[idx]]: response.tooth
+                    };
                 });
             } catch (e) {
                 console.log(e);
@@ -502,8 +525,9 @@ const EditTreatmentPlanPatient = ({ data }) => {
                 const response = await request.json();
                 
                 if (response.success) setToothImageCurrentStatusKids(currImages => {
-                    currImages[TEETH_KIDS[idx]] = response.tooth;
-                    return currImages;
+                    return {...currImages, 
+                        [TEETH_KIDS[idx]]: response.tooth
+                    };
                 });
                 
             } catch (e) {

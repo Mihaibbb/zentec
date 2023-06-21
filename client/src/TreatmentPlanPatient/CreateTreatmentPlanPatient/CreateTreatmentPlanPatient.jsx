@@ -29,7 +29,7 @@ const CreateTreatmentPlanPatient = ({ data }) => {
     // const year = dateJS.getFullYear();
     // const dayNumber = dateJS.getDay();
 
-    const [treatments, setTreatments] = useState([]);
+    const [treatments, setTreatments] = useState([{}]);
     const [treatmentPlans, setTreatmentPlans] = useState(data.organisation.treatments_plan_patients.filter(plan => plan.patientId === param?.id).length);
     const [editing, setEditing] = useState(false);
     const [changes, setChanges] = useState(false);
@@ -56,7 +56,7 @@ const CreateTreatmentPlanPatient = ({ data }) => {
     const [errorMessages, setErrorMessages] = useState([]);
     const [toothImage, setToothImage] = useState({});
     const [toothImageCurrentStatus, setToothImageCurrentStatus] = useState({});
-    const [treatmentSelected, setTreatmentSelected] = useState();
+    const [treatmentSelected, setTreatmentSelected] = useState(0);
     const [toothImageInitialStatusKids, setToothImageInitialStatusKids] = useState({});
     const [toothImageCurrentStatusKids, setToothImageCurrentStatusKids] = useState({});
     const currTeethTypes = cookies.language === "en" ? ['Temporary', 'Permanently', 'Mix'] : ['Temporara', 'Permanenta', 'Mixta'];
@@ -180,23 +180,20 @@ const CreateTreatmentPlanPatient = ({ data }) => {
     const saveChanges = async () => {
         console.log(treatmentValue);
 
-        if (treatmentValue && treatmentValue.length && treatmentValue.some(treatment => treatment === "")) return;
-        console.log("past");
+        if (treatmentValue && !treatmentValue?.length) return;
         const appearedTreatments = {};
         treatmentValue.forEach((treatmentId, idx) => {
             if (!appearedTreatments[treatmentId]) appearedTreatments[treatmentId] = [idx];
             else appearedTreatments[treatmentId].push(idx);
-        }); 
+        });
 
-        for (let treatmentId in appearedTreatments) {
-            appearedTreatments[treatmentId].forEach(idx => {
+        const treatmentValueFiltered = treatmentValue.filter(trt => trt !== "");
+        if (treatmentValueFiltered && !treatmentValueFiltered?.length) return;
 
-            });
-        }
 
         const currTreatments = [];
 
-        treatmentValue.forEach((currTreatmentValue, idx) => {
+        treatmentValueFiltered.forEach((currTreatmentValue, idx) => {
             currTreatments.push({
                 organisationId: data.organisation._id,
                 treatmentId: currTreatmentValue,
@@ -210,8 +207,6 @@ const CreateTreatmentPlanPatient = ({ data }) => {
                 treatmentPicture: data.organisation.treatments.find(treatment => treatment._id === currTreatmentValue)?.picture || "dinte.png"
             });
         });
-        
-  
             
         const options = {
             method: "POST",
@@ -287,8 +282,8 @@ const CreateTreatmentPlanPatient = ({ data }) => {
             setTeethValue(currValue => [...currValue, treatment?.teethValue || ""]);
             setTeethSelected(currValue => [...currValue, treatment?.teeth || []]);
             setTeethSurfacesValue(currValue => [...currValue, treatment?.teethSurfaces || []]);
-            setTotalValue(currValue => [...currValue, treatment?.total || ""]);
-            setTotalNegotiatedValue(currValue => [...currValue, treatment?.totalNegotiated || ""]);
+            setTotalValue(currValue => [...currValue, treatment?.total || parseFloat(0).toFixed(2)]);
+            setTotalNegotiatedValue(currValue => [...currValue, treatment?.totalNegotiated || parseFloat(0).toFixed(2)]);
             setErrorMessages(currValue => [...currValue, treatment?.errorMessages || ""]);
         });
 
@@ -303,6 +298,7 @@ const CreateTreatmentPlanPatient = ({ data }) => {
         if (treatmentSelected == null) return;
         let str = "";
         const currTeeth = teethSelected?.[treatmentSelected]?.sort((trt1, trt2) => Number(trt1) - Number(trt2));
+        if (!currTeeth) return;
         currTeeth.forEach(tooth => str = str + tooth + ", ");
         setTeethValue(currValues => {
             return currValues.map((currValue, idx) => {
@@ -375,8 +371,9 @@ const CreateTreatmentPlanPatient = ({ data }) => {
                 const response = await request.json();
                 console.log(response);
                 if (response.success) setToothImage(currImages => {
-                    currImages[tooth] = response.tooth;
-                    return currImages;
+                    return {...currImages,
+                        [tooth]: response.tooth
+                    };
                 });
             } catch (e) {
                 console.log(e);
@@ -399,8 +396,9 @@ const CreateTreatmentPlanPatient = ({ data }) => {
                 const response = await request.json();
 
                 if (response.success) setToothImageCurrentStatus(currImages => {
-                    currImages[tooth] = response.tooth;
-                    return currImages;
+                    return {...currImages,
+                        [tooth]: response.tooth
+                    };
                 });
             } catch (e) {
                 console.log(e);
@@ -424,8 +422,9 @@ const CreateTreatmentPlanPatient = ({ data }) => {
                 const response = await request.json();
                 
                 if (response.success) setToothImageInitialStatusKids(currImages => {
-                    currImages[TEETH_KIDS[idx]] = response.tooth;
-                    return currImages;
+                    return {...currImages,
+                        [TEETH_KIDS[idx]]: response.tooth
+                    };
                 });
             } catch (e) {
                 console.log(e);
@@ -448,8 +447,9 @@ const CreateTreatmentPlanPatient = ({ data }) => {
                 const response = await request.json();
                 
                 if (response.success) setToothImageCurrentStatusKids(currImages => {
-                    currImages[TEETH_KIDS[idx]] = response.tooth;
-                    return currImages;
+                    return {...currImages, 
+                        [TEETH_KIDS[idx]]: response.tooth
+                    };
                 });
                 
             } catch (e) {

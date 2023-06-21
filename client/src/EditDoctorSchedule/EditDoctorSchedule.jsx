@@ -33,7 +33,7 @@ const EditDoctorSchedule = ({ data }) => {
     const [endHourValue, setEndHourValue] = useState([]);
     const [endMinutesValue, setEndMinutesValue] = useState([]);
     const [notes, setNotes] = useState([]);
-    const [applyToCalendarValue, setApplyToCalendarValue] = useState(false);
+    const [applyToCalendarValue, setApplyToCalendarValue] = useState([]);
     const [startHourActiveMenu, setStartHourActiveMenu] = useState([]);
     const [endHourActiveMenu, setEndHourActiveMenu] = useState([]);
     const [doctorNameValue, setDoctorNameValue] = useState([]);
@@ -112,12 +112,29 @@ const EditDoctorSchedule = ({ data }) => {
         console.log(doctorNameValue);
     }, [doctorNameValue]);
 
+    const removeScheduleFunctions = (idx) => {
+        setDoctorValue(currValues => currValues.filter((_, currIdx) => currIdx !== idx));
+        setDoctorNameValue(currValues => currValues.filter((_, currIdx) => currIdx !== idx));
+        setStartHourValue(currValues => currValues.filter((_, currIdx) => currIdx !== idx));
+        setStartMinutesValue(currValues => currValues.filter((_, currIdx) => currIdx !== idx));
+        setEndHourValue(currValues => currValues.filter((_, currIdx) => currIdx !== idx));
+        setEndMinutesValue(currValues => currValues.filter((_, currIdx) => currIdx !== idx));
+        setNotes(currValues => currValues.filter((_, currIdx) => currIdx !== idx));
+        setApplyToCalendarValue(currValues => currValues.filter((_, currIdx) => currIdx !== idx));
+        setStartHourActiveMenu(currValues => currValues.filter((_, currIdx) => currIdx !== idx));
+        setEndHourActiveMenu(currValues => currValues.filter((_, currIdx) => currIdx !== idx));
+        setErrorMessages(currValues => currValues.filter((_, currIdx) => currIdx !== idx));
+    };
+
     const removeSchedule = async (scheduleId, doctorId, idx) => {
         console.log(scheduleId, doctorId);
+        removeScheduleFunctions(idx);
+
         if (!scheduleId || !doctorId) 
             return setSchedules(currSchedules => {
                 return currSchedules.filter((schedule, scheduleIdx) => scheduleIdx !== idx);
             });
+
     
         try {
             const options = {
@@ -235,17 +252,17 @@ const EditDoctorSchedule = ({ data }) => {
 
     useEffect(() => {
         if (!schedules || !schedules.length) return;
-        setDoctorValue([]);
-        setDoctorNameValue([]);
-        setStartHourValue([]);
-        setStartMinutesValue([]);
-        setEndHourValue([]);
-        setEndMinutesValue([]);
-        setNotes([]);
-        setApplyToCalendarValue([]);
-        setStartHourActiveMenu([]);
-        setEndHourActiveMenu([]);
-        setErrorMessages([]);
+        // setDoctorValue([]);
+        // setDoctorNameValue([]);
+        // setStartHourValue([]);
+        // setStartMinutesValue([]);
+        // setEndHourValue([]);
+        // setEndMinutesValue([]);
+        // setNotes([]);
+        // setApplyToCalendarValue([]);
+        // setStartHourActiveMenu([]);
+        // setEndHourActiveMenu([]);
+        // setErrorMessages([]);
 
         schedules.forEach((schedule, idx) => {
             console.log(schedule);
@@ -256,7 +273,7 @@ const EditDoctorSchedule = ({ data }) => {
             setEndHourValue(currValue => [...currValue, schedule?.endHour || 0]);
             setEndMinutesValue(currValue => [...currValue, schedule?.endMinutes || 0]);
             setNotes(currValue => [...currValue, schedule?.notes || ""]);
-            setApplyToCalendarValue(currValue => [...currValue, schedule?.repeat]);
+            setApplyToCalendarValue(currValue => [...currValue, schedule?.repeat === null ? false : schedule.repeat]);
             setStartHourActiveMenu(currValue => [...currValue, false]);
             setEndHourActiveMenu(currValue => [...currValue, false]);
             setErrorMessages(currValue => [...currValue, ""]);
@@ -324,7 +341,8 @@ const EditDoctorSchedule = ({ data }) => {
     useEffect(() => {
         window.addEventListener("click", e => {
             if (e.target.classList.contains("time-input")) return;
-            if (startHourActiveMenu && endHourActiveMenu && startHourActiveMenu.any(menu => !menu) && endHourActiveMenu.any(menu => menu)) return;
+            console.log(startHourActiveMenu);
+            if (startHourActiveMenu?.length && endHourActiveMenu?.length && startHourActiveMenu.any(menu => !menu) && endHourActiveMenu.any(menu => menu)) return;
 
             setStartHourActiveMenu(currMenus => {
                 return [...currMenus].map(() => false);
@@ -344,7 +362,7 @@ const EditDoctorSchedule = ({ data }) => {
             <div className="content">
                 <Header data={data} />
         
-                <h2 className="title">{cookies.language === "en" ? `Schedule on ${day}.${month + 1}.${year}` : `Program in data de ${day}.${month + 1}.${year}`}</h2>
+                <h2 className="title">{cookies.language === "en" ? `Schedule on ${day < 10 ? `0${day}` : day}.${month + 1 < 10 ? `0${month + 1}` : month + 1}.${year}` : `Program in data de ${day < 10 ? `0${day}` : day}.${month + 1 < 10 ? `0${month + 1}` : month + 1}.${year}`}</h2>
                 <div className="go-back" onClick={() => navigate(-1)}>
                     <FontAwesomeIcon icon={faAngleLeft} />
                 </div>
