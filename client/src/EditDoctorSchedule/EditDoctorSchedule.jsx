@@ -712,6 +712,7 @@ const EditDoctorSchedule = ({ data }) => {
                     });
                 }}>
                     <FontAwesomeIcon icon={faPlus} className="add-icon" />
+                    <p>{cookies?.language === "en" ? "Add schedule" : "Adauga program"}</p>
                 </div>
 
                 <button type="button" className={`save-button show`} onClick={async () => await saveChanges()}>

@@ -973,6 +973,7 @@ const Profile = ({ data }) => {
 
                                 <div className="add-button" onClick={() => navigate("/create-assistant")}>
                                     <FontAwesomeIcon icon={faPlus} className="add-icon" />
+                                    <p>{cookies?.language === "en" ? "Add assistant" : "Adauga asistent"}</p>
                                 </div>
                             </div>
                         ) : activeOption === 2 ? (
@@ -1090,6 +1091,8 @@ const Profile = ({ data }) => {
                                 
                                 <div className="add-button" onClick={() => navigate("/create-treatment")}>
                                     <FontAwesomeIcon icon={faPlus} className="add-icon" />
+                                    <p>{cookies?.language === "en" ? "Add treatment" : "Adauga tratament"}</p>
+
                                 </div>
                             </div>
                         ) : activeOption === 4 ? (
@@ -1189,6 +1192,7 @@ const Profile = ({ data }) => {
                                 
                                 <div className="add-button" onClick={() => navigate("/create-treatment-category")}>
                                     <FontAwesomeIcon icon={faPlus} className="add-icon" />
+                                    <p>{cookies?.language === "en" ? "Add treatment category" : "Adauga categorie tratament"}</p>
                                 </div>
                             </div>
                         ) : activeOption === 5 ? <div className="treatment-categories-details">
@@ -1289,6 +1293,7 @@ const Profile = ({ data }) => {
                     
                         <div className="add-button" onClick={() => navigate("/create-diagnostic")}>
                             <FontAwesomeIcon icon={faPlus} className="add-icon" />
+                            <p>{cookies?.language === "en" ? "Add diagnostic" : "Adauga diagnostic"}</p>
                         </div>
                     </div> : activeOption === 6 ? (
                          <div className="treatment-categories-details">
@@ -1380,6 +1385,7 @@ const Profile = ({ data }) => {
                             
                             <div className="add-button" onClick={() => navigate("/create-patient-type/type")}>
                                 <FontAwesomeIcon icon={faPlus} className="add-icon" />
+                                <p>{cookies?.language === "en" ? "Add patient type" : "Adauga tip pacient"}</p>
                             </div>
                          </div>
                     ) : activeOption === 7 ? (
@@ -1472,6 +1478,7 @@ const Profile = ({ data }) => {
                             
                             <div className="add-button" onClick={() => navigate("/create-patient-type/category")}>
                                 <FontAwesomeIcon icon={faPlus} className="add-icon" />
+                                <p>{cookies?.language === "en" ? "Add patient category" : "Adauga categorie pacient"}</p>
                             </div>
                          </div>
                     ) : null}

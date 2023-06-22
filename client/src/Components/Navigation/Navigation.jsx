@@ -6,7 +6,7 @@ import dashboardIconBlack from "../../imgs/icons/dashboard-icon_black.svg";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleDown, faBedPulse, faCalendarDays, faClose, faCoffee, faDashboard, faHandHoldingDollar, faHeart, faUserDoctor, faVirusCovidSlash } from "@fortawesome/free-solid-svg-icons"
 import settingsIcon from "../../imgs/icons/settings-icon.svg";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useCookies } from 'react-cookie';
 import patientIcon from "../../imgs/icons/patient.svg";
 import patientIconBlack from "../../imgs/icons/patient_black.svg";
@@ -21,9 +21,12 @@ const Navigation = ({ show, page }) => {
     const [closed, setClosed] = useState(false);
     const [doctorsSubmenuActive, setDoctorsSubmenuActive] = useState(false);
     const [theme, setTheme] = useState(cookies?.theme);
+    const [touchStart, setTouchStart] = useState(0);
+    const [touchEnd, setTouchEnd] = useState(0);
 
     const navigationElement = useRef();
     const settingsRef = useRef();
+    const location = useLocation();
 
     useEffect(() => {
         if (!settingsRef?.current) return;
@@ -34,8 +37,25 @@ const Navigation = ({ show, page }) => {
         setTheme(cookies?.theme);
     }, [document.cookie]);
 
+    const touchStartEvent = (e) => {
+        setTouchStart(e.targetTouches[0].clientX);
+        setTouchEnd(e.targetTouches?.[0]?.clientX);
+    };
+
+    const touchMoveEvent = (e) => {
+        setTouchEnd(e.targetTouches[0].clientX);
+    }
+
+    const touchEndEvent = () => {
+        if (touchStart - touchEnd > 45) {
+            navigationElement.current.classList.remove("active");
+            document.querySelector(".header").classList.add("no-navigation");
+            document.querySelector(".content").classList.add("no-navigation");
+        }
+    };  
+
     return (
-        <div className="navigation active" ref={navigationElement}>
+        <div className="navigation active" ref={navigationElement} onTouchStart={touchStartEvent} onTouchMove={touchMoveEvent} onTouchEnd={touchEndEvent}>
            
             <FontAwesomeIcon icon={faClose} className="close-icon" onClick={e => {
                 

@@ -67,7 +67,7 @@ exports.createAppointment = async (req, res) => {
         }));
 
         sql = "INSERT INTO ?? (_id, startDate, endDate, users, patients, title, income, incomePaid, typeIncome, notes, finished, confirmed, canceled, unpresented, date, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        const insertedAppointment = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.schedules`, appointmentId, new Date(startDate), new Date(endDate), JSON.stringify(users), JSON.stringify(patients), title, income, incomePaid, typeIncome, notes, false, false, false, false, new Date(date), new Date()]);
+        const insertedAppointment = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.schedules`, appointmentId, new Date(startDate), new Date(endDate), JSON.stringify(users), JSON.stringify(patients), title || "", income, incomePaid, typeIncome, notes, false, false, false, false, new Date(date), new Date()]);
         if (!insertedAppointment) return new ErrorResponse("An error occured!", 404);
 
         // Push message to inbox if patient didn't confirm his appointment
@@ -122,7 +122,7 @@ exports.createAppointment = async (req, res) => {
                     date: new Date(startDate),
                     price: income,
                     typePrice: typeIncome,
-                    title: title
+                    title: title || ""
                 }]);
         
                 sql = "UPDATE ?? SET historic = ? WHERE _id = ?";
@@ -147,7 +147,7 @@ exports.updateAppointment = async (req, res) => {
     try {
         console.log(_id);
         let sql = 'UPDATE ?? SET startDate = ?, endDate = ?, users = ?, patients = ?, title = ?, income = ?, incomePaid = ?, typeIncome = ?, notes = ?, date = ?, finished = ?, confirmed = ?, unpresented = ? WHERE _id = ?';
-        const updatedAppointment = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.schedules`, new Date(startDate), new Date(endDate), JSON.stringify(users), JSON.stringify(patients), title, income, incomePaid, typeIncome, notes, new Date(date), finished, confirmed, unpresented, appointmentId]);
+        const updatedAppointment = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.schedules`, new Date(startDate), new Date(endDate), JSON.stringify(users), JSON.stringify(patients), title || "", income, incomePaid, typeIncome, notes, new Date(date), finished, confirmed, unpresented, appointmentId]);
         if (!updatedAppointment) return res.status(200).json({ success: false, message: { en: "Appointment could not be updated!", ro: "Programarea nu a putut fi modificata!" } })
         if (confirmed) return res.status(200).json({ success: true, message: { en: "Appointment updated successfully!", ro: "Programare modificata cu succes!"}});
         
@@ -2971,6 +2971,20 @@ exports.getToothImageTreatmentPlan = async (req, res) => {
     } catch (e) {
         console.log(e);
         res.status(404).json({ success: false, message: "An error occured!", error: e });
+    }
+};
+
+exports.updateTreatmentPatientSterilization = async (req, res) => {
+    const { organisationId, id, sterilizations } = req.body;
+    try {
+        const treatmentsPaient = await db.query("SELECT * FROM ?? WHERE id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.treatments_patients`, id]);
+        if (treatmentsPaient?.length !== 1) return res.status(404).json({ success: false, message: "User not found!" });
+        
+        await db.query("UPDATE ?? SET sterilizations = ? WHERE id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.treatments_patients`, JSON.stringify(sterilizations), id]);
+        res.status(200).json({ success: true });
+    } catch (e) {
+        console.log(e);
+        res.status(404).json({ success: false, error: e, message: "An error occured!" });
     }
 };
 

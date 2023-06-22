@@ -374,6 +374,7 @@ const Patients = ({ data }) => {
 
                 <div className="add-button" onClick={() => navigation("/create-patient")}>
                     <FontAwesomeIcon icon={faPlus} className="add-icon"/>
+                    <p>{cookies?.language === "en" ? "Add patient" : "Adauga pacient"}</p>
                 </div>
             </div>
         </div>

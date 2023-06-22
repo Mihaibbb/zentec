@@ -1368,7 +1368,8 @@ body.light .appointments .filter div.active p
 
 }
 
-.appointments .scroll-button 
+.appointments .scroll-button,
+.edit-doctors-schedule .scroll-button
 {
     position: fixed;
     bottom: 85px;
@@ -1387,14 +1388,16 @@ body.light .appointments .filter div.active p
     transition: all 300ms ease-in-out;
 }
 
-.appointments .scroll-button.active
+.appointments .scroll-button.active,
+.edit-doctors-schedule .scroll-button.active
 {
     z-index: 100;
     opacity: 1;
     cursor: pointer;
 }
 
-.appointments .scroll-button .scroll-icon 
+.appointments .scroll-button .scroll-icon,
+.edit-doctors-schedule .scroll-button .scroll-icon
 {
     width: 35px;
     height: 35px;

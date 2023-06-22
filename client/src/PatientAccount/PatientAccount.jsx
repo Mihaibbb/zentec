@@ -1,4 +1,4 @@
-import { faAddressBook, faAddressCard, faAngleLeft, faCalendar, faCheck, faCity, faDeleteLeft, faEllipsis, faEnvelope, faFilePdf, faIdBadge, faList, faMars, faMinus, faNoteSticky, faPhone, faPlus, faQrcode, faSearch, faTimes, faTooth, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faAddressBook, faAddressCard, faAngleLeft, faBarcode, faCalendar, faCheck, faCity, faDeleteLeft, faEllipsis, faEnvelope, faFilePdf, faIdBadge, faList, faMars, faMinus, faNoteSticky, faPhone, faPlus, faQrcode, faSearch, faTimes, faTooth, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState, useEffect, useRef, useMemo, useLayoutEffect } from "react";
 import { useCookies } from "react-cookie";
@@ -1218,10 +1218,10 @@ const PatientAccount = ({ data }) => {
 
                             <div className="add-button" onClick={() => navigation(`/create-treatment-plan-patient/${param?.id}`, { state: location?.state })}>
                                 <FontAwesomeIcon icon={faPlus} className="add-icon" />
-                                <p>{cookies?.language === "en" ? "Add treatment plan" : "Adauga plan de tratament"}</p>
+                                <p>{cookies?.language === "en" ? "Add treatment plan" : "Adauga plan tratament"}</p>
                             </div>
                         </div>
-                        </div>
+                    </div>
                     ) : historicPage === 4 ? (
                         <div>
                             {activeStatusOption === 0 ? <div className="search-container">
@@ -1319,8 +1319,8 @@ const PatientAccount = ({ data }) => {
                                                     <p>{cookies.language === "en" ? "Edit" : "Editeaza"}</p>
                                                 </div>
 
-                                                <div className="option" onClick={() => navigation(`/generate-sterilization/${param?.id}/${treatment.id}`, { state: { treatment: treatment } })}>
-                                                    <FontAwesomeIcon icon={faQrcode} className="option-icon" />
+                                                <div className="option" onClick={() => navigation(`/view-treatment-sterilization/${param?.id}/${treatment.id}`, { state: { treatment: treatment } })}>
+                                                    <FontAwesomeIcon icon={faBarcode} className="option-icon" />
                                                     <p>{cookies.language === "en" ? "Sterilization" : "Sterilizare"}</p>
                                                 </div>
                                                 
@@ -1417,9 +1417,11 @@ const PatientAccount = ({ data }) => {
                                 <div className="teeth-container">
                                     {TEETH.map((tooth, idx) => (
                                         <div className="tooth-container" key={idx}>
+                                            {idx <= 15 ? <div className="hover-name">{toothImage[tooth]?.slice(1, 2)?.toUpperCase() || ""}{toothImage[tooth]?.slice(2, toothImage[tooth].length) || "Normal"}</div> : null}
                                             {idx <= 15 ? <p>{tooth}</p> : null}
                                             <img src={`${process.env.REACT_APP_BACKEND_URL}/teeth/pictograme_terminate_dinti/${tooth}/${tooth}${toothImage[tooth] || ""}.png`} />
                                             {idx > 15 ? <p>{tooth}</p> : null}
+                                            {idx > 15 ? <div className="hover-name">{toothImage[tooth]?.slice(1, 2)?.toUpperCase() || ""}{toothImage[tooth]?.slice(2, toothImage[tooth].length) || "Normal"}</div> : null}
                                         </div>
                                     ))}
                                 </div>
@@ -1429,9 +1431,11 @@ const PatientAccount = ({ data }) => {
                                 <div className="teeth-container kids-teeth">
                                     {TEETH_KIDS.map((tooth, idx) => (
                                         <div className="tooth-container" key={idx}>
+                                            {idx <= 9 ? <div className="hover-name">{toothImageInitialStatusKids[tooth]?.slice(1, 2)?.toUpperCase() || ""}{toothImageInitialStatusKids[tooth]?.slice(2, toothImageInitialStatusKids[tooth]?.length) || "Normal"}</div>  : null}
                                             {idx <= 9 ? <p>{TEETH_KIDS_NUMBERS[idx]}</p> : null}
                                             <img src={`${process.env.REACT_APP_BACKEND_URL}/teeth/pictograme_terminate_dinti/${tooth}/${tooth}${toothImageInitialStatusKids[tooth] || ""}.png`} />
                                             {idx > 9 ? <p>{TEETH_KIDS_NUMBERS[idx]}</p> : null}
+                                            {idx > 9 ? <div className="hover-name">{toothImageInitialStatusKids[tooth]?.slice(1, 2)?.toUpperCase() || ""}{toothImageInitialStatusKids[tooth]?.slice(2, toothImageInitialStatusKids[tooth]?.length) || "Normal"}</div>  : null}
                                         </div>
                                     ))}
                                 </div>
@@ -1460,15 +1464,16 @@ const PatientAccount = ({ data }) => {
                                     </div>
                                 </div>
                             </div> : null }
-                         
                             
                             {activeStatusOption === 1 && (teethType === currTeethTypes[1] || teethType === currTeethTypes[2]) ? (
                                 <div className="teeth-container">
                                     {TEETH.map((tooth, idx) => (
                                         <div className="tooth-container" key={idx}>
+                                            {idx <= 15 ? <div className="hover-name">{toothImageCurrentStatus[tooth]?.slice(1, 2)?.toUpperCase() || ""}{toothImageCurrentStatus[tooth]?.slice(2, toothImageCurrentStatus[tooth].length) || "Normal"}</div> : null}
                                             {idx <= 15 ? <p>{tooth}</p> : null}
                                             <img src={`${process.env.REACT_APP_BACKEND_URL}/teeth/pictograme_terminate_dinti/${tooth}/${tooth}${toothImageCurrentStatus[tooth] || ""}.png`} />
                                             {idx > 15 ? <p>{tooth}</p> : null}
+                                            {idx > 15 ? <div className="hover-name">{toothImageCurrentStatus[tooth]?.slice(1, 2)?.toUpperCase() || ""}{toothImageCurrentStatus[tooth]?.slice(2, toothImageCurrentStatus[tooth]?.length) || "Normal"}</div>  : null}
                                         </div>
                                     ))}
                                 </div>
@@ -1478,9 +1483,11 @@ const PatientAccount = ({ data }) => {
                                 <div className="teeth-container kids-teeth">
                                     {TEETH_KIDS.map((tooth, idx) => (
                                         <div className="tooth-container" key={idx}>
+                                            {idx <= 9 ? <div className="hover-name">{toothImageCurrentStatusKids[tooth]?.slice(1, 2)?.toUpperCase() || ""}{toothImageCurrentStatusKids[tooth]?.slice(2, toothImageCurrentStatusKids[tooth]?.length) || "Normal"}</div>  : null}
                                             {idx <= 9 ? <p>{TEETH_KIDS_NUMBERS[idx]}</p> : null}
                                             <img src={`${process.env.REACT_APP_BACKEND_URL}/teeth/pictograme_terminate_dinti/${tooth}/${tooth}${toothImageCurrentStatusKids[tooth] || ""}.png`} />
                                             {idx > 9 ? <p>{TEETH_KIDS_NUMBERS[idx]}</p> : null}
+                                            {idx > 9 ? <div className="hover-name">{toothImageCurrentStatusKids[tooth]?.slice(1, 2)?.toUpperCase() || ""}{toothImageCurrentStatusKids[tooth]?.slice(2, toothImageCurrentStatusKids[tooth]?.length) || "Normal"}</div>  : null}
                                         </div>
                                     ))}
                                 </div>

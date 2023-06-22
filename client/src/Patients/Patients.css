@@ -331,6 +331,37 @@ body.light .content .patients-container .row
     padding: 9.6px;
 }
 
+.content .add-button 
+{
+    padding-inline: 15px 30px;
+    border-radius: 15px;
+    cursor: pointer;
+    right: 15px;
+    transition: all 350ms ease-in-out;
+}
+
+.content .add-button .add-icon 
+{
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    margin-right: .75rem;
+    margin-block: .5rem;
+}
+
+.content .add-button p 
+{
+    color: #fff;
+    font-weight: 700;
+    font-size: 18px;
+}
+
+.content .add-button:hover 
+{
+    border-radius: 35px;
+}
+
 .content h2.center 
 {
     color: var(--text-color-3);

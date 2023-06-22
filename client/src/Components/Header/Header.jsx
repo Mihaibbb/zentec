@@ -7,6 +7,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useCallback, useEffect, useState } from 'react';
 import { useRef } from 'react';
 import { useCookies } from 'react-cookie';
+import { useLayoutEffect } from 'react';
 
 const Header = ({ data }) => {
 
@@ -21,11 +22,10 @@ const Header = ({ data }) => {
     const [fullScreenAccess, setFullScreenAccess] = useState(false);
 
     useEffect(() => {
-        console.log(theme);
-        setCookie('theme', theme, "/");
+        setCookie('theme', theme);
     }, [theme]);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         if (cookies?.theme === 'light') {
 
             document.documentElement.style.setProperty("--background", "#f7f7f7");
@@ -111,8 +111,6 @@ const Header = ({ data }) => {
 
         return false;
     }
-
-
 
 
     // Fullscreen functions 

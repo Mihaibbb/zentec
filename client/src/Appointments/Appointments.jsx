@@ -12,8 +12,8 @@ import DoctorsFilter from '../Components/DoctorsFilter/DoctorsFilter';
 import getContrastForText from '../Functions/Contrast';
 import Select from "react-select";
 import DateCustomInput from "../Components/DatePicker/DatePicker";
-import ReactDOM from "react-dom";
 import { useCallback } from "react";
+import { createRoot } from "react-dom/client";
 
 const Appointments = ({ data }) => {
 
@@ -791,7 +791,7 @@ const Appointments = ({ data }) => {
 
     const sendAppointment = async () => {
 
-        if (appointmentPatient.length === 0 || appointmentPatientPhoneNumber.toString().length === 0 || appointmentTitle.length === 0 || !appointmentPatientData)
+        if (appointmentPatient.length === 0 || appointmentPatientPhoneNumber.toString().length === 0 || !appointmentPatientData)
             return setErrorMessage(cookies.language === "en" ? "Fill required fields!" : "Completeaza campurile obligatorii!");
 
         if (appointmentStartMinutes % minutesPerGap !== 0 || appointmentEndMinutes % minutesPerGap !== 0) 
@@ -1352,21 +1352,24 @@ const Appointments = ({ data }) => {
                 titleAppointmentDivElement.classList.add("appointment-interval-container");
                 currentGaps[startIdx].appendChild(titleAppointmentDivElement);
 
-                ReactDOM.render(
-                <>
-                    <p className="appointment-interval appointment-interval-title" style={appointmentLength <= 3 ? { 
-                        color: getContrastForText(doctorColor), 
-                        top: `calc(-100% - 20px + ${gapsRef.current[0].clientHeight}px)`
-                    } : {
-                        color: getContrastForText(doctorColor), 
-                        top: `calc(-100% - 20px + ${gapsRef.current[0].clientHeight}px)`, 
-                        fontSize: '20px',
-                        height: `${gapsRef.current[0].clientHeight}px`
-                    }}>
-                        {startHourAppointment < 10 ? `0${startHourAppointment}` : startHourAppointment}:{startMinutesAppointment < 10 ? `0${startMinutesAppointment}` : startMinutesAppointment} - {endHourAppointment < 10 ? `0${endHourAppointment}` : endHourAppointment}:{endMinutesAppointment < 10 ? `0${endMinutesAppointment}` : endMinutesAppointment}
-                        {appointment.confirmed ? <FontAwesomeIcon icon={faCheck} className="check-appointment-icon" style={{ marginLeft: '10px', marginRight: '10px' }}/> : null}
-                    </p>
-                </>, titleAppointmentDivElement);
+                const root = createRoot(titleAppointmentDivElement);
+
+                root.render(
+                    <>
+                        <p className="appointment-interval appointment-interval-title" style={appointmentLength <= 3 ? { 
+                            color: getContrastForText(doctorColor), 
+                            top: `calc(-100% - 20px + ${gapsRef.current[0].clientHeight}px)`
+                        } : {
+                            color: getContrastForText(doctorColor), 
+                            top: `calc(-100% - 20px + ${gapsRef.current[0].clientHeight}px)`, 
+                            fontSize: '20px',
+                            height: `${gapsRef.current[0].clientHeight}px`
+                        }}>
+                            {startHourAppointment < 10 ? `0${startHourAppointment}` : startHourAppointment}:{startMinutesAppointment < 10 ? `0${startMinutesAppointment}` : startMinutesAppointment} - {endHourAppointment < 10 ? `0${endHourAppointment}` : endHourAppointment}:{endMinutesAppointment < 10 ? `0${endMinutesAppointment}` : endMinutesAppointment}
+                            {appointment.confirmed ? <FontAwesomeIcon icon={faCheck} className="check-appointment-icon" style={{ marginLeft: '10px', marginRight: '10px' }}/> : null}
+                        </p>
+                    </>
+                );
 
                 
                 // const patientNameElement = document.createElement('p');
@@ -2067,13 +2070,13 @@ const Appointments = ({ data }) => {
                                             <div className="patient-list">
                                                 {appointmentPatientsList.map((patient, idx) => (
                                                     <div className="patient-container" key={idx} onClick={() => {
-                                                        setAppointmentPatient(`${patient.firstname} ${patient.lastname}`);
+                                                        setAppointmentPatient(`${patient.firstname} ${patient.lastname} ${cookies?.language === "en" ? `(File number: ${patient.fileNumber})` : `(Nr. fisa: ${patient.fileNumber})`}`);
                                                         setAppointmentPatientsList([]);
                                                         setAppointmentPatientData(patient);
                                                         setAppointmentPatientPhoneNumber(patient.phone);
                                                     }}>
                                                         <FontAwesomeIcon icon={faUser} className="user-icon" />
-                                                        <p>{patient.firstname} {patient.lastname}</p>
+                                                        <p>{patient.firstname} {patient.lastname} {cookies?.language === "en" ? `(File number: ${patient.fileNumber})` : `(Nr. fisa: ${patient.fileNumber})`}</p>
                                                     </div>
                                                 ))}
                                             </div>
@@ -2100,13 +2103,13 @@ const Appointments = ({ data }) => {
                                             <div className="patient-list">
                                                 {appointmentPatientsList.map((patient, idx) => (
                                                     <div className="patient-container" key={idx} onClick={() => {
-                                                        setAppointmentPatient(`${patient.firstname} ${patient.lastname}`);
+                                                        setAppointmentPatient(`${patient.firstname} ${patient.lastname} ${cookies?.language === "en" ? `(File number: ${patient.fileNumber})` : `(Nr. fisa: ${patient.fileNumber})`}`);
                                                         setAppointmentPatientsList([]);
                                                         setAppointmentPatientData(patient);
                                                         setAppointmentPatientPhoneNumber(patient.phone);
                                                     }}>
                                                         <FontAwesomeIcon icon={faUser} className="user-icon" />
-                                                        <p>{patient.firstname} {patient.lastname}</p>
+                                                        <p>{patient.firstname} {patient.lastname} {cookies?.language === "en" ? `(File number: ${patient.fileNumber})` : `(Nr. fisa: ${patient.fileNumber})`}</p>
                                                     </div>
                                                 ))}
                                             </div>
@@ -2233,7 +2236,7 @@ const Appointments = ({ data }) => {
                                     </div>
                                     
                                 </div>
-                            </div> : 
+                            </div> :
                             
                             <div className="label-row label">
                                 <div className="label-column">
@@ -2341,12 +2344,12 @@ const Appointments = ({ data }) => {
                                     <div className="patient-list">
                                         {appointmentPatientsList.map((patient, idx) => (
                                             <div className="patient-container" key={idx} onClick={() => {
-                                                setAppointmentPatient(`${patient.firstname} ${patient.lastname}`);
+                                                setAppointmentPatient(`${patient.firstname} ${patient.lastname} ${cookies?.language === "en" ? `(File number: ${patient.fileNumber})` : `(Nr. fisa: ${patient.fileNumber})`}`);
                                                 setAppointmentPatientsList([]);
                                                 setAppointmentPatientData(patient);
                                                 setAppointmentPatientPhoneNumber(patient.phone);
                                             }}>
-                                                <p>{patient.firstname} {patient.lastname}</p>
+                                                <p>{patient.firstname} {patient.lastname} {cookies?.language === "en" ? `(File number: ${patient.fileNumber})` : `(Nr. fisa: ${patient.fileNumber})`}</p>
                                             </div>
                                         ))}
                                     </div>
@@ -2626,6 +2629,7 @@ const Appointments = ({ data }) => {
                     setActiveCreateAppointment(true);
                 }}>
                     <FontAwesomeIcon icon={faPlus} className="add-icon" />
+                    <p>{cookies?.language === "en" ? "Add appointment" : "Adauga programare"}</p>
                 </div> : null}
                 
            

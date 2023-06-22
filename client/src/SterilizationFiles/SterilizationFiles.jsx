@@ -1,6 +1,5 @@
 import JsBarcode from "jsbarcode";
 import React, { useEffect, useMemo, useState } from "react";
-import ReactDOM from "react-dom";
 import {
   PDFViewer,
   Page,
@@ -8,15 +7,16 @@ import {
   View,
   Document,
   StyleSheet,
-  Font
+  Font,
 } from "@react-pdf/renderer";
 import { useLocation, useParams } from "react-router-dom";
-
-
+import sourceSansProBold from "../fonts/source-sans-pro-bold.ttf";
+import sourceSansPro from "../fonts/source-sans-pro.regular.ttf";
 
 const SterilizationFiles = ({ data : currData }) => {
 
-    // Font.register({ family: "Source-Sans-Pro", src:  })
+    Font.register({ family: "Source-Sans-Pro-Bold", src: sourceSansProBold, fontWeight: "bold" });
+    Font.register({ family: "Source-Sans-Pro", src: sourceSansPro });
 
     const { id } = useParams();
     const location = useLocation();
@@ -30,8 +30,13 @@ const SterilizationFiles = ({ data : currData }) => {
     
     const styles = StyleSheet.create({
       boldText: {
-        fontSize: 10,
-        fontWeight: 700
+        fontSize: 8.5,
+        fontFamily: "Source-Sans-Pro-Bold"
+      },
+      
+      normalText: {
+        fontSize: 8.5,
+
       }
     });
 
@@ -80,7 +85,7 @@ const SterilizationFiles = ({ data : currData }) => {
               height: `${realHeight}px`,
               width: `100%`,
               justifyContent: "center",
-              marginTop: 5,
+              marginTop: 3,
               marginHorizontal: "auto",
         
             }}
@@ -107,10 +112,10 @@ const SterilizationFiles = ({ data : currData }) => {
       
       const MyDocument = ({ barCode, instrument, iso, assistant, sarja, addDate, expireDate, barCodeData }) => (
          
-              <Page size={{ width: 170, height: 170 }}>
+              <Page size={{ width: 150, height: 150 }}>
                 <View style={{ width: "90%", marginHorizontal: "auto" }}>
                   <MyBarcode barCodeData={barCodeData} />
-                  <Text style={{ fontSize: 10, marginHorizontal: "auto", letterSpacing: 2 }}>{barCode}</Text>
+                  <Text style={[ styles.normalText, {marginHorizontal: "auto", letterSpacing: 2.2 }]}>{barCode}</Text>
 
                   <View 
                     style={{
@@ -118,9 +123,9 @@ const SterilizationFiles = ({ data : currData }) => {
                         flexDirection: "row", 
                         alignItems: "center", 
                         marginLeft: 3.5, 
-                        marginTop: 5
+                        marginTop: 3
                     }}>
-                    <Text style={{ fontSize: 10 }}>Instrument: </Text>
+                    <Text style={styles.normalText}>Instrument: </Text>
                     <Text style={styles.boldText}>{instrument}</Text>
                   </View>
 
@@ -130,11 +135,11 @@ const SterilizationFiles = ({ data : currData }) => {
                         flexDirection: "row",  
                         alignItems: "center", 
                         marginLeft: 3.5, 
-                        marginTop: 5
+                        marginTop: 3
                     }}
                 >
-                    <Text style={{ fontSize: 10 }}>Cod ISO: </Text>
-                    <Text style={{ fontSize: 10 }}>{iso}</Text>
+                    <Text style={styles.normalText}>Cod ISO: </Text>
+                    <Text style={styles.boldText}>{iso}</Text>
                   </View>
 
                   <View 
@@ -143,10 +148,10 @@ const SterilizationFiles = ({ data : currData }) => {
                         flexDirection: "row", 
                         alignItems: "center", 
                         marginLeft: 3.5, 
-                        marginTop: 5
+                        marginTop: 3
                     }}>
-                    <Text style={{ fontSize: 10 }}>Sarja: </Text>
-                    <Text style={{ fontSize: 10 }}>{sarja}</Text>
+                    <Text style={styles.normalText}>Sarja: </Text>
+                    <Text style={styles.boldText}>{sarja}</Text>
                   </View>
                   <View 
                     style={{
@@ -154,10 +159,10 @@ const SterilizationFiles = ({ data : currData }) => {
                         flexDirection: "row", 
                         alignItems: "center", 
                         marginLeft: 3.5, 
-                        marginTop: 5
+                        marginTop: 3
                     }}>
-                    <Text style={{ fontSize: 10 }}>Data adaugare: </Text>
-                    <Text style={{ fontSize: 10 }}>{addDate}</Text>
+                    <Text style={styles.normalText}>Data adaugare: </Text>
+                    <Text style={styles.boldText}>{addDate}</Text>
                   </View>
                   <View 
                     style={{
@@ -165,10 +170,10 @@ const SterilizationFiles = ({ data : currData }) => {
                         flexDirection: "row", 
                         alignItems: "center", 
                         marginLeft: 3.5, 
-                        marginTop: 5
+                        marginTop: 3
                     }}>
-                    <Text style={{ fontSize: 10 }}>Data expirare: </Text>
-                    <Text style={{ fontSize: 10 }}>{expireDate}</Text>
+                    <Text style={styles.normalText}>Data expirare: </Text>
+                    <Text style={styles.boldText}>{expireDate}</Text>
                   </View>
                   <View 
                     style={{
@@ -176,10 +181,10 @@ const SterilizationFiles = ({ data : currData }) => {
                         flexDirection: "row", 
                         alignItems: "center", 
                         marginLeft: 3.5,                         
-                        marginTop: 5
+                        marginTop: 3
                     }}>
-                    <Text style={{ fontSize: 10 }}>Personal: </Text>
-                    <Text style={{ fontSize: 10 }}>{assistant}</Text>
+                    <Text style={styles.normalText}>Personal: </Text>
+                    <Text style={styles.boldText}>{assistant}</Text>
                   </View>
                 </View>
               </Page>

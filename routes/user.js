@@ -105,7 +105,8 @@ const {
     getPatientTypes,
     getToothImageInitialStatus,
     getToothImageCurrentStatus,
-    getToothImageTreatmentPlan
+    getToothImageTreatmentPlan,
+    updateTreatmentPatientSterilization
 } = require("../controllers/user");
 
 router.post("/create-appointment", createAppointment);
@@ -249,5 +250,9 @@ router.get("/get-patient-types/:organisationId", getPatientTypes);
 router.get("/get-tooth-image-initial-status/:organisationId/:patientId/:toothNumber", getToothImageInitialStatus);
 router.get("/get-tooth-image-current-status/:organisationId/:patientId/:toothNumber", getToothImageCurrentStatus);
 router.get("/get-tooth-image-treatment-plan/:organisationId/:patientId/:treatmentPlanId/:toothNumber", getToothImageTreatmentPlan);
+
+// Treatment patient sterilizations
+
+router.put("/update-treatment-patient-sterilization", updateTreatmentPatientSterilization);
 
 module.exports = router;

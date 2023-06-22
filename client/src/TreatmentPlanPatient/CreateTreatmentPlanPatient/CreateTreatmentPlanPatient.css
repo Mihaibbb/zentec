@@ -69,3 +69,29 @@
     border-radius: 25px;
     color: rgba(255, 255, 255, .8);
 }
+
+.tooth-container 
+{
+    position: relative;
+}
+
+.tooth-container .hover-name 
+{
+    top: -40px;
+    background: rgba(0, 0, 0, .85);
+    padding: .5rem 1rem;
+    text-align: center;
+    font-weight: bold;
+    color: rgba(255, 255, 255, .85);
+    opacity: 0;
+    user-select: none;
+    position: absolute;
+    transition: all 350ms ease-in-out;
+}
+
+.tooth-container:hover .hover-name
+{
+    user-select: initial;
+    opacity: 1;
+    border-radius: 15px;
+}

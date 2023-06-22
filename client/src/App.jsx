@@ -48,6 +48,8 @@ import EditTreatmentPlanPatient from "./TreatmentPlanPatient/EditTreatmentPlanPa
 import DocumentPatientTreatment from "./DocumentPatientTreatmentPlan/DocumentPatientTreatmentPlan";
 import CreateTreatmentPatient from "./TreatmentsPatient/CreateTreatmentPatient/CreateTreatmentPatient";
 import EditTreatmentPatient from "./TreatmentsPatient/EditTreatmentPatient/EditTreatmetnPatient";
+import GenerateSterilization from "./TreatmentSterilization/GenerateSterilization/GenerateSterilization";
+import ViewTreatmentSterilization from "./TreatmentSterilization/ViewSterilization/ViewTreatmentSterilization";
 
 
 const App = () => {
@@ -206,6 +208,8 @@ const App = () => {
                                 <Route path="document-patient-treatment-plan/:id/:treatmentPlanId" element={<DocumentPatientTreatment data={data} />} />
                                 <Route path="create-treatment-patient/:id" element={<CreateTreatmentPatient data={data} />} />
                                 <Route path="edit-treatment-patient/:id/:treatmentId" element={<EditTreatmentPatient data={data} />} />
+                                <Route path="view-treatment-sterilization/:id/:treatmentId" element={<ViewTreatmentSterilization data={data} />} />
+                                <Route path="generate-sterilization/:id/:treatmentId" element={<GenerateSterilization data={data} />} />
                             </>
                         ) : (
                             <>

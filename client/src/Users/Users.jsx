@@ -344,6 +344,7 @@ const Users = ({ data }) => {
 
                 <div className="add-button" onClick={() => navigation("/create-doctor")}>
                     <FontAwesomeIcon icon={faPlus} className="add-icon"/>
+                    <p>{cookies?.language === "en" ? "Add doctor" : "Adauga medic"}</p>
                 </div>
 
                 <div className={`message-container ${message?.success ? "success-message" : "error-message"} ${message ? "show" : ""}`}>

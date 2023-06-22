@@ -102,7 +102,7 @@ const CreateDoctor = ({ data }) => {
                     <TickAnimation title={cookies.language === "en" ? "Doctor added successfully!" : "Doctorul a fost adaugat cu succes!"} animationFinished={animationFinished} />
                 ) : (
                 <div className="no-video-content" ref={noVideoContentRef}>
-                    <h2 className="title">{cookies.langauge === "en" ? "Add Doctor" : "Adauga Doctor"}</h2>
+                    <h2 className="title">{cookies.langauge === "en" ? "Add Doctor" : "Adauga Medic"}</h2>
                     
                     <div className="go-back" onClick={() => navigate(-1)}>
                         <FontAwesomeIcon icon={faAngleLeft} />

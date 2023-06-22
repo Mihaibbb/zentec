@@ -693,13 +693,15 @@ const EditTreatmentPlanPatient = ({ data }) => {
                                 </div>
                             </div>
 
-                            {(teethType === currTeethTypes[1] || teethType === currTeethTypes[2]) ? (
+                           {(teethType === currTeethTypes[1] || teethType === currTeethTypes[2]) ? (
                                 <div className="teeth-container">
                                     {TEETH.map((tooth, idx) => (
                                         <div className={`tooth-container ${teethSelected?.[treatmentSelected]?.find(currTooth => currTooth === tooth) ? "active" : ""}`} key={idx} onClick={() => toggleTooth(tooth)}>
+                                            {idx <= 15 ? <div className="hover-name">{toothImage[tooth]?.slice(1, 2)?.toUpperCase() || ""}{toothImage[tooth]?.slice(2, toothImage[tooth].length) || "Normal"}</div> : null}
                                             {idx <= 15 ? <p>{tooth}</p> : null}
                                             <img src={`${process.env.REACT_APP_BACKEND_URL}/teeth/pictograme_terminate_dinti/${tooth}/${tooth}${toothImage[tooth] || ""}.png`} />
                                             {idx > 15 ? <p>{tooth}</p> : null}
+                                            {idx > 15 ? <div className="hover-name">{toothImage[tooth]?.slice(1, 2)?.toUpperCase() || ""}{toothImage[tooth]?.slice(2, toothImage[tooth]?.length) || "Normal"}</div>  : null}
                                         </div>
                                     ))}
                                 </div>
@@ -709,9 +711,11 @@ const EditTreatmentPlanPatient = ({ data }) => {
                                 <div className="teeth-container kids-teeth">
                                     {TEETH_KIDS.map((tooth, idx) => (
                                         <div className={`tooth-container ${teethSelected?.[treatmentSelected]?.find(currTooth => currTooth === TEETH_KIDS_NUMBERS[idx]) ? "active" : ""}`} key={idx} onClick={() => toggleTooth(TEETH_KIDS_NUMBERS[idx])}>
+                                            {idx <= 9 ? <div className="hover-name">{toothImageInitialStatusKids[tooth]?.slice(1, 2)?.toUpperCase() || ""}{toothImageInitialStatusKids[tooth]?.slice(2, toothImageInitialStatusKids[tooth]?.length) || "Normal"}</div>  : null}
                                             {idx <= 9 ? <p>{TEETH_KIDS_NUMBERS[idx]}</p> : null}
                                             <img src={`${process.env.REACT_APP_BACKEND_URL}/teeth/pictograme_terminate_dinti/${tooth}/${tooth}${toothImageInitialStatusKids[tooth] || ""}.png`} />
                                             {idx > 9 ? <p>{TEETH_KIDS_NUMBERS[idx]}</p> : null}
+                                            {idx > 9 ? <div className="hover-name">{toothImageInitialStatusKids[tooth]?.slice(1, 2)?.toUpperCase() || ""}{toothImageInitialStatusKids[tooth]?.slice(2, toothImageInitialStatusKids[tooth]?.length) || "Normal"}</div> : null}
                                         </div>
                                     ))}
                                 </div>
@@ -870,6 +874,7 @@ const EditTreatmentPlanPatient = ({ data }) => {
                             });
                         }}>
                             <FontAwesomeIcon icon={faPlus} className="add-icon" />
+                            <p>{cookies?.language === "en" ? "Add treatment" : "Adauga tratament"}</p>
                         </div>
 
                         <button type="button" className={`save-button show`} onClick={async () => await saveChanges()}>

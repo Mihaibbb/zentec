@@ -13,6 +13,7 @@ import MultiSelect from "../../Components/MultiSelect/MultiSelect";
 import { TEETH, TEETH_KIDS, TEETH_KIDS_NUMBERS } from "../../utils/TeethOrder";
 import DateCustomInput from "../../Components/DatePicker/DatePicker";
 import TickAnimation from "../../utils/TickAnimation";
+import { useLayoutEffect } from "react";
 
 const GAPS = 4;
 const END_SCHEDULE_HOUR = 23;
@@ -70,7 +71,10 @@ const CreateTreatmentPlanPatient = ({ data }) => {
     const statusRef = useRef([]);
     const initialStatusRef = useRef([]);
     const noVideoContentRef = useRef();
+    const teethRef = useRef();
+    const scrollButtonRef = useRef();
 
+    const [scrollUsed, setScrollUsed] = useState(0);
 
     const toggleTeethType = (idx) => {
         currTeethTypeRef.current[idx].classList.add("active");
@@ -458,6 +462,27 @@ const CreateTreatmentPlanPatient = ({ data }) => {
         });
     }, [location]);
 
+    useEffect(() => {
+        
+        if (!scrollButtonRef || !scrollButtonRef?.current || !teethRef || !teethRef?.current) return;
+        
+        const scrollEvent = () => {
+
+            if (document.documentElement.scrollHeight - (window.scrollY + window.screen.height) >= 150) {
+                scrollButtonRef?.current?.classList?.add("active");
+            } else scrollButtonRef?.current?.classList?.remove("active");
+        }
+
+        window.addEventListener("scroll", scrollEvent);
+        return () => window.removeEventListener("scroll", scrollEvent);
+    }, [scrollButtonRef, teethRef]);
+
+    useLayoutEffect(() => {
+        if (document.documentElement.scrollHeight - (window.scrollY + window.screen.height) >= 150) {
+            scrollButtonRef?.current?.classList?.add("active");
+        } else scrollButtonRef?.current?.classList?.remove("active");
+    }, [scrollUsed]);
+
     const handleChangeDate = (newBirthdate) => setDateValue(new Date(newBirthdate));
 
     const toggleTooth = (idx) => {
@@ -590,7 +615,7 @@ const CreateTreatmentPlanPatient = ({ data }) => {
                                     </div> */}
                             </div>
 
-                            <div className="patient-account-details teeth-surfaces">
+                            <div className="patient-account-details teeth-surfaces" ref={teethRef}>
                                 <div className="inputs-container">
 
                                     <div className="input">
@@ -619,9 +644,11 @@ const CreateTreatmentPlanPatient = ({ data }) => {
                                 <div className="teeth-container">
                                     {TEETH.map((tooth, idx) => (
                                         <div className={`tooth-container ${teethSelected?.[treatmentSelected]?.find(currTooth => currTooth === tooth) ? "active" : ""}`} key={idx} onClick={() => toggleTooth(tooth)}>
+                                            {idx <= 15 ? <div className="hover-name">{toothImage[tooth]?.slice(1, 2)?.toUpperCase() || ""}{toothImage[tooth]?.slice(2, toothImage[tooth].length) || "Normal"}</div> : null}
                                             {idx <= 15 ? <p>{tooth}</p> : null}
                                             <img src={`${process.env.REACT_APP_BACKEND_URL}/teeth/pictograme_terminate_dinti/${tooth}/${tooth}${toothImage[tooth] || ""}.png`} />
                                             {idx > 15 ? <p>{tooth}</p> : null}
+                                            {idx > 15 ? <div className="hover-name">{toothImage[tooth]?.slice(1, 2)?.toUpperCase() || ""}{toothImage[tooth]?.slice(2, toothImage[tooth]?.length) || "Normal"}</div>  : null}
                                         </div>
                                     ))}
                                 </div>
@@ -631,9 +658,11 @@ const CreateTreatmentPlanPatient = ({ data }) => {
                                 <div className="teeth-container kids-teeth">
                                     {TEETH_KIDS.map((tooth, idx) => (
                                         <div className={`tooth-container ${teethSelected?.[treatmentSelected]?.find(currTooth => currTooth === TEETH_KIDS_NUMBERS[idx]) ? "active" : ""}`} key={idx} onClick={() => toggleTooth(TEETH_KIDS_NUMBERS[idx])}>
+                                            {idx <= 9 ? <div className="hover-name">{toothImageInitialStatusKids[tooth]?.slice(1, 2)?.toUpperCase() || ""}{toothImageInitialStatusKids[tooth]?.slice(2, toothImageInitialStatusKids[tooth]?.length) || "Normal"}</div>  : null}
                                             {idx <= 9 ? <p>{TEETH_KIDS_NUMBERS[idx]}</p> : null}
                                             <img src={`${process.env.REACT_APP_BACKEND_URL}/teeth/pictograme_terminate_dinti/${tooth}/${tooth}${toothImageInitialStatusKids[tooth] || ""}.png`} />
                                             {idx > 9 ? <p>{TEETH_KIDS_NUMBERS[idx]}</p> : null}
+                                            {idx > 9 ? <div className="hover-name">{toothImageInitialStatusKids[tooth]?.slice(1, 2)?.toUpperCase() || ""}{toothImageInitialStatusKids[tooth]?.slice(2, toothImageInitialStatusKids[tooth]?.length) || "Normal"}</div> : null}
                                         </div>
                                     ))}
                                 </div>
@@ -711,7 +740,7 @@ const CreateTreatmentPlanPatient = ({ data }) => {
                             
                                 <div className="input">
                                     <p className="title">{cookies.language === "en" ? "Teeth" : "Dinti"}</p>
-                                    <input className="time-input" type="text" value={teethValue[idx]} disabled />
+                                    <input className="time-input" type="text" value={teethValue[idx]} onClick={() => teethRef.current.scrollIntoView({behavior: "smooth"})} readOnly />
                                 </div>
 
                                 <div className="input">
@@ -792,6 +821,14 @@ const CreateTreatmentPlanPatient = ({ data }) => {
                             });
                         }}>
                             <FontAwesomeIcon icon={faPlus} className="add-icon" />
+                            <p>{cookies?.language === "en" ? "Add treatment" : "Adauga tratament"}</p>
+                        </div>
+
+                        <div className={`scroll-button`} ref={scrollButtonRef} onClick={() => {
+                            setScrollUsed(curr => curr + 1);
+                            window.scrollTo({ left: 0, top: document.documentElement.scrollHeight, behavior: 'smooth' })
+                        }}>
+                            <FontAwesomeIcon icon={faAngleDown} className="scroll-icon" />
                         </div>
 
                         <button type="button" className={`save-button show`} onClick={async () => await saveChanges()}>

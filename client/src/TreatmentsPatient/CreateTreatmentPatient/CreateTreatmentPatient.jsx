@@ -350,7 +350,7 @@ const CreateTreatmentPatient = ({ data }) => {
                                             <p>{cookies.language === "en" ? "Dentition Type: " : "Tipul dentitiei: "}</p>
                                         </div> */}
                                         
-                                        <div className="options">
+                                        <div className="options column">
                                             {treatmentTypes.map((currTeethType, idx) => (
                                                 <>
                                                     <div className={`option ${currTeethType === treatmentType ? "active" : ""}`} key={idx} ref={ref => currTreatmentTypeRef.current[idx] = ref}>

@@ -72,7 +72,7 @@ exports.createOrganisation = async (req, res, next) => {
         createTableSql += '_id varchar(25) not null, ';
         createTableSql += 'startDate datetime not null, ';
         createTableSql += 'endDate datetime not null, ';
-        createTableSql += 'title varchar(128) not null, ';
+        createTableSql += 'title varchar(128), ';
         createTableSql += 'income int, ';
         createTableSql += 'incomePaid int, '; 
         createTableSql += 'typeIncome varchar(10), ';
@@ -184,7 +184,8 @@ exports.createOrganisation = async (req, res, next) => {
         createTableSql += 'totalPrice float not null, ';
         createTableSql += 'totalNegotiated float not null, ';
         createTableSql += 'materialPrice float not null, ';
-        createTableSql += 'notes text not null );';
+        createTableSql += 'notes text not null, ';
+        createTableSql += "sterilizations json not null default ('[]') );";
 
         await db.query(createTableSql, ['treatments_patients']);
 

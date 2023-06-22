@@ -7,14 +7,20 @@ import {
   Page,
   Text,
   View,
-  Document
+  Document,
+  Font,
+  StyleSheet
 } from "@react-pdf/renderer";
 import { useLocation, useParams } from "react-router-dom";
 import { TEETH, TEETH_KIDS, TEETH_KIDS_NUMBERS } from "../utils/TeethOrder";
 import { useCookies } from "react-cookie";
+import sourceSansProBold from "../fonts/source-sans-pro-bold.ttf";
+import sourceSansPro  from "../fonts/source-sans-pro.semibold.ttf";
 
 const DocumentPatientTreatment = ({ data : currData }) => {
 
+    Font.register({ family: "Source-Sans-Pro-Bold", src: sourceSansProBold, fontWeight: "bold" });
+    Font.register({ family: "Source-Sans-Pro", src: sourceSansPro });
 
     const { id, treatmentPlanId } = useParams();
     const location = useLocation();
@@ -154,12 +160,18 @@ const DocumentPatientTreatment = ({ data : currData }) => {
         });
     }, []);
 
-    useEffect(() => {
-        console.log(toothImage, toothImageInitialStatusKids, toothImageCurrentStatus, toothImageCurrentStatusKids);
-    }, [toothImage, toothImageInitialStatusKids, toothImageCurrentStatus, toothImageCurrentStatusKids]);
+    const styles = StyleSheet.create({
+        boldText: {
+            fontSize: 16,
+            textAlign: "center",
+            fontFamily: "Source-Sans-Pro-Bold"
+        },
 
-
-
+        normalText: {
+            fontSize: 14,
+            fontFamily: "Source-Sans-Pro"
+        }
+    });
 
     return initialize ? (
         <div>
@@ -167,12 +179,12 @@ const DocumentPatientTreatment = ({ data : currData }) => {
                 <Document>
                 <Page size="A4"> 
                     <View style={{ width: "90%", marginHorizontal: "auto", padding: 20, flex: 1, marginTop: 30 }}>
-                        <Text style={{ fontSize: 16, textAlign: "center", fontWeight: 700 }}>{cookies?.language === "en" ? "Treatment Plan" : "Plan de tratament"}</Text>
-                        <Text style={{ fontSize: 16, textAlign: "center", fontWeight: 700 }}>{new Date(treatmentPlan.date).getDate() < 10 ? `0${new Date(treatmentPlan.date).getDate()}` : new Date(treatmentPlan.date).getDate()}.{new Date(treatmentPlan.date).getMonth() + 1 < 10 ? `0${new Date(treatmentPlan.date).getMonth() + 1}` : new Date(treatmentPlan.date).getMonth() + 1}.{new Date(treatmentPlan.date).getFullYear()}</Text>
-                        <Text style={{ fontSize: 14, fontWeight: 700 }}>Pacient: {patientData?.firstname || ""} {patientData?.lastname || ""}</Text>
+                        <Text style={styles.boldText}>{cookies?.language === "en" ? "Treatment Plan" : "Plan de tratament"}</Text>
+                        <Text style={styles.boldText}>{new Date(treatmentPlan.date).getDate() < 10 ? `0${new Date(treatmentPlan.date).getDate()}` : new Date(treatmentPlan.date).getDate()}.{new Date(treatmentPlan.date).getMonth() + 1 < 10 ? `0${new Date(treatmentPlan.date).getMonth() + 1}` : new Date(treatmentPlan.date).getMonth() + 1}.{new Date(treatmentPlan.date).getFullYear()}</Text>
+                        <Text style={styles.normalText}>Pacient: {patientData?.firstname || ""} {patientData?.lastname || ""}</Text>
 
                         <View style={{ marginTop: 50 }}>
-                            <Text style={{ color: "blue", fontWeight: 700 }}>{cookies?.language === "en" ? "Initial Status" : "Status initial"}</Text>
+                            <Text style={{ color: "#8146ff", fontFamily: "Source-Sans-Pro-Bold" }}>{cookies?.language === "en" ? "Initial Status" : "Status initial"}</Text>
                        
 
                             <View style={{ flexDirection: "row", gap: "10px", marginTop: 20 }}>
@@ -180,7 +192,7 @@ const DocumentPatientTreatment = ({ data : currData }) => {
                                     if (idx >= 16) return <></>;
                                     return (
                                         <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-                                            <Text style={{ textAlign: "center", flex: 1, fontSize: 12 }}>{tooth}</Text>
+                                            <Text style={{ textAlign: "center", flex: 1, fontSize: 12, fontFamily: "Source-Sans-Pro" }}>{tooth}</Text>
                                             <Image style={{ width: '30px' }} src={{ uri:`${process.env.REACT_APP_URL}/teeth/pictograme_terminate_dinti/${tooth}/${tooth}${toothImage?.[tooth] || ""}.png`, method: "GET", headers: { "Cache-Control": "no-cache", "Access-Control-Allow-Origin": "*" }, body: "" }}  />
                                         </View>
                                     );
@@ -194,7 +206,7 @@ const DocumentPatientTreatment = ({ data : currData }) => {
                                         <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
                                             <Image style={{ width: '30px' }} src={{ uri:`${process.env.REACT_APP_URL}/teeth/pictograme_terminate_dinti/${tooth}/${tooth}${toothImage?.[tooth] || ""}.png`, method: "GET", headers: { "Cache-Control": "no-cache", "Access-Control-Allow-Origin": "*" }, body: "" }}  />
                                             <View style={{ flex: 1 }}></View>
-                                            <Text style={{ textAlign: "center", fontSize: 12 }}>{tooth}</Text>
+                                            <Text style={{ textAlign: "center", fontSize: 12, fontFamily: "Source-Sans-Pro" }}>{tooth}</Text>
                                         </View>
                                     );
                                 })}
@@ -205,7 +217,7 @@ const DocumentPatientTreatment = ({ data : currData }) => {
                                     if (idx >= 10) return <></>;
                                     return (
                                         <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-                                            <Text style={{ textAlign: "center", fontSize: 12, flex: 1 }}>{TEETH_KIDS_NUMBERS[idx]}</Text>
+                                            <Text style={{ textAlign: "center", fontSize: 12, flex: 1, fontFamily: "Source-Sans-Pro" }}>{TEETH_KIDS_NUMBERS[idx]}</Text>
                                             <Image style={{ width: '30px' }} source={`${process.env.REACT_APP_URL}/teeth/pictograme_terminate_dinti/${tooth}/${tooth}${toothImageInitialStatusKids[tooth] || ""}.png`} />
                                         </View>
                                     );
@@ -219,7 +231,7 @@ const DocumentPatientTreatment = ({ data : currData }) => {
                                         <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
                                             <Image style={{ width: '30px' }} source={`${process.env.REACT_APP_URL}/teeth/pictograme_terminate_dinti/${tooth}/${tooth}${toothImageInitialStatusKids[tooth] || ""}.png`} />
                                             <View style={{ flex: 1 }}></View>
-                                            <Text style={{ textAlign: "center", fontSize: 12 }}>{TEETH_KIDS_NUMBERS[idx]}</Text>
+                                            <Text style={{ textAlign: "center", fontSize: 12, fontFamily: "Source-Sans-Pro" }}>{TEETH_KIDS_NUMBERS[idx]}</Text>
                                         </View>
                                     );
                                 })}
@@ -228,13 +240,13 @@ const DocumentPatientTreatment = ({ data : currData }) => {
                         </View>
 
                         <View style={{ marginTop: 150 }}>
-                            <Text style={{ color: "blue" }}>{cookies?.language === "en" ? "Final Status" : "Status Final"}</Text>
+                            <Text style={{ color: "#8146ff", fontFamily: "Source-Sans-Pro-Bold" }}>{cookies?.language === "en" ? "Final Status" : "Status Final"}</Text>
                             <View style={{ flexDirection: "row", marginTop: 20 }}>
                                 {TEETH.map((tooth, idx) => {
                                     if (idx >= TEETH.length / 2) return <></>;
                                     return (
                                         <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-                                            <Text style={{ textAlign: "center", fontSize: 12, flex: 1 }}>{tooth}</Text>
+                                            <Text style={{ textAlign: "center", fontSize: 12, flex: 1, fontFamily: "Source-Sans-Pro" }}>{tooth}</Text>
                                             <Image style={{ width: '30px' }} source={`${process.env.REACT_APP_URL}/teeth/pictograme_terminate_dinti/${tooth}/${tooth}${toothImageCurrentStatus[tooth] || ""}.png`} />
                                         </View>
                                     );
@@ -248,7 +260,7 @@ const DocumentPatientTreatment = ({ data : currData }) => {
                                         <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
                                             <Image style={{ width: '30px' }} source={`${process.env.REACT_APP_URL}/teeth/pictograme_terminate_dinti/${tooth}/${tooth}${toothImageCurrentStatus[tooth] || ""}.png`} />
                                             <View style={{ flex: 1 }}></View>
-                                            <Text style={{ textAlign: "center", fontSize: 12 }}>{tooth}</Text>
+                                            <Text style={{ textAlign: "center", fontSize: 12, fontFamily: "Source-Sans-Pro" }}>{tooth}</Text>
                                         </View>
                                     );
                                 })}
@@ -259,7 +271,7 @@ const DocumentPatientTreatment = ({ data : currData }) => {
                                     if (idx >= TEETH_KIDS.length / 2) return <></>;
                                     return (
                                         <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-                                            <Text style={{ textAlign: "center", fontSize: 12, flex: 1 }}>{TEETH_KIDS_NUMBERS[idx]}</Text>
+                                            <Text style={{ textAlign: "center", fontSize: 12, flex: 1, fontFamily: "Source-Sans-Pro" }}>{TEETH_KIDS_NUMBERS[idx]}</Text>
                                             <Image style={{ width: '30px' }} source={`${process.env.REACT_APP_URL}/teeth/pictograme_terminate_dinti/${tooth}/${tooth}${toothImageCurrentStatusKids[tooth] || ""}.png`} />
                                         </View>
                                     );
@@ -273,7 +285,7 @@ const DocumentPatientTreatment = ({ data : currData }) => {
                                         <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
                                             <Image style={{ width: '30px' }} source={`${process.env.REACT_APP_URL}/teeth/pictograme_terminate_dinti/${tooth}/${tooth}${toothImageCurrentStatusKids[tooth] || ""}.png`} />
                                             <View style={{ flex: 1 }}></View>
-                                            <Text style={{ textAlign: "center", fontSize: 12 }}>{TEETH_KIDS_NUMBERS[idx]}</Text>
+                                            <Text style={{ textAlign: "center", fontSize: 12, fontFamily: "Source-Sans-Pro" }}>{TEETH_KIDS_NUMBERS[idx]}</Text>
                                         </View>
                                     );
                                 })}

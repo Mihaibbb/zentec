@@ -15,8 +15,8 @@ const Sterilizations = ({ data }) => {
     const [cookies, setCookie] = useCookies();
     const [options, setOptions] = useState([cookies?.language === "en" ? "Instruments" : "Instrumentar", cookies?.language === "en" ? "List" : "Lista"]);
     const [activeOption, setActiveOption] = useState(0);
-
-    const [sterilizationsList, setSterilizationsList] = useState(data.organisation?.sterilizations || []);
+    const initialSterilizations = data.organisation?.sterilizations?.sort((ster1, ster2) => new Date(ster2.add_date).getTime() - new Date(ster1.add_date).getTime()) || [];
+    const [sterilizationsList, setSterilizationsList] = useState(initialSterilizations);
 
     const [instruments, setInstruments] = useState(data.organisation?.sterilization_instruments || []);
     const [instrumentsQuery, setInstrumentsQuery] = useState("");
@@ -68,6 +68,8 @@ const Sterilizations = ({ data }) => {
             window.location.reload();
         }
     }, [location]);
+
+
 
 
     useEffect(() => {
@@ -428,6 +430,7 @@ const Sterilizations = ({ data }) => {
     
                     <div className="add-button" onClick={() => activeOption === 0 ? navigation("/create-instrument") : navigation("/create-sterilization")}>
                         <FontAwesomeIcon icon={faPlus} className="add-icon" />
+                        <p>{cookies?.language === "en" ? `Add ${activeOption === 0 ? "instrument" : "sterilization"}` : `Adauga ${activeOption === 0 ? "instrument" : "sterilizare"}`}</p>
                     </div>
                     </div>
     

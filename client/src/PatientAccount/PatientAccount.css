@@ -7,7 +7,7 @@
 
 .account-container .patient-name
 {
-    color: var(--text-color-3);
+    color: var(--text-color);
     display: flex;
     width: 100%;
     justify-content: flex-start;
@@ -21,9 +21,9 @@
     width: 24px;
     height: 24px;
     border-radius: 50%;
-    border: 2px solid var(--text-color-3);
+    border: 2px solid var(--contrast-color);
     padding: .5rem;
-    
+    color: var(--contrast-color);
 }
 
 .account-container .patient-name .icon 
@@ -495,7 +495,7 @@ body.light .patient-historic .historic-options .historic-option.active
 
 .account-container .add-button 
 {
-    padding-inline: 10px 35px;
+    padding-inline: 15px 30px;
     border-radius: 15px;
     cursor: pointer;
     right: 15px;
@@ -506,12 +506,17 @@ body.light .patient-historic .historic-options .historic-option.active
 {
     width: 24px;
     height: 24px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    margin-right: .75rem;
+    margin-block: .5rem;
 }
 
 .account-container .add-button p 
 {
     color: #fff;
-    font-weight: 600;
+    font-weight: 700;
+    font-size: 18px;
 }
 
 .account-container .add-button:hover 
