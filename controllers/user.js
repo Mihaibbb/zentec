@@ -2977,8 +2977,8 @@ exports.getToothImageTreatmentPlan = async (req, res) => {
 exports.updateTreatmentPatientSterilization = async (req, res) => {
     const { organisationId, id, sterilizations } = req.body;
     try {
-        const treatmentsPaient = await db.query("SELECT * FROM ?? WHERE id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.treatments_patients`, id]);
-        if (treatmentsPaient?.length !== 1) return res.status(404).json({ success: false, message: "User not found!" });
+        const treatmentsPatient = await db.query("SELECT * FROM ?? WHERE id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.treatments_patients`, id]);
+        if (treatmentsPatient?.length !== 1) return res.status(404).json({ success: false, message: "User not found!" });
         
         await db.query("UPDATE ?? SET sterilizations = ? WHERE id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.treatments_patients`, JSON.stringify(sterilizations), id]);
         res.status(200).json({ success: true });
@@ -2987,6 +2987,46 @@ exports.updateTreatmentPatientSterilization = async (req, res) => {
         res.status(404).json({ success: false, error: e, message: "An error occured!" });
     }
 };
+
+exports.removeTreatmentPatientSterilizaton = async (req, res) => {
+    const { organisationId, id, sterilizationId } = req.params;
+    try {
+        const treatmentsPatient = await db.query("SELECT * FROM ?? WHERE id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.treatments_patients`, id]);
+        if (treatmentsPatient?.length !== 1) return res.status(404).json({ success: false, message: "User not found!" });
+        const treatmentPatient = treatmentsPatient[0];
+        const newSterilizations = JSON.parse(treatmentPatient.sterilizations).filter(sterilization => {
+            return sterilization.id.toString() !== sterilizationId.toString();
+        });
+    
+        await db.query("UPDATE ?? SET sterilizations = ? WHERE id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.treatments_patients`, JSON.stringify(newSterilizations), id]);
+        res.status(200).json({ success: true });
+    } catch (e) {
+        console.log(e);
+        res.status(404).json({ success: false, error: e, message: "An error occured!" });
+    }
+};
+
+// exports.searchTreatmentPatientSterilizations = async (req, res) => {
+//     const { organisationId, id, searchQuery } = req.body;
+//     try {
+//         const treatmentsPaient = await db.query("SELECT * FROM ?? WHERE id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.treatments_patients`, id]);
+//         if (treatmentsPaient?.length !== 1) return res.status(404).json({ success: false, message: "User not found!" });
+//         const treatmentPatient = treatmentsPatient[0];
+//         const sterilizations = JSON.parse(treatmentPatient.sterilizations);
+//         const filteredSterilizations = await sterilizations && await sterilizations.length > 0 && await sterilizations.filter((sterilization, idx) => {
+//             return (
+//                 (sterilization.category.toLowerCase().search(searchQuery.toLowerCase()) !== -1 || sterilization.category.toLowerCase().includes(searchQuery.toLowerCase())) ||
+//                 (sterilization.id.toString().search(searchQuery.toLowerCase()) !== -1 || sterilization.id.toString().includes(searchQuery.toLowerCase())) 
+//             );
+//         });
+        
+//         if (!await filteredPatientCategories || !await filteredPatientCategories.length) return res.status(200).json({ success: false, message: { en: "No results found!", ro: "Nu a fost gasit niciun rezultat!" } });
+//         res.status(200).json({ success: true, patientCategories: await filteredPatientCategories });
+//     } catch (e) {
+//         console.log(e);
+//         res.status(404).json({ success: false, error: e, message: "An error occured!" });
+//     }
+// };
 
 
 const sameDate = (date1, date2) => {

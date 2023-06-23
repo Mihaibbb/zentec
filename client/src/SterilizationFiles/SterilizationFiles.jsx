@@ -13,12 +13,13 @@ import { useLocation, useParams } from "react-router-dom";
 import sourceSansProBold from "../fonts/source-sans-pro-bold.ttf";
 import sourceSansPro from "../fonts/source-sans-pro.regular.ttf";
 
-const SterilizationFiles = ({ data : currData }) => {
+const SterilizationFiles = ({ data : currData, sterilizationBarCode, sterilizationId }) => {
 
     Font.register({ family: "Source-Sans-Pro-Bold", src: sourceSansProBold, fontWeight: "bold" });
     Font.register({ family: "Source-Sans-Pro", src: sourceSansPro });
 
-    const { id } = useParams();
+    const params = useParams();
+    const id = sterilizationId || params?.id;
     const location = useLocation();
     const sterilizationData = useMemo(() => {
         return currData.organisation.sterilizations.find(sterilization => sterilization._id === id);
@@ -196,7 +197,7 @@ const SterilizationFiles = ({ data : currData }) => {
         if (!sterilizationData || initialize) return;
         JSON.parse(sterilizationData.sterilization_instruments).forEach((instrument, idx) => {
             console.log(instrument);
-            if (Number(instrument.quantity) === 1 || !instrument.multipleCode) {
+            if (Number(instrument.quantity) === 1 && !instrument.multipleCode) {
                 const barCodeValue = `${new Date(sterilizationData.add_date).getFullYear()}${new Date(sterilizationData.add_date).getMonth() + 1 < 10 ? `0${new Date(sterilizationData.add_date).getMonth() + 1}` : new Date(sterilizationData.add_date).getMonth() + 1}${new Date(sterilizationData.add_date).getDate() < 10 ? `0${new Date(sterilizationData.add_date).getDate()}` : new Date(sterilizationData.add_date).getDate()}${sterilizationData.id}1`;
                 
                 setData(currData => {
@@ -209,9 +210,8 @@ const SterilizationFiles = ({ data : currData }) => {
                 setBarCodes(currValues => [...currValues, barCodeValue]);
                 
             } else {
-                console.log(Number(instrument.quantity));
                 for (let quantity = 0; quantity < Number(instrument.quantity); quantity++) {
-                    const barCodeValue = `${new Date(sterilizationData.add_date).getFullYear()}${new Date(sterilizationData.add_date).getMonth() + 1 < 10 ? `0${new Date(sterilizationData.add_date).getMonth() + 1}` : new Date(sterilizationData.add_date).getMonth() + 1}${new Date(sterilizationData.add_date).getDate() < 10 ? `0${new Date(sterilizationData.add_date).getDate()}` : new Date(sterilizationData.add_date).getDate()}${sterilizationData.id}${quantity}`;
+                    const barCodeValue = `${new Date(sterilizationData.add_date).getFullYear()}${new Date(sterilizationData.add_date).getMonth() + 1 < 10 ? `0${new Date(sterilizationData.add_date).getMonth() + 1}` : new Date(sterilizationData.add_date).getMonth() + 1}${new Date(sterilizationData.add_date).getDate() < 10 ? `0${new Date(sterilizationData.add_date).getDate()}` : new Date(sterilizationData.add_date).getDate()}${sterilizationData.id}${instrument.multipleCode ? quantity : 1}`;
                     setData(currData => {
                         let newData = {};
                         JsBarcode(newData, barCodeValue);
@@ -237,23 +237,23 @@ const SterilizationFiles = ({ data : currData }) => {
 
     return initialize ? (
         <div>
-            <PDFViewer style={{ height: "100vh", width: "100%" }}>
+            <PDFViewer style={{ height: sterilizationBarCode ? 200 : "100vh", width: sterilizationBarCode ? "150%" : "100%" }}>
                 <Document>
                     {JSON.parse(sterilizationData.sterilization_instruments).map((instrument, idx) => {
-                        if (Number(instrument.quantity) > 1 && instrument.multipleCode) {
+                        if (Number(instrument.quantity) > 1 || instrument.multipleCode) {
                             const currSterilizations = [];
                             for (let quantity = 0; quantity < Number(instrument.quantity); quantity++)
                                 currSterilizations.push(
-                                    <MyDocument 
-                                        barCode={barCodes[idx  + quantity]} 
+                                    !sterilizationBarCode || sterilizationBarCode.toString() === barCodes[idx  + quantity].toString() ?  <MyDocument 
+                                        barCode={barCodes[idx  + (Number(instrument.quantity) > 1 ? quantity : 0)]} 
                                         assistant={`${sterilizationAssistant.firstname.slice(0, 1)}. ${sterilizationAssistant.lastname}`} 
                                         iso={instrument.iso}
                                         instrument={instrument.name}
                                         sarja={sterilizationData.sarja}
                                         addDate={`${new Date(sterilizationData.add_date).getDate() < 10 ? `0${new Date(sterilizationData.add_date).getDate()}` : new Date(sterilizationData.add_date).getDate()}.${new Date(sterilizationData.add_date).getMonth() + 1 < 10 ? `0${new Date(sterilizationData.add_date).getMonth() + 1}` : new Date(sterilizationData.add_date).getMonth() + 1}.${new Date(sterilizationData.add_date).getFullYear()}`}
                                         expireDate={`${new Date(sterilizationData.expire_date).getDate() < 10 ? `0${new Date(sterilizationData.expire_date).getDate()}` : new Date(sterilizationData.expire_date).getDate()}.${new Date(sterilizationData.expire_date).getMonth() + 1 < 10 ? `0${new Date(sterilizationData.expire_date).getMonth() + 1}` : new Date(sterilizationData.expire_date).getMonth() + 1}.${new Date(sterilizationData.expire_date).getFullYear()}`}
-                                        barCodeData={data[idx  + quantity]}
-                                    />
+                                        barCodeData={data[idx  + (Number(instrument.quantity) > 1 ? quantity : 0)]}
+                                    /> : <></>
                                 );
 
                             return currSterilizations;

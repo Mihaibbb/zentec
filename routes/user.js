@@ -106,7 +106,8 @@ const {
     getToothImageInitialStatus,
     getToothImageCurrentStatus,
     getToothImageTreatmentPlan,
-    updateTreatmentPatientSterilization
+    updateTreatmentPatientSterilization,
+    removeTreatmentPatientSterilizaton
 } = require("../controllers/user");
 
 router.post("/create-appointment", createAppointment);
@@ -253,6 +254,8 @@ router.get("/get-tooth-image-treatment-plan/:organisationId/:patientId/:treatmen
 
 // Treatment patient sterilizations
 
-router.put("/update-treatment-patient-sterilization", updateTreatmentPatientSterilization);
+router.put("/update-treatment-patient-sterilizations", updateTreatmentPatientSterilization);
+router.delete("/remove-treatment-patient-sterilization/:organisationId/:id/:sterilizationId", removeTreatmentPatientSterilizaton);
+// router.post("/search-treatment-patient-sterilizations", searchTreatmentPatientSterilizations);
 
 module.exports = router;
