@@ -125,7 +125,35 @@
 }
 
 
+@media only screen and (max-width: 800px)
+{
+    .account-details.form, .assistants-details
+    {
+        margin-left: initial;
+        margin-right: initial;
+    }
 
+    .account-details.form
+    {
+        /* align-items: flex-start; */
+        justify-content: center;
+        /* margin-left: 5%; */
+    }
 
+    .account-details.form .account-flex 
+    {
+        flex-direction: column;
+    }
 
+    .account-container.input,
+    .account-flex
+    {
+        width: 100%;
+        max-width: 300px;
+    }
 
+    .profile-container .users-list, .profile-container .assistants-details
+    {
+        margin: 0 auto;
+    }
+}

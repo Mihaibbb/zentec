@@ -785,3 +785,25 @@ body.light .patient-historic .historic-options .historic-option.active
         margin-top: initial;
     }
 }
+
+@media only screen and (max-width: 950px) 
+{
+    .account-container.patients .treatment-categories-details
+    {
+        overflow-x: hidden;
+    }
+
+    .teeth-container
+    {
+        overflow-x: auto;
+    }
+}
+
+@media only screen and (max-width: 750px)
+{
+    .account-container .documents-container
+    {
+        justify-content: center;
+        margin-bottom: 10rem;
+    }
+}

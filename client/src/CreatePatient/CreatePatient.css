@@ -239,4 +239,10 @@ body.light .form button.confirm-button
         width: 90%;
 
     }
+
+    .form .input 
+    {
+        width: 100%;
+        max-width: 300px;
+    }
 }

@@ -264,7 +264,7 @@ const GenerateSterilization = ({ data }) => {
                     <TickAnimation title={cookies?.language === "en" ? "Sterilizations added successfully!" : "Sterilizarile au fost adaugate cu succes!"} animationFinished={animationFinished} />
                 ) : (
                     <div className="no-video-content" ref={noVideoContentRef}>
-                        <div className="go-back" onClick={() => navigation(-1)}>
+                        <div className="go-back" onClick={() => navigation(`/view-treatment-sterilization/${params?.id}/${params?.treatmentId}`)}>
                             <FontAwesomeIcon icon={faAngleLeft} />
                         </div>
                         <div className="patient-account-details">

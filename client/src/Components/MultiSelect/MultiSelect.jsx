@@ -24,7 +24,7 @@ const MultiSelect = ({ options, colors, label, handleChanges, defaultValue, widt
             <Autocomplete
                 sx={{ 
                     m: 1, 
-                    width: width || 500,
+                    width: window.innerWidth > 800 ? ( width || 500) : "100%",
                     '& .MuiButtonBase-root': {
                         backgroundColor: "var(--over-difference-color)",
                         color: "var(--text-color-2)"
