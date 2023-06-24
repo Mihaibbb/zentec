@@ -165,8 +165,8 @@ const Appointments = ({ data }) => {
 
 
     // const { startHour, endHour, gaps, doctors } = location?.state;
-    const startHour = useMemo(() => 8, []);
-    const endHour = useMemo(() => 20, []);
+    const startHour = useMemo(() => data.organisation.details[0]?.start_hour || 8, []);
+    const endHour = useMemo(() => data.organisation.details[0]?.end_hour || 20, []);
     const gaps = useMemo(() => 4, []);
     const minutesPerGap = useMemo(() => 60 / gaps, []);
     

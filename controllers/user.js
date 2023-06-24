@@ -1092,14 +1092,10 @@ exports.addSMS = async (req, res) => {
         const detailsRow = await db.query("SELECT * FROM ??", [`${process.env.DB_PREFIX}org_${organisationId}.details`]);
         const details = await detailsRow[0];
         const currentSmsMessage = JSON.parse(details["sms_message"]);
-        
-        let newId = generateId(25);
-        while (currentSmsMessage.some(smsMessage => smsMessage.id === newId)) newId = generateId(25);
 
         currentSmsMessage.push({
-            scheduledAt,
-            sms,
-            id: newId
+            scheduledAt: scheduledAt === "now" ? scheduledAt : Number(scheduledAt),
+            message,
         });
 
         await db.query("UPDATE ?? SET sms_message = ? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.details`, JSON.stringify(currentSmsMessage), organisationId]);
@@ -1119,14 +1115,14 @@ exports.addSMS = async (req, res) => {
 };
 
 exports.removeSMS = async (req, res) => {
-    const { organisationId, smsId } = req.body;
+    const { organisationId, smsId } = req.query;
 
     try {
         const detailsRow = await db.query("SELECT * FROM ??", [`${process.env.DB_PREFIX}org_${organisationId}.details`]);
         const details = await detailsRow[0];
         const currentSmsMessage = JSON.parse(details["sms_message"]);
 
-        const newSmsMessage = currentSmsMessage.filter(smsMessage => smsMessage.id === smsId);
+        const newSmsMessage = currentSmsMessage.filter((_, idx) => idx !== Number(smsId));
 
         await db.query("UPDATE ?? SET sms_message = ? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.details`, JSON.stringify(newSmsMessage), organisationId]);
         
@@ -1151,11 +1147,10 @@ exports.editSMS = async (req, res) => {
         const details = await detailsRow[0];
         const currentSmsMessage = JSON.parse(details["sms_message"]);
 
-        const newSmsMessage = currentSmsMessage.map(smsMessage => {
-            if (smsMessage.id === smsId) return {
-                id: smsMessage.id,
-                sms: sms,
-                scheduledAt: scheduledAt
+        const newSmsMessage = currentSmsMessage.map((smsMessage, idx) => {
+            if (idx === Number(smsId)) return {
+                message: sms,
+                scheduledAt: scheduledAt === "now" ? scheduledAt : Number(scheduledAt)
             };
 
             return smsMessage;

@@ -6,11 +6,12 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faClockRotateLeft, faEllipsis, faFileArrowDown, faFileArrowUp, faMagnifyingGlass, faMinus, faPlus, faSearch, faSortDown, faTimes, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faClockRotateLeft, faEdit, faEllipsis, faFileArrowDown, faFileArrowUp, faMagnifyingGlass, faMinus, faPencil, faPlus, faSearch, faSortDown, faTimes, faTrashCan, faUser } from "@fortawesome/free-solid-svg-icons";
 import greenTick from "../imgs/green-tick.mp4";
 import greenTickWhiteTheme from "../imgs/green-tick-light-theme.mp4";
 import { useRef } from "react";
 import TickAnimation from "../utils/TickAnimation";
+import { faClock } from "@fortawesome/free-regular-svg-icons";
 
 const Profile = ({ data }) => {
 
@@ -454,9 +455,7 @@ const Profile = ({ data }) => {
 
                 window.location.reload();
             }
-
-            console.log("Error!");
-
+            
         } catch (e) {
             console.log(e);
           
@@ -977,8 +976,26 @@ const Profile = ({ data }) => {
                                 </div>
                             </div>
                         ) : activeOption === 2 ? (
-                            <div className="services-details">
-
+                            <div className="sms-details">
+                                {currentSMS.map((sms, idx) => (
+                                    <div className="sms-container" key={idx}>
+                                        <h2> <FontAwesomeIcon icon={faClock} className="schedule-icon" /> {cookies?.language === 'en' ? `Scheduled: ${sms.scheduledAt === "now" ? "when creating appointment" : `${sms.scheduledAt} hours before appointment`}` : `Programat: ${sms.scheduledAt === "now" ? "cand s-a adaugat programarea" : `${sms.scheduledAt}${Number(sms.scheduledAt) >= 20 ? " de" : ""} ore inaintea programarii`}`}</h2>
+                                        <p>{sms.message}</p>
+                                        <div className="edit-container" onClick={() => navigate(`/edit-sms/${idx}`)}>
+                                            <FontAwesomeIcon icon={faPencil} className="edit-icon" />
+                                            <p>{cookies?.language === "en" ? "Edit" : "Editeaza"}</p>
+                                        </div>
+                                        <div className="remove-container" onClick={async () => currentSMS.length === 1 ? setErrorMessage(cookies?.language === "en" ? "You must have at least one sms scheduled!" : "Trebuie sa ai minim un SMS programat!") : await removeSMS(idx)}>
+                                            <FontAwesomeIcon icon={faTrashCan} className="edit-icon" />
+                                            <p>{cookies?.language === "en" ? "Remove" : "Sterge"}</p>
+                                        </div>
+                                    </div>
+                                ))}
+                                 <div className="add-button" onClick={() => navigate("/add-sms")}>
+                                    <FontAwesomeIcon icon={faPlus} className="add-icon" />
+                                    <p>{cookies?.language === "en" ? "Add SMS" : "Adauga SMS"}</p>
+                                </div>
+                                <p className="error">{errorMessage}</p>
                             </div>
                         ) :  activeOption === 3 ? (
                             <div className="treatment-categories-details">

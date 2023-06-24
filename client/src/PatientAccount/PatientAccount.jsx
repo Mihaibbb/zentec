@@ -1,4 +1,4 @@
-import { faAddressBook, faAddressCard, faAngleLeft, faBarcode, faCalendar, faCheck, faCity, faDeleteLeft, faEllipsis, faEnvelope, faFilePdf, faIdBadge, faList, faMars, faMinus, faNoteSticky, faPhone, faPlus, faQrcode, faSearch, faTimes, faTooth, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faAddressBook, faAddressCard, faAngleLeft, faBarcode, faCalendar, faCheck, faCity, faCloudArrowDown, faDeleteLeft, faDownLong, faEllipsis, faEnvelope, faFilePdf, faIdBadge, faList, faMars, faMinus, faNoteSticky, faPhone, faPlus, faQrcode, faSearch, faTimes, faTooth, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState, useEffect, useRef, useMemo, useLayoutEffect } from "react";
 import { useCookies } from "react-cookie";
@@ -76,6 +76,7 @@ const PatientAccount = ({ data }) => {
     const [videoMessage, setVideoMessage] = useState("");
     const initialActiveOption = historicPage || location?.state?.activeOption || 0;
     const [activeOption, setActiveOption] = useState(initialActiveOption);
+    const [activeDocumentIdx, setActiveDocumentIdx] = useState(-1);
 
     const [documentMessage, setDocumentMessage] = useState("");
     const [documentRemoved, setDocumentRemoved] = useState(false);
@@ -785,7 +786,19 @@ const PatientAccount = ({ data }) => {
         return currTreatment;
     };
 
-
+    const downloadDocument = (source, documentSource) => {
+        fetch(source).then(response => {
+            response.blob().then(blob => {
+                // Creating new object of PDF file
+                const fileURL = window.URL.createObjectURL(blob);
+                // Setting various property values
+                let alink = document.createElement('a');
+                alink.href = fileURL;
+                alink.download = documentSource;
+                alink.click();
+            })
+        })
+    };
     
     return (
         <div className="account-container patients"> 
@@ -1060,15 +1073,26 @@ const PatientAccount = ({ data }) => {
                                 {/* <h2 className="title">{options[historicPage]}</h2> */}
                                 {documents.map((document, idx) => (
                                     <>
-                                        <div className="document">
+                                        <div className={`document ${idx === activeDocumentIdx ? "zoom-in" : ""}`} onClick={e => {
+                                            if (e.target.tagName.toLowerCase() === "svg" || e.target.tagName.toLowerCase() === "path") return;
+                                            if (e.target.classList.contains("edit-container") || e.target.classList.contains("remove-container")) return;
+                                            if (activeDocumentIdx === idx) setActiveDocumentIdx(-1);
+                                            else setActiveDocumentIdx(idx);
+                                        }}>
                                             <img className="document-image" loading="lazy" src={`${process.env.REACT_APP_BACKEND_URL}${document.source}`} alt="document" />
                                             <h2 className="document-name">{document.fileName}</h2>
-                                            <div className="edit-container" onClick={() => window.location.replace(`/patient/${param?.id}/${document.photoId}/edit`)}>
-                                                <FontAwesomeIcon icon={faPenToSquare} className="edit-icon" />
-                                            </div>
+                                            {activeDocumentIdx === idx ? (
+                                                <div className="edit-container" onClick={() => downloadDocument(`${process.env.REACT_APP_BACKEND_URL}${document.source}`, document.fileName)}>
+                                                    <FontAwesomeIcon icon={activeDocumentIdx === idx ? faCloudArrowDown : faPenToSquare} className="edit-icon" />
+                                                </div>
+                                            ) : (
+                                                <div className="edit-container" onClick={() => window.location.replace(`/patient/${param?.id}/${document.photoId}/edit`)}>
+                                                        <FontAwesomeIcon icon={activeDocumentIdx === idx ? faCloudArrowDown : faPenToSquare} className="edit-icon" />
+                                                    </div>
+                                            )}
 
-                                            <div className="remove-container" onClick={async () => await removeDocument(document.photoId, document.source, document.fileName)}>
-                                                <FontAwesomeIcon icon={faTrashCan} className="remove-icon icon" />
+                                            <div className={"remove-container"} onClick={async () => activeDocumentIdx === idx ? setActiveDocumentIdx(-1) : await removeDocument(document.photoId, document.source, document.fileName)}>
+                                                <FontAwesomeIcon icon={activeDocumentIdx === idx ? faTimes : faTrashCan} className="remove-icon icon" />
                                             </div>
                                         </div>
                             

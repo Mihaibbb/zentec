@@ -124,6 +124,115 @@
     font-size: 30px;
 }
 
+.profile-container .sms-details 
+{
+    margin-inline: 2.5rem;
+    margin-block: 1.5rem;
+}
+
+.profile-container .sms-details .sms-container 
+{
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    background: var(--over-difference-color-2);
+    width: 100%;
+    border: 2px solid var(--contrast-color);
+    border-radius: 15px;
+    padding: .5rem;
+    padding-bottom: 5rem;
+}
+
+.profile-container .sms-details .sms-container h2 
+{
+    color: var(--text-color);
+    margin-top: 10px;
+    margin-bottom: 0;
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+}
+
+.profile-container .sms-details .sms-container h2 .schedule-icon
+{
+    margin-left: .25rem;
+    color: var(--contrast-color);
+}
+
+.profile-container .sms-details .sms-container p
+{
+    font-weight: 600;
+}
+
+.profile-container .sms-details .sms-container > p
+{
+    color: var(--text-color-3);
+    font-size: 20px;
+    margin-left: 10px;
+}
+
+.profile-container .sms-details .error 
+{
+    margin-top: 1rem;
+}
+
+.profile-container .sms-details .sms-container .edit-container
+{
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: .5rem;
+    padding-inline: 1.5rem;
+    border-radius: 10px;
+    background: var(--contrast-color-highlight);
+    color: rgba(255, 255, 255, .8);
+    cursor: pointer;
+    transition: all 350ms ease-in-out;
+}
+
+.profile-container .sms-details .sms-container .remove-container
+{
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: .5rem;
+    padding-inline: 1.5rem;
+    border-radius: 10px;
+    background: var(--error-color);
+    color: rgba(255, 255, 255, .8);
+    cursor: pointer;
+    transition: all 350ms ease-in-out;
+}
+
+.profile-container .sms-details .sms-container .remove-container:hover 
+{
+    filter: brightness(1.25);
+}
+
+/* .profile-container .sms-details .sms-container .edit-container p 
+{
+    width: 0;
+    opacity: 0;
+    transition: width 350ms ease-in-out;
+} */
+
+.profile-container .sms-details .sms-container .edit-container:hover 
+{
+    background: var(--contrast-color);
+}
+
+/* .profile-container .sms-details .sms-container .edit-container:hover p 
+{
+    opacity: 1;
+    width: 100%;
+} */
+
 
 @media only screen and (max-width: 800px)
 {

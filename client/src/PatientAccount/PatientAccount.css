@@ -549,6 +549,16 @@ body.light .patient-historic .historic-options .historic-option.active
     transition: all 350ms ease-in-out;
 }
 
+.account-container .documents-container .document.zoom-in
+{
+    position: absolute;
+    z-index: 999999999;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
 .account-container .documents-container .document img 
 {
     width: 100%;
@@ -560,9 +570,14 @@ body.light .patient-historic .historic-options .historic-option.active
     position: relative;
     z-index: -1;
  
-    transition: all 350ms ease-in-out;
+    transition: border-radius 350ms ease-in-out;
     
 
+}
+
+.account-container .documents-container .document.zoom-in img 
+{
+    height: 90%;
 }
 
 .account-container .documents-container .document h2 
@@ -571,6 +586,7 @@ body.light .patient-historic .historic-options .historic-option.active
     text-align: center;
     font-size: 22px;
     font-family: "Source Sans Pro";
+    color: var(--text-color);
 }
 
 .account-container .documents-container .document:hover 
@@ -726,6 +742,8 @@ body.light .patient-historic .historic-options .historic-option.active
     grid-template-columns: auto auto auto;
     grid-gap: 1.5rem;
 }
+
+
 
 @keyframes update_btn {
     33% {

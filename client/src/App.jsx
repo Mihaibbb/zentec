@@ -50,6 +50,8 @@ import CreateTreatmentPatient from "./TreatmentsPatient/CreateTreatmentPatient/C
 import EditTreatmentPatient from "./TreatmentsPatient/EditTreatmentPatient/EditTreatmetnPatient";
 import GenerateSterilization from "./TreatmentSterilization/GenerateSterilization/GenerateSterilization";
 import ViewTreatmentSterilization from "./TreatmentSterilization/ViewSterilization/ViewTreatmentSterilization";
+import EditSMS from "./EditSMS/EditSMS";
+import CreateSMS from "./CreateSMS/CreateSMS";
 
 
 const App = () => {
@@ -210,6 +212,8 @@ const App = () => {
                                 <Route path="edit-treatment-patient/:id/:treatmentId" element={<EditTreatmentPatient data={data} />} />
                                 <Route path="view-treatment-sterilization/:id/:treatmentId" element={<ViewTreatmentSterilization data={data} />} />
                                 <Route path="generate-sterilization/:id/:treatmentId" element={<GenerateSterilization data={data} />} />
+                                <Route path="edit-sms/:id" element={<EditSMS data={data} />} />
+                                <Route path="add-sms" element={<CreateSMS data={data} />} />
                             </>
                         ) : (
                             <>

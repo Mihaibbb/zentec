@@ -2,6 +2,7 @@
 {
     
     font-weight: bold;
+    color: var(--text-color);
 }
 
 .input .text-variables .list
@@ -14,14 +15,21 @@
 .input .text-variables .list .item 
 {
     background: var(--contrast-color);
-    padding: .5rem;
+    padding: .5rem 1rem;
     border-radius: 2rem;
     cursor: pointer;
+    transition: all 350ms ease-in-out;
+}
+
+.input .text-variables .list .item:hover 
+{
+    filter: brightness(1.25);
 }
 
 .input .text-variables .list .item .item-text 
 {
     margin: 0;
+    color: rgba(255, 255, 255, .85);
 }
 
 .input textarea

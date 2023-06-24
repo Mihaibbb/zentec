@@ -54,6 +54,7 @@ body.light .doctors-filter .filter-container
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    font-weight: bold;
 }
 
 .element-title 
@@ -64,7 +65,7 @@ body.light .doctors-filter .filter-container
 
 .filter-container .filter-doctor .close-icon
 {
-    color: rgba(255, 255, 255, .8);
+    color: var(--text-color);
     cursor: pointer;
     width: 18px;
     height: 18px;
