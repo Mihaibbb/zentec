@@ -94,7 +94,7 @@ const CreateAssistant = ({ data }) => {
                     <TickAnimation title={cookies.language === "en" ? "Assistant added successfully!" : "Personalul a fost adaugat cu succes!"} animationFinished={animationFinished} />
                 ) : (
                 <div className="no-video-content" ref={noVideoContentRef}>
-                    <h2 className="title">{cookies.langauge === "en" ? "Add Assistant" : "Adauga Personal"}</h2>
+                    <h2 className="title">{cookies.langauge === "en" ? "Add assistant" : "Adauga personal"}</h2>
                     
                     <div className="go-back" onClick={() => navigate(-1)}>
                         <FontAwesomeIcon icon={faAngleLeft} />

@@ -3,7 +3,7 @@ import './Appointments.css';
 import Navigation from '../Components/Navigation/Navigation';
 import Header from '../Components/Header/Header';
 import { useLocation } from 'react-router-dom';
-import { useState, useRef, useEffect, useMemo } from 'react';
+import { useState, useRef, useEffect, useMemo, useLayoutEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faAngleDown, faAngleLeft, faAngleRight, faAngleUp, faBan, faMinus, faPlus, faTimes, faUser, faTicket } from '@fortawesome/free-solid-svg-icons';
 import { useCookies } from 'react-cookie';
@@ -94,7 +94,7 @@ const Appointments = ({ data }) => {
     const [patientSaved, setPatientSaved] = useState(true);
     const [appointmentId, setAppointmentId] = useState();
     const [statusMessage, setStatusMessage] = useState();
-    const [activeGaps, setActiveGaps] = useState(false);
+    const [activeGaps, setActiveGaps] = useState(cookies?.activeGaps || true);
     const [errorMessage, setErrorMessage] = useState("");
     const [activeErrorMessage, setActiveErrorMessage] = useState();
     const [headerElement, setHeaderElement] = useState(null);
@@ -1751,6 +1751,10 @@ const Appointments = ({ data }) => {
     useEffect(() => {
         console.log(appointmentPatientData);
     }, [appointmentPatient]);
+
+    useLayoutEffect(() => {
+        setCookie('active-gaps', activeGaps);
+    }, [activeGaps]);
         
     return !activeCreatePatient ? (
         <div className="appointments">

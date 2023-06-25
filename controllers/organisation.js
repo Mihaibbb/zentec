@@ -233,6 +233,30 @@ exports.createOrganisation = async (req, res, next) => {
         createTableSql += 'notes text not null );';
 
         await db.query(createTableSql, ['consultations']);
+        
+        createTableSql = 'CREATE TABLE ?? ( ';
+        createTableSql += 'id int primary key auto_increment not null, ';
+        createTableSql += 'finished boolean not null, ';
+        createTableSql += 'patientId varchar(26) not null, ';
+        createTableSql += 'doctorId varchar(26) not null, ';
+        createTableSql += 'scheduleDate date not null, ';
+        createTableSql += 'notes text not null, ';
+        createTableSql += 'createdAt date not null );';
+
+        await db.query(createTableSql, ['patients_waiting']);
+
+        createTableSql = 'CREATE TABLE ?? ( ';
+        createTableSql += 'id int primary key auto_increment not null, ';
+        createTableSql += 'finished boolean not null, ';
+        createTableSql += 'patientId varchar(26) not null, ';
+        createTableSql += 'doctorId varchar(26) not null, ';
+        createTableSql += 'workId varchar(26) not null, ';
+        createTableSql += 'laboratoryId varchar(26) not null, ';
+        createTableSql += 'delivery date not null, ';
+        createTableSql += 'term date not null, ';
+        createTableSql += 'createdAt date not null );';
+
+        await db.query(createTableSql, ['works']);
 
 
         let sql = 'INSERT INTO ?? (name, date, sms_limit, sms_message, sms_modem_id, inbox, _id, start_hour, end_hour) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';

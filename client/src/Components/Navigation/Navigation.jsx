@@ -4,7 +4,7 @@ import logoBlack from "../../imgs/logo_zentec3_black.svg";
 import dashboardIcon from "../../imgs/icons/dashboard-icon.svg";
 import dashboardIconBlack from "../../imgs/icons/dashboard-icon_black.svg";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAngleDown, faBedPulse, faCalendarDays, faClose, faCoffee, faDashboard, faHandHoldingDollar, faHeart, faUserDoctor, faVirusCovidSlash } from "@fortawesome/free-solid-svg-icons"
+import { faAngleDown, faBedPulse, faCalendarDays, faClose, faCoffee, faDashboard, faHandHoldingDollar, faHeart, faListCheck, faUserDoctor, faVirusCovidSlash } from "@fortawesome/free-solid-svg-icons"
 import settingsIcon from "../../imgs/icons/settings-icon.svg";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useCookies } from 'react-cookie';
@@ -100,6 +100,11 @@ const Navigation = ({ show, page }) => {
             <div className={`item ${page === "sterilizations" ? "active" : ""}`} onClick={() => navigation("/sterilizations")}>
                 <FontAwesomeIcon icon={faVirusCovidSlash} className="item-icon" />
                 <h3>{cookies.language === "en" ? "Sterilizations" : "Sterilizari"}</h3>
+            </div>
+
+            <div className={`item ${page === "tasks" ? "active" : ""}`} onClick={() => navigation(`/tasks`)}>
+                <FontAwesomeIcon icon={faListCheck} className="item-icon" />
+                <h3>{cookies?.language === "en" ? "Tasks" : "Sarcini"}</h3>
             </div>
 
             <div className={`item ${page === "feedback" ? "active" : ""} bottom`} onClick={() => navigation("/feedback")} ref={settingsRef}>
