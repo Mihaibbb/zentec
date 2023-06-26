@@ -18,10 +18,10 @@
 
 .login-container .title 
 {
-    font-size: 35px;
+    font-size: 40px;
     color: var(--contrast-color);
     text-align: center;
-   
+    
 }
 
 .login-container .login-inputs .input
@@ -32,6 +32,7 @@
 .login-container .login-inputs .input p 
 {
     color: var(--text-color);
+    font-weight: bold;
 }
 
 .login-container .login-inputs .input-color 
@@ -57,15 +58,16 @@
 .login-container .login-inputs .input input 
 {
     width: 100%;
-    border: 1px solid rgba(255, 255, 255, .1);
+    border: 1px solid var(--over-difference-color);
     outline: none;
-    background: rgba(255, 255, 255, .025);
-    height: 40px;
+    background: var(--over-difference-color-2);
+    height: 50px;
     border-radius: 10px;
     font-family: 'Inter';
-    color: rgba(255, 255, 255, .8);
+    color: var(--text-color);
+    font-weight: 600;
     padding-left: 1rem;
-    
+    font-size: 16px;
 }
 
 .login-container .login-inputs button 
@@ -81,6 +83,12 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    transition: all 350ms ease-in-out;
+}
+
+.login-container .login-inputs button:hover 
+{
+    filter: brightness(0.9);
 }
 
 .login-container .login-inputs button p 
@@ -124,4 +132,12 @@
 h3 
 {
     color: var(--text-color);
+}
+
+.login-container .error-text 
+{
+    color: var(--error-color);
+    text-align: center;
+    font-size: 24px;
+    font-weight: 700;
 }

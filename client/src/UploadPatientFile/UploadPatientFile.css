@@ -22,3 +22,56 @@
 {
     grid-column: 1 / -1;
 }
+
+.progress-container
+{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.progress-container .name-content 
+{
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+}
+
+.progress-container .name-content p 
+{
+    color: var(--text-color);
+    font-weight: 600;
+    font-size: 18;
+}
+
+.progress-container .name-content .remove-icon 
+{
+    color: var(--text-color);
+    cursor: pointer;
+    font-size: 18px;
+    transition: all 350ms ease-in-out;
+}
+
+.progress-container .name-content .remove-icon:hover
+{
+    transform: scale(1.2);
+    color: var(--error-color);
+}
+
+.progress-container .progress-bar 
+{
+    width: 100%;
+    max-width: 100%;
+    background: var(--over-difference-color);
+    border-radius: 40px;
+    height: 15px;
+}
+
+.progress-container .progress-bar .progress
+{
+    background: linear-gradient(90deg, var(--contrast-color), var(--contrast-color-highlight));
+    border-radius: 40px;
+    height: 100%;
+    transition: all 350ms ease-in-out;
+}

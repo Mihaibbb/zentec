@@ -94,7 +94,7 @@ const Appointments = ({ data }) => {
     const [patientSaved, setPatientSaved] = useState(true);
     const [appointmentId, setAppointmentId] = useState();
     const [statusMessage, setStatusMessage] = useState();
-    const [activeGaps, setActiveGaps] = useState(cookies?.activeGaps || true);
+    const [activeGaps, setActiveGaps] = useState(cookies?.activeGaps === null ? true : cookies?.activeGaps === "true");
     const [errorMessage, setErrorMessage] = useState("");
     const [activeErrorMessage, setActiveErrorMessage] = useState();
     const [headerElement, setHeaderElement] = useState(null);
@@ -1095,8 +1095,8 @@ const Appointments = ({ data }) => {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                _id: data.organisation._id,
-                appointmentId: appointmentId1,
+                organisationId: data.organisation._id,
+                scheduleId: appointmentId1,
                 patientId: patientId
             })
         };
@@ -1157,6 +1157,10 @@ const Appointments = ({ data }) => {
     //     }
        
     // }, [filterActive, doctors]);
+
+    useEffect(() => {
+        document.body.classList.add("scroll-x");
+    }, []);
 
     useEffect(() => {
         if (month === date.getMonth() && year === date.getFullYear()) return;
@@ -1753,7 +1757,8 @@ const Appointments = ({ data }) => {
     }, [appointmentPatient]);
 
     useLayoutEffect(() => {
-        setCookie('active-gaps', activeGaps);
+        console.log(activeGaps);
+        setCookie('activeGaps', activeGaps);
     }, [activeGaps]);
         
     return !activeCreatePatient ? (
@@ -1907,7 +1912,7 @@ const Appointments = ({ data }) => {
                     </div>
                 </div>
             
-                {doctors && doctors.length <= 2 && window.innerWidth > 800 && <div className="scheduler">
+                {doctors && doctors.length <= 10 && window.innerWidth > 800 && <div className="scheduler">
                     {filterActive !== 3 && filterActive !== 4 && 
                         <div className="hours" filterid={filterActive.toString()}>
                             {hours.map((hour, hourIdx) => (
@@ -1964,7 +1969,7 @@ const Appointments = ({ data }) => {
                     
                 </div>}
 
-                {doctors && (doctors.length > 2 || window.innerWidth <= 800) && 
+                {doctors && (doctors.length > 10 || window.innerWidth <= 800) && 
                      <div className="scheduler flex-column">
                     
                      <div className="schedules flex-column" style={{ marginTop: hourContainerHeight }}>

@@ -1,4 +1,4 @@
-import { faAngleLeft, faCloudArrowUp, faFile, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faAngleLeft, faCloudArrowUp, faFile, faTimes, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useRef, useState } from "react";
 import { useCookies } from "react-cookie";
@@ -31,6 +31,7 @@ const UploadPatientFile = ({ data, editMode }) => {
     const [successfullyUploaded, setSuccessfullyUploaded] = useState(false);
     const [theme, setTheme] = useState(cookies?.theme || "dark");
     const [fileData, setFileData] = useState(null);
+    const [progress, setProgress] = useState(null);
 
     const uploadFileInputRef = useRef();
 
@@ -85,7 +86,18 @@ const UploadPatientFile = ({ data, editMode }) => {
         setFileName(currFile.name);
         document.body.style.background = theme === "light" ? "#fff" : "#000";
         noVideoContentRef.current.classList.add("invisible");
+        for (let i = 0; i <= 100; i++)
+            setTimeout(() => setProgress(i), i * 5);
+
         setTimeout(() => setSuccessUpload(true), 300);
+
+    };
+
+    const handleCancel = () => {
+        setFileSize(null);
+        setFileName("");
+        setFile(null);
+        setProgress(null);
     };
     
     const handleRemove = () => {
@@ -211,6 +223,16 @@ const UploadPatientFile = ({ data, editMode }) => {
                                     <h2>{cookies.language === "en" ? "Select the file you want to upload" : "Selectati fisierul pe care doriti sa il incarcati!"}</h2>
                                     { dragActive && <div id="drag-file-element" onDragEnter={handleDrag} onDragLeave={handleDrag} onDragOver={handleDrag} onDrop={handleDrop}></div>}
                                 </div>
+
+                                {progress !== null ? <div className="progress-container">
+                                    <div className="name-content">
+                                            <p>{fileName}</p>
+                                            <FontAwesomeIcon icon={faTimes} className="remove-icon" onClick={() => handleCancel()} />
+                                        </div>
+                                    <div className="progress-bar">
+                                        <div className="progress" style={{ width: `${progress}%` }} />
+                                    </div>
+                                </div> : null}
                             </>
                         ) : null}
 

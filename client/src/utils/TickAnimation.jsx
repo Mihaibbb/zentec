@@ -15,7 +15,7 @@ const TickAnimation = ({ title, animationFinished }) => {
                 autoPlay
                 playsInline
                 onEnded={animationFinished}
-
+                
                 muted
                 style={{ height: "40vh" }}
 

@@ -49,7 +49,7 @@ const Login = () => {
                 setCookie('user-id', await res.objectId);
                 setCookie('pwd', await res.hashedPassword);
                 setCookie('language', 'ro');
-                setCookie('theme', 'dark');
+                setCookie('theme', 'light');
                 window.location.reload();
             } 
 

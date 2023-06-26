@@ -107,7 +107,13 @@ const {
     getToothImageCurrentStatus,
     getToothImageTreatmentPlan,
     updateTreatmentPatientSterilization,
-    removeTreatmentPatientSterilizaton
+    removeTreatmentPatientSterilizaton,
+    createPatientWaiting,
+    updatePatientWaiting,
+    removePatientWaiting,
+    createWorkList,
+    updateWorkList,
+    removeWorkList
 } = require("../controllers/user");
 
 router.post("/create-appointment", createAppointment);
@@ -257,5 +263,17 @@ router.get("/get-tooth-image-treatment-plan/:organisationId/:patientId/:treatmen
 router.put("/update-treatment-patient-sterilizations", updateTreatmentPatientSterilization);
 router.delete("/remove-treatment-patient-sterilization/:organisationId/:id/:sterilizationId", removeTreatmentPatientSterilizaton);
 // router.post("/search-treatment-patient-sterilizations", searchTreatmentPatientSterilizations);
+
+// Patients waiting
+
+router.post("/create-patient-waiting", createPatientWaiting);
+router.put("/update-patient-waiting", updatePatientWaiting);
+router.delete("/remove-patient-waiting/:organisationId/:listId", removePatientWaiting);
+
+// Works
+
+router.post("/create-work-list", createWorkList);
+router.put("/update-work-list", updateWorkList);
+router.delete("/remove-work-list", removeWorkList);
 
 module.exports = router;

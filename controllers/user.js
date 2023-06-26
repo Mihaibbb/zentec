@@ -227,33 +227,36 @@ exports.removeFutureAppointment = async (req, res) => {
     try {
 
 
-        const patientsData = await db.query("SELECT * FROM ?? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.patients`, patientId]);
-        const newPatientsHistoric = JSON.parse(patientsData[0]?.historic).filter(historicData => {
-            return !(
-                sameDate(new Date(historicData?.date), new Date(date)) &&
-                Number(historicData.startHour) === Number(startHour) && 
-                Number(historicData.startMinutes) === Number(startMinutes) && 
-                Number(historicData.endHour) === Number(endHour) && 
-                Number(historicData.endMinutes) === Number(endMinutes)
-            );
-        });
+        // const patientsData = await db.query("SELECT * FROM ?? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.patients`, patientId]);
+        // const newPatientsHistoric = JSON.parse(patientsData[0]?.historic).filter(historicData => {
+        //     return !(
+        //         sameDate(new Date(historicData?.date), new Date(Number(date))) &&
+        //         Number(historicData.startHour) === Number(startHour) && 
+        //         Number(historicData.startMinutes) === Number(startMinutes) && 
+        //         Number(historicData.endHour) === Number(endHour) && 
+        //         Number(historicData.endMinutes) === Number(endMinutes)
+        //     );
+        // });
 
-        await db.query("UPDATE ?? SET historic = ? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.patients`, JSON.stringify(newPatientsHistoric), patientId]);
+        // await db.query("UPDATE ?? SET historic = ? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.patients`, JSON.stringify(newPatientsHistoric), patientId]);
 
 
-        const totalSchedules = await db.query('SELECT * FROM ??', [`${process.env.DB_PREFIX}org_${organisationId}.schedules`]);
-        const foundSchedule = totalSchedules.find(appointment => {
-            const appointmentStartHour = new Date(appointment.startDate).getHours();
-            const appointmentEndHour = new Date(appointment.endDate).getHours();
-            const appointmentStartMinutes = new Date(appointment.startDate).getMinutes();
-            const appointmentEndMinutes = new Date(appointment.endDate).getMinutes();
-            const samePatient = JSON.parse(appointment.patients).some(patient => patient._id === patientId);
+        // const totalSchedules = await db.query('SELECT * FROM ??', [`${process.env.DB_PREFIX}org_${organisationId}.schedules`]);
+        // const foundSchedule = totalSchedules.find(appointment => {
+        //     const appointmentStartHour = new Date(appointment.startDate).getHours();
+        //     const appointmentEndHour = new Date(appointment.endDate).getHours();
+        //     const appointmentStartMinutes = new Date(appointment.startDate).getMinutes();
+        //     const appointmentEndMinutes = new Date(appointment.endDate).getMinutes();
+        //     const samePatient = JSON.parse(appointment.patients).some(patient => patient._id === patientId);
+            
+        //     return samePatient && sameDate(new Date(date), new Date(appointment.date)) && Number(startHour) === appointmentStartHour && Number(startMinutes) === appointmentStartMinutes && Number(endHour) === appointmentEndHour && Number(endMinutes) === appointmentEndMinutes;
+        // });
 
-            return samePatient && sameDate(new Date(Number(date)), new Date(appointment.date)) && Number(startHour) === appointmentStartHour && Number(startMinutes) === appointmentStartMinutes && Number(endHour) === appointmentEndHour && Number(endMinutes) === appointmentEndMinutes;
-        });
-
-        if (!foundSchedule) return res.status(200).json({ success: false, message: "Appointment not found!" });
-        await db.query("DELETE FROM ?? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.schedules`, foundSchedule._id]);
+        // if (!foundSchedule) {
+        //     console.log("ERROR", totalSchedules);
+        //     return res.status(200).json({ success: false, message: "Appointment not found!" });
+        // }
+        // await db.query("DELETE FROM ?? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.schedules`, foundSchedule._id]);
 
         return res.status(200).json({ success: true, message: "Success!" });
     } catch (e) {
@@ -267,23 +270,27 @@ exports.cancelAppointment = async (req, res) => {
     const { organisationId, scheduleId, patientId } = req.body;
 
     try {
-        const appointmentUpdated = await db.query("UPDATE * FROM ?? SET canceled = ? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.schedules`, true, scheduleId]);
+        const currentAppointments = await db.query("SELECT * FROM ?? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.schedules`, scheduleId]);
+        const currentAppointment = currentAppointments[0];
+        const appointmentUpdated = await db.query("UPDATE ?? SET canceled = ? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.schedules`, true, scheduleId]);
         if (!appointmentUpdated) return res.status(404).json({ success: false, message: { en: "Appointment couldn't be canceled!", ro: "Programarea nu a putut fi anulata!" } });
 
         sql = "SELECT * FROM ?? WHERE _id = ?";
-        const currentPatient = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.patients`, patientId]);
+        const currentPatients = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.patients`, patientId]);
+        const currentPatient = currentPatients[0];
         const historic = JSON.parse(currentPatient.historic);
         const newHistoric = historic.map(appointment => {
-            if (new Date(currentAppointment.startDate).getTime() !== new Date(new Date(appointment.date).getFullYear(), new Date(appointment.date).getMonth(), new Date(appointment.date).getDate(), Number(appointment.startHour), Number(appointment.startMinutes())).getTime()) return {...appointment, 
+            if (new Date(currentAppointment.startDate).getTime() !== new Date(new Date(appointment.date).getFullYear(), new Date(appointment.date).getMonth(), new Date(appointment.date).getDate(), Number(appointment.startHour), Number(appointment.startMinutes)).getTime()) return {...appointment, 
                 cancel: true
             }
 
             return appointment;
         });
-        await db.query("UPDATE ?? SET historic = ? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${_id}.patients`, JSON.stringify(newHistoric), patientId]);
+        await db.query("UPDATE ?? SET historic = ? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.patients`, JSON.stringify(newHistoric), patientId]);
         res.status(200).json({ success: true, message: { en: "Appointment was successfully canceled!", ro: "Programarea a fost anulata cu succes!" } });
     } catch (e) {
         logger.debug("Error cancel appointment: ", e);
+        console.log(e);
         res.status(404).json({ success: false, message: "An error occured!", error: e });
     }
 };
@@ -3022,6 +3029,129 @@ exports.removeTreatmentPatientSterilizaton = async (req, res) => {
 //         res.status(404).json({ success: false, error: e, message: "An error occured!" });
 //     }
 // };
+
+// Patient waiting
+
+exports.createPatientWaiting = async (req, res) => {
+    const { organisationId, patientId, doctorId, finished, scheduleDate, notes } = req.body;
+    try {
+        await db.query("INSERT INTO ?? (finished, patientId, doctorId, scheduleDate, notes, createdAt) VALUES (?, ?, ?, ?, ?, ?)", [`${process.env.DB_PREFIX}org_${organisationId}.patients_waiting`, finished, patientId, doctorId, new Date(scheduleDate), notes, new Date()]);
+        res.status(200).json({ success: true });
+    } catch (e) {
+        console.log(e);
+        res.status(404).json({ success: false, error: e });
+    }
+};
+
+exports.updatePatientWaiting = async (req, res) => {
+    try {
+        const { organisationId, patientId, doctorId, finished, scheduleDate, notes, listId } = req.body;
+
+        const listRows = await db.query("SELECT * FROM ?? WHERE id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.patients_waiting`, listId]);
+        if (listRows?.length !== 1) return res.status(404).json({ success: false, message: "Task not found!" });
+        const listRow = listRows[0];
+        const dbModifications = JSON.parse(listRow.modifications);
+        dbModifications.push(new Date());
+
+        await db.query("UPDATE ?? SET finished = ?, patientId = ?, doctorId = ?, scheduleDate = ?, notes = ?, modifications = ? WHERE id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.patients_waiting`, finished, patientId, doctorId, new Date(scheduleDate), notes, JSON.stringify(dbModifications), listId]);
+        res.status(200).json({ success: true });
+    } catch (e) {
+        console.log(e);
+        res.status(404).json({ success: false, error: e });
+    }
+};
+
+exports.removePatientWaiting = async (req, res) => {
+    try {
+        const { organisationId, listId } = req.params;
+        try {
+            await db.query("DELETE FROM ?? WHERE id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.patients_waiting`, Number(listId)]);
+            res.status(200).json({ success: true });
+
+        } catch (e) {
+            console.log(e);
+            res.status(404).json({ success: false, error: e });
+        }
+    } catch (e) {
+        console.log(e);
+        res.status(404).json({ success: false, error: e });
+    }
+};
+
+// Work List
+
+exports.createWorkList = async (req, res) => {
+    try {
+        const { organisationId, finished, patientId, doctorId, workId, labId, delivery, term } = req.body;
+        
+        await db.query("INSERT INTO ?? (finished, patientId, doctorId, workId, labId, delivery, term, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", [`${process.env.DB_PREFIX}org_${organisationId}.list_works`, finished, patientId, doctorId, workId, labId, new Date(delivery), new Date(term), new Date()]);
+        res.status(200).json({ success: true });
+    } catch (e) {
+        console.log(e);
+        res.status(404).json({ success: false, error: e });
+    }
+};
+
+exports.updateWorkList = async (req, res) => {
+    try {
+        const { organisationId, finished, patientId, doctorId, workId, labId, delivery, term, listWorkId } = req.body;
+        const listRows = await db.query("SELECT * FROM ?? WHERE id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.list_works`, listWorkId]);
+        if (listRows?.length !== 1) return res.status(404).json({ success: false, message: "Task not found!" });
+        const listRow = listRows[0];
+        const dbModifications = JSON.parse(listRow.modifications);
+        dbModifications.push(new Date());
+        
+        await db.query("UPDATE ?? finished = ?, patientId = ?, doctorId = ?, workId = ?, labId = ?, delivery = ?, term = ?, modifications = ? WHERE id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.list_works`, finished, patientId, doctorId, workId, labId, new Date(delivery), new Date(term), JSON.stringify(dbModifications), listWorkId]);
+        res.status(200).json({ success: true });
+    } catch (e) {
+        console.log(e);
+        res.status(404).json({ success: false, error: e });
+    }
+};
+
+exports.removeWorkList = async (req, res) => {
+    try {
+        const { organisationId, listWorkId } = req.params;
+        
+        await db.query("DELETE FROM ?? WHERE id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.list_works`, Number(listWorkId)]);
+    } catch (e) {
+        console.log(e);
+        res.status(404).json({ success: false, error: e });
+    }
+};
+
+// Works
+
+exports.createWork = async (req, res) => {
+
+};
+
+exports.editWork = async (req, res) => {
+
+};
+
+exports.removeWork = async (req, res) => {
+    
+};
+
+// Labs
+
+exports.createLab = async (req, res) => {
+
+};
+
+exports.editLab = async (req, res) => {
+    
+};
+
+exports.removeLab = async (req, res) => {
+    
+};
+
+// exports.uploadDocumentPatientPercentage = async (req, res) => {
+
+// };
+
 
 
 const sameDate = (date1, date2) => {

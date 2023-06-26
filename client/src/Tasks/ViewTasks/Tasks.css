@@ -1,0 +1,58 @@
+.tasks-container
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    /* border: 1px solid var(--contrast-color); */
+    background: var(--over-difference-color-2);
+    width: 90%;
+    margin: 2rem auto;
+    padding: 1rem 2rem 2rem;
+    border-radius: 16px;
+    overflow-x: auto;
+}
+
+.tasks-container .first-row 
+{
+    width: 100%;
+    background: linear-gradient(90deg, var(--contrast-color), var(--contrast-color-highlight));
+    display: flex;
+    align-items: center;
+    border-radius: 50px;
+    gap: 1rem;
+    
+}
+
+.tasks-container .first-row .label 
+{
+    flex: 1;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    width: 100%;
+    min-width: 100px;
+    justify-content: center;
+}
+
+.tasks-container .first-row .label p 
+{
+    text-align: center;
+    font-weight: 700;
+    color: rgba(255, 255, 255, .9);
+    
+
+}
+
+.tasks-container .row 
+{
+
+}
+
+@media only screen and (max-width: 800px)
+{
+    .tasks-container .first-row 
+    {
+        width: max-content;
+    }
+}
