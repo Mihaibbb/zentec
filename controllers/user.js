@@ -3123,36 +3123,76 @@ exports.removeWorkList = async (req, res) => {
 // Works
 
 exports.createWork = async (req, res) => {
-
+    const { organisationId, name, pricePer, color } = req.body;
+    try {
+        await db.query("INSERT INTO ?? (name, pricePer, color) VALUES (?, ?, ?)", [`${process.env.DB_PREFIX}org_${organisationId}`, name, pricePer, color]);
+        res.status(200).json({ success: true });
+    } catch (e) {
+        console.log(e);
+        res.status(404).json({ success: false, error: e });
+    }
 };
 
-exports.editWork = async (req, res) => {
-
+exports.updateWork = async (req, res) => {
+    const { organisationId, name, pricePer, color, workId } = req.body;
+    try {
+        await db.query("UPDATE ?? SET name = ?, pricePer = ?, color = ? WHERE id = ?", [`${process.env.DB_PREFIX}org_${organisationId}`, name, pricePer, color, workId]);
+        res.status(200).json({ success: true });
+    } catch (e) {
+        console.log(e);
+        res.status(404).json({ success: false, error: e });
+    }
 };
 
 exports.removeWork = async (req, res) => {
-    
+    const { organisationId, workId } = req.params;
+    try {
+        await db.query("DELETE FROM ?? WHERE id = ?", [`${process.env.DB_PREFIX}org_${organisationId}`, Number(workId)]);
+        res.status(200).json({ success: true });
+    } catch (e) {
+        console.log(e);
+        res.status(404).json({ success: false, error: e });
+    }
 };
 
 // Labs
 
 exports.createLab = async (req, res) => {
-
+    const { organisationId, name, city, county, address, phone } = req.body;
+    try {
+        if (!validPhoneNumber("RO", phone)) return res.status(200).json({ success: false, message: {en: "Phone number is not valid!", ro: "Numarul de telefon nu este valid!" }});
+    
+        await db.query("INSERT INTO ?? (name, city, county, address, phone) VALUES (?, ?, ?, ?, ?)", [`${process.env.DB_PREFIX}org_${organisationId}.labs`, name, city, county, address, phone]);
+        res.status(200).json({ success: true });
+    } catch (e) {
+        console.log(e);
+        res.status(404).json({ success: false, error: e });
+    }
 };
 
-exports.editLab = async (req, res) => {
+exports.updateLab = async (req, res) => {
+    const { organisationId, name, city, county, address, phone, labId } = req.body;
+    try {
+        if (!validPhoneNumber("RO", phone)) return res.status(200).json({ success: false, message: {en: "Phone number is not valid!", ro: "Numarul de telefon nu este valid!" }});
     
+        await db.query("UPDATE ?? SET name = ?, city = ?, county = ?, address = ?, phone = ? WHERE id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.labs`, name, city, county, address, phone, labId]);
+        res.status(200).json({ success: true });
+    } catch (e) {
+        console.log(e);
+        res.status(404).json({ success: false, error: e });
+    }
 };
 
 exports.removeLab = async (req, res) => {
-    
+    const { organisationId, labId } = req.params;
+    try {
+        await db.query("DELETE FROM ?? WHERE id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.labs`, Number(labId)]);
+        res.status(200).json({ success: true });
+    } catch (e) {
+        console.log(e);
+        res.status(404).json({ success: false, error: e });
+    }
 };
-
-// exports.uploadDocumentPatientPercentage = async (req, res) => {
-
-// };
-
-
 
 const sameDate = (date1, date2) => {
     console.log("DATE1", date1.getDate(), date2.getDate());

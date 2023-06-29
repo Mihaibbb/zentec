@@ -113,7 +113,13 @@ const {
     removePatientWaiting,
     createWorkList,
     updateWorkList,
-    removeWorkList
+    removeWorkList,
+    createWork,
+    updateWork,
+    removeWork,
+    createLab,
+    updateLab,
+    removeLab
 } = require("../controllers/user");
 
 router.post("/create-appointment", createAppointment);
@@ -270,10 +276,23 @@ router.post("/create-patient-waiting", createPatientWaiting);
 router.put("/update-patient-waiting", updatePatientWaiting);
 router.delete("/remove-patient-waiting/:organisationId/:listId", removePatientWaiting);
 
-// Works
+// List Works
 
 router.post("/create-work-list", createWorkList);
 router.put("/update-work-list", updateWorkList);
-router.delete("/remove-work-list", removeWorkList);
+router.delete("/remove-work-list/:organisationId/:listWorkId", removeWorkList);
+
+// Works
+
+router.post("/create-work", createWork);
+router.put("/update-work", updateWork);
+router.delete("/remove-work/:organisationId/:workId", removeWork);
+
+
+// Labs
+router.post("/create-lab", createLab);
+router.put("/update-lab", updateLab);
+router.delete("/remove-lab/:organisationId/:labId", removeLab);
+
 
 module.exports = router;

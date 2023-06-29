@@ -54,6 +54,7 @@ import EditSMS from "./EditSMS/EditSMS";
 import CreateSMS from "./CreateSMS/CreateSMS";
 import GeneratePatientFile from "./GenerateFilePatient/GeneratePatientFile";
 import Tasks from "./Tasks/ViewTasks/Tasks";
+import CreateTask from "./Tasks/CreateTask/CreateTask";
 
 
 const App = () => {
@@ -247,6 +248,7 @@ const App = () => {
                                 <Route path="add-sms" element={<CreateSMS data={data} />} />
                                 <Route path="patient-file/:id" element={<GeneratePatientFile data={data} />} />
                                 <Route path="tasks" element={<Tasks data={data} />} />
+                                <Route path="create-task/:activeOption/:createMode/:taskId" element={<CreateTask data={data} />} />
                             </>
                         ) : (
                             <>

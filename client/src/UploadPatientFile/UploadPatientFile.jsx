@@ -184,7 +184,7 @@ const UploadPatientFile = ({ data, editMode }) => {
                     <TickAnimation title={editMode ? (cookies.language === "en" ? "Changes have been saved successfully!" : "Modificarile au fost salvate cu succes!") : (cookies?.language === "en" ? "Document uploaded successfully!" : "Documentul a fost incarcat cu succes!")} animationFinished={animationFinished} />
                 ) : (
                     <div className="no-video-content patient-account-details upload" ref={noVideoContentRef}>
-                        <h2 className="title">{editMode ? (cookies.language === "en" ? "Edit Document" : "Modificati documentul") : (cookies.language === "en" ? "Create Document" : "Creeati un document")}</h2>
+                        <h2 className="title" style={{ marginTop: "10vh" }}>{editMode ? (cookies.language === "en" ? "Edit Document" : "Modificati documentul") : (cookies.language === "en" ? "Create Document" : "Creeati un document")}</h2>
 
                         <div className="go-back" onClick={() => !successUpload && navigate(-1)}>
                             <FontAwesomeIcon icon={faAngleLeft} />

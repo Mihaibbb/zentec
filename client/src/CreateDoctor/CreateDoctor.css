@@ -108,6 +108,7 @@ p.error
 
 .no-video-content
 {
+    position: relative;
     transition: all 300ms ease-in-out;
 }
 

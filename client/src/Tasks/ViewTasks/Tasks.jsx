@@ -1,7 +1,8 @@
-import { faCheck, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faAngleDown, faAngleUp, faCheck, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useCookies } from "react-cookie";
+import { useNavigate } from "react-router-dom";
 import Header from "../../Components/Header/Header";
 import Navigation from "../../Components/Navigation/Navigation";
 import TickAnimation from "../../utils/TickAnimation";
@@ -10,6 +11,7 @@ import "./Tasks.css";
 const Tasks = ({ data }) => {
 
     const [cookies, setCookie] = useCookies();
+    const navigate = useNavigate();
     const [activeOption, setActiveOption] = useState(0);
     const options = cookies?.language === "en" ? ["Waiting patients", "Laboratory Works"] : ["Pacienti in asteptare", "Lucrari laborator"];
     const [patientsWaiting, setPatientsWaiting] = useState(data.organisation.patients_waiting);
@@ -18,6 +20,8 @@ const Tasks = ({ data }) => {
     const [worksList, setWorksList] = useState(data.organisation.list_works);
     const [worksListUnfinished, setWorksListUnfinished] = useState(worksList.filter(work => !work.finished));
     const [worksListFinished, setWorksListFinished] = useState(worksList.filter(work => work.finished));
+    const [showWorksFinished, setShowWorksFinished] = useState(true);
+    const [showPatientsWaitingFinished, setShowPatientswaitingFinished] = useState(true);
 
     const [taskRemoved, setTaskRemoved] = useState(false);
     const noVideoContentRef = useRef();
@@ -61,6 +65,17 @@ const Tasks = ({ data }) => {
         }
     };
     
+    useLayoutEffect(() => {
+        setPatientsWaitingUnfinished(patientsWaiting.filter(patientWaiting => !patientWaiting.finished));
+        setPatientsWaitingFinished(patientsWaiting.filter(patientWaiting => patientWaiting.finished));
+
+    }, [patientsWaiting]);
+
+    useLayoutEffect(() => {
+        setWorksListUnfinished(worksList.filter(work => !work.finished));
+        setWorksListFinished(worksList.filter(work => work.finished));
+    }, [worksList]);
+    
     const changeStatusPatientsWaiting = async (patient, status) => {
         try {
             setPatientsWaiting(currPatients => {
@@ -69,6 +84,7 @@ const Tasks = ({ data }) => {
                     return currPatient;
                 });
             });
+
     
       
             const options = {
@@ -78,7 +94,8 @@ const Tasks = ({ data }) => {
                 },
                 body: JSON.stringify({...patient,
                     finished: status,
-                    listId: Number(patient.id)
+                    listId: Number(patient.id),
+                    organisationId: data.organisation._id
                 })
             };
 
@@ -135,13 +152,13 @@ const Tasks = ({ data }) => {
                                         <div className="row" key={idx}>
 
                                             <div className="label">
-                                                <div className="circle">
+                                                <div className={`circle ${patientWaiting.finished ? "finished" : ""}`} onClick={() => changeStatusPatientsWaiting(patientWaiting, !patientWaiting.finished)}>
                                                     {patientWaiting.finished ? <FontAwesomeIcon icon={faCheck} className="check-icon" /> : null}
                                                 </div>
                                             </div>
 
                                             <div className="label">
-                                                <p>{data.organisation.patients.find(patient => patient._id === patientWaiting.patientId)?.firstname} {data.organisation.patients(patient => patient._id === patientWaiting.patientId)?.lastname}</p>
+                                                <p>{data.organisation.patients.find(patient => patient._id === patientWaiting.patientId)?.firstname || ""} {data.organisation.patients.find(patient => patient._id === patientWaiting.patientId)?.lastname}</p>
                                             </div>
 
                                             <div className="label">
@@ -149,11 +166,11 @@ const Tasks = ({ data }) => {
                                             </div>
                                             
                                             <div className="label">
-                                                <p>{new Date(patientWaiting.scheduleDate).getDate() < 10 ? `0${new Date(patientWaiting.scheduleDate).getDate()}` : new Date(patientWaiting.scheduleDate).getDate()}.{new Date(patientWaiting.scheduleDate).getMonth() + 1 < 10 ? `0${new Date(patientWaiting.scheduleDate).getMonth() + 1}` : new Date(patientWaiting.scheduleDate).getMonth() + 1}.${new Date(patientWaiting.scheduleDate).getFullYear()}</p>
+                                                <p>{new Date(patientWaiting.scheduleDate).getDate() < 10 ? `0${new Date(patientWaiting.scheduleDate).getDate()}` : new Date(patientWaiting.scheduleDate).getDate()}.{new Date(patientWaiting.scheduleDate).getMonth() + 1 < 10 ? `0${new Date(patientWaiting.scheduleDate).getMonth() + 1}` : new Date(patientWaiting.scheduleDate).getMonth() + 1}.{new Date(patientWaiting.scheduleDate).getFullYear()}</p>
                                             </div>
 
                                             <div className="label">
-                                                <p>{patientWaiting.notes}</p>
+                                                <p>{patientWaiting.notes || "Nedefinit"}</p>
                                             </div>
                                         
                                         </div>
@@ -200,7 +217,7 @@ const Tasks = ({ data }) => {
                                             </div> 
 
                                             <div className="label">
-                                                <p>{data.organisation.patients.find(patient => patient._id === work.patientId)?.firstname || ""} {data.organisation.patients(patient => patient._id === work.patientId)?.lastname || ""}</p>
+                                                <p>{data.organisation.patients.find(patient => patient._id === work.patientId)?.firstname || ""} {data.organisation.patients.find(patient => patient._id === work.patientId)?.lastname || ""}</p>
                                             </div>
                                             <div className="label">
                                                 <p>{data.organisation.doctors.find(doctor => doctor._id === work.doctorId)?.firstname || ""} {data.organisation.doctors.find(doctor => doctor._id === work.doctorId)?.lastname || ""}</p>
@@ -224,7 +241,80 @@ const Tasks = ({ data }) => {
                            
                         </div>
 
-                        <div className="add-button">
+
+                        <h2 className="title" style={{ marginTop: 50 }}>{cookies.language === "en" ? "Finished Tasks" : "Sarcini Completate"} <FontAwesomeIcon icon={(activeOption === 0 && showPatientsWaitingFinished && patientsWaitingFinished.length) || (activeOption === 1 && showWorksFinished && worksListFinished.length) ? faAngleUp : faAngleDown} onClick={() => activeOption === 0 ? setShowPatientswaitingFinished(curr => !curr) : setShowWorksFinished(curr => !curr) }/> </h2>
+                        {activeOption === 0 && showPatientsWaitingFinished && patientsWaitingFinished.length ? 
+                                <div className="tasks-container finished">
+
+                                    <>
+                                        {patientsWaitingFinished.map((patientWaiting, idx) => (
+                                            <div className="row" key={idx}>
+
+                                                <div className="label">
+                                                    <div className={`circle ${patientWaiting.finished ? "finished" : ""}`} onClick={() => changeStatusPatientsWaiting(patientWaiting, !patientWaiting.finished)}>
+                                                        {patientWaiting.finished ? <FontAwesomeIcon icon={faCheck} className="check-icon" /> : null}
+                                                    </div>
+                                                </div>
+
+                                                <div className="label">
+                                                    <p>{data.organisation.patients.find(patient => patient._id === patientWaiting.patientId)?.firstname || ""} {data.organisation.patients.find(patient => patient._id === patientWaiting.patientId)?.lastname}</p>
+                                                </div>
+
+                                                <div className="label">
+                                                    <p>{data.organisation.doctors.find(doctor => doctor._id === patientWaiting.doctorId)?.firstname} {data.organisation.doctors.find(doctor => doctor._id === patientWaiting.doctorId)?.lastname}</p>
+                                                </div>
+                                                
+                                                <div className="label">
+                                                    <p>{new Date(patientWaiting.scheduleDate).getDate() < 10 ? `0${new Date(patientWaiting.scheduleDate).getDate()}` : new Date(patientWaiting.scheduleDate).getDate()}.{new Date(patientWaiting.scheduleDate).getMonth() + 1 < 10 ? `0${new Date(patientWaiting.scheduleDate).getMonth() + 1}` : new Date(patientWaiting.scheduleDate).getMonth() + 1}.{new Date(patientWaiting.scheduleDate).getFullYear()}</p>
+                                                </div>
+
+                                                <div className="label">
+                                                    <p>{patientWaiting.notes || "Nedefinit"}</p>
+                                                </div>
+
+                                                <div className="line" />
+                                            
+                                            </div>
+                                        ))}
+                                    </>
+                                </div>
+                            : activeOption === 1 && showWorksFinished && worksListFinished.length ? (
+                                <div className="tasks-container finished">
+                                    
+
+                                    {worksListFinished.map((work, idx) => (
+                                        <div className="row" key={idx}>
+                                            <div className="label">
+                                                <div className="circle">
+                                                    {work.finished ? <FontAwesomeIcon icon={faCheck} className="check-icon" /> : null}
+                                                </div>
+                                            </div> 
+
+                                            <div className="label">
+                                                <p>{data.organisation.patients.find(patient => patient._id === work.patientId)?.firstname || ""} {data.organisation.patients.find(patient => patient._id === work.patientId)?.lastname || ""}</p>
+                                            </div>
+                                            <div className="label">
+                                                <p>{data.organisation.doctors.find(doctor => doctor._id === work.doctorId)?.firstname || ""} {data.organisation.doctors.find(doctor => doctor._id === work.doctorId)?.lastname || ""}</p>
+                                            </div>
+                                            <div className="label">
+                                                <p>{data.organisation.works.find(listWork => listWork.id.toString() === work.workId)?.name || ""}</p>
+                                            </div>
+                                            <div className="label">
+                                                <p>{data.organisation.labs.find(lab => lab.id.toString() === work.labId)?.name || ""}</p>
+                                            </div>
+                                            <div className="label">
+                                                <p>{new Date(work.delivery).getDate() < 10 ? `0${new Date(work.delivery).getDate()}` : new Date(work.delivery).getDate()}.{new Date(work.delivery).getMonth() + 1 < 10 ? `0${new Date(work.delivery).getMonth() + 1}` : new Date(work.delivery).getMonth() + 1}.${new Date(work.delivery).getFullYear()}</p>
+                                            </div>
+                                            <div className="label">
+                                                <p>{new Date(work.term).getDate() < 10 ? `0${new Date(work.term).getDate()}` : new Date(work.term).getDate()}.{new Date(work.term).getMonth() + 1 < 10 ? `0${new Date(work.term).getMonth() + 1}` : new Date(work.term).getMonth() + 1}.${new Date(work.term).getFullYear()}</p>
+                                            </div>                                      
+                                        </div>
+                                    ))}
+                                </div>
+                            ) 
+                            : null}
+
+                        <div className="add-button" onClick={() => navigate(`/create-task/${activeOption}/1/0`)}>
                             <FontAwesomeIcon icon={faPlus} className="add-icon" />
                             {activeOption === 0 ? <p>{cookies?.language === "en" ? "Add patient on hold" : "Adauga pacient in asteptare"}</p> : <p>{cookies?.language === "en" ? "Add lab work" : "Adauga lucrare laborator"}</p>}
                         </div>

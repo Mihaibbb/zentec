@@ -140,7 +140,7 @@ const AssistantAccount = ({ data }) => {
                     <TickAnimation title={cookies.language === "en" ? "Changes have been saved successfully!" : "Modificarile au fost salvate cu succes!"} animationFinished={animationFinished} />
                 ) : (
                     <div className="no-video-content" ref={noVideoContentRef}>
-                        <h2 className="title">{cookies.language === "en" ? "Edit assistant" : "Editare asistent"}</h2>
+                        <h2 className="title">{cookies.language === "en" ? "Edit assistant" : "Editare personal"}</h2>
                 
                         <div className="go-back" onClick={() => navigate(-1)}>
                             <FontAwesomeIcon icon={faAngleLeft} />
