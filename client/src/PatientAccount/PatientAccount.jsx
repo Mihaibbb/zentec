@@ -216,14 +216,11 @@ const PatientAccount = ({ data }) => {
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({
-                _id: data.organisation._id,
-                patientId
-            })
+           
         };
         
         try {
-            const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/remove-patient`, options);
+            const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/remove-patient/${data.organisation._id}/${patientId}`, options);
             const response = await request.json();
             console.log(response);
             if (response.success) {
@@ -824,7 +821,7 @@ const PatientAccount = ({ data }) => {
                             </div>
 
                             <div className="patient-option-icon">
-                                <FontAwesomeIcon icon={faTrashCan} className="icon remove-icon option-icon" onClick={async () => await removePatient()} />
+                                <FontAwesomeIcon icon={faTrashCan} className="icon remove-icon option-icon" onClick={async () => await removePatient(param?.id)} />
                                 <div className="label">
                                     <p>{cookies?.language === "en" ? "Remove Patient" : "Sterge Pacient"}</p>
                                 </div>

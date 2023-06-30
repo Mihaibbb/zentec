@@ -55,6 +55,8 @@ import CreateSMS from "./CreateSMS/CreateSMS";
 import GeneratePatientFile from "./GenerateFilePatient/GeneratePatientFile";
 import Tasks from "./Tasks/ViewTasks/Tasks";
 import CreateTask from "./Tasks/CreateTask/CreateTask";
+import CreateWork from "./Works/CreateWork/CreateWork";
+import CreateLab from "./Labs/CreateLabs/CreateLab";
 
 
 const App = () => {
@@ -208,8 +210,6 @@ const App = () => {
                                 <Route path="patient/:id/:photoId/edit" element={<UploadPatientFile data={data} editMode={true} />} />
                                 <Route path="patient/:id/upload" element={<UploadPatientFile data={data} editMode={false} />} />
                                 <Route path="patient/:id/:historicPage" element={<PatientAccount data={data} />} />
-                                <Route path="doctors" element={<Users data={data} />} />
-                                <Route path="doctors-schedule" element={<DoctorSchedule data={data} />} />
                                 <Route path="doctors-schedule/:date" element={<EditDoctorSchedule data={data} />} />
                                 <Route path="doctor/:id/:historicPage" element={<DoctorAccount data={data} />} />
                                 <Route path="appointments" element={<Appointments data={data} />} />
@@ -249,6 +249,8 @@ const App = () => {
                                 <Route path="patient-file/:id" element={<GeneratePatientFile data={data} />} />
                                 <Route path="tasks" element={<Tasks data={data} />} />
                                 <Route path="create-task/:activeOption/:createMode/:taskId" element={<CreateTask data={data} />} />
+                                <Route path="create-work/:id" element={<CreateWork data={data} />} />
+                                <Route path="create-lab/:id" element={<CreateLab data={data} />} />
                             </>
                         ) : (
                             <>

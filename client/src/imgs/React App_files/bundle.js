@@ -8951,15 +8951,11 @@ const Patients = _ref => {
       method: 'DELETE',
       headers: {
         "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        _id: data.organisation._id,
-        patientId
-      })
+      }
     };
 
     try {
-      const request = await fetch(`${"http://localhost:8080"}/api/user/remove-patient`, options);
+      const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/remove-patient/${data.organisation._id}/${patientId}`, options);
       const response = await request.json();
       console.log(response);
       if (response.success) window.location.reload();

@@ -134,7 +134,7 @@ const CreateTask = ({ data }) => {
 
             console.log(taskData?.finished);
 
-            const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/${createMode ? "create" : "updatecc"}-patient-waiting`, options);
+            const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/${createMode ? "create" : "update"}-patient-waiting`, options);
             const response = await request.json();
             if (response.success) {
                 setAnimationName(cookies?.language === "en" ? `Patient on hold ${createMode ? "created" : "updated"} successfully!` : `Pacientul in astepare a fost ${createMode ? "adaugat" : "modificat"} cu succes!`);
@@ -155,7 +155,7 @@ const CreateTask = ({ data }) => {
                 body: JSON.stringify({
                     organisationId: data.organisation._id,
                     patientId: patientValue,
-                    doctorValue: doctorValue,
+                    doctorId: doctorValue,
                     labId: labValue,
                     workId: workValue,
                     delivery: new Date(deliveryDate),
@@ -182,10 +182,10 @@ const CreateTask = ({ data }) => {
             <div className="content" style={taskAdded ? {maxHeight: "100vh"} : {}}>
                 <Header data={data} />
                 {taskAdded ? (
-                    <TickAnimation title={cookies.language === "en" ? "Doctor added successfully!" : "Doctorul a fost adaugat cu succes!"} animationFinished={animationFinished} />
+                    <TickAnimation title={animationName} animationFinished={animationFinished} />
                 ) : (
                 <div className="no-video-content" ref={noVideoContentRef}>
-                    <h2 className="title">{cookies.langauge === "en" ? `Add ${activeOption === 0 ? "patient in waiting" : "laboratory work"}` : `Adauga ${activeOption === 0 ? "pacient in asteptare" : "lucrare laborator"}`}</h2>
+                    <h2 className="title">{cookies.langauge === "en" ? `${createMode ? "Add" : "Edit"} ${activeOption === 0 ? "patient in waiting" : "laboratory work"}` : `${createMode ? "Adauga" : "Editeaza"} ${activeOption === 0 ? "pacient in asteptare" : "lucrare laborator"}`}</h2>
                     
                     <div className="go-back" onClick={() => navigate(-1)}>
                         <FontAwesomeIcon icon={faAngleLeft} />

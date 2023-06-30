@@ -46,7 +46,7 @@ const CreateSMS = ({ data }) => {
             const response = await request.json();
             if (response.success) {
                 window.history.replaceState({
-                    activeOption: 2,
+                    activeOption: 4,
                     sideMenuOption: true,
                     successProfile: true,
                     message: cookies.language === "en" ? "SMS added successfully!" : "SMS-ul a fost adaugat cu succes!"

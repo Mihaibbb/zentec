@@ -151,7 +151,7 @@ const DoctorAccount = ({ data }) => {
 
     const animationFinished = () => {
         document.body.style.background = "var(--background)";
-        navigate("/doctors", { state: { success: true, message: cookies.language === "en" ? "Changes have been saved successfully!" : "Modificarile au fost salvate cu succes!" } });
+        navigate("/profile", { state: { refresh: true, activeOption: 1 } });
     };
     
     return initialColor && (

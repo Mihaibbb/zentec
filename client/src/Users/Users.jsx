@@ -63,11 +63,11 @@ const Users = ({ data }) => {
             const response = await request.json();
             setWarning(false);
             setDoctorId();
-            if (await response.success) navigation("/doctors", { state: { success: true, message: cookies.language === "en" ? "Doctor removed successfully!" : "Doctorul a fost sters cu succes!", notEdit: true }});
+            if (await response.success) navigation("/profile", { state: { refresh: true, activeOption: 1 }});
             
         } catch (e) {
             console.log(e);
-            navigation("/doctors", { state: { message: cookies.language === "en" ? "An error occured!" : "A aparut o eroare!" }, notEdit: true });
+            navigation("/profile", { state: { message: cookies.language === "en" ? "An error occured!" : "A aparut o eroare!" }, notEdit: true });
         }
     };
 
@@ -104,7 +104,7 @@ const Users = ({ data }) => {
 
         } catch (e) {
             console.log(e);
-            navigation("/doctors", { state: {
+            navigation("/profile", { state: {
                 success: false,
                 message: cookies.language === "en" ? "Doctor's status couldn't be changed!" : "Statusul doctorului nu a putut fi modificat!",
                 notEdit: true
@@ -239,12 +239,10 @@ const Users = ({ data }) => {
 
 
     return (
-        <div className="patients">
-            <Navigation page="doctors" />
+        <div className="patients" style={{ display: "block" }}>
 
-            <div className="content">
                 <Header data={data} />
-                <h2 className="title">{cookies.language === "en" ? "Doctors List" : "Lista Medici"}</h2>
+                <h2 className="title" style={{ marginTop: "50px" }}>{cookies.language === "en" ? "Doctors List" : "Lista Medici"}</h2>
         
                 {doctors && (doctors.length > 0 || query.length > 0) && <div className="search-container">
                     <input type="text" value={query} onChange={e => setQuery(e.target.value)} placeholder={cookies.language === "en" ? "Search patient..." : "Cauta doctor..."} />
@@ -365,7 +363,6 @@ const Users = ({ data }) => {
                 </div>}
 
 
-            </div>
         </div>
     );
 

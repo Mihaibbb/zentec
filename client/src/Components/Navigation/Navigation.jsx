@@ -78,7 +78,7 @@ const Navigation = ({ show, page }) => {
                 <h3>{cookies.language === "en" ? "Appointments" : "Programari"}</h3>
             </div>
 
-            <div className={`item ${page === "doctors" ? "active" : ""}`} onClick={() => navigation("/doctors")}>
+            {/* <div className={`item ${page === "doctors" ? "active" : ""}`} onClick={() => navigation("/doctors")}>
                 <FontAwesomeIcon icon={faUserDoctor} className="item-icon" />
                 <h3>{cookies.language === "en" ? "Doctors" : "Medici"}</h3>
                 <FontAwesomeIcon icon={faAngleDown} className={`submenu-icon ${faAngleDown}`} onClick={() => setDoctorsSubmenuActive(curr => !curr)} />
@@ -89,7 +89,7 @@ const Navigation = ({ show, page }) => {
                     <div className="dot" />
                     <p>{cookies.language === "en" ? "Doctors Schedule" : "Program Doctori"}</p>
                 </div>
-            </div>
+            </div> */}
 
             <div className={`item ${page === "patients" ? "active" : ""}`} onClick={() => navigation("/patients")}>
                 {/* <FontAwesomeIcon icon={faBedPulse} className="item-icon" /> */}

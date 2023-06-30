@@ -1,4 +1,4 @@
-import { faAngleDown, faAngleUp, faCheck, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faAngleDown, faAngleUp, faCheck, faPencil, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useCookies } from "react-cookie";
@@ -53,7 +53,8 @@ const Tasks = ({ data }) => {
                 },
                 body: JSON.stringify({...work,
                     finished: status,
-                    listWorkId: Number(work.id)
+                    listWorkId: Number(work.id),
+                    organisationId: data.organisation._id
                 })
             };
 
@@ -146,6 +147,10 @@ const Tasks = ({ data }) => {
                                         <div className="label">
                                             <p>{cookies?.language === "en" ? "Notes": "Observatii"}</p>
                                         </div>
+
+                                        <div className="label">
+                                            <p>{cookies?.language === "en" ? "Options" : "Optiuni"}</p>
+                                        </div>
                                     </div>
 
                                     {patientsWaitingUnfinished.map((patientWaiting, idx) => (
@@ -171,6 +176,10 @@ const Tasks = ({ data }) => {
 
                                             <div className="label">
                                                 <p>{patientWaiting.notes || "Nedefinit"}</p>
+                                            </div>
+
+                                            <div className="label" onClick={() => navigate(`/create-task/${activeOption}/0/${patientWaiting.id}`)}>
+                                                <FontAwesomeIcon icon={faPencil} className="edit-icon" />
                                             </div>
                                         
                                         </div>
@@ -206,12 +215,16 @@ const Tasks = ({ data }) => {
                                         <div className="label">
                                             <p>{cookies?.language === "en" ? "Pickup": "Primire"}</p>
                                         </div>
+
+                                        <div className="label">
+                                            <p>{cookies?.language === "en" ? "Options" : "Optiuni"}</p>
+                                        </div>
                                     </div>
 
                                     {worksListUnfinished.map((work, idx) => (
                                         <div className="row" key={idx}>
                                             <div className="label">
-                                                <div className="circle">
+                                                <div className={`circle ${work.finished ? "finished" : ""}`} onClick={() => changeStatusWorksList(work, !work.finished)}>
                                                     {work.finished ? <FontAwesomeIcon icon={faCheck} className="check-icon" /> : null}
                                                 </div>
                                             </div> 
@@ -233,7 +246,11 @@ const Tasks = ({ data }) => {
                                             </div>
                                             <div className="label">
                                                 <p>{new Date(work.term).getDate() < 10 ? `0${new Date(work.term).getDate()}` : new Date(work.term).getDate()}.{new Date(work.term).getMonth() + 1 < 10 ? `0${new Date(work.term).getMonth() + 1}` : new Date(work.term).getMonth() + 1}.${new Date(work.term).getFullYear()}</p>
-                                            </div>                                      
+                                            </div>           
+
+                                            <div className="label" onClick={() => navigate(`/create-task/${activeOption}/0/${work.id}`)}>
+                                                <FontAwesomeIcon className="edit-icon" icon={faPencil} />
+                                            </div>                           
                                         </div>
                                     ))}
                                 </>
@@ -272,6 +289,10 @@ const Tasks = ({ data }) => {
                                                     <p>{patientWaiting.notes || "Nedefinit"}</p>
                                                 </div>
 
+                                                <div className="label" onClick={() => navigate(`/create-task/${activeOption}/0/${patientWaiting.id}`)}>
+                                                    <FontAwesomeIcon icon={faPencil} className="edit-icon" />
+                                                </div>
+
                                                 <div className="line" />
                                             
                                             </div>
@@ -285,7 +306,7 @@ const Tasks = ({ data }) => {
                                     {worksListFinished.map((work, idx) => (
                                         <div className="row" key={idx}>
                                             <div className="label">
-                                                <div className="circle">
+                                                <div className={`circle ${work.finished ? "finished" : ""}`} onClick={() => changeStatusWorksList(work, !work.finished)}>
                                                     {work.finished ? <FontAwesomeIcon icon={faCheck} className="check-icon" /> : null}
                                                 </div>
                                             </div> 
@@ -307,7 +328,14 @@ const Tasks = ({ data }) => {
                                             </div>
                                             <div className="label">
                                                 <p>{new Date(work.term).getDate() < 10 ? `0${new Date(work.term).getDate()}` : new Date(work.term).getDate()}.{new Date(work.term).getMonth() + 1 < 10 ? `0${new Date(work.term).getMonth() + 1}` : new Date(work.term).getMonth() + 1}.${new Date(work.term).getFullYear()}</p>
-                                            </div>                                      
+                                            </div>      
+
+                                            <div className="label" onClick={() => navigate(`/create-task/${activeOption}/0/${work.id}`)}>
+                                                    <FontAwesomeIcon icon={faPencil} className="edit-icon" />
+                                            </div>
+
+                                            <div className="line" />
+                                
                                         </div>
                                     ))}
                                 </div>

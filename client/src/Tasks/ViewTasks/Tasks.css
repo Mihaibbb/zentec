@@ -76,7 +76,18 @@
 
 .tasks-container.finished .row p
 {
-    
+    color: var(--text-color);
+}
+
+
+.tasks-container.finished .row .line 
+{
+    background: rgba(164, 164, 164, .3);
+}
+
+body.light .tasks-container .finished .row .line 
+{
+    background: rgba(0, 0, 0, .3);
 }
 
 .tasks-container.finished .row .line 
@@ -86,10 +97,10 @@
     top: 50%;
     transform: translateY(-50%);
     height: 3px;
-    background: rgba(0, 0, 0, .3);
     z-index: 100;
     transition: all 350ms ease-in-out;
 }
+
 
 .tasks-container.finished .row:hover .line
 {

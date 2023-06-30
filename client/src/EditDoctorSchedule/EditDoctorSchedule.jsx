@@ -1,6 +1,6 @@
 import { faAngleDown, faAngleLeft, faAngleUp, faCheck, faPlus, faTimes, faZ } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useEffect } from "react";
+import { useEffect, useLayoutEffect } from "react";
 import { useState } from "react";
 import { useCookies } from "react-cookie";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
@@ -171,7 +171,7 @@ const EditDoctorSchedule = ({ data }) => {
 
         let timeErrorsIdx = [];
         startHourValue.forEach((hourValue, idx) => {
-            const startTime = Number(hourValue) * 60 + Number(startMinutesValue[idx]);
+            const startTime = Number(startHourValue[idx]) * 60 + Number(startMinutesValue[idx]);
             const endTime = Number(endHourValue[idx]) * 60 + Number(endMinutesValue[idx]);
             if (startTime >= endTime) {
                 timeErrorsIdx.push(idx);
@@ -179,7 +179,7 @@ const EditDoctorSchedule = ({ data }) => {
         });
 
         // Verify if start hour is >= end hour
-        timeErrorsIdx.forEach((timeErrorIdx) => {
+        if (timeErrorsIdx.length) return timeErrorsIdx.forEach((timeErrorIdx) => {
             setErrorMessages(currErrorMessages => {
                 return [...currErrorMessages, {
                     idx: timeErrorIdx,
@@ -220,7 +220,7 @@ const EditDoctorSchedule = ({ data }) => {
             });
         });
         
-        await Promise.all(currSchedules.map(async (schedule, idx) => {
+        currSchedules.forEach(async (schedule, idx) => {
             
                 console.log(schedule);
                 const options = {
@@ -234,13 +234,14 @@ const EditDoctorSchedule = ({ data }) => {
                 try {
                     const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/${schedule?.scheduleId ? "edit-doctor-schedule" : "create-doctor-schedule"}`, options);
                     const response = await request.json();
+                    console.log(response);
                 } catch(e) {
                     console.log(e);
                 }
-        }));
+        });
 
-        //window.history.replaceState({ fromSchedules: true }, '');
-        window.location.replace("/doctors-schedule");
+        window.history.replaceState({ activOption: 2 }, '');
+        navigate("/profile", { state: { refresh: true, activeOption: 2 }});
 
     };
 
@@ -250,20 +251,12 @@ const EditDoctorSchedule = ({ data }) => {
         setSchedules(getSchedulesForDay());
     }, []);
 
+    const [addedSchedule, setAddedSchedule] = useState(0);
+
     useEffect(() => {
         if (!schedules || !schedules.length) return;
-        // setDoctorValue([]);
-        // setDoctorNameValue([]);
-        // setStartHourValue([]);
-        // setStartMinutesValue([]);
-        // setEndHourValue([]);
-        // setEndMinutesValue([]);
-        // setNotes([]);
-        // setApplyToCalendarValue([]);
-        // setStartHourActiveMenu([]);
-        // setEndHourActiveMenu([]);
-        // setErrorMessages([]);
-
+        if (addedSchedule) return;
+        
         schedules.forEach((schedule, idx) => {
             console.log(schedule);
             setDoctorValue(currValues => [...currValues, schedule?.doctorId || ""]);
@@ -280,6 +273,36 @@ const EditDoctorSchedule = ({ data }) => {
         });
 
     }, [schedules]);
+
+    useLayoutEffect(() => {
+        if (!schedules || !schedules.length) return;
+
+        // setDoctorValue([]);
+        // setDoctorNameValue([]);
+        // setStartHourValue([]);
+        // setStartMinutesValue([]);
+        // setEndHourValue([]);
+        // setEndMinutesValue([]);
+        // setNotes([]);
+        // setApplyToCalendarValue([]);
+        // setStartHourActiveMenu([]);
+        // setEndHourActiveMenu([]);
+        // setErrorMessages([]);
+
+    
+        setDoctorValue(currValues => [...currValues, ""]);
+        setDoctorNameValue(currValues => [...currValues, ""]);
+        setStartHourValue(currValue => [...currValue, 0]);
+        setStartMinutesValue(currValue => [...currValue,  0]);
+        setEndHourValue(currValue => [...currValue, 0]);
+        setEndMinutesValue(currValue => [...currValue, 0]);
+        setNotes(currValue => [...currValue, ""]);
+        setApplyToCalendarValue(currValue => [...currValue, false]);
+        setStartHourActiveMenu(currValue => [...currValue, false]);
+        setEndHourActiveMenu(currValue => [...currValue, false]);
+        setErrorMessages(currValue => [...currValue, ""]);
+    
+    }, [addedSchedule]);
 
     useEffect(() => {
         console.log(doctorValue);
@@ -340,9 +363,15 @@ const EditDoctorSchedule = ({ data }) => {
 
     useEffect(() => {
         window.addEventListener("click", e => {
-            if (e.target.classList.contains("time-input")) return;
+            let element = e.target, found = false;
+            while (element?.parentElement) {
+                if (element?.classList.contains("hour-frame")) found = true;
+                element = element?.parentElement;
+            }
+
+            if (e.target.classList.contains("time-input") || found) return;
             console.log(startHourActiveMenu);
-            if (startHourActiveMenu?.length && endHourActiveMenu?.length && startHourActiveMenu.any(menu => !menu) && endHourActiveMenu.any(menu => menu)) return;
+            if (startHourActiveMenu?.length && endHourActiveMenu?.length && startHourActiveMenu.every(menu => !menu) && endHourActiveMenu.every(menu => menu)) return;
 
             setStartHourActiveMenu(currMenus => {
                 return [...currMenus].map(() => false);
@@ -397,7 +426,8 @@ const EditDoctorSchedule = ({ data }) => {
                 )} */}
 
                 {schedules && schedules.length ? schedules.map((schedule, idx) => (
-                    <div className="schedule" key={idx}>
+                    <>
+                        <div className="schedule" key={idx}>
                         
                         <div className="input">
                             {idx === 0 && <p className="title">{cookies.language === "en" ? "Doctor" : "Medic"}</p> }
@@ -439,6 +469,7 @@ const EditDoctorSchedule = ({ data }) => {
                                         icon={faAngleDown} 
                                         className="angle-icon" 
                                         onClick={() => {
+                                            if (!startHourActiveMenu[idx]) return;
                                             setStartHourValue(currValues => {
                                                 return currValues.map((currValue, valueIdx) => {
                                                     if (valueIdx !== idx) return Number(currValue);
@@ -463,7 +494,7 @@ const EditDoctorSchedule = ({ data }) => {
                                     <FontAwesomeIcon 
                                         icon={faAngleUp} 
                                         className="angle-icon" 
-                                        onClick={() => setStartHourValue(currValues => {
+                                        onClick={() => startHourActiveMenu[idx] && setStartHourValue(currValues => {
                                             return currValues.map((currValue, valueIdx) => {
                                                 if (valueIdx !== idx) return Number(currValue);
                                                 if (Number(currValue) + 1 > END_SCHEDULE_HOUR) {
@@ -496,6 +527,7 @@ const EditDoctorSchedule = ({ data }) => {
                                         icon={faAngleDown} 
                                         className="angle-icon"
                                         onClick={(e) => {
+                                            if (!startHourActiveMenu[idx]) return;
                                             setStartMinutesValue(currValues => {
                                                 return currValues.map((currValue, valueIdx) => {
                                                     if (valueIdx !== idx) return Number(currValue);
@@ -520,6 +552,7 @@ const EditDoctorSchedule = ({ data }) => {
                                         icon={faAngleUp} 
                                         className="angle-icon" 
                                         onClick={() => {
+                                            if (!startHourActiveMenu[idx]) return;
                                             setStartMinutesValue(currValues => {
                                                 return currValues.map((currValue, valueIdx) => {
                                                     if (valueIdx !== idx) return Number(currValue);
@@ -562,6 +595,8 @@ const EditDoctorSchedule = ({ data }) => {
                                         icon={faAngleDown} 
                                         className="angle-icon" 
                                         onClick={() => {
+                                            if (!endHourActiveMenu[idx]) return;
+
                                             setEndHourValue(currValues => {
                                                 return currValues.map((currValue, valueIdx) => {
                                                     if (valueIdx !== idx) return Number(currValue);
@@ -586,7 +621,8 @@ const EditDoctorSchedule = ({ data }) => {
                                     <FontAwesomeIcon 
                                         icon={faAngleUp} 
                                         className="angle-icon" 
-                                        onClick={() => setEndHourValue(currValues => {
+                                        onClick={() => endHourActiveMenu[idx] && setEndHourValue(currValues => {
+                                            
                                             return currValues.map((currValue, valueIdx) => {
                                                 if (valueIdx !== idx) return Number(currValue);
                                                 if (Number(currValue) + 1 > END_SCHEDULE_HOUR) {
@@ -620,6 +656,7 @@ const EditDoctorSchedule = ({ data }) => {
                                         icon={faAngleDown} 
                                         className="angle-icon"
                                         onClick={(e) => {
+                                            if (!endHourActiveMenu[idx]) return;
                                             setEndMinutesValue(currValues => {
                                                 return currValues.map((currValue, valueIdx) => {
                                                     if (valueIdx !== idx) return Number(currValue);
@@ -644,6 +681,7 @@ const EditDoctorSchedule = ({ data }) => {
                                         icon={faAngleUp} 
                                         className="angle-icon" 
                                         onClick={() => {
+                                            if (!endHourActiveMenu[idx]) return;
                                             setEndMinutesValue(currValues => {
                                                 return currValues.map((currValue, valueIdx) => {
                                                     if (valueIdx !== idx) return Number(currValue);
@@ -701,9 +739,12 @@ const EditDoctorSchedule = ({ data }) => {
                             <FontAwesomeIcon className="remove-button" icon={faTimes} onClick={async () => await removeSchedule(schedule?.scheduleId, doctorValue[idx] || null, idx)} />
                         </div>
                     </div>
+                        <p className="error">{errorMessages.find(errorMessage => errorMessage?.idx === idx)?.message || ""}</p>
+                    </>
                 )) : null}
 
                 <div className="add-button" onClick={() => {
+                    setAddedSchedule(curr => curr + 1);
                     setSchedules(currSchedules => [...currSchedules, {}]);
                     window.scrollTo({
                         top: document.body.scrollHeight,

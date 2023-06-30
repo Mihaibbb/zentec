@@ -12,6 +12,8 @@ import greenTickWhiteTheme from "../imgs/green-tick-light-theme.mp4";
 import { useRef } from "react";
 import TickAnimation from "../utils/TickAnimation";
 import { faClock } from "@fortawesome/free-regular-svg-icons";
+import Users from "../Users/Users";
+import DoctorSchedule from "../DoctorSchedule/DoctorSchedule";
 
 const Profile = ({ data }) => {
 
@@ -23,7 +25,7 @@ const Profile = ({ data }) => {
     const [startHourProgram, setStartHourProgram] = useState(data.organisation.details[0].start_hour);
     const [endHourProgram, setEndHourProgram] = useState(data.organisation.details[0].end_hour);
     
-    const options = cookies.language === "en" ? ["Details", "Assistants", "Scheduled SMS", "Treatments", "Treatments Categories", "Diagnostics", "Patients' Types (dental status)", "Patient Categories"] : ["Detalii", "Personal", "SMS-uri Programate", "Tratamente", "Categorii Tratamente", "Diagnostice", "Tipuri pacienti (status dentar)", "Categorii pacienti"];
+    const options = cookies.language === "en" ? ["Details", "Doctors", "Doctors' Schedule", "Assistants", "Scheduled SMS", "Treatments", "Treatments Categories", "Diagnostics", "Patients' Types (dental status)", "Patient Categories", "Laboratories", "Works"] : ["Detalii", "Doctori", "Program Doctori", "Personal", "SMS-uri Programate", "Tratamente", "Categorii Tratamente", "Diagnostice", "Tipuri pacienti (status dentar)", "Categorii pacienti", "Laboratoare", "Lucrari"];
     const optionsTitle = cookies.language === "en" ? ["", "", "", ""] : ["", "", ""];
     const [activeOption, setActiveOption] = useState(window?.history?.state?.activeOption || 0);
     const [sideMenuOption, setSideMenuOption] = useState(window?.history?.state?.sideMenuOption || 0);
@@ -61,6 +63,13 @@ const Profile = ({ data }) => {
     const [diagnosticsQuery, setDiagnosticsQuery] = useState("");
     const [patientTypesQuery, setPatientTypesQuery] = useState("");
     const [patientCategoriesQuery, setPatientCategoriesQuery] = useState("");
+
+    const [works, setWorks] = useState(data.organisation.works);
+    const [totalWorks, setTotalWorks] = useState(data.organisation.works);
+    const [labs, setLabs] = useState(data.organisation.labs);
+    const [totalLabs, setTotalLabs] = useState(data.organisation.labs);
+    const [labsQuery, setLabsQuery] = useState("");
+    const [worksQuery, setWorksQuery] = useState("");
 
     const [videoStart, setVideoStart] = useState(false);
     const [patients, setPatients] = useState([]);
@@ -609,7 +618,8 @@ const Profile = ({ data }) => {
                 activeOption: location?.state?.activeOption
             }, "");
             window.location.reload();
-        } else window.history.replaceState({}, "");
+        } 
+        // else window.history.replaceState({}, "");
     }, [location]);
 
     const removeTreatmentCategory = async (id) => {
@@ -718,6 +728,48 @@ const Profile = ({ data }) => {
         }
     };
 
+    const removeLab = async (labId) => {
+        const options = {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        };
+
+        try {
+            const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/remove-lab/${data.organisation._id}/${labId}`, options);
+            const response = await request.json();
+
+            if (response.success) {
+                document.body.style.background = theme === "light" ? "#fff" : "#000";
+                setTimeout(() => setVideoStart(cookies?.language === "en" ? "Patient category removed successfully!" : "Categoria de pacient a fost stearsa cu succes!"), 350);
+            } else console.log(response);
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
+    const removeWork = async (workId) => {
+        const options = {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        };
+
+        try {
+            const request = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/remove-work/${data.organisation._id}/${workId}`, options);
+            const response = await request.json();
+
+            if (response.success) {
+                document.body.style.background = theme === "light" ? "#fff" : "#000";
+                setTimeout(() => setVideoStart(cookies?.language === "en" ? "Work removed successfully!" : "Lucrarea a fost stearsa cu succes!"), 350);
+            } else console.log(response);
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
     const saveChanges = async () => {
 
         if (Number(startHourProgram) >= Number(endHourProgram) || Number(startHourProgram) <= 0 || Number(startHourProgram) >= 22 || Number(endHourProgram) <= 1 || Number(endHourProgram) >= 23) 
@@ -755,7 +807,7 @@ const Profile = ({ data }) => {
     return (
         <div className="profile-container">
             <Navigation page="" />
-            <div className="content">
+            <div className="content" style={videoStart ? {maxHeight: "100vh"} : {}}>
                 <Header data={data} />
                 
                 {!videoStart ? 
@@ -843,6 +895,10 @@ const Profile = ({ data }) => {
                                 </button> 
                             </div>
                         ) : activeOption === 1 ? (
+                            <Users data={data} />
+                        ) : activeOption === 2 ? (
+                            <DoctorSchedule data={data} />
+                        ) : activeOption === 3 ? (
                             <div className="assistants-details">
                                 <h3>{cookies.language === "en" ? "Assistants List" : "Lista Personal"}</h3>
 
@@ -975,7 +1031,7 @@ const Profile = ({ data }) => {
                                     <p>{cookies?.language === "en" ? "Add assistant" : "Adauga asistent"}</p>
                                 </div>
                             </div>
-                        ) : activeOption === 2 ? (
+                        ) : activeOption === 4 ? (
                             <div className="sms-details">
                                 {currentSMS.map((sms, idx) => (
                                     <div className="sms-container" key={idx}>
@@ -997,7 +1053,7 @@ const Profile = ({ data }) => {
                                 </div>
                                 <p className="error">{errorMessage}</p>
                             </div>
-                        ) :  activeOption === 3 ? (
+                        ) :  activeOption === 5 ? (
                             <div className="treatment-categories-details">
                                 <div className="search-container">
                                     <input type="text" value={treatmentsQuery} onChange={e => setTreatmentsQuery(e.target.value)} placeholder={cookies.language === "en" ? "Search treatment..." : "Cauta tratament..."} />
@@ -1112,7 +1168,7 @@ const Profile = ({ data }) => {
 
                                 </div>
                             </div>
-                        ) : activeOption === 4 ? (
+                        ) : activeOption === 6 ? (
                             <div className="treatment-categories-details">
                                 <div className="search-container">
                                     <input type="text" value={query} onChange={e => setQuery(e.target.value)} placeholder={cookies.language === "en" ? "Search category..." : "Cauta categorie..."} />
@@ -1212,7 +1268,7 @@ const Profile = ({ data }) => {
                                     <p>{cookies?.language === "en" ? "Add treatment category" : "Adauga categorie tratament"}</p>
                                 </div>
                             </div>
-                        ) : activeOption === 5 ? <div className="treatment-categories-details">
+                        ) : activeOption === 7 ? <div className="treatment-categories-details">
                         <div className="search-container">
                             <input type="text" value={diagnosticsQuery} onChange={e => setDiagnosticsQuery(e.target.value)} placeholder={cookies.language === "en" ? "Search diagnose..." : "Cauta diagnostic..."} />
                             <FontAwesomeIcon icon={faSearch} className="search-icon" />
@@ -1312,7 +1368,7 @@ const Profile = ({ data }) => {
                             <FontAwesomeIcon icon={faPlus} className="add-icon" />
                             <p>{cookies?.language === "en" ? "Add diagnostic" : "Adauga diagnostic"}</p>
                         </div>
-                    </div> : activeOption === 6 ? (
+                    </div> : activeOption === 8 ? (
                          <div className="treatment-categories-details">
                             <div className="search-container">
                                 <input type="text" value={patientTypesQuery} onChange={e => setPatientTypesQuery(e.target.value)} placeholder={cookies.language === "en" ? "Search patient type..." : "Cauta tip de pacient..."} />
@@ -1405,7 +1461,7 @@ const Profile = ({ data }) => {
                                 <p>{cookies?.language === "en" ? "Add patient type" : "Adauga tip pacient"}</p>
                             </div>
                          </div>
-                    ) : activeOption === 7 ? (
+                    ) : activeOption === 9 ? (
                         <div className="treatment-categories-details">
                             <div className="search-container">
                                 <input type="text" value={patientCategoriesQuery} onChange={e => setPatientCategoriesQuery(e.target.value)} placeholder={cookies.language === "en" ? "Search patient category..." : "Cauta categorie de pacient..."} />
@@ -1498,6 +1554,238 @@ const Profile = ({ data }) => {
                                 <p>{cookies?.language === "en" ? "Add patient category" : "Adauga categorie pacient"}</p>
                             </div>
                          </div>
+                    ) : activeOption === 10 ? (
+                        <div className="treatment-categories-details">
+                            <div className="search-container">
+                                <input type="text" value={labsQuery} onChange={e => setLabsQuery(e.target.value)} placeholder={cookies.language === "en" ? "Search laboratory..." : "Cauta laborator..."} />
+                                <FontAwesomeIcon icon={faSearch} className="search-icon" />
+                            </div>
+    
+                            <div className="patients-container">
+                                {patientTypes.length > 0 && <div className="first-row">
+                                    {windowWidth >= 600 ? <div className="column">
+                                        <p>{cookies.language === "en" ? "No." : "Nr."}</p>
+                                        
+                                    </div> : null}
+    
+                                    <div className="column">
+                                        <p>{cookies.language === "en" ? "Name" : "Nume"}</p>
+                                    </div>
+
+                                    <div className="column">
+                                        <p>{cookies?.language === "en" ? "City" : "Oras"}</p>
+                                    </div>
+
+                                    <div className="column">
+                                        <p>{cookies?.language === "en" ? "County" : "Judet / Sector"}</p>
+                                    </div>
+                                    
+                                    <div className="column">
+                                        <p>{cookies?.language === "en" ? "Address" : "Adresa"}</p>
+                                    </div>
+
+                                    <div className="column">
+                                        <p>{cookies?.language === "en" ? "Phone" : "Telefon"}</p>
+                                    </div>
+    
+                                    <div className="column">
+                                        <p>{cookies.language === "en" ? "Options" : "Optiuni"}</p>
+                                    </div>
+                                </div>}
+    
+                                {labs?.length > 0 ? labs.map((lab, idx) => (
+                                    <div className="row" key={idx}>
+    
+                                        {windowWidth >= 600 ? <div className="column">
+                                            <p>{lab.id}</p>
+                                        </div> : null}
+    
+                                        <div className="column">
+                                            <p>{lab.name}</p>
+                                        </div>
+
+                                        <div className="column">
+                                            <p>{lab.city}</p>
+                                        </div>
+
+                                        <div className="column">
+                                            <p>{lab.county}</p>
+                                        </div>
+
+                                        <div className="column">
+                                            <p>{lab.address}</p>
+                                        </div>
+
+                                        <div className="column">
+                                            <p>{lab.phone}</p>
+                                        </div>
+    
+                                        <div className="column pressable">
+                                            <FontAwesomeIcon className="column-icon" icon={faEllipsis} onClick={() => triggerOptions(idx, optionsTreatmentsRef.current)}/>
+                                            <div className="options-container" ref={ref => optionsTreatmentsRef.current[idx] = ref}>
+                                                <div className="option" onClick={async () => optionsTreatmentsRef.current[idx].classList.contains("show") ? await removeLab(lab.id) : null}>
+                                                    <FontAwesomeIcon icon={faTimes} className="option-icon" /> 
+                                                    <p>{cookies.language === "en" ? "Remove" : "Sterge"}</p>
+                                                </div>
+    
+                                                <div className="option" onClick={() => navigation(`/create-lab/${lab.id}`, { state: { lab } })}>
+                                                    <FontAwesomeIcon icon={faUser} className="option-icon" />
+                                                    <p>{cookies.language === "en" ? "Edit" : "Editeaza"}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )) : (
+                                    <h2 className="center">{cookies.language === "en" ? "No laboratory found." : "Niciun laborator gasit."}</h2>
+                                )}
+    
+                                {/* {pages > 1 ? <div className="pages-container">
+    
+                                    <div className="page-container" onClick={() => setCurrentPagePatientCategories(1)}>
+                                        <p>1</p>
+                                    </div>
+    
+                                    <div className="page-input">
+                                        <div 
+                                            className="value-container"
+                                            onClick={() => currentPagePatientCategories > 1 ? setCurrentPagePatientCategories(currValue => currValue - 1) : null}
+                                        >
+                                            <FontAwesomeIcon icon={faMinus} className="value-icon" />
+                                        </div>
+                                        
+                                        <input 
+                                            type="number" 
+                                            placeholder={cookies.language === "en" ? "Page's number" : "Numarul paginii"}
+                                            value={currentPagePatientCategories}
+                                            onChange={e => Number(e.target.value) ? setCurrentPagePatientCategories(Number(e.target.value)) : setCurrentPagePatientCategories("")}
+                                        />
+    
+                                        <div 
+                                            className="value-container"
+                                            onClick={() => currentPagePatientCategories < pages ? setCurrentPagePatientCategories(currValue => currValue + 1) : null}
+                                        >
+                                            <FontAwesomeIcon icon={faPlus} className="value-icon" />
+                                        </div>
+                                    </div>
+                                    <div className="page-container" onClick={() => setCurrentPagePatientCategories(pages)}>
+                                        <p>{pages}</p>
+                                    </div>
+                                </div> : null} */}
+                            </div>
+                            
+                            <div className="add-button" onClick={() => navigate("/create-lab/-1")}>
+                                <FontAwesomeIcon icon={faPlus} className="add-icon" />
+                                <p>{cookies?.language === "en" ? "Add laboratory" : "Adauga laborator"}</p>
+                            </div>
+                         </div>
+                    ) : activeOption === 11 ? (
+                        <div className="treatment-categories-details">
+                        <div className="search-container">
+                            <input type="text" value={worksQuery} onChange={e => setWorksQuery(e.target.value)} placeholder={cookies.language === "en" ? "Search lab work..." : "Cauta lucrare laborator..."} />
+                            <FontAwesomeIcon icon={faSearch} className="search-icon" />
+                        </div>
+
+                        <div className="patients-container">
+                            {patientTypes.length > 0 && <div className="first-row">
+                                {windowWidth >= 600 ? <div className="column">
+                                    <p>{cookies.language === "en" ? "No." : "Nr."}</p>
+                                </div> : null}
+
+                                <div className="column">
+                                    <p>{cookies.language === "en" ? "Name" : "Nume"}</p>
+                                </div>
+
+                                <div className="column">
+                                    <p>{cookies?.language === "en" ? "Price per" : "Pret per"}</p>
+                                </div>
+
+                                <div className="column">
+                                    <p>{cookies?.language === "en" ? "Color" : "Culoare"}</p>
+                                </div>
+
+                                <div className="column">
+                                    <p>{cookies?.language === "en" ? "Options" : "Optiuni"}</p>
+                                </div>
+                            </div>}
+
+                            {works?.length > 0 ? works.map((work, idx) => (
+                                <div className="row" key={idx}>
+
+                                    {windowWidth >= 600 ? <div className="column">
+                                        <p>{work.id}</p>
+                                    </div> : null}
+
+                                    <div className="column">
+                                        <p>{work.name}</p>
+                                    </div>
+
+                                    <div className="column">
+                                        <p>{work.pricePer}</p>
+                                    </div>
+
+                                    <div className="column">
+                                        <div className="square" style={{ width: '50px', height: '20px', borderRadius: '10px', backgroundColor: work.color }} />
+                                    </div>
+
+
+                                    <div className="column pressable">
+                                        <FontAwesomeIcon className="column-icon" icon={faEllipsis} onClick={() => triggerOptions(idx, optionsTreatmentsRef.current)}/>
+                                        <div className="options-container" ref={ref => optionsTreatmentsRef.current[idx] = ref}>
+                                            <div className="option" onClick={async () => optionsTreatmentsRef.current[idx].classList.contains("show") ? await removeWork(work.id) : null}>
+                                                <FontAwesomeIcon icon={faTimes} className="option-icon" /> 
+                                                <p>{cookies.language === "en" ? "Remove" : "Sterge"}</p>
+                                            </div>
+
+                                            <div className="option" onClick={() => navigation(`/create-work/${work.id}`, { state: { work } })}>
+                                                <FontAwesomeIcon icon={faUser} className="option-icon" />
+                                                <p>{cookies.language === "en" ? "Edit" : "Editeaza"}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )) : (
+                                <h2 className="center">{cookies.language === "en" ? "No work found." : "Nicio lucrare gasita."}</h2>
+                            )}
+
+                            {/* {pages > 1 ? <div className="pages-container">
+
+                                <div className="page-container" onClick={() => setCurrentPagePatientCategories(1)}>
+                                    <p>1</p>
+                                </div>
+
+                                <div className="page-input">
+                                    <div 
+                                        className="value-container"
+                                        onClick={() => currentPagePatientCategories > 1 ? setCurrentPagePatientCategories(currValue => currValue - 1) : null}
+                                    >
+                                        <FontAwesomeIcon icon={faMinus} className="value-icon" />
+                                    </div>
+                                    
+                                    <input 
+                                        type="number" 
+                                        placeholder={cookies.language === "en" ? "Page's number" : "Numarul paginii"}
+                                        value={currentPagePatientCategories}
+                                        onChange={e => Number(e.target.value) ? setCurrentPagePatientCategories(Number(e.target.value)) : setCurrentPagePatientCategories("")}
+                                    />
+
+                                    <div 
+                                        className="value-container"
+                                        onClick={() => currentPagePatientCategories < pages ? setCurrentPagePatientCategories(currValue => currValue + 1) : null}
+                                    >
+                                        <FontAwesomeIcon icon={faPlus} className="value-icon" />
+                                    </div>
+                                </div>
+                                <div className="page-container" onClick={() => setCurrentPagePatientCategories(pages)}>
+                                    <p>{pages}</p>
+                                </div>
+                            </div> : null} */}
+                        </div>
+                        
+                        <div className="add-button" onClick={() => navigate("/create-work/-1")}>
+                            <FontAwesomeIcon icon={faPlus} className="add-icon" />
+                            <p>{cookies?.language === "en" ? "Add work" : "Adauga lucrare"}</p>
+                        </div>
+                     </div>
                     ) : null}
                     </div>
                     
