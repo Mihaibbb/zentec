@@ -129,7 +129,7 @@ router.post("/cancel-appointment", cancelAppointment);
 router.post("/next-appointments", nextAppointments);
 router.post("/update-appointment", updateAppointment);
 router.post("/create-patient", createPatient);
-router.delete("/remove-patient", removePatient);
+router.delete("/remove-patient/:organisationId/:id", removePatient);
 router.post("/get-doctors", getDoctors);
 router.post("/get-latest-schedules", getLatestSchedules);
 router.post("/analytics", analytics);
@@ -285,13 +285,13 @@ router.delete("/remove-work-list/:organisationId/:listWorkId", removeWorkList);
 // Works
 
 router.post("/create-work", createWork);
-router.put("/update-work", updateWork);
+router.put("/edit-work", updateWork);
 router.delete("/remove-work/:organisationId/:workId", removeWork);
 
 
 // Labs
 router.post("/create-lab", createLab);
-router.put("/update-lab", updateLab);
+router.put("/edit-lab", updateLab);
 router.delete("/remove-lab/:organisationId/:labId", removeLab);
 
 

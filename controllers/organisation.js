@@ -263,7 +263,7 @@ exports.createOrganisation = async (req, res, next) => {
         createTableSql = 'CREATE TABLE ?? ( ';
         createTableSql += 'id int primary key auto_increment not null, ';
         createTableSql += 'name varchar(64) not null, ';
-        createTableSql += 'pricePer int(2) not null, ';
+        createTableSql += 'pricePer varchar(64) not null, ';
         createTableSql += 'color varchar(16) not null );';
 
         await db.query(createTableSql, ['works']);

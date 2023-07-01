@@ -22,7 +22,7 @@ import doctorVideo from "../imgs/videos/doctor.mp4";
 import patientVideo from "../imgs/videos/pacient.mp4";
 import doctorScheduleVideo from "../imgs/videos/program_doctori.mp4";
 import appointmentVideo from "../imgs/videos/programare.mp4";
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const Home = ({ data }) => {
 
@@ -36,6 +36,7 @@ const Home = ({ data }) => {
     const [videosStatus, setVideosStatus] = useState([]);
 
     const navigate = useNavigate();
+    const location = useLocation();
 
     const isTouchDevice = useCallback(() => {
         return (('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0));
@@ -79,7 +80,8 @@ const Home = ({ data }) => {
     };
 
     useEffect(() => {
-        document.body.style.overflowX = 'hidden';
+        console.log("change");
+        // document.body.style.overflowX = 'hidden';
     }, []);
 
     const userConnected = async () => {
@@ -145,12 +147,12 @@ const Home = ({ data }) => {
                 <div className="block-1">
                     <h2 className="title">
                         Digitalizează-ți cabinetul <span></span> <br />  
-                        cu <span>ZenTec</span>
+                        cu <span>ZenTec</span> 🛜
                     </h2>
 
                     <p className="description">{cookies.language === "en" ? "ZenTec is a software designed for medical cabients, easy to use, which simplifies handling with appointments." : "ZenTec este o platformă destinată cabinetelor medicale, ce este intuitivă și ușor de folosit, simplificând gestionarea pacienților, cât și a programarilor."}</p>
 
-                    <button type="button" onClick={() => foundUser ? navigate("/dashboard") : navigate("/contact")}>
+                    <button type="button" onClick={() => foundUser ? navigate("/appointments", { change: true }) : navigate("/contact")}>
                         {foundUser ? <p>{cookies?.language === "en" ? "Towards app" : "Spre aplicație"}</p> : <p>{cookies?.language === "en" ? "Contact us" : "Contactează-ne"}</p>}
                     </button>
 
@@ -585,7 +587,7 @@ const Home = ({ data }) => {
                 </div>
                 
                 <div className="fixed-icon-container">
-                    <a href="https://wa.me/+40734893938" target="_blank">
+                    <a href="https://wa.me/+40760331658" target="_blank">
                         <FontAwesomeIcon icon={faWhatsapp} className="fixed-icon" />
                     </a>
                 </div>

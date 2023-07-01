@@ -92,6 +92,8 @@ body
     font-family: "Inter";
     font-weight: 600;
     font-size: 16px;
+    position: relative;
+    z-index: 100;
 
     transition: all 350ms ease-in-out;
 }
@@ -343,7 +345,7 @@ body
 
 .home-container .content .block-4 .block-container h2 
 {
-    font-size: 40px;
+    font-size: 50px;
     color: var(--home-opposite-text-color);
     margin-bottom: 2rem;
 }

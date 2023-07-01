@@ -74,12 +74,10 @@ const HeaderHome = ({ data, activePage }) => {
                 {/* <p className="item">Zen news</p> */}
 
                 <div className="right-container">
-                    <div className="button" onClick={() => foundUser ? navigation("/dashboard") : navigation("/login")}>
+                    <div className="button" onClick={() => foundUser ? navigation("/appointments") : navigation("/login")}>
                         {!foundUser ? 
                             <p>{cookies.language === "en" ? "Login" : "Login"}</p> :
-                            <>
-                                <p>{cookies.language === "en" ? "To dashboard" : "Aplicatie"}</p>
-                            </>
+                            <p>{cookies.language === "en" ? "Dashboard" : "Aplicatie"}</p>
                         }
                     </div>
                 </div>

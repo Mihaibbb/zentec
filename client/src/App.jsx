@@ -258,7 +258,7 @@ const App = () => {
                                 <Route path="create-user" element={<CreateUser />}/>
                             </>
                         )}
-                        <Route path="*" element={<Navigate to="/dashboard" />}/>
+                        <Route path="*" element={<Navigate to="/appointments" />}/>
                     </>
                 ) : (
                     <>

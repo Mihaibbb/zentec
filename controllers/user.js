@@ -551,27 +551,29 @@ exports.updatePatient = async (req, res) => {
 };
 
 exports.removePatient = async (req, res) => {
-    const { _id, patientId } = req.body;
+    const { organisationId, id } = req.params;
 
     try {
         let sql = "DELETE FROM ?? WHERE _id = ?";
-        const deletedPatient = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.patients`, patientId]);
-        if (!deletedPatient) return new ErrorResponse("An error occured!", 404);
+        console.log("ID", `${process.env.DB_PREFIX}org_${organisationId}.patients`, id);
+        await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.patients`, id]);
 
         sql = "SELECT * FROM ??";
-        const schedules = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.schedules`]);
+        const schedules = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.schedules`]);
 
         // The schedules that the current patient has taken a part into must be removed
         const removingSchedules = schedules.filter(schedule => {
             return JSON.parse(schedule.patients).some(patient => {
-                return patient._id === patientId;
+                return patient._id === id;
             });
         });
 
-        removingSchedules.forEach(async removingSchedule => {
+        await Promise.all(removingSchedules.map(async removingSchedule => {
             sql = "DELETE FROM ?? WHERE _id = ?";
-            await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.schedules`, removingSchedule._id]);
-        });
+            await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.schedules`, removingSchedule._id]);
+        }));
+
+        
         
         res.status(200).json({ success: true, message: { en: "Patient removed successfully!", ro: "Pacientul a fost sters cu succes!" }});
         
@@ -857,7 +859,6 @@ exports.createDoctorSchedule = async (req, res) => {
 // Remove schedule
 
 exports.removeDoctorSchedule = async (req, res) => {
-    console.log("HAHHAH", req.query);
     const { organisationId, doctorId, scheduleId } = req.query;
     try {
 
@@ -3101,7 +3102,7 @@ exports.updateWorkList = async (req, res) => {
         const dbModifications = JSON.parse(listRow.modifications);
         dbModifications.push(new Date());
         
-        await db.query("UPDATE ?? finished = ?, patientId = ?, doctorId = ?, workId = ?, labId = ?, delivery = ?, term = ?, modifications = ? WHERE id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.list_works`, finished, patientId, doctorId, workId, labId, new Date(delivery), new Date(term), JSON.stringify(dbModifications), listWorkId]);
+        await db.query("UPDATE ?? SET finished = ?, patientId = ?, doctorId = ?, workId = ?, labId = ?, delivery = ?, term = ?, modifications = ? WHERE id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.list_works`, finished, patientId, doctorId, workId, labId, new Date(delivery), new Date(term), JSON.stringify(dbModifications), listWorkId]);
         res.status(200).json({ success: true });
     } catch (e) {
         console.log(e);
@@ -3125,7 +3126,7 @@ exports.removeWorkList = async (req, res) => {
 exports.createWork = async (req, res) => {
     const { organisationId, name, pricePer, color } = req.body;
     try {
-        await db.query("INSERT INTO ?? (name, pricePer, color) VALUES (?, ?, ?)", [`${process.env.DB_PREFIX}org_${organisationId}`, name, pricePer, color]);
+        await db.query("INSERT INTO ?? (name, pricePer, color) VALUES (?, ?, ?)", [`${process.env.DB_PREFIX}org_${organisationId}.works`, name, pricePer, color]);
         res.status(200).json({ success: true });
     } catch (e) {
         console.log(e);
@@ -3136,7 +3137,7 @@ exports.createWork = async (req, res) => {
 exports.updateWork = async (req, res) => {
     const { organisationId, name, pricePer, color, workId } = req.body;
     try {
-        await db.query("UPDATE ?? SET name = ?, pricePer = ?, color = ? WHERE id = ?", [`${process.env.DB_PREFIX}org_${organisationId}`, name, pricePer, color, workId]);
+        await db.query("UPDATE ?? SET name = ?, pricePer = ?, color = ? WHERE id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.works`, name, pricePer, color, workId]);
         res.status(200).json({ success: true });
     } catch (e) {
         console.log(e);
@@ -3147,7 +3148,7 @@ exports.updateWork = async (req, res) => {
 exports.removeWork = async (req, res) => {
     const { organisationId, workId } = req.params;
     try {
-        await db.query("DELETE FROM ?? WHERE id = ?", [`${process.env.DB_PREFIX}org_${organisationId}`, Number(workId)]);
+        await db.query("DELETE FROM ?? WHERE id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.works`, Number(workId)]);
         res.status(200).json({ success: true });
     } catch (e) {
         console.log(e);
@@ -3160,7 +3161,8 @@ exports.removeWork = async (req, res) => {
 exports.createLab = async (req, res) => {
     const { organisationId, name, city, county, address, phone } = req.body;
     try {
-        if (!validPhoneNumber("RO", phone)) return res.status(200).json({ success: false, message: {en: "Phone number is not valid!", ro: "Numarul de telefon nu este valid!" }});
+        console.log(phone);
+        if (phone.length && !validPhoneNumber("RO", phone)) return res.status(200).json({ success: false, message: {en: "Phone number is not valid!", ro: "Numarul de telefon nu este valid!" }});
     
         await db.query("INSERT INTO ?? (name, city, county, address, phone) VALUES (?, ?, ?, ?, ?)", [`${process.env.DB_PREFIX}org_${organisationId}.labs`, name, city, county, address, phone]);
         res.status(200).json({ success: true });
@@ -3173,7 +3175,7 @@ exports.createLab = async (req, res) => {
 exports.updateLab = async (req, res) => {
     const { organisationId, name, city, county, address, phone, labId } = req.body;
     try {
-        if (!validPhoneNumber("RO", phone)) return res.status(200).json({ success: false, message: {en: "Phone number is not valid!", ro: "Numarul de telefon nu este valid!" }});
+        if (phone.length && !validPhoneNumber("RO", phone)) return res.status(200).json({ success: false, message: {en: "Phone number is not valid!", ro: "Numarul de telefon nu este valid!" }});
     
         await db.query("UPDATE ?? SET name = ?, city = ?, county = ?, address = ?, phone = ? WHERE id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.labs`, name, city, county, address, phone, labId]);
         res.status(200).json({ success: true });

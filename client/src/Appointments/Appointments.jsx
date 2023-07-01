@@ -1160,7 +1160,7 @@ const Appointments = ({ data }) => {
 
     useEffect(() => {
         document.body.classList.add("scroll-x");
-    }, []);
+    }, [location?.state]);
 
     useEffect(() => {
         if (month === date.getMonth() && year === date.getFullYear()) return;
