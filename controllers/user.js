@@ -13,7 +13,7 @@ let currentResponse;
 const tryParse = (request) => {
     let response;
     try {
-        response = tryParse(request);
+        response = JSON.parse(request);
     } catch (e) {
         return request;
     }
