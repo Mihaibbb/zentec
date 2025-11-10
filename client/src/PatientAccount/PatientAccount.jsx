@@ -11,6 +11,17 @@ import "./PatientAccount.css";
 import TickAnimation from "../utils/TickAnimation";
 import { TEETH, TEETH_KIDS, TEETH_KIDS_NUMBERS } from "../utils/TeethOrder";
 
+const tryParse = (request) => {
+    let response;
+    try {
+        response = JSON.parse(request);
+    } catch (e) {
+        return request;
+    }
+
+    return response;
+}
+
 const PatientAccount = ({ data }) => {
 
     const navigation = useNavigate();
@@ -42,8 +53,8 @@ const PatientAccount = ({ data }) => {
     const initialPIC = patient?.cnp || "";
     const initialNotes = patient?.notes || "";
     const initialBirthdate = patient?.birthdate || new Date();
-    const initialDocuments = JSON.parse(patient?.documents || "[]");
-    const initialInitialStatus = JSON.parse(patient?.initial_status || "[]");
+    const initialDocuments = tryParse(patient?.documents || "[]");
+    const initialInitialStatus = tryParse(patient?.initial_status || "[]");
     
     const [firstName, setFirstName] = useState(initialFirstName);
     const [lastName, setLastName] = useState(initialLastName);
@@ -59,7 +70,7 @@ const PatientAccount = ({ data }) => {
     const [PIC, setPIC] = useState(initialPIC);
     const [notes, setNotes] = useState(initialNotes);
     const [showUpdate, setShowUpdate] = useState(false);
-    const [historic, setHistoric] = useState(JSON.parse(patient?.historic || "[]"));
+    const [historic, setHistoric] = useState(tryParse(patient?.historic || "[]"));
     const [documents, setDocuments] = useState(initialDocuments || []);
     const [treatmentPlans, setTreatmentPlans] = useState(data.organisation.treatments_plan_patients);
     const [totalTreatmentPlans, setTotalTreatmentPlans] = useState(data.organisation.treatments_plan_patients);
@@ -153,11 +164,11 @@ const PatientAccount = ({ data }) => {
             setFileNumber(currPatient?.fileNumber || "");
             setPIC(currPatient?.cnp || "");
             setNotes(currPatient?.notes || "");
-            setDocuments(JSON.parse(currPatient?.documents || "[]"));
-            setHistoric(JSON.parse(currPatient?.historic || "[]"))
+            setDocuments(tryParse(currPatient?.documents || "[]"));
+            setHistoric(tryParse(currPatient?.historic || "[]"))
             setPatient(response.patient[0]);
-            setDiagnostics(JSON.parse(response.patient[0]?.initial_status || "[]"));
-            setTotalDiagnostics(JSON.parse(response.patient[0]?.initial_status || "[]"));
+            setDiagnostics(tryParse(response.patient[0]?.initial_status || "[]"));
+            setTotalDiagnostics(tryParse(response.patient[0]?.initial_status || "[]"));
 
         } catch (e) {
             console.log(e)
@@ -324,20 +335,20 @@ const PatientAccount = ({ data }) => {
         if (historicOption === 0) {
             
             setHistoric(currHistoric => currHistoric.filter(appointment => false));
-            JSON.parse(patient.historic).forEach(appointment => {
+            tryParse(patient.historic).forEach(appointment => {
                 const appointmentStartDate = new Date(new Date(appointment.date).getFullYear(), new Date(appointment.date).getMonth(), new Date(appointment.date).getDate(), Number(appointment.startHour), Number(appointment.startMinutes));
                 if (appointmentStartDate.getTime() <= new Date().getTime() && !appointment.cancel) setHistoric(currHistoric => [...currHistoric, appointment]);
             });
 
         } else if (historicOption === 1) {
             setHistoric(currHistoric => currHistoric.filter(appointment => false));
-            JSON.parse(patient.historic).forEach(appointment => {
+            tryParse(patient.historic).forEach(appointment => {
                 const appointmentStartDate = new Date(new Date(appointment.date).getFullYear(), new Date(appointment.date).getMonth(), new Date(appointment.date).getDate(), Number(appointment.startHour), Number(appointment.startMinutes));
                 if (appointmentStartDate.getTime() > new Date().getTime() && !appointment.cancel) setHistoric(currHistoric => [...currHistoric, appointment]);
             });
         } else {
             setHistoric(currHistoric => currHistoric.filter(appointment => false));
-            JSON.parse(patient.historic).forEach(appointment => {
+            tryParse(patient.historic).forEach(appointment => {
                 if (appointment.cancel) setHistoric(currHistoric => [...currHistoric, appointment]);
             });
         }
@@ -1310,7 +1321,7 @@ const PatientAccount = ({ data }) => {
 
                                 
                                         <div className="column">
-                                            <p>{printTeeth(JSON.parse(treatment.teeth))}</p>
+                                            <p>{printTeeth(tryParse(treatment.teeth))}</p>
                                         </div>
 
 

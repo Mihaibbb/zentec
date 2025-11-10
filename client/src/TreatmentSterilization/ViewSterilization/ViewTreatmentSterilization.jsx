@@ -9,6 +9,17 @@ import Navigation from "../../Components/Navigation/Navigation";
 import TickAnimation from "../../utils/TickAnimation";
 import "./ViewTreatmentSterilization.css";
 
+const tryParse = (request) => {
+    let response;
+    try {
+        response = JSON.parse(request);
+    } catch (e) {
+        return request;
+    }
+
+    return response;
+}
+
 const ViewTreatmentSterilization = ({ data }) => {
 
     const [cookies, setCookie] = useCookies();
@@ -19,7 +30,7 @@ const ViewTreatmentSterilization = ({ data }) => {
     console.log(data.organisation.patients.find(patient => patient._id === params?.id));
 
     const patientName = `${data.organisation.patients.find(patient => patient._id === params?.id)?.firstname || ""} ${data.organisation.patients.find(patient => patient._id === params?.id)?.lastname || ""}`;
-    const initialSterilziations = JSON.parse(data.organisation.treatments_patients.find(treatment => treatment.id === params?.treatmentId)?.sterilizations || "[]");
+    const initialSterilziations = tryParse(data.organisation.treatments_patients.find(treatment => treatment.id === params?.treatmentId)?.sterilizations || "[]");
     const [sterilizations, setSterilizations] = useState(initialSterilziations);
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
     const [sterilizationsQuery, setSterilizationsQuery] = useState("");

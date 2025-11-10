@@ -1,7 +1,7 @@
 {
-  "homepage": "https://mihaibarbu.com",
-  "name": "clincal-calendar",
-  "version": "0.1.0",
+  "homepage": "https://zentec.ro",
+  "name": "zentec",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "@adobe/react-spectrum": "^3.22.0",

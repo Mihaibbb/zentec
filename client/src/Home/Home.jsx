@@ -147,7 +147,7 @@ const Home = ({ data }) => {
                 <div className="block-1">
                     <h2 className="title">
                         Digitalizează-ți cabinetul <span></span> <br />  
-                        cu <span>ZenTec</span> 🛜
+                        cu <span>ZenTec</span>
                     </h2>
 
                     <p className="description">{cookies.language === "en" ? "ZenTec is a software designed for medical cabients, easy to use, which simplifies handling with appointments." : "ZenTec este o platformă destinată cabinetelor medicale, ce este intuitivă și ușor de folosit, simplificând gestionarea pacienților, cât și a programarilor."}</p>
@@ -597,7 +597,7 @@ const Home = ({ data }) => {
                     <div className="logo">
 
                     </div>
-                    <h2 className="title"><span>Simplifică-ți afacerea.</span> <br /> Nu este nevoie de experiență. </h2>
+                    <h2 className="title last"><span>Simplifică-ți afacerea.</span> <br /> Nu este nevoie de experiență. </h2>
 
                     <img src={ZenLogo} alt="logo-image" className="logo-icon" width={100} height="auto" />
                 </div>

@@ -14,6 +14,17 @@ import GetToothSurfaces from "../../utils/TeethSurfaces";
 import { TEETH, TEETH_KIDS, TEETH_KIDS_NUMBERS } from "../../utils/TeethOrder";
 import DateCustomInput from "../../Components/DatePicker/DatePicker";
 
+const tryParse = (request) => {
+    let response;
+    try {
+        response = JSON.parse(request);
+    } catch (e) {
+        return request;
+    }
+
+    return response;
+}
+
 const EditTreatmentPatient = ({ data }) => {
 
     const { id, treatmentId } = useParams();
@@ -62,7 +73,7 @@ const EditTreatmentPatient = ({ data }) => {
     const [treatmentValue, setTreatmentValue] = useState(stateTreatment.treatmentPlanId ? "" : stateTreatment.treatmentId);
     const [treatmentPlanValue, setTreatmentPlanValue] = useState(stateTreatment?.treatmentPlanId || "");
     const [treatmentPlanNameValue, setTreatmentPlanNameValue] = useState(data.organisation.treatments_plan_patients.find(treatmentPlan => treatmentPlan._id === stateTreatment?.treatmentPlanId)?.name || "");
-    const [treatmentPlanTreatments, setTreatmentPlanTreatments] = useState(JSON.parse(data.organisation.treatments_plan_patients.find(treatmentPlan => treatmentPlan._id === stateTreatment?.treatmentPlanId)?.treatments || "[]"));
+    const [treatmentPlanTreatments, setTreatmentPlanTreatments] = useState(tryParse(data.organisation.treatments_plan_patients.find(treatmentPlan => treatmentPlan._id === stateTreatment?.treatmentPlanId)?.treatments || "[]"));
     const [treatmentPlanTreatmentNameValue, setTreatmentPlanTreatmentNameValue] = useState(stateTreatment?.treatmentPlanId ? currTreatmentName : "");
     const [treatmentPlanTreatmentValue, setTreatmentPlanTreatmentValue] = useState(stateTreatment.treatmentPlanId ? stateTreatment.treatmentId : "");
     const [total, setTotal] = useState(parseFloat(stateTreatment?.totalPrice).toFixed(2));
@@ -85,7 +96,7 @@ const EditTreatmentPatient = ({ data }) => {
     const noVideoContentRef = useRef();
     const [objToothSurfaces, setObjToothSurfaces] = useState(realTeethSurfaces.filter(surface => stateTreatment?.teethSurfaces.includes(surface.at(-2))) || []);
   
-    const [toothSelected, setToothSelected] = useState(JSON.parse(stateTreatment?.teeth || "[]") || []);
+    const [toothSelected, setToothSelected] = useState(tryParse(stateTreatment?.teeth || "[]") || []);
     const [toothSurfaces, setToothSurfaces] = useState(stateTreatment?.teethSurfaces || "");
     const [activeTooth, setActiveTooth] = useState("");
 
@@ -282,7 +293,7 @@ const EditTreatmentPatient = ({ data }) => {
         if (treatmentPlanValue.length === 0) return;
         if (treatmentType !== 'Plan de tratament' && treatmentType !== 'Treatment Plan') return;
         const currTreatmentPlan = data.organisation.treatments_plan_patients.find(treatmentPlan => treatmentPlan._id === treatmentPlanValue);
-        const currTreatments = JSON.parse(currTreatmentPlan.treatments);
+        const currTreatments = tryParse(currTreatmentPlan.treatments);
         setTreatmentPlanTreatments(currTreatments);
     }, [treatmentPlanValue, treatmentType]);
 
@@ -311,7 +322,7 @@ const EditTreatmentPatient = ({ data }) => {
         const currTreatmentPlan = data.organisation.treatments_plan_patients.find(treatmentPlan => treatmentPlan._id === treatmentPlanValue);
 
         if (!currTreatmentPlan) return;
-        const currTreatment = JSON.parse(currTreatmentPlan.treatments).find(treatment => treatment.treatmentId === treatmentPlanTreatmentValue);
+        const currTreatment = tryParse(currTreatmentPlan.treatments).find(treatment => treatment.treatmentId === treatmentPlanTreatmentValue);
         if (!currTreatment) return;
         setToothSelected(currTreatment.teeth);
         handleChangeToothSurfaces(currTreatment.teethSurfaces);

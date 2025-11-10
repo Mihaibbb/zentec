@@ -13,6 +13,17 @@ import { useLocation, useParams } from "react-router-dom";
 import sourceSansProBold from "../fonts/source-sans-pro-bold.ttf";
 import sourceSansPro from "../fonts/source-sans-pro.regular.ttf";
 
+const tryParse = (request) => {
+  let response;
+  try {
+      response = JSON.parse(request);
+  } catch (e) {
+      return request;
+  }
+
+  return response;
+}
+
 const SterilizationFiles = ({ data : currData, sterilizationBarCode, sterilizationId }) => {
 
     Font.register({ family: "Source-Sans-Pro-Bold", src: sourceSansProBold, fontWeight: "bold" });
@@ -25,7 +36,6 @@ const SterilizationFiles = ({ data : currData, sterilizationBarCode, sterilizati
         return currData.organisation.sterilizations.find(sterilization => sterilization._id === id);
     }, []);
 
-    console.log(JSON.parse(sterilizationData.sterilization_instruments))
 
     const sterilizationAssistant = useMemo(() => currData.organisation.assistants.find((assistant => assistant._id === sterilizationData.assistant)), [location]);
     
@@ -195,7 +205,7 @@ const SterilizationFiles = ({ data : currData, sterilizationBarCode, sterilizati
 
     useEffect(() => {
         if (!sterilizationData || initialize) return;
-        JSON.parse(sterilizationData.sterilization_instruments).forEach((instrument, idx) => {
+        tryParse(sterilizationData.sterilization_instruments).forEach((instrument, idx) => {
             console.log(instrument);
             if (Number(instrument.quantity) === 1 && !instrument.multipleCode) {
                 const barCodeValue = `${new Date(sterilizationData.add_date).getFullYear()}${new Date(sterilizationData.add_date).getMonth() + 1 < 10 ? `0${new Date(sterilizationData.add_date).getMonth() + 1}` : new Date(sterilizationData.add_date).getMonth() + 1}${new Date(sterilizationData.add_date).getDate() < 10 ? `0${new Date(sterilizationData.add_date).getDate()}` : new Date(sterilizationData.add_date).getDate()}${sterilizationData.id}1`;
@@ -239,7 +249,7 @@ const SterilizationFiles = ({ data : currData, sterilizationBarCode, sterilizati
         <div>
             <PDFViewer style={{ height: sterilizationBarCode ? 200 : "100vh", width: sterilizationBarCode ? "150%" : "100%" }}>
                 <Document>
-                    {JSON.parse(sterilizationData.sterilization_instruments).map((instrument, idx) => {
+                    {tryParse(sterilizationData.sterilization_instruments).map((instrument, idx) => {
                         if (Number(instrument.quantity) > 1 || instrument.multipleCode) {
                             const currSterilizations = [];
                             for (let quantity = 0; quantity < Number(instrument.quantity); quantity++)

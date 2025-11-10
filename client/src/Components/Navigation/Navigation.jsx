@@ -5,7 +5,6 @@ import dashboardIcon from "../../imgs/icons/dashboard-icon.svg";
 import dashboardIconBlack from "../../imgs/icons/dashboard-icon_black.svg";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleDown, faBedPulse, faCalendarDays, faClose, faCoffee, faDashboard, faHandHoldingDollar, faHeart, faListCheck, faUserDoctor, faVirusCovidSlash } from "@fortawesome/free-solid-svg-icons"
-import settingsIcon from "../../imgs/icons/settings-icon.svg";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useCookies } from 'react-cookie';
 import patientIcon from "../../imgs/icons/patient.svg";

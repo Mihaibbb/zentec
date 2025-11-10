@@ -13,6 +13,17 @@ const GAPS = 4;
 const END_SCHEDULE_HOUR = 23;
 const START_SCHEDULE_HOUR = 0;
 
+const tryParse = (request) => {
+    let response;
+    try {
+        response = JSON.parse(request);
+    } catch (e) {
+        return request;
+    }
+
+    return response;
+}
+
 const EditDoctorSchedule = ({ data }) => {
 
     const minutesPerGap = 60 / GAPS;
@@ -90,7 +101,7 @@ const EditDoctorSchedule = ({ data }) => {
         const totalDateSchedules = [];
 
         data.organisation.doctors.forEach(doctor => {
-            const currSchedules = JSON.parse(doctor.schedules);
+            const currSchedules = tryParse(doctor.schedules);
             console.log(currSchedules);
             const foundSchedule = currSchedules.find(schedule => sameDay(new Date(date), new Date(schedule.date)));
             if (foundSchedule) totalDateSchedules.push({...
@@ -240,8 +251,10 @@ const EditDoctorSchedule = ({ data }) => {
                 }
         });
 
-        window.history.replaceState({ activOption: 2 }, '');
-        navigate("/profile", { state: { refresh: true, activeOption: 2 }});
+        console.log(currSchedules);
+
+        // window.history.replaceState({ activOption: 2 }, '');
+        // navigate("/profile", { state: { refresh: true, activeOption: 2 }});
 
     };
 

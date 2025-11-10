@@ -14,6 +14,18 @@ import MultiSelect from "../../Components/MultiSelect/MultiSelect";
 import GetToothSurfaces from "../../utils/TeethSurfaces";
 import { TEETH, TEETH_KIDS, TEETH_KIDS_NUMBERS } from "../../utils/TeethOrder";
 
+
+const tryParse = (request) => {
+    let response;
+    try {
+        response = JSON.parse(request);
+    } catch (e) {
+        return request;
+    }
+
+    return response;
+}
+
 const EditDiagnosticPatient = ({ data }) => {
 
     const { id, diagnosticId } = useParams();
@@ -143,7 +155,7 @@ const EditDiagnosticPatient = ({ data }) => {
             if (!response.success) navigate(-1);
             console.log(response.patient);
             
-            const initialStatus = JSON.parse(response.patient[0].initial_status || "[]");
+            const initialStatus = tryParse(response.patient[0].initial_status || "[]");
             console.log(initialStatus)
             const currentDiagnostic = initialStatus.find(diagnostic => diagnostic.id === diagnosticId);
             console.log(currentDiagnostic);

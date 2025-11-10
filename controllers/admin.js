@@ -9,13 +9,12 @@ exports.createAdmin = async (req, res, next) => {
     const adminId = generateId(25);
     console.log(firstname);
     try {
-        const result = await db.query('USE ??', [`${process.env.DB_PREFIX}admins`]);
-        console.log("The result", result);
+
 
         const salt = await bcrypt.genSalt(parseInt(process.env.SALT));
         const hashedPassword = await bcrypt.hash(password, salt);
         let sql = 'INSERT INTO ?? (_id, firstname, lastname, username, email, password) VALUES (?, ?, ?, ?, ?, ?)';
-        let placeholders = ['users', adminId, firstname, lastname, username, email, hashedPassword];
+        let placeholders = ['admins.users', adminId, firstname, lastname, username, email, hashedPassword];
         const insertAdmin = await db.query(sql, placeholders);
         
         if (insertAdmin) res.status(200).json({ created: true });

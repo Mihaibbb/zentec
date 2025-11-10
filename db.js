@@ -1,22 +1,21 @@
-const util = require( 'util' );
-const mysql = require( 'mysql' );
-function makeDb( config ) {
-        const connection = mysql.createConnection( config );
-        return {
-            query( sql, args ) {
-            return util.promisify( connection.query )
-                .call( connection, sql, args );
-        },
-        close() {
-            return util.promisify( connection.end ).call( connection );
-        }
-    };
-}
+// db.js
+const mysql = require('mysql2/promise');
 
-const dbConfig = {
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
+const pool = mysql.createPool({
+  host:     process.env.DB_HOST    || '127.0.0.1',
+  user:     process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
+});
+
+module.exports = {
+  query: (sql, params) =>
+    // pool.query calls mysql.format under the hood,
+    // so both ? and ?? placeholders will work
+    pool.query(sql, params)
+        .then(([rows /*, fields*/]) => rows),
+
+  close: () => pool.end(),
 };
-
-module.exports = makeDb(dbConfig);

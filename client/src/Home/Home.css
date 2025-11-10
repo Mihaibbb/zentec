@@ -37,10 +37,18 @@ body
 
 .home-container .content h2.title span 
 {
+    background: -webkit-linear-gradient(0deg, var(--home-contrast-color-2), var(--home-contrast-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.home-container .content h2.title.last span
+{
     background: -webkit-linear-gradient(0deg, var(--home-contrast-color), var(--home-contrast-color-2));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
+
 .home-container .content p.description 
 {
     font-size: 22px;
@@ -633,4 +641,3 @@ body
         width: 95%;
     }
 }
-

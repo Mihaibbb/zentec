@@ -9,6 +9,17 @@ import Navigation from "../Components/Navigation/Navigation";
 import "./DoctorSchedule.css";
 import getContrastForText from "../Functions/Contrast";
 
+const tryParse = (request) => {
+    let response;
+    try {
+        response = JSON.parse(request);
+    } catch (e) {
+        return request;
+    }
+
+    return response;
+}
+
 const DoctorSchedule = ({ data }) => {
     
     const [cookies, setCookie] = useCookies();
@@ -37,7 +48,7 @@ const DoctorSchedule = ({ data }) => {
     ["Lun.", "Mar.", "Mie.", "Joi", "Vin."];
 
     useEffect(() => {
-        setTotalSchedules(doctors.map(doctor => JSON.parse(doctor.schedules)));
+        setTotalSchedules(doctors.map(doctor => tryParse(doctor.schedules)));
     }, []);
 
     useEffect(() => {
@@ -187,7 +198,7 @@ const DoctorSchedule = ({ data }) => {
 
         activeDoctors.forEach(doctor => {
             console.log(doctor);
-            const currSchedules = JSON.parse(doctor.schedules);
+            const currSchedules = tryParse(doctor.schedules);
             console.log(currSchedules);
             const foundSchedule = currSchedules.find(schedule => sameDay(date, new Date(schedule.date)));
             if (foundSchedule) totalDateSchedules.push({...

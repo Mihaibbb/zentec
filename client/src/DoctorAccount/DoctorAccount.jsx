@@ -12,6 +12,17 @@ import tickAnimation from "../imgs/green-tick.mp4";
 import tickAnimationLight from "../imgs/green-tick-light-theme.mp4";
 import TickAnimation from "../utils/TickAnimation";
 
+const tryParse = (request) => {
+    let response;
+    try {
+        response = JSON.parse(request);
+    } catch (e) {
+        return request;
+    }
+
+    return response;
+}
+
 const DoctorAccount = ({ data }) => {
 
     const [cookies, setCookie] = useCookies();
@@ -26,7 +37,7 @@ const DoctorAccount = ({ data }) => {
     const [multipleSchedules, setMultipleSchedules] = useState();
     const [activeDoctor, setActiveDoctor] = useState();
     const [errorMessage, setErrorMessage] = useState();
-    const initialHistoric = data.organisation.schedules.filter(schedule => JSON.parse(schedule.users).includes(id));
+    const initialHistoric = data.organisation.schedules.filter(schedule => tryParse(schedule.users).includes(id));
     const [historic, setHistoric] = useState(initialHistoric);
     const [historicOption, setHistoricOption] = useState(0);
     const [doctorAdded, setDoctorAdded] = useState(false);
@@ -246,7 +257,7 @@ const DoctorAccount = ({ data }) => {
                                 {historic && historic.length > 0 && historic.map(historicItem => (
                                     <div className="historic-item">
                                         <div className="col">{historicItem.title}</div>
-                                        <div className="col">{JSON.parse(historicItem.patients)[0].firstname} {JSON.parse(historicItem.patients)[0].lastname}</div>
+                                        <div className="col">{tryParse(historicItem.patients)[0].firstname} {tryParse(historicItem.patients)[0].lastname}</div>
                                         <div className="col">{new Date(historicItem.date).getDate() < 10 ? `0${new Date(historicItem.date).getDate()}` : new Date(historicItem.date).getDate()}/{new Date(historicItem.date).getMonth() + 1 < 10 ? `0${new Date(historicItem.date).getMonth() + 1}` : new Date(historicItem.date).getMonth() + 1}/{new Date(historicItem.date).getFullYear()}</div>
                                         <div className="col">{new Date(historicItem.startDate).getHours() < 10 ? `0${new Date(historicItem.startDate).getHours()}` : new Date(historicItem.startDate).getHours()}:{new Date(historicItem.startDate).getMinutes() < 10 ? `0${new Date(historicItem.startDate).getMinutes()}` : new Date(historicItem.startDate).getMinutes()} - {new Date(historicItem.endDate).getHours() < 10 ? `0${new Date(historicItem.endDate).getHours()}` : new Date(historicItem.endDate).getHours()}:{new Date(historicItem.endDate).getMinutes() < 10 ? `0${new Date(historicItem.endDate).getMinutes()}` : new Date(historicItem.endDate).getMinutes()}</div>
                                         <div className="col">{historicItem?.income || "Nedefinit"} {historicItem?.income ? historicItem?.typeIncome : ""}</div>

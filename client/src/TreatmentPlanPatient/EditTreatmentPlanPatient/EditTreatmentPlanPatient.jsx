@@ -14,6 +14,17 @@ import { TEETH, TEETH_KIDS, TEETH_KIDS_NUMBERS } from "../../utils/TeethOrder";
 import DateCustomInput from "../../Components/DatePicker/DatePicker";
 import TickAnimation from "../../utils/TickAnimation";
 
+const tryParse = (request) => {
+    let response;
+    try {
+        response = JSON.parse(request);
+    } catch (e) {
+        return request;
+    }
+
+    return response;
+}
+
 const EditTreatmentPlanPatient = ({ data }) => {
 
     const [cookies, setCookie] = useCookies();
@@ -366,7 +377,7 @@ const EditTreatmentPlanPatient = ({ data }) => {
 
     useEffect(() => {
         const currTreatmentPlan = location.state.treatmentPlan;
-        const currTreatments = JSON.parse(currTreatmentPlan.treatments);
+        const currTreatments = tryParse(currTreatmentPlan.treatments);
         setTreatmentPlanName(currTreatmentPlan.name);
         setStatusValue(currTreatmentPlan.status);
         setTotal(parseFloat(currTreatmentPlan.totalPrice).toFixed(2));

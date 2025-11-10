@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS schedules (
-    _id.
+    _id varchar(24) primary key not null,
     startDate date not null,
     endDate date not null,
     title varchar(128) not null,

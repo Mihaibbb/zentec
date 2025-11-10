@@ -10,6 +10,17 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
+const tryParse = (request) => {
+    let response;
+    try {
+        response = JSON.parse(request);
+    } catch (e) {
+        return request;
+    }
+
+    return response;
+}
+
 const EditSMS = ({ data }) => {
 
     const [cookies, setCookie] = useCookies();
@@ -26,7 +37,7 @@ const EditSMS = ({ data }) => {
     if (!id) navigation(-1);
     const textVariables = [`"Nume Organizatie"`, "Data Programare", "Ora Programare", "Link Confirmare"];
 
-    const sms = JSON.parse(data.organisation.details[0].sms_message)[Number(id)];
+    const sms = tryParse(data.organisation.details[0].sms_message)[Number(id)];
     const [smsMessage, setSmsMessage] = useState(sms.message);
     const [smsScheduled, setSmsScheduled] = useState(sms.scheduledAt);
     const scheduledAt = sms.scheduledAt;

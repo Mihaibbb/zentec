@@ -10,6 +10,17 @@ import SterilizationFiles from "../../SterilizationFiles/SterilizationFiles";
 import TickAnimation from "../../utils/TickAnimation";
 import "./GenerateSterilization.css";
 
+const tryParse = (request) => {
+    let response;
+    try {
+        response = JSON.parse(request);
+    } catch (e) {
+        return request;
+    }
+
+    return response;
+}
+
 const GenerateSterilization = ({ data }) => {
     const navigation = useNavigate();
     const params = useParams();
@@ -42,7 +53,7 @@ const GenerateSterilization = ({ data }) => {
 
     const findSterilization = (barcode) => {
         const values = data.organisation.sterilizations.map(sterilization => {
-            const currInstruments = JSON.parse(sterilization.sterilization_instruments);
+            const currInstruments = tryParse(sterilization.sterilization_instruments);
             const instrumentsFound =  currInstruments.filter(instrument => {
                 if (Number(instrument.quantity) === 1 || !instrument.multipleCode) {
                     const barCodeValue = `${new Date(sterilization.add_date).getFullYear()}${new Date(sterilization.add_date).getMonth() + 1 < 10 ? `0${new Date(sterilization.add_date).getMonth() + 1}` : new Date(sterilization.add_date).getMonth() + 1}${new Date(sterilization.add_date).getDate() < 10 ? `0${new Date(sterilization.add_date).getDate()}` : new Date(sterilization.add_date).getDate()}${sterilization.id}1`;
@@ -134,7 +145,7 @@ const GenerateSterilization = ({ data }) => {
         const treatment = data.organisation.treatments_patients.find(treatment => treatment.id === params?.treatmentId);
         if (!treatment) return;
         console.log("here");
-        const currentSterilizations = JSON.parse(treatment?.sterilizations);
+        const currentSterilizations = tryParse(treatment?.sterilizations);
         lastTimeFinishedAdded = true;
         if (!currentSterilizations?.length) return setFinishedAdded(true);
         setFinishedAdded(true);

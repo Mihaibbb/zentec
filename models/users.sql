@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS users (
     date date not null,
     profileImage json,
     type varchar(24) not null,
-    status varchar default='Offline',
+    status varchar(24) DEFAULT 'Offline',
     color varchar(16),
     startHour int(2) not null,
     startMinutes int(2) not null,

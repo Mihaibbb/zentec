@@ -19,6 +19,16 @@ import sourceSansPro  from "../fonts/source-sans-pro.semibold.ttf";
 import sourceSansProRegular from "../fonts/source-sans-pro.regular.ttf";
 import { fontWeight } from "@mui/system";
 
+const tryParse = (request) => {
+    let response;
+    try {
+        response = JSON.parse(request);
+    } catch (e) {
+        return request;
+    }
+
+    return response;
+}
 
 const GeneratePatientFile = ({ data }) => {
 
@@ -106,7 +116,7 @@ const GeneratePatientFile = ({ data }) => {
 
     });
 
-    const [currentDoctors, setCurrentDoctors] = useState(JSON.parse(patientData?.doctors || "[]"));
+    const [currentDoctors, setCurrentDoctors] = useState(tryParse(patientData?.doctors || "[]"));
     const [toothImageCurrentStatus, setToothImageCurrentStatus] = useState({});
     const [toothImageCurrentStatusKids, setToothImageCurrentStatusKids] = useState({});
 
@@ -240,7 +250,7 @@ const GeneratePatientFile = ({ data }) => {
 
                                 <View style={styles.dataRow}>
                                     <Text style={[styles.normalText, { flex: 1 }]}>{cookies?.language === "en" ? "Doctor(s): " : "Medic(i): "}</Text>
-                                    <Text style={styles.smallText}>{currentDoctors.includes("null") ? "-" : currentDoctors}</Text>
+                                    <Text style={styles.smallText}>{!currentDoctors || currentDoctors.includes("null") ? "-" : currentDoctors}</Text>
                                 </View>
 
                                 <View style={styles.dataRow}>
@@ -323,7 +333,7 @@ const GeneratePatientFile = ({ data }) => {
                                         </View>
                                         
                                         <View style={styles.cell}>
-                                            <Text style={styles.normalLightText}>{printTooth(JSON.parse(treatment?.teeth || ""))}</Text>
+                                            <Text style={styles.normalLightText}>{printTooth(tryParse(treatment?.teeth || ""))}</Text>
                                         </View>
 
                                         <View style={styles.cell}>

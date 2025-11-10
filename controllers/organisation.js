@@ -363,7 +363,8 @@ exports.createUser = async (req, res, next) => {
         if (!isAdmin.length) return new ErrorResponse("You cannot add an organisation if you are not an admin!", 404, res);
 
         const dbs = await db.query("SHOW DATABASES");
-        const foundOrganisation = await dbs.find(currDb => currDb.Database === `${process.env.DB_PREFIX}org_${organisationId}`);
+        console.log("dbs", dbs, organisationId);
+        const foundOrganisation = await dbs.find(currDb => currDb.Database === `${process.env.DB_PREFIX}org_${organisationId.toLowerCase()}`);
         if (!await foundOrganisation) new ErrorResponse("Organisation doesn't exist!", 404, res);
         
         const userId = generateId(25);

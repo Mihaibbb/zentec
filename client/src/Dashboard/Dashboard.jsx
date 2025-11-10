@@ -8,6 +8,17 @@ import { useCookies } from 'react-cookie';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Select   from 'react-select';
 
+const tryParse = (request) => {
+    let response;
+    try {
+        response = JSON.parse(request);
+    } catch (e) {
+        return request;
+    }
+
+    return response;
+}
+
 const Dashboard = ({ data }) => {
 
     const filters_server = ["day", "week", "month", "year"] 
@@ -80,7 +91,7 @@ const Dashboard = ({ data }) => {
                 const filteredAppointments = response.appointments.filter(appointment => appointment?.doctorName === doctorNameValue);
                 setNextAppointments(filteredAppointments.map(appointment => {
                     return {
-                        name: `${JSON.parse(appointment.patients)[0].firstname} ${JSON.parse(appointment.patients)[0].lastname}`,
+                        name: `${tryParse(appointment.patients)[0].firstname} ${tryParse(appointment.patients)[0].lastname}`,
                         hour: `${new Date(appointment.startDate).getHours() < 10 ? `0${new Date(appointment.startDate).getHours()}` : new Date(appointment.startDate).getHours()}:${new Date(appointment.startDate).getMinutes() < 10 ? `0${new Date(appointment.startDate).getMinutes()}` : new Date(appointment.startDate).getMinutes()}`,
                         income: appointment?.income || "Nedefinit",
                         typeIncome: appointment?.typeIncome || "",

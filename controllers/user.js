@@ -10,6 +10,17 @@ const { COMPATIBLE_DIAGNOSTICS, SINGLE_DIAGNOSTICS } = require("../functions/com
 
 let currentResponse;
 
+const tryParse = (request) => {
+    let response;
+    try {
+        response = tryParse(request);
+    } catch (e) {
+        return request;
+    }
+
+    return response;
+}
+
 exports.createAppointment = async (req, res) => {
     const { _id, startDate, endDate, users, patients, title, income, typeIncome, notes, date, language, incomePaid } = req.body;
     console.log( new Date(startDate).getMonth(), new Date(startDate).getDate(), new Date(startDate).getHours(), new Date(startDate).getMinutes());
@@ -22,7 +33,7 @@ exports.createAppointment = async (req, res) => {
         const detailsOrganisationRows = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.details`]);
         const detailsOrganisation = detailsOrganisationRows[0];
         //const smsMessageRaw = detailsOrganisation["sms_message"];
-        const organisationSMS = JSON.parse(detailsOrganisation["sms_message"]);
+        const organisationSMS = tryParse(detailsOrganisation["sms_message"]);
         const apiKey = detailsOrganisation?.["api_key"];
         
         // 1 day earlier message
@@ -33,7 +44,6 @@ exports.createAppointment = async (req, res) => {
 
         await Promise.all(organisationSMS.map(async sms => {
 
-            logger.debug(sms);
 
             const currentSmsSchedule = sms.scheduledAt - 2;
             
@@ -41,10 +51,10 @@ exports.createAppointment = async (req, res) => {
             
             patients.forEach((currPatient, idx) => idx !== patients.length - 1 ? patientsPhones += `${currPatient.phone.toString().slice(0, 2) === "+4" ? currPatient.phone.toString() : `+4${currPatient.phone}`},` : patientsPhones += `${currPatient.phone.slice(0, 2) === "+4" ? currPatient.phone : `+4${currPatient.phone}`}`);
             const smsStartDate =  new Date(startDate).getTime() - (1000 * 60 * 60 * Number(currentSmsSchedule)) < new Date().getTime() ? new Date().getTime() + 1000 * 15 : new Date(startDate).getTime() - (1000 * 60 * 60 * Number(currentSmsSchedule));
-            
+            console.log("DATA", new Date(startDate));
             let smsMessage = sms.message.replaceAll("NUME_ORGANIZATIE", detailsOrganisation.name);
             smsMessage = smsMessage.replaceAll("DATA_PROGRAMARE", `${new Date(startDate).getDate() < 10 ? `0${new Date(startDate).getDate()}` : new Date(startDate).getDate()}/${new Date(startDate).getMonth() + 1 < 10 ? `0${new Date(startDate).getMonth() + 1}` : new Date(startDate).getMonth() + 1}/${new Date(startDate).getFullYear()}`);
-            smsMessage = smsMessage.replaceAll("ORA_PROGRAMARE", `${new Date(startDate).getHours() + 2 < 10 ? `0${new Date(startDate).getHours() + 2}` : new Date(startDate).getHours() + 2}:${new Date(startDate).getMinutes() < 10 ? `0${new Date(startDate).getMinutes()}` : new Date(startDate).getMinutes()}`);
+            smsMessage = smsMessage.replaceAll("ORA_PROGRAMARE", `${new Date(startDate).getHours() < 10 ? `0${new Date(startDate).getHours()}` : new Date(startDate).getHours()}:${new Date(startDate).getMinutes() < 10 ? `0${new Date(startDate).getMinutes()}` : new Date(startDate).getMinutes()}`);
 
             smsMessage = smsMessage.replaceAll("LINK_CONFIRMARE", `${process.env.BACKEND_URL}/api/patient/confirm-appointment?organisationId=${_id}&doctorId=${users[0]}&appointmentId=${appointmentId}`);
             
@@ -71,7 +81,7 @@ exports.createAppointment = async (req, res) => {
         if (!insertedAppointment) return new ErrorResponse("An error occured!", 404);
 
         // Push message to inbox if patient didn't confirm his appointment
-        const hourBeforeSend = 3; // The number of hours before the appointment, so that message can be sent to the doctor
+        const hourBeforeSend = 24; // The number of hours before the appointment, so that message can be sent to the doctor
         const dateScheduleMessageInbox = new Date(new Date(startDate).getTime() - 1000 * 60 * 60 * hourBeforeSend); // The time when the message must be sent
         const scheduleMessageInbox = schedule.scheduleJob(dateScheduleMessageInbox, async () => {
             logger.debug("Scheduling appointment...");
@@ -114,7 +124,7 @@ exports.createAppointment = async (req, res) => {
                 const patientArr = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.patients`, currPatient._id]);
                 const patient = await patientArr[0];
                 console.log(patient);
-                const historic = JSON.stringify([...JSON.parse(await patient.historic), {
+                const historic = JSON.stringify([...tryParse(await patient.historic), {
                     startHour: new Date(startDate).getHours(),
                     startMinutes: new Date(startDate).getMinutes(),
                     endHour: new Date(endDate).getHours(),
@@ -147,12 +157,12 @@ exports.updateAppointment = async (req, res) => {
     try {
         console.log(_id);
         let sql = 'UPDATE ?? SET startDate = ?, endDate = ?, users = ?, patients = ?, title = ?, income = ?, incomePaid = ?, typeIncome = ?, notes = ?, date = ?, finished = ?, confirmed = ?, unpresented = ? WHERE _id = ?';
-        const updatedAppointment = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.schedules`, new Date(startDate), new Date(endDate), JSON.stringify(users), JSON.stringify(patients), title || "", income, incomePaid, typeIncome, notes, new Date(date), finished, confirmed, unpresented, appointmentId]);
+        const updatedAppointment = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.schedules`, new Date(startDate), new Date(endDate), JSON.stringify(users), JSON.stringify(patients), title || "", income, incomePaid || 0, typeIncome, notes, new Date(date), finished, confirmed, unpresented || 0, appointmentId]);
         if (!updatedAppointment) return res.status(200).json({ success: false, message: { en: "Appointment could not be updated!", ro: "Programarea nu a putut fi modificata!" } })
         if (confirmed) return res.status(200).json({ success: true, message: { en: "Appointment updated successfully!", ro: "Programare modificata cu succes!"}});
         
         // Push message to inbox if patient didn't confirm his appointment
-        const hourBeforeSend = 3; // The number of hours before the appointment, so that message can be sent to the doctor
+        const hourBeforeSend = 24; // The number of hours before the appointment, so that message can be sent to the doctor
         const dateScheduleMessageInbox = new Date(new Date(startDate).getTime() - 1000 * 60 * 60 * hourBeforeSend); // The time when the message must be sent
 
         const scheduleMessageInbox = schedule.scheduleJob(dateScheduleMessageInbox, async () => {
@@ -207,7 +217,7 @@ exports.removeAppointment = async (req, res) => {
 
         sql = "SELECT * FROM ?? WHERE _id = ?";
         const currentPatients = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.patients`, patientId]);
-        const historic = JSON.parse(currentPatients[0]?.historic);
+        const historic = tryParse(currentPatients[0]?.historic);
         const newHistoric = historic.filter(appointment => {
             return new Date(currentAppointment.startDate).getTime() !== new Date(new Date(appointment.date).getFullYear(), new Date(appointment.date).getMonth(), new Date(appointment.date).getDate(), Number(appointment.startHour), Number(appointment.startMinutes)).getTime();
         });
@@ -228,7 +238,7 @@ exports.removeFutureAppointment = async (req, res) => {
 
 
         // const patientsData = await db.query("SELECT * FROM ?? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.patients`, patientId]);
-        // const newPatientsHistoric = JSON.parse(patientsData[0]?.historic).filter(historicData => {
+        // const newPatientsHistoric = tryParse(patientsData[0]?.historic).filter(historicData => {
         //     return !(
         //         sameDate(new Date(historicData?.date), new Date(Number(date))) &&
         //         Number(historicData.startHour) === Number(startHour) && 
@@ -247,7 +257,7 @@ exports.removeFutureAppointment = async (req, res) => {
         //     const appointmentEndHour = new Date(appointment.endDate).getHours();
         //     const appointmentStartMinutes = new Date(appointment.startDate).getMinutes();
         //     const appointmentEndMinutes = new Date(appointment.endDate).getMinutes();
-        //     const samePatient = JSON.parse(appointment.patients).some(patient => patient._id === patientId);
+        //     const samePatient = tryParse(appointment.patients).some(patient => patient._id === patientId);
             
         //     return samePatient && sameDate(new Date(date), new Date(appointment.date)) && Number(startHour) === appointmentStartHour && Number(startMinutes) === appointmentStartMinutes && Number(endHour) === appointmentEndHour && Number(endMinutes) === appointmentEndMinutes;
         // });
@@ -278,7 +288,7 @@ exports.cancelAppointment = async (req, res) => {
         sql = "SELECT * FROM ?? WHERE _id = ?";
         const currentPatients = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.patients`, patientId]);
         const currentPatient = currentPatients[0];
-        const historic = JSON.parse(currentPatient.historic);
+        const historic = tryParse(currentPatient.historic);
         const newHistoric = historic.map(appointment => {
             if (new Date(currentAppointment.startDate).getTime() !== new Date(new Date(appointment.date).getFullYear(), new Date(appointment.date).getMonth(), new Date(appointment.date).getDate(), Number(appointment.startHour), Number(appointment.startMinutes)).getTime()) return {...appointment, 
                 cancel: true
@@ -563,7 +573,7 @@ exports.removePatient = async (req, res) => {
 
         // The schedules that the current patient has taken a part into must be removed
         const removingSchedules = schedules.filter(schedule => {
-            return JSON.parse(schedule.patients).some(patient => {
+            return tryParse(schedule.patients).some(patient => {
                 return patient._id === id;
             });
         });
@@ -604,7 +614,7 @@ exports.getLatestSchedules = async (req, res) => {
         const schedules = await db.query(sql, [`${process.env.DB_PREFIX}org_${_id}.schedules`, new Date(), startEndLimit]);
         // Adding a key of doctor's name in schedules object
         const schedulesWithDoctors = await Promise.all(schedules.map(async (schedule, idx) => {
-            const doctors = JSON.parse(await schedule.users);
+            const doctors = tryParse(await schedule.users);
             let doctorFullname = "";
             sql = "SELECT * FROM ?? WHERE _id = ?";
 
@@ -723,7 +733,7 @@ exports.removeDoctor = async (req, res) => {
         
         schedules && schedules?.length && schedules.forEach(async schedule => {
 
-            const users = JSON.parse(schedule.users);
+            const users = tryParse(schedule.users);
             if (users.includes(doctorId)) await db.query("DELETE FROM ?? WHERE _id = ?;", [`${process.env.DB_PREFIX}org_${organisationId}.schedules`, schedule._id]);
         });
 
@@ -811,8 +821,8 @@ exports.createDoctorSchedule = async (req, res) => {
         let sql = "SElECT * FROM ?? WHERE _id = ?";
         const doctors = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.doctors`, doctorId]);
         if (await doctors.length !== 1) return res.status(404).json({ success: false, message: { en: "Doctor doesn't exist!", ro: "Doctorul nu exista!"} });
-        const schedules = JSON.parse(await doctors[0].schedules);
-
+        const schedules = tryParse(await doctors[0]?.schedules ?? "");
+        
         let scheduleId = generateId(25);
         while (inArrId(schedules, scheduleId, "scheduleId")) scheduleId = generateId(25);
         
@@ -866,7 +876,7 @@ exports.removeDoctorSchedule = async (req, res) => {
         const doctors = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.doctors`, doctorId]);
         
         if (await doctors.length !== 1) return res.status(404).json({ success: false, message: { en: "Doctor doesn't exist!", ro: "Doctorul nu exista!"} });
-        const schedules = JSON.parse(await doctors[0].schedules);
+        const schedules = tryParse(await doctors[0].schedules);
         const foundSchedule = await schedules.find(schedule => schedule.scheduleId === scheduleId);
         console.log(schedules);
         const updatedSchedules = await schedules.filter(schedule => {
@@ -906,14 +916,16 @@ exports.editDoctorSchedule = async (req, res) => {
         let sql = "SELECT * FROM ?? WHERE _id = ?";
         const doctors = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.doctors`, doctorId]);
         if (await doctors.length !== 1) return res.status(404).json({ success: false, message: { en: "Doctor doesn't exist!", ro: "Doctorul nu exista!"} });
-        let schedules = JSON.parse(await doctors[0].schedules);
+        let schedules = tryParse(await doctors[0].schedules);
         let found = false;
 
-        for (let scheduleIdx = 0; scheduleIdx < schedules.length && !found; scheduleIdx++)
+        for (let scheduleIdx = 0; scheduleIdx < schedules.length && !found; scheduleIdx++) {
             if (schedules[scheduleIdx].scheduleId === scheduleId) 
                 found = scheduleIdx;
+        }
+            
         
-        if (schedules[found].repeat && !repeat) {
+        if (schedules?.[found]?.repeat && !repeat) {
             const foundDayNumber = schedules[found].dayNumber;
             const foundStartHour = schedules[found].startHour;
             const foundStartMinutes = schedules[found].startMinutes;
@@ -929,7 +941,7 @@ exports.editDoctorSchedule = async (req, res) => {
                 return idx === found || !(sameDay && sameStartHour && sameStartMinutes && sameEndHour && sameEndMinutes);
             });
 
-        } else if (!schedules[found].repeat && repeat) {
+        } else if (!schedules?.[found].repeat && repeat) {
             const foundDate = new Date(schedules[found].date);
             const threeYearsInUnix = 1000 * 60 * 60 * 24 * 365
             for (let currDate = foundDate.getTime(); currDate <= foundDate.getTime() + threeYearsInUnix; currDate += 1000 * 60 * 60 * 24 * 7) {
@@ -950,9 +962,11 @@ exports.editDoctorSchedule = async (req, res) => {
         // Repeat getting idx because the idx might have suffered because of adding elements and deleting them
         found = false;
         for (let scheduleIdx = 0; scheduleIdx < schedules.length && !found; scheduleIdx++)
-            if (schedules[scheduleIdx].scheduleId === scheduleId) 
+            if (schedules?.[scheduleIdx]?.scheduleId === scheduleId) 
                 found = scheduleIdx;
         
+        console.log(schedules);
+
         schedules[found] = {
             startHour,
             startMinutes,
@@ -968,7 +982,7 @@ exports.editDoctorSchedule = async (req, res) => {
         sql = "UPDATE ?? SET schedules = ? WHERE _id = ?";
         const updatedSchedule = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.doctors`, JSON.stringify(schedules), doctorId]);
         if (await updatedSchedule) res.status(200).json({ success: true, message: { en: "Schedule updated successfully!", ro: "Programul a fost editat!" } });
-
+        else res.status(404).json({ error: "An error occured!" });
     } catch (e) {
         console.log(e);
         res.status(404).json({ success: false, message: { en: "An error occurred!", ro: "A aparut o eroare!" } });
@@ -982,7 +996,7 @@ exports.getSchedulesForDay = async (req, res) => {
         let sql = "SELECT * FROM ??";
         const doctors = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.doctors`]);
         const schedules = await Promise.all(await doctors.map(doctor => {
-            const doctorSchedules = JSON.parse(doctor.schedules);
+            const doctorSchedules = tryParse(doctor.schedules);
             return doctorSchedules.filter(schedule => sameDate(new Date(schedule.date), new Date(year, month, day)));
         }));
 
@@ -1034,7 +1048,7 @@ exports.responseSMS = async (req, res) => {
             }
             const futureSchedules = await db.query('SELECT * FROM ?? WHERE startDate > ?', [`${organisation}.schedules`, new Date(date)]);
             const patientSchedules = futureSchedules.filter(futureSchedule => {
-                const patients = JSON.parse(futureSchedule.patients);
+                const patients = tryParse(futureSchedule.patients);
                 return patients.some(patient => {
                     return patient.phone === phone;
                 });
@@ -1050,7 +1064,7 @@ exports.responseSMS = async (req, res) => {
                 await db.query("UPDATE ?? SET confirmed = ? WHERE _id = ?", [`${organisation}.schedules`, message.toLowerCase().includes("da"), confirmingSchedule._id]);
                 const organisationDetailsRows = await db.query("SELECT * FROM ??", [`${organisation}.details`]);
                 const organisationDetails = organisationDetailsRows[0];
-                const currentInbox = JSON.parse(organisationDetails.inbox);
+                const currentInbox = tryParse(organisationDetails.inbox);
                 let messageId = generateId(25);
                 while (inbox.some(inboxMessage => inboxMessage.id === messageId)) messageId = generateId(25);
                 const scheduleDate = `${new Date(confirmingSchedule.date).getDate() < 10 ? `0${new Date(confirmingSchedule.date).getDate()}` : new Date(confirmingSchedule.date).getDate()}/${new Date(confirmingSchedule.date).getMonth() + 1 < 10 ? `0${new Date(confirmingSchedule.date).getMonth() + 1}` : new Date(confirmingSchedule.date).getMonth() + 1}/${new Date(confirmingSchedule.date).getFullYear()}`;
@@ -1062,7 +1076,7 @@ exports.responseSMS = async (req, res) => {
                 currentInbox.push({
                     doctorId,
                     doctorName,
-                    message: `Pacientul ${JSON.parse(confirmingSchedule.patients)[0].firstname} ${JSON.parse(confirmingSchedule.patients)[0].lastname} a confirmat programarea din data ${scheduleDate} de la ora ${scheduleStartHour}:${scheduleStartMinutes} la ora ${scheduleEndHour}:${scheduleEndMinutes}`,
+                    message: `Pacientul ${tryParse(confirmingSchedule.patients)[0].firstname} ${tryParse(confirmingSchedule.patients)[0].lastname} a confirmat programarea din data ${scheduleDate} de la ora ${scheduleStartHour}:${scheduleStartMinutes} la ora ${scheduleEndHour}:${scheduleEndMinutes}`,
                     createdAt: new Date(),
                     id: messageId
                 });
@@ -1099,7 +1113,7 @@ exports.addSMS = async (req, res) => {
     try {
         const detailsRow = await db.query("SELECT * FROM ??", [`${process.env.DB_PREFIX}org_${organisationId}.details`]);
         const details = await detailsRow[0];
-        const currentSmsMessage = JSON.parse(details["sms_message"]);
+        const currentSmsMessage = tryParse(details["sms_message"]);
 
         currentSmsMessage.push({
             scheduledAt: scheduledAt === "now" ? scheduledAt : Number(scheduledAt),
@@ -1128,7 +1142,7 @@ exports.removeSMS = async (req, res) => {
     try {
         const detailsRow = await db.query("SELECT * FROM ??", [`${process.env.DB_PREFIX}org_${organisationId}.details`]);
         const details = await detailsRow[0];
-        const currentSmsMessage = JSON.parse(details["sms_message"]);
+        const currentSmsMessage = tryParse(details["sms_message"]);
 
         const newSmsMessage = currentSmsMessage.filter((_, idx) => idx !== Number(smsId));
 
@@ -1153,7 +1167,7 @@ exports.editSMS = async (req, res) => {
     try {
         const detailsRow = await db.query("SELECT * FROM ??", [`${process.env.DB_PREFIX}org_${organisationId}.details`]);
         const details = await detailsRow[0];
-        const currentSmsMessage = JSON.parse(details["sms_message"]);
+        const currentSmsMessage = tryParse(details["sms_message"]);
 
         const newSmsMessage = currentSmsMessage.map((smsMessage, idx) => {
             if (idx === Number(smsId)) return {
@@ -1188,7 +1202,7 @@ exports.createService = async (req, res) => {
         const currentDoctors = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.doctors`, doctorId]);
         logger.debug(currentDoctors);
         const currentDoctor = currentDoctors[0];
-        const currentServices = JSON.parse(currentDoctor.services);
+        const currentServices = tryParse(currentDoctor.services);
            
         let serviceId = generateId(25);
         while (currentServices.some(service => service.id === serviceId)) serviceId = generateId(25);
@@ -1231,7 +1245,7 @@ exports.removeService = async (req, res) => {
         let sql = "SELECT * FROM ?? WHERE _id = ?";
         const currentDoctors = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.doctors`, doctorId]);
         const currentDoctor = currentDoctors[0];
-        const currentServices = JSON.parse(currentDoctor.services);
+        const currentServices = tryParse(currentDoctor.services);
 
         const newServices = currentServices.filter(service => service.id !== serviceId);
 
@@ -1267,7 +1281,7 @@ exports.editService = async (req, res) => {
         const currentDoctors = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.doctors`, doctorId]);
         if (!currentDoctors || !currentDoctors.length) return res.status(404).json({ success: false, message: { en: "Doctor couldn't be found!", ro: "Doctorul nu a putut fi gasit!" } });
         const currentDoctor = currentDoctors[0];
-        const currentServices = JSON.parse(currentDoctor.services);
+        const currentServices = tryParse(currentDoctor.services);
 
         const modifiedServices = currentServices.map(service => {
             if (service.id === serviceId) return {...service,
@@ -1316,7 +1330,7 @@ exports.pushMessageInbox = async (req, res) => {
         sql = "SELECT * FROM ??";
         const detailsRows = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.details`]);
         const detailsRow = detailsRows[0];
-        const inbox = JSON.parse(detailsRow.inbox);
+        const inbox = tryParse(detailsRow.inbox);
 
         let messageId = generateId(25);
         while (inbox.some(inboxMessage => inboxMessage.id === messageId)) messageId = generateId(25);
@@ -1358,7 +1372,7 @@ exports.removeMessageInbox = async (req, res) => {
         let sql = "SELECT * FROM ??";
         const detailsRows = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.details`]);
         const detailsRow = await detailsRows[0];
-        const inbox = JSON.parse(detailsRow.inbox);
+        const inbox = tryParse(detailsRow.inbox);
         const newInbox = inbox.filter(message => message.id !== inboxMessageId);
         
         sql = "UPDATE ?? SET inbox = ? WHERE _id = ?";
@@ -1391,7 +1405,7 @@ exports.clearInbox = async (req, res) => {
         let sql = "SELECT * FROM ??";
         const detailsRows = await db.query(sql, [`${process.env.DB_PREFIX}org_${organisationId}.details`]);
         const detailsRow = await detailsRows[0];
-        const inbox = JSON.parse(detailsRow.inbox);
+        const inbox = tryParse(detailsRow.inbox);
         let newInbox;
         if (req.body?.doctorId) newInbox = inbox.filter(message => message.doctorId !== req.body?.doctorId);
         else newInbox = [];
@@ -2094,8 +2108,7 @@ exports.searchPatientTreatment = async (req, res) => {
             ) return treatment;
             return null;
         }));
-
-        const filteredTreatments = results.filter(result => result !== null);
+        const filteredTreatments = results?.filter(result => result !== null);
         if (!filteredTreatments || !filteredTreatments.length) return res.status(200).json({ success: false, message: { en: "No results found!", ro: "Nu a fost gasit niciun rezultat!" } });
         res.status(200).json({ success: true, treatments: filteredTreatments });
 
@@ -2219,7 +2232,7 @@ exports.createDiagnosticInitialStatus = async (req, res) => {
     try {
         const patients = await db.query("SELECT * FROM ?? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.patients`, patientId]);
         if (patients?.length !== 1) return res.status(404).json({ success: false, reason: "invalid-patient" });
-        const initialStatus = JSON.parse(patients[0].initial_status);
+        const initialStatus = tryParse(patients[0].initial_status);
         let id = generateId(8);
         while (inArrId(initialStatus, id, "id")) id = generateId(8);
         
@@ -2251,7 +2264,7 @@ exports.editDiagnosticInitialStatus = async (req, res) => {
     try {
         const patients = await db.query("SELECT * FROM ?? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.patients`, patientId]);
         if (patients?.length !== 1) return res.status(404).json({ success: false, reason: "invalid-patient" });
-        const initialStatus = JSON.parse(patients[0].initial_status);
+        const initialStatus = tryParse(patients[0].initial_status);
         const newInitialStatus = await Promise.all(initialStatus.map(async diagnostic => {
             if (diagnostic.id !== id) return diagnostic;
             const diagnostics = await db.query("SELECT * FROM ?? WHERE id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.diagnostics`, diagnostic.diagnosticId]);
@@ -2282,7 +2295,7 @@ exports.removeDiagnosticInitialStatus = async (req, res) => {
     try {
         const patients = await db.query("SELECT * FROM ?? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.patients`, patientId]);
         if (patients?.length !== 1) return res.status(404).json({ success: false, reason: "invalid-patient" });
-        const initialStatus = JSON.parse(patients[0].initial_status);
+        const initialStatus = tryParse(patients[0].initial_status);
         console.log("ID: ", id);
         const newInitialStatus = initialStatus.filter(diagnostic => diagnostic.id.toString() !== id.toString());
 
@@ -2304,7 +2317,7 @@ exports.getDiagnosticsInitialStatus = async (req, res) => {
     try {
         const patients = await db.query("SELECT * FROM ?? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.patients`, patientId]);
         if (patients?.length !== 1) return res.status(404).json({ success: false, reason: "invalid-patient" });
-        const initialStatus = JSON.parse(patients[0].initial_status);
+        const initialStatus = tryParse(patients[0].initial_status);
         const results = await Promise.all(await initialStatus.map(async (diagnostic, idx) => {
             const diagnostics = await db.query("SELECT * FROM ?? WHERE id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.diagnostics`, diagnostic.diagnosticId]);
 
@@ -2332,7 +2345,7 @@ exports.searchDiagnosticInitialStatus = async (req, res) => {
     try {
         const patients = await db.query("SELECT * FROM ?? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.patients`, patientId]);
         if (patients?.length !== 1) return res.status(404).json({ success: false, reason: "invalid-patient" });
-        const initialStatus = JSON.parse(patients[0].initial_status);
+        const initialStatus = tryParse(patients[0].initial_status);
         if (!await initialStatus || !await initialStatus.length > 0) return res.status(200).json({ success: true, initialStatus: [] });
         const results = await Promise.all(await initialStatus.map(async (diagnostic, idx) => {
             const diagnostics = await db.query("SELECT * FROM ?? WHERE id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.diagnostics`, diagnostic.diagnosticId]);
@@ -2641,7 +2654,7 @@ exports.createPatientDocument = async (req, res) => {
         if (!patients?.length) return res.status(404).json({ success: false, message: "An error occured!" });
         const photoId = generateId(8);
         const patient = patients[0];
-        const patientsDocuments = JSON.parse(patient.documents);
+        const patientsDocuments = tryParse(patient.documents);
         patientsDocuments.push({
             size: fileSize,
             source: `/uploads/${organisationId}/${patientId}/${source}`,
@@ -2669,7 +2682,7 @@ exports.editPatientDocument = async (req, res) => {
         if (!patients?.length) return res.status(404).json({ success: false, message: "An error occured!" });
 
         const patient = patients[0];
-        const patientsDocuments = JSON.parse(patient.documents);
+        const patientsDocuments = tryParse(patient.documents);
         const newPatientsDocuments = patientsDocuments.map((currDocument) => {
             if (currDocument.photoId === photoId) return {
                 ...currDocument, 
@@ -2699,7 +2712,7 @@ exports.removePatientDocument = async (req, res) => {
         if (!patients?.length) return res.status(404).json({ success: false, message: "An error occured!" });
 
         const patient = patients[0];
-        const patientsDocuments = JSON.parse(patient.documents);
+        const patientsDocuments = tryParse(patient.documents);
         const newPatientsDocuments = patientsDocuments.filter((currDocument) => {
             return currDocument.photoId !== photoId;
         });
@@ -2723,7 +2736,7 @@ exports.getPatientDocument = async (req, res) => {
         const patients = await db.query("SELECT * FROM ?? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.patients`, patientId]);
         if (!patients?.length) return res.status(404).json({ success: false, message: "An error occured!" });
         const patient = patients[0];
-        const patientsDocuments = JSON.parse(patient.documents);
+        const patientsDocuments = tryParse(patient.documents);
 
         const foundDocument = patientsDocuments.find(document => document.photoId === photoId);
         if (!foundDocument) return res.status(404).json({ success: false, message: "Document not found!" });
@@ -2786,7 +2799,7 @@ exports.getToothImageInitialStatus = async (req, res) => {
         });
 
         const patient = patients[0];
-        const diagnostics = JSON.parse(patient.initial_status);
+        const diagnostics = tryParse(patient.initial_status);
         const toothDiagnostics = diagnostics.filter(diagnostic => diagnostic.teeth.includes(toothNumber));
         if (!toothDiagnostics.length) return res.status(200).json({ success: true, tooth: '' }); // Represents the normal tooth
         console.log(toothDiagnostics, toothNumber);
@@ -2831,7 +2844,7 @@ exports.getToothImageCurrentStatus = async (req, res) => {
         });
 
         const patient = patients[0];
-        const diagnostics = JSON.parse(patient.initial_status);
+        const diagnostics = tryParse(patient.initial_status);
         const filteredDiagnostics = diagnostics.filter(diagnostic => diagnostic.teeth.includes(toothNumber));
         const treatmentPlans = await db.query("SELECT * FROM ?? WHERE patientId = ?", [`${process.env.DB_PREFIX}org_${organisationId}.treatments_patients`, patientId]);
         const initialTreatments = await db.query("SELECT * FROM ??", [`${process.env.DB_PREFIX}org_${organisationId}.treatments`]);
@@ -2839,7 +2852,7 @@ exports.getToothImageCurrentStatus = async (req, res) => {
             return treatmentPlan.status.toLowerCase() === 'realizat' || treatmentPlan.status.toLowerCase() === 'finished';
         });
 
-        const filteredTreatments = treatments?.filter(treatment => JSON.parse(treatment?.teeth)?.includes(toothNumber));
+        const filteredTreatments = treatments?.filter(treatment => tryParse(treatment?.teeth)?.includes(toothNumber));
 
         if (filteredTreatments?.length === 0 && filteredDiagnostics?.length === 0) 
             return res.status(200).json({ success: true, tooth: '' });
@@ -2920,11 +2933,11 @@ exports.getToothImageTreatmentPlan = async (req, res) => {
         });
 
         const patient = patients[0];
-        const diagnostics = JSON.parse(patient.initial_status);
+        const diagnostics = tryParse(patient.initial_status);
         const filteredDiagnostics = diagnostics.filter(diagnostic => diagnostic.teeth.includes(toothNumber));
         const treatmentPlans = await db.query("SELECT * FROM ?? WHERE _id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.treatments_plan_patients`, treatmentPlanId]);
         const treatmentPlan = treatmentPlans[0];
-        const treatments = JSON.parse(treatmentPlan.treatments);
+        const treatments = tryParse(treatmentPlan.treatments);
         const filteredTreatments = treatments.filter(treatment => treatment.teeth.includes(toothNumber));
         if (filteredTreatments.length === 0 && filteredDiagnostics.length === 0) 
             return res.status(200).json({ success: true, tooth: '' });
@@ -2997,7 +3010,7 @@ exports.removeTreatmentPatientSterilizaton = async (req, res) => {
         const treatmentsPatient = await db.query("SELECT * FROM ?? WHERE id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.treatments_patients`, id]);
         if (treatmentsPatient?.length !== 1) return res.status(404).json({ success: false, message: "User not found!" });
         const treatmentPatient = treatmentsPatient[0];
-        const newSterilizations = JSON.parse(treatmentPatient.sterilizations).filter(sterilization => {
+        const newSterilizations = tryParse(treatmentPatient.sterilizations).filter(sterilization => {
             return sterilization.id.toString() !== sterilizationId.toString();
         });
     
@@ -3015,7 +3028,7 @@ exports.removeTreatmentPatientSterilizaton = async (req, res) => {
 //         const treatmentsPaient = await db.query("SELECT * FROM ?? WHERE id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.treatments_patients`, id]);
 //         if (treatmentsPaient?.length !== 1) return res.status(404).json({ success: false, message: "User not found!" });
 //         const treatmentPatient = treatmentsPatient[0];
-//         const sterilizations = JSON.parse(treatmentPatient.sterilizations);
+//         const sterilizations = tryParse(treatmentPatient.sterilizations);
 //         const filteredSterilizations = await sterilizations && await sterilizations.length > 0 && await sterilizations.filter((sterilization, idx) => {
 //             return (
 //                 (sterilization.category.toLowerCase().search(searchQuery.toLowerCase()) !== -1 || sterilization.category.toLowerCase().includes(searchQuery.toLowerCase())) ||
@@ -3051,7 +3064,7 @@ exports.updatePatientWaiting = async (req, res) => {
         const listRows = await db.query("SELECT * FROM ?? WHERE id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.patients_waiting`, listId]);
         if (listRows?.length !== 1) return res.status(404).json({ success: false, message: "Task not found!" });
         const listRow = listRows[0];
-        const dbModifications = JSON.parse(listRow.modifications);
+        const dbModifications = tryParse(listRow.modifications);
         dbModifications.push(new Date());
 
         await db.query("UPDATE ?? SET finished = ?, patientId = ?, doctorId = ?, scheduleDate = ?, notes = ?, modifications = ? WHERE id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.patients_waiting`, finished, patientId, doctorId, new Date(scheduleDate), notes, JSON.stringify(dbModifications), listId]);
@@ -3099,7 +3112,7 @@ exports.updateWorkList = async (req, res) => {
         const listRows = await db.query("SELECT * FROM ?? WHERE id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.list_works`, listWorkId]);
         if (listRows?.length !== 1) return res.status(404).json({ success: false, message: "Task not found!" });
         const listRow = listRows[0];
-        const dbModifications = JSON.parse(listRow.modifications);
+        const dbModifications = tryParse(listRow.modifications);
         dbModifications.push(new Date());
         
         await db.query("UPDATE ?? SET finished = ?, patientId = ?, doctorId = ?, workId = ?, labId = ?, delivery = ?, term = ?, modifications = ? WHERE id = ?", [`${process.env.DB_PREFIX}org_${organisationId}.list_works`, finished, patientId, doctorId, workId, labId, new Date(delivery), new Date(term), JSON.stringify(dbModifications), listWorkId]);
@@ -3254,7 +3267,7 @@ const getToothInitialStatus = async (organisationId, patientId, toothNumber) => 
         if (patients?.length !== 1) return '';
 
         const patient = patients[0];
-        const diagnostics = JSON.parse(patient.initial_status);
+        const diagnostics = tryParse(patient.initial_status);
         const toothDiagnostics = diagnostics.filter(diagnostic => diagnostic.teeth.includes(toothNumber));
         if (!toothDiagnostics.length) return ''; // Represents the normal tooth
         if (toothDiagnostics.find(diagnostic => diagnostic?.diagnosticPicture === "coroana.png") && toothDiagnostics.find(diagnostic => diagnostic?.diagnosticPicture === "implant.png")) 

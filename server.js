@@ -27,7 +27,7 @@ const io = require('socket.io')(server);
 const removeOldSchedules = require("./functions/removingOldSchedules");
 const db = require("./db");
 
-removeOldSchedules();
+// removeOldSchedules();
 backupData();
 
 app.use(cors());
@@ -38,35 +38,31 @@ app.get("/test", (req, res) => {
     res.send("Hello");
 });
 
-
 // (async () => {
 //     const databases = await db.query("SHOW DATABASES");
-//     const realDatabases = databases.filter(database => database.Database.includes("org") && !database.Database.includes("_backup"));
+//     const realDatabases = ['zentec'];
 //     realDatabases.forEach(async currDb => {
 //         const dbName = currDb.Database;
-//         console.log(dbName);
-//         if (dbName !== "sgdpjsrc_org_jVPdzuvfqF0nR0q2MuGue46OH") return;
 //         await db.query("USE ??", [dbName]);
-//         // let createTableSql = 'CREATE TABLE ?? ( ';
-//         // createTableSql += 'id int(14) auto_increment primary key not null, ';
-//         // createTableSql += 'name varchar(128) not null, ';
-//         // createTableSql += 'color varchar(20) not null );';
+//         let createTableSql = 'CREATE TABLE ?? ( ';
+//         createTableSql += 'id int(14) auto_increment primary key not null, ';
+//         createTableSql += 'name varchar(128) not null, ';
+//         createTableSql += 'color varchar(20) not null );';
 
-//         // await db.query(createTableSql, ['treatment_categories']);
+//         await db.query(createTableSql, ['treatment_categories']);
 
-//         // // Treatments
-//         // createTableSql = 'CREATE TABLE ?? ( ';
-//         // createTableSql += '_id varchar(26) not null, ';
-//         // createTableSql += 'name varchar(128) not null, ';
-//         // createTableSql += 'category varchar(128) not null, ';
-//         // createTableSql += 'price int not null, ';
-//         // createTableSql += 'pricePer varchar(64) not null, ';
-//         // createTableSql += 'type varchar(64) not null, ';
-//         // createTableSql += 'color varchar(20) not null );';
-//         // await db.query(createTableSql, ['treatments']);
+//         // Treatments
+//         createTableSql = 'CREATE TABLE ?? ( ';
+//         createTableSql += '_id varchar(26) not null, ';
+//         createTableSql += 'name varchar(128) not null, ';
+//         createTableSql += 'category varchar(128) not null, ';
+//         createTableSql += 'price int not null, ';
+//         createTableSql += 'pricePer varchar(64) not null, ';
+//         createTableSql += 'type varchar(64) not null, ';
+//         createTableSql += 'color varchar(20) not null );';
+//         await db.query(createTableSql, ['treatments']);
 
 //         const tables = await db.query("SELECT table_name FROM information_schema.tables WHERE table_schema = ?", [dbName]);
-//         console.log(tables);
 //         if (tables.every(table => Object.values(table)[0] !== "treatments")) {
 //             await Promise.all(tables.map(async table => {
 
@@ -77,7 +73,7 @@ app.get("/test", (req, res) => {
 //                     try {
 //                         await db.query("ALTER TABLE details ADD COLUMN country varchar(128) default 'Romania', ADD COLUMN county varchar(64), ADD COLUMN city varchar(128), ADD COLUMN address varchar(128), ADD COLUMN business_address varchar(128), ADD COLUMN start_hour int(2) not null, ADD COLUMN end_hour int(2) not null");
 //                     } catch (e) {
-//                         console.log("EEEE", e);
+//                         console.log("Error", e);
 //                     }
 //                 }
     

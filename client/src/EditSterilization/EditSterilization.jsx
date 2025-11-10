@@ -11,6 +11,17 @@ import DateCustomInput from "../Components/DatePicker/DatePicker";
 import Select from "react-select";
 import TickAnimation from "../utils/TickAnimation";
 
+const tryParse = (request) => {
+    let response;
+    try {
+        response = JSON.parse(request);
+    } catch (e) {
+        return request;
+    }
+
+    return response;
+}
+
 const EditSterilization = ({ data }) => {
 
     const { id } = useParams();
@@ -22,7 +33,6 @@ const EditSterilization = ({ data }) => {
         return location.state?.sterilization;
     } ,[location]);
 
-    console.log(sterilizationData);
 
     const [errorMessage, setErrorMessage] = useState("");
     const [assistantAdded, setAssistantAdded] = useState(false);
@@ -38,11 +48,11 @@ const EditSterilization = ({ data }) => {
     const [assistantNameValue, setAssistantNameValue] = useState(`${data.organisation.assistants.find(assistant => assistant._id === sterilizationData.assistant).firstname.slice(0, 1)}. ${data.organisation.assistants.find(assistant => assistant._id === sterilizationData.assistant).lastname}`);
     const [assistantValue, setAssistantValue] = useState(sterilizationData.assistant);
     const [headerElement, setHeaderElement] = useState();
-    const [sterilizationInstruments, setSterilizationInstruments] = useState(JSON.parse(sterilizationData.sterilization_instruments) || []);
+    const [sterilizationInstruments, setSterilizationInstruments] = useState(tryParse(sterilizationData.sterilization_instruments) || []);
     const [sterilizationNameValue, setSterilizationNameValue] = useState();
     const [sterilizationValue, setSterilizationValue] = useState();
-    const [quantity, setQuantity] = useState(JSON.parse(sterilizationData.sterilization_instruments).map(instrument => instrument.quantity));
-    const [multipleCodes, setMultipleCodes] = useState(JSON.parse(sterilizationData.sterilization_instruments).map(instrument => instrument.multipleCode));
+    const [quantity, setQuantity] = useState(tryParse(sterilizationData.sterilization_instruments).map(instrument => instrument.quantity));
+    const [multipleCodes, setMultipleCodes] = useState(tryParse(sterilizationData.sterilization_instruments).map(instrument => instrument.multipleCode));
 
     const weekdayLabelsText = useMemo(() => {
         return { ro: ['Dum', 'Lun', 'Mar', 'Mie', 'Joi', 'Vin', 'Sam'], en: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']}

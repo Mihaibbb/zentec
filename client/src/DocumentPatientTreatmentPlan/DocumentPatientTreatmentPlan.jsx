@@ -17,6 +17,18 @@ import { useCookies } from "react-cookie";
 import sourceSansProBold from "../fonts/source-sans-pro-bold.ttf";
 import sourceSansPro  from "../fonts/source-sans-pro.semibold.ttf";
 
+
+const tryParse = (request) => {
+    let response;
+    try {
+        response = JSON.parse(request);
+    } catch (e) {
+        return request;
+    }
+
+    return response;
+}
+
 const DocumentPatientTreatment = ({ data : currData }) => {
 
     Font.register({ family: "Source-Sans-Pro-Bold", src: sourceSansProBold, fontWeight: "bold" });
@@ -35,7 +47,7 @@ const DocumentPatientTreatment = ({ data : currData }) => {
 
 
 
-    const initialStatus = JSON.parse(patientData?.initial_status || "");
+    const initialStatus = tryParse(patientData?.initial_status || "");
 
 
     const [data, setData] = useState([]);

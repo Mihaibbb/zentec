@@ -14,6 +14,17 @@ import GetToothSurfaces from "../../utils/TeethSurfaces";
 import { TEETH, TEETH_KIDS, TEETH_KIDS_NUMBERS } from "../../utils/TeethOrder";
 import DateCustomInput from "../../Components/DatePicker/DatePicker";
 
+const tryParse = (request) => {
+    let response;
+    try {
+        response = JSON.parse(request);
+    } catch (e) {
+        return request;
+    }
+
+    return response;
+}
+
 const CreateTreatmentPatient = ({ data }) => {
 
     const { id } = useParams();
@@ -257,7 +268,7 @@ const CreateTreatmentPatient = ({ data }) => {
         if (treatmentPlanValue.length === 0) return;
         if (treatmentType !== 'Plan de tratament' && treatmentType !== 'Treatment Plan') return;
         const currTreatmentPlan = data.organisation.treatments_plan_patients.find(treatmentPlan => treatmentPlan._id === treatmentPlanValue);
-        const currTreatments = JSON.parse(currTreatmentPlan.treatments);
+        const currTreatments = tryParse(currTreatmentPlan.treatments);
         setTreatmentPlanTreatments(currTreatments);
     }, [treatmentPlanValue, treatmentType]);
 
@@ -286,7 +297,7 @@ const CreateTreatmentPatient = ({ data }) => {
         const currTreatmentPlan = data.organisation.treatments_plan_patients.find(treatmentPlan => treatmentPlan._id === treatmentPlanValue);
 
         if (!currTreatmentPlan) return;
-        const currTreatment = JSON.parse(currTreatmentPlan.treatments).find(treatment => treatment.treatmentId === treatmentPlanTreatmentValue);
+        const currTreatment = tryParse(currTreatmentPlan.treatments).find(treatment => treatment.treatmentId === treatmentPlanTreatmentValue);
         if (!currTreatment) return;
         setToothSelected(currTreatment.teeth);
         handleChangeToothSurfaces(currTreatment.teethSurfaces);

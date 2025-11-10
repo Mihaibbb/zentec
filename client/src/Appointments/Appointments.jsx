@@ -15,6 +15,17 @@ import DateCustomInput from "../Components/DatePicker/DatePicker";
 import { useCallback } from "react";
 import { createRoot } from "react-dom/client";
 
+const tryParse = (request) => {
+    let response;
+    try {
+        response = JSON.parse(request);
+    } catch (e) {
+        return request;
+    }
+
+    return response;
+}
+
 const Appointments = ({ data }) => {
 
     const [cookies, setCookie] = useCookies();
@@ -335,7 +346,7 @@ const Appointments = ({ data }) => {
                         return (
                             <div 
                                 className={`gap 
-                                    ${ isInDoctorInterval(startHourGapAttr, startMinutesGapAttr, new Date(dayFormat), JSON.parse(doctorObject.schedules)) ? "" : "not-in-schedule"} 
+                                    ${ isInDoctorInterval(startHourGapAttr, startMinutesGapAttr, new Date(dayFormat), tryParse(doctorObject.schedules)) ? "" : "not-in-schedule"} 
                                     ${getContrastForText(doctorColor) === "#000" ? "dark" : ""}
                                     ${idx === hours.length - 1 ? "inactive" : ""}
                                     `} 
@@ -353,7 +364,7 @@ const Appointments = ({ data }) => {
                                 ref={ref => gapsRef.current[idx * gapsArr.length + gapIdx] = ref} 
                                 onMouseDown={(e) => !e.target.classList.contains("resizeable-down") && !e.target.parentElement.classList.contains("resizeable-down") ? initiateAppointment(e, idx, gapIdx, doctorObject, false) : null}
                                 onMouseMove={(e) => moveAppointment(e, doctorColor, false, null, doctorObject)}
-                                onMouseUp={async (e) => await createAppointment(e, JSON.parse(doctorObject.schedules))}
+                                onMouseUp={async (e) => await createAppointment(e, tryParse(doctorObject.schedules))}
                             >
                                 {firstElement?.getAttribute('id') === (idx * gaps + gapIdx).toString() && 
                                 firstElement?.getAttribute('day') === dayFormat.toString() && !activeResizing &&
@@ -687,7 +698,7 @@ const Appointments = ({ data }) => {
                 dragInitStartMinutes === Number(new Date(appointment.startDate).getMinutes()),
                 dragInitEndHour === Number(new Date(appointment.endDate).getHours()),
                 dragInitEndMinutes === Number(new Date(appointment.endDate).getMinutes()),
-                dragFirstElement.getAttribute("doctorid") === (isJSON(appointment.users) ? JSON.parse(appointment.users)[0] : appointment.users[0])
+                dragFirstElement.getAttribute("doctorid") === (isJSON(appointment.users) ? tryParse(appointment.users)[0] : appointment.users[0])
             );
             
             return (
@@ -696,7 +707,7 @@ const Appointments = ({ data }) => {
                 dragInitStartMinutes === Number(new Date(appointment.startDate).getMinutes()) &&
                 dragInitEndHour === Number(new Date(appointment.endDate).getHours()) &&
                 dragInitEndMinutes === Number(new Date(appointment.endDate).getMinutes()) &&
-                dragFirstElement.getAttribute("doctorid") === (isJSON(appointment.users) ? JSON.parse(appointment.users)[0] : appointment.users[0])
+                dragFirstElement.getAttribute("doctorid") === (isJSON(appointment.users) ? tryParse(appointment.users)[0] : appointment.users[0])
             );
         });
 
@@ -714,8 +725,8 @@ const Appointments = ({ data }) => {
                         startDate: new Date(appointmentDate.getFullYear(), appointmentDate.getMonth(), appointmentDate.getDate(), dragFirstHour, dragFirstMinutes),
                         endDate: new Date(appointmentDate.getFullYear(), appointmentDate.getMonth(), appointmentDate.getDate(), dragLastHour, dragLastMinutes),
                         _id: data.organisation._id,
-                        users: JSON.parse(foundAppointment.users),
-                        patients: JSON.parse(foundAppointment.patients),
+                        users: tryParse(foundAppointment.users),
+                        patients: tryParse(foundAppointment.patients),
                         appointmentId: foundAppointment._id
                     })
                 };
@@ -812,7 +823,7 @@ const Appointments = ({ data }) => {
             console.log(appointmentStartHourInMinutes, appointmentEndHourInMinutes, currentAppointmentStartHourInMinutes, currentAppointmentEndHourInMinutes);
 
             return (
-                (isJSON(appointment.users) ? JSON.parse(appointment.users)[0] : appointment.users[0]) === appointmentDoctorId.toString() &&
+                (isJSON(appointment.users) ? tryParse(appointment.users)[0] : appointment.users[0]) === appointmentDoctorId.toString() &&
                 sameDay(new Date(appointment.date), new Date(appointmentDateValue)) &&
                 (
                     (appointmentStartHourInMinutes >= currentAppointmentStartHourInMinutes && appointmentStartHourInMinutes <= currentAppointmentEndHourInMinutes) ||
@@ -999,6 +1010,7 @@ const Appointments = ({ data }) => {
             appointmentId: currentAppointmentId,
             finished: appointmentFinished ? true : false,
             confirmed: appointmentConfirmed,
+            unpresented: appointmentUnpresented,
             language: cookies.language
         };
 
@@ -1032,7 +1044,7 @@ const Appointments = ({ data }) => {
                         appointmentId: currentAppointmentId,
                         finished: appointmentFinished ? true : false,
                         confirmed: appointmentConfirmed,
-                        unpresented: appointmentUnpresented
+                        unpresented: appointmentUnpresented,
                     };
 
                     return currAppointment;
@@ -1209,11 +1221,11 @@ const Appointments = ({ data }) => {
             const appointmentDate = new Date(appointment.startDate);
             const startHourAppointment = appointmentDate.getHours();
             const startMinutesAppointment = appointmentDate.getMinutes();
-            const doctorIdAppointment = isJSON(appointment.users) ? JSON.parse(appointment.users)[0] : appointment.users[0];
+            const doctorIdAppointment = isJSON(appointment.users) ? tryParse(appointment.users)[0] : appointment.users[0];
             const endHourAppointment = new Date(appointment.endDate).getHours();
             const endMinutesAppointment = new Date(appointment.endDate).getMinutes();
             let startIdx, endIdx;
-            const appointmentDoctor = doctors.find(doctor => doctor._id === (isJSON(appointment.users) ? JSON.parse(appointment.users)[0] : appointment.users[0]));
+            const appointmentDoctor = doctors.find(doctor => doctor._id === (isJSON(appointment.users) ? tryParse(appointment.users)[0] : appointment.users[0]));
             if (appointmentDoctor) {
                 const doctorColor = appointmentDoctor?.color;
                 currentGaps.forEach((gap, gapIdx) => {
@@ -1244,9 +1256,9 @@ const Appointments = ({ data }) => {
                         //if (new Date(appointment.startDate).getTime() < new Date().getTime()) return;
                         setActiveEditAppointment(true);
                         setAppointmentTitle(appointment.title);
-                        setAppointmentPatient(`${isJSON(appointment.patients) ? JSON.parse(appointment.patients)[0].firstname : appointment.patients[0].firstname} ${isJSON(appointment.patients) ? JSON.parse(appointment.patients)[0].lastname : appointment.patients[0].lastname}`);
+                        setAppointmentPatient(`${isJSON(appointment.patients) ? tryParse(appointment.patients)[0].firstname : appointment.patients[0].firstname} ${isJSON(appointment.patients) ? tryParse(appointment.patients)[0].lastname : appointment.patients[0].lastname}`);
                         setAppointmentPatientsList([]);
-                        setAppointmentPatientData(JSON.parse(appointment.patients)[0]);
+                        setAppointmentPatientData(tryParse(appointment.patients)[0]);
                         setAppointmentStartHour(new Date(appointment.startDate).getHours() < 10 ? `0${new Date(appointment.startDate).getHours()}` : new Date(appointment.startDate).getHours());
                         setAppointmentStartMinutes(new Date(appointment.startDate).getMinutes() < 10 ? `0${new Date(appointment.startDate).getMinutes()}` : new Date(appointment.startDate).getMinutes());
                         setAppointmentEndHour(new Date(appointment.endDate).getHours() < 10 ? `0${new Date(appointment.endDate).getHours()}` : new Date(appointment.endDate).getHours());
@@ -1254,21 +1266,21 @@ const Appointments = ({ data }) => {
                         setAppointmentCost(appointment.income);
                         setAppointmentId(appointment._id);
                         setAppointmentNotes(appointment.notes);
-                        setAppointmentDoctorId(JSON.parse(appointment.users)[0]);
+                        setAppointmentDoctorId(tryParse(appointment.users)[0]);
                         setAppointmentFinished(appointment.finished);
                         setAppointmentConfirmed(appointment.confirmed);
                         setAppointmentUnpresented(appointment.unpresented);
                         setAppointmentDateValue(new Date(appointment.date));
                         setInitialAppointmentValues({
                             title: appointment.title,
-                            patient: `${isJSON(appointment.patients) ? JSON.parse(appointment.patients)[0].firstname : appointment.patients[0].firstname} ${isJSON(appointment.patients) ? JSON.parse(appointment.patients)[0].lastname : appointment.patients[0].lastname}`,
+                            patient: `${isJSON(appointment.patients) ? tryParse(appointment.patients)[0].firstname : appointment.patients[0].firstname} ${isJSON(appointment.patients) ? tryParse(appointment.patients)[0].lastname : appointment.patients[0].lastname}`,
                             startHour: new Date(appointment.startDate).getHours() < 10 ? `0${new Date(appointment.startDate).getHours()}` : new Date(appointment.startDate).getHours(),
                             startMinutes: new Date(appointment.startDate).getMinutes() < 10 ? `0${new Date(appointment.startDate).getMinutes()}` : new Date(appointment.startDate).getMinutes(),
                             endHour: new Date(appointment.endDate).getHours() < 10 ? `0${new Date(appointment.endDate).getHours()}` : new Date(appointment.endDate).getHours(),
                             endMinutes: new Date(appointment.endDate).getMinutes() < 10 ? `0${new Date(appointment.endDate).getMinutes()}` : new Date(appointment.endDate).getMinutes(),
                             cost: appointment.income,
                             appointmentNotes: appointment.notes,
-                            doctorId: JSON.parse(appointment.users)[0],
+                            doctorId: tryParse(appointment.users)[0],
                             date: new Date(appointment.date),
                             confirmed: appointment.confirmed
 
@@ -1280,7 +1292,7 @@ const Appointments = ({ data }) => {
                
                 const textElement2 = document.createElement('p');
                 textElement2.classList.add('appointment-interval');
-                const currentPatient = isJSON(appointment.patients) ? JSON.parse(appointment.patients)[0] : appointment.patients[0];
+                const currentPatient = isJSON(appointment.patients) ? tryParse(appointment.patients)[0] : appointment.patients[0];
                 textElement2.innerText = `${currentPatient.firstname} ${currentPatient.lastname}`;
                 textElement2.innerText += cookies.langauge === "en" ? ` / File No.: ${currentPatient.fileNumber}` : ` / Nr. fisa: ${currentPatient.fileNumber}`;
                 textElement2.style.top = `calc(-100% + ${gapsRef.current[0].clientHeight * (appointmentLength <= 2 ? 2 : 3)}px)`;
@@ -1371,6 +1383,7 @@ const Appointments = ({ data }) => {
                         }}>
                             {startHourAppointment < 10 ? `0${startHourAppointment}` : startHourAppointment}:{startMinutesAppointment < 10 ? `0${startMinutesAppointment}` : startMinutesAppointment} - {endHourAppointment < 10 ? `0${endHourAppointment}` : endHourAppointment}:{endMinutesAppointment < 10 ? `0${endMinutesAppointment}` : endMinutesAppointment}
                             {appointment.confirmed ? <FontAwesomeIcon icon={faCheck} className="check-appointment-icon" style={{ marginLeft: '10px', marginRight: '10px' }}/> : null}
+                            {appointment.unpresented ? <FontAwesomeIcon icon={faTimes} className="check-appointment-icon" style={{ marginLeft: '10px', marginRight: '10px' }} /> : null}
                         </p>
                     </>
                 );
@@ -1379,7 +1392,7 @@ const Appointments = ({ data }) => {
                 // const patientNameElement = document.createElement('p');
                 // patientNameElement.classList.add("appointment-interval");
                 // console.log(appointment.patients);
-                // patientNameElement.innerText = `${isJSON(appointment.patients) ? JSON.parse(appointment.patients)[0].firstname : appointment.patients[0].firstname} ${isJSON(appointment.patients) ? JSON.parse(appointment.patients)[0].lastname : appointment.patients[0].lastname}`;
+                // patientNameElement.innerText = `${isJSON(appointment.patients) ? tryParse(appointment.patients)[0].firstname : appointment.patients[0].firstname} ${isJSON(appointment.patients) ? tryParse(appointment.patients)[0].lastname : appointment.patients[0].lastname}`;
                 // patientNameElement.style.top = 'calc(-100% + 60px)';
                 // patientNameElement.style.fontSize = '20px';
                 // patientNameElement.style.color = getContrastForText(doctorColor);
@@ -1590,7 +1603,7 @@ const Appointments = ({ data }) => {
 
                     <div className="month-appointments">
                         {currAppointments.map((appointment, idx) => {
-                            const appointmentDoctorId = isJSON(appointment.users) ? JSON.parse(appointment.users)[0] : appointment.users[0];
+                            const appointmentDoctorId = isJSON(appointment.users) ? tryParse(appointment.users)[0] : appointment.users[0];
                             const currDoctor = data.organisation.doctors.find(doctor => doctor._id === appointmentDoctorId);
                             const currDoctorColor = currDoctor?.color;
                             return (
@@ -1607,7 +1620,7 @@ const Appointments = ({ data }) => {
                                   
                                     setActiveEditAppointment(true);
                                     setAppointmentTitle(appointment.title);
-                                    setAppointmentPatient(`${JSON.parse(appointment.patients)[0].firstname} ${JSON.parse(appointment.patients)[0].lastname}`);
+                                    setAppointmentPatient(`${tryParse(appointment.patients)[0].firstname} ${tryParse(appointment.patients)[0].lastname}`);
                                     setAppointmentPatientsList([]);
                                     setAppointmentPatientData(appointment.patients[0]);
                                     setAppointmentStartHour(new Date(appointment.startDate).getHours() < 10 ? `0${new Date(appointment.startDate).getHours()}` : new Date(appointment.startDate).getHours());
@@ -1623,21 +1636,21 @@ const Appointments = ({ data }) => {
                                     setAppointmentDateValue(new Date(appointment.date));
                                     setInitialAppointmentValues({
                                         title: appointment.title,
-                                        patient: `${isJSON(appointment.patients) ? JSON.parse(appointment.patients)[0].firstname : appointment.patients[0].firstname} ${isJSON(appointment.patients) ? JSON.parse(appointment.patients)[0].lastname : appointment.patients[0].lastname}`,
+                                        patient: `${isJSON(appointment.patients) ? tryParse(appointment.patients)[0].firstname : appointment.patients[0].firstname} ${isJSON(appointment.patients) ? tryParse(appointment.patients)[0].lastname : appointment.patients[0].lastname}`,
                                         startHour: new Date(appointment.startDate).getHours() < 10 ? `0${new Date(appointment.startDate).getHours()}` : new Date(appointment.startDate).getHours(),
                                         startMinutes: new Date(appointment.startDate).getMinutes() < 10 ? `0${new Date(appointment.startDate).getMinutes()}` : new Date(appointment.startDate).getMinutes(),
                                         endHour: new Date(appointment.endDate).getHours() < 10 ? `0${new Date(appointment.endDate).getHours()}` : new Date(appointment.endDate).getHours(),
                                         endMinutes: new Date(appointment.endDate).getMinutes() < 10 ? `0${new Date(appointment.endDate).getMinutes()}` : new Date(appointment.endDate).getMinutes(),
                                         cost: appointment.income,
                                         appointmentNotes: appointment.notes,
-                                        doctorId: JSON.parse(appointment.users)[0],
+                                        doctorId: tryParse(appointment.users)[0],
                                         date: new Date(appointment.date),
                                         confirmed: appointment.confirmed
             
                                     });
                                 }
                             }>
-                                <p className="patient-text" style={{ color: getContrastForText( currDoctorColor || doctorColor ) === "#000" ? "#000" : "var(--text-color)" }}>{JSON.parse(appointment.patients)[0].firstname} {JSON.parse(appointment.patients)[0].lastname}</p>
+                                <p className="patient-text" style={{ color: getContrastForText( currDoctorColor || doctorColor ) === "#000" ? "#000" : "var(--text-color)" }}>{tryParse(appointment.patients)[0].firstname} {tryParse(appointment.patients)[0].lastname}</p>
                                 <p>{new Date(appointment.startDate).getHours() < 10 ? `0${new Date(appointment.startDate).getHours()}` : new Date(appointment.startDate).getHours()}:{new Date(appointment.startDate).getMinutes() < 10 ? `0${new Date(appointment.startDate).getMinutes()}` : new Date(appointment.startDate).getMinutes()}</p>
                             </div>);
                         })}
@@ -1706,7 +1719,7 @@ const Appointments = ({ data }) => {
     const isJSON = (json) => {
         
         try {
-            JSON.parse(json);
+            tryParse(json);
         } catch (e) {
             return false;
         }
@@ -2566,7 +2579,7 @@ const Appointments = ({ data }) => {
                                     <div className="check-box" onClick={() => setAppointmentUnpresented(currStatus => !currStatus)}>
                                         <FontAwesomeIcon 
                                             icon={faCheck} 
-                                            className={`check-icon ${appointmentConfirmed ? "active" : ""}`}  
+                                            className={`check-icon ${appointmentUnpresented ? "active" : ""}`}  
                                         />
                                     </div>
 

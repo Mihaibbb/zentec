@@ -29,8 +29,7 @@ const Profile = ({ data }) => {
     const optionsTitle = cookies.language === "en" ? ["", "", "", ""] : ["", "", ""];
     const [activeOption, setActiveOption] = useState(window?.history?.state?.activeOption || 0);
     const [sideMenuOption, setSideMenuOption] = useState(window?.history?.state?.sideMenuOption || 0);
-
-    const [currentSMS, setCurrentSMS] = useState(JSON.parse(data.organisation.details[0].sms_message));
+    const [currentSMS, setCurrentSMS] = useState(data?.organisation?.details[0]?.sms_message ?? []);
 
     const [currentSmsMessage, setCurrentSmsMessage] = useState("");
     const [currentSmsSchedule, setCurrentSmsSchedule] = useState();
